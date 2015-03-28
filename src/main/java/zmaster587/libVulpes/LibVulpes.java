@@ -4,6 +4,7 @@ import gregtech.api.enums.ItemList;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -43,6 +44,7 @@ public class LibVulpes {
 	public static boolean gcSilicon;
 	public static boolean diamondBlockHardness;
 	public static boolean hardFactoryRecipe;
+	public static boolean craftableSkyStone;
 	public static Logger logger;
 
 	@EventHandler
@@ -61,6 +63,7 @@ public class LibVulpes {
 		gcSilicon = config.get(Configuration.CATEGORY_GENERAL, "registerGCsiliconItems", false).getBoolean(false);
 		diamondBlockHardness = config.get(Configuration.CATEGORY_GENERAL, "undoGTDiamondBlockMod", false).getBoolean(false);
 		hardFactoryRecipe = config.get(Configuration.CATEGORY_GENERAL, "harderFactoryManager", false).getBoolean(false);
+		craftableSkyStone = config.get(Configuration.CATEGORY_GENERAL, "addSkystoneCrafting", true).getBoolean(true);
 		config.save();
 
 		if((forceLove || ic2MinerGTOre))
@@ -68,17 +71,25 @@ public class LibVulpes {
 	}
 
 	@EventHandler
-	public void postPostInit(FMLServerStartingEvent event) {
-		//Undo the damaged done to the diamond Block by GT
-
-		if(diamondBlockHardness) {
-			Blocks.diamond_block.setResistance(5.0f);
-			logger.error("fixing diamond ore");
-		}
-	}
-
-	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+
+		if(craftableSkyStone && Loader.isModLoaded("appliedenergistics2")) {
+			Block skystone = null;
+			try {
+				Class items = Class.forName("appeng.api.util.AEItemDefinition");
+				Class blocks = Class.forName("appeng.api.definitions.Blocks");
+				Class api = Class.forName("appeng.core.Api");
+				skystone = (Block)items.getMethod("block").invoke(blocks.getDeclaredField("blockSkyStone").get(api.getMethod("blocks").invoke(api.getField("instance").get(null))));
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			if(skystone != null) {
+				GameRegistry.addShapedRecipe(new ItemStack(skystone, 32), "xxx", "xyx", "xxx", 'x', Blocks.obsidian, 'y', Blocks.stone);	
+			}
+			
+		}
 
 		if(forceLove) {
 			for(String item : Events.gregAversionItems.keySet()) {

@@ -26,12 +26,12 @@ public class ZUtils {
 		minX = -((axis.minZ*Math.sin(angle)) + (axis.minX*Math.cos(angle)));
 		maxX = -((axis.maxZ*Math.sin(angle)) + (axis.maxX*Math.cos(angle)));
 
-		if(minZ > 0) {
+		if(minZ > maxZ) {
 			double buffer = minZ;
 			minZ = maxZ;
 			maxZ = buffer;
 		}
-		if(minX > 0) {
+		if(minX > maxZ) {
 			double buffer = minX;
 			minX = maxX;
 			maxX = buffer;

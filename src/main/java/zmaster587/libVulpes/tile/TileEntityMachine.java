@@ -17,7 +17,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 public abstract class TileEntityMachine extends TileEntity implements ISidedInventory  {
 	
 	
-	EnergyStorage energy;
+	protected EnergyStorage energy;
+	
 	protected ItemStack inv[];
 	
 	protected int progress, totalTime;
