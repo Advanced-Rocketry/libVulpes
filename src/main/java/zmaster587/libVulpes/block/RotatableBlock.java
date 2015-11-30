@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.block;
 
+import zmaster587.libVulpes.util.ZUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -13,28 +14,16 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class RotatableBlock extends Block {
 
-	protected IIcon front, back, sides, top, bottom;
+	protected IIcon front, rear, sides, top, bottom;
 
 	public RotatableBlock(Material par2Material) {
 		super(par2Material);
 	}
 	
-	
-	
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
-		int l = MathHelper.floor_double((double)(MathHelper.wrapAngleTo180_float(entity.rotationYaw) * 4.0F / 360.0F) + 0.5D) & 3;
 		
-		if(l == 0)
-			l = 2;
-		else if(l == 1)
-			l = 5;
-		else if(l == 2)
-			l = 3;
-		else
-			l = 4;
-		
-		world.setBlockMetadataWithNotify(x, y, z, l, 2);
+		world.setBlockMetadataWithNotify(x, y, z, ZUtils.getDirectionFacing(entity.rotationYaw), 2);
 	}
 	
 	public static ForgeDirection getFront(int meta) {
@@ -81,7 +70,7 @@ public class RotatableBlock extends Block {
 		else if(side == ForgeDirection.EAST)
 			return this.sides;
 		else if(side == ForgeDirection.SOUTH)
-			return this.back;
+			return this.rear;
 		else if(side == ForgeDirection.WEST)
 			return this.sides;
 		

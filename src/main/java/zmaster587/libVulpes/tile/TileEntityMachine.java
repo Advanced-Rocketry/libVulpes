@@ -12,7 +12,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class TileEntityMachine extends TileEntity implements ISidedInventory  {
 	
@@ -39,7 +38,7 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 	}
 	
 	protected boolean getIsRunning() {
-		return (this.blockMetadata & 8) == 8;
+		return (this.getBlockMetadata() & 8) == 8;
 	}
 	
 	@Override

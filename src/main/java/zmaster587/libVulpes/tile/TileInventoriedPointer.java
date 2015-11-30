@@ -6,7 +6,7 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileInventoriedPointer extends TileEntityPointer implements IInventoryMultiblock, ISidedInventory {
+public class TileInventoriedPointer extends TilePointer implements IInventoryMultiblock, ISidedInventory {
 
 	@Override
 	public int getSizeInventory() {

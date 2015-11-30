@@ -1,12 +1,12 @@
 package zmaster587.libVulpes.tile;
 
-import net.minecraft.item.ItemStack;
+import zmaster587.libVulpes.api.IUniversalEnergy;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
 
-public abstract class TileEntityRFMachine extends TileEntityMachine implements IEnergyHandler {
+public abstract class TileEntityRFMachine extends TileEntityMachine implements IEnergyHandler, IUniversalEnergy {
 
 	protected EnergyStorage energy;
 	
@@ -46,6 +46,7 @@ public abstract class TileEntityRFMachine extends TileEntityMachine implements I
 	
 	public boolean hasEnergy() { return energy.getEnergyStored() > 0; }
 
+	@Override
 	public void setEnergyStored(int value) {
 		energy.setEnergyStored(value);
 	}
@@ -62,9 +63,6 @@ public abstract class TileEntityRFMachine extends TileEntityMachine implements I
 
 	@Override
 	public boolean canConnectEnergy(ForgeDirection arg0) {
-		// TODO Auto-generated method stub
 		return true;
 	}
-	
-	public void onTileChange() {}
 }

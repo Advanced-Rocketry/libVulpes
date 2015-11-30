@@ -4,7 +4,7 @@ import net.minecraft.tileentity.TileEntity;
 
 public interface IMultiblock {
 	
-	public boolean isComplete();
+	public boolean hasMaster();
 	
 	public TileEntity getMasterBlock();
 	

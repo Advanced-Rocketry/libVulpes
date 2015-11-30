@@ -1,6 +1,6 @@
 package zmaster587.libVulpes.util;
 
-public class MathVulpes {
+public class VulpineMath {
 	public static double log2 = Math.log(2);
 	
 	public static double log2(double in) {return Math.log(in)/log2;}
@@ -15,6 +15,19 @@ public class MathVulpes {
 		}
 		
 		return largestGCF;
+	}
+	
+	public static boolean isBetween(int number, int A, int B) {
+		if(A > B) {
+			int buffer = A;
+			A = B;
+			B = buffer;
+		}
+		return A <= number && number <= B;
+	}
+	
+	public static boolean isBetween(double number, double A, double B) {
+		return A <= number  && number <= B;
 	}
 	
 	public static int greatestCommonFactor(int numA, int numB) {

@@ -104,7 +104,7 @@ public abstract class RotatableMachineBlock extends RotatableBlock {
 		else if(side == ForgeDirection.EAST)
 			return this.sides;
 		else if(side == ForgeDirection.SOUTH)
-			return this.back;
+			return this.rear;
 		else if(side == ForgeDirection.WEST)
 			return this.sides;
 		
