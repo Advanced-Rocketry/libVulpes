@@ -18,7 +18,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "0.0.6b"
+version = "0.0.6c"
 group= "zmaster587.libVulpes" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "LibVulpes"
 

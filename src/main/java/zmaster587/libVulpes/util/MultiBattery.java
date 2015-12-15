@@ -55,7 +55,7 @@ public class MultiBattery implements IUniversalEnergy {
 	public int acceptEnergy(int amt, boolean simulate) {
 		int energyRecieved = 0;
 		for(IUniversalEnergy battery : batteries)
-			energyRecieved += battery.acceptEnergy(amt, simulate);
+			energyRecieved += battery.acceptEnergy(amt - energyRecieved, simulate);
 		return energyRecieved;
 	}
 
