@@ -26,7 +26,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid="libVulpes",name="Vulpes library",version="0.0.6",useMetadata=true, dependencies="before:gregtech;after:CoFHCore")
+@Mod(modid="libVulpes",name="Vulpes library",version="0.0.6d",useMetadata=true, dependencies="before:gregtech;after:CoFHCore")
 public class LibVulpes {
 
 	public static boolean debugMode;
