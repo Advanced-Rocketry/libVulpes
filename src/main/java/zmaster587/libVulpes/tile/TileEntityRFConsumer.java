@@ -1,12 +1,10 @@
 package zmaster587.libVulpes.tile;
 
 import zmaster587.libVulpes.api.IUniversalEnergy;
-import zmaster587.libVulpes.util.MultiBattery;
 import zmaster587.libVulpes.util.UniversalBattery;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
 
 public abstract class TileEntityRFConsumer extends TileEntity implements IEnergyHandler, IUniversalEnergy {

@@ -61,7 +61,7 @@ public class LibVulpes {
 		if((forceLove || ic2MinerGTOre))
 			MinecraftForge.EVENT_BUS.register(new Events());
 		
-		itemLinker = new ItemLinker().setUnlocalizedName("Linker").setCreativeTab(CreativeTabs.tabAllSearch).setTextureName("libvulpes:Linker");
+		itemLinker = new ItemLinker().setUnlocalizedName("Linker").setCreativeTab(CreativeTabs.tabTransport).setTextureName("libvulpes:Linker");
 		
 		GameRegistry.registerItem(itemLinker, "Linker");
 	}
