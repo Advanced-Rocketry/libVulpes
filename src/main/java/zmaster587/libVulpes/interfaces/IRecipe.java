@@ -1,6 +1,6 @@
 package zmaster587.libVulpes.interfaces;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -11,9 +11,9 @@ public interface IRecipe {
 	
 	public List<FluidStack> getFluidOutputs();
 	
-	public ArrayList<ItemStack> getIngredients();
+	public LinkedList<LinkedList<ItemStack>> getIngredients();
 	
-	public ArrayList<FluidStack> getFluidIngredients();
+	public List<FluidStack> getFluidIngredients();
 	
 	public int getTime();
 	

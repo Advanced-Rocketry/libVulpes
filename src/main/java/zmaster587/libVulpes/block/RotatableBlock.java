@@ -20,6 +20,7 @@ public class RotatableBlock extends Block {
 		super(par2Material);
 	}
 	
+	
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
 		
