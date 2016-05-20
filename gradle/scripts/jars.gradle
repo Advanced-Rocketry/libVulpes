@@ -35,7 +35,7 @@ ext.sharedManifest = manifest {
 task deobfJar(type: Jar) {
      from sourceSets.main.output
      //if project name is BBM-Dev it makes the deobf jar deobf-dev if not its just deobf
-     if (project.getProperty("bambooshortPlanName") == "BBM-Dev") classifier = "deobf-dev"
+     if (project.hasProperty("bambooshortPlanName") && project.getProperty("bambooshortPlanName") == "BBM-Dev") classifier = "deobf-dev"
      else classifier = "deobf"
      //sets where the jars go to.
      destinationDir = file 'output'
@@ -47,7 +47,7 @@ task deobfJar(type: Jar) {
 
 jar {
      //if project has the property BBM-Dev then it appends dev to indicate the dev branch
-     if (project.getProperty("bambooshortPlanName") == "BBM-Dev") classifier = "dev-universal"
+     if (project.hasProperty("bambooshortPlanName") && project.getProperty("bambooshortPlanName") == "BBM-Dev") classifier = "dev-universal"
      else classifier = "universal"
      //sets where the jars go to.
      destinationDir = file 'output'
