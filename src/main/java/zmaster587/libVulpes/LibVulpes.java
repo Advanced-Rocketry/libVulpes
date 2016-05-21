@@ -8,6 +8,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import zmaster587.libVulpes.item.ItemLinker;
+import zmaster587.libVulpes.tile.TileEntityRFConsumer;
+import zmaster587.libVulpes.tile.TileEntityRFMachine;
 import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.tile.TileInventoriedPointer;
 import cpw.mods.fml.common.Mod;
@@ -25,6 +27,7 @@ public class LibVulpes {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		
 		GameRegistry.registerTileEntity(TilePointer.class, "TilePointer");
 		GameRegistry.registerTileEntity(TileInventoriedPointer.class, "TileInvPointer");
 		

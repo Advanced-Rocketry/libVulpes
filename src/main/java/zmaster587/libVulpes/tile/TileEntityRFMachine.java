@@ -6,6 +6,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
 
+
 public abstract class TileEntityRFMachine extends TileEntityMachine implements IEnergyHandler, IUniversalEnergy {
 
 	protected EnergyStorage energy;
