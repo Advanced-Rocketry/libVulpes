@@ -11,4 +11,6 @@ public interface IMultiblock {
 	public void setComplete(int x, int y, int z);
 	
 	public void setIncomplete();
+	
+	public void setMasterBlock(int x, int y, int z);
 }

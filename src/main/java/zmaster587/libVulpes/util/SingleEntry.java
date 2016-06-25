@@ -30,5 +30,12 @@ public class SingleEntry<K, V> implements Entry<K, V> {
 		this.value = value;
 		return ret;
 	}
+	@Override
+	public boolean equals(Object paramObject) {
+		if(paramObject instanceof SingleEntry<?, ?>) {
+			return ((SingleEntry) paramObject).getKey().equals(this.getKey()) && ((SingleEntry) paramObject).getValue().equals(this.getValue());
+		}
+		return super.equals(paramObject);
+	}
 
 }

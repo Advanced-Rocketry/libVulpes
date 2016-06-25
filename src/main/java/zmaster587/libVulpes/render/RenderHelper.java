@@ -226,6 +226,19 @@ public class RenderHelper {
         }
 	}
 	
+	public static void renderBlockWithEndPointers(Tessellator tess, double radius, double x1, double y1, double z1, double x2, double y2, double z2) {
+		double buffer;
+		
+
+		
+		//renderBottomFaceEndpoints(tess, radius, x1, y1 - radius/2d, z1, x2, y2 - radius/2d, z2);
+		renderTopFaceEndpoints(tess, radius, x1, y1 + radius/2d, z1, x2, y2 + radius/2d, z2);
+		//renderNorthFaceEndpoints(tess, radius, x1, y1, z1 + radius/2d, x2, y2, z2 + radius/2d);
+		//renderSouthFaceEndpoints(tess, radius, x1, y1, z1 - radius/2d, x2, y2, z2 - radius/2d);
+		//renderEastFaceEndpoints(tess, radius, x1 + radius/2d, y1, z1, x2 + radius/2d, y2, z2);
+		//renderWestFaceEndpoints(tess, radius, x1 - radius/2d, y1, z1, x2 - radius/2d, y2, z2);
+	}
+	
 	public static void renderCrossXZ(Tessellator tess, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
 		renderTopFaceEndpoints(tess, width, xMin, yMin, zMin, xMax, yMax, zMax);
 		renderBottomFaceEndpoints(tess, width, xMin, yMin, zMin, xMax, yMax, zMax);
@@ -310,12 +323,28 @@ public class RenderHelper {
 	}
 	
 	
+	public static void renderEastFaceEndpoints(Tessellator tess, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
+		//east
+		tess.addVertex(xMax, yMax + width, zMin);
+		tess.addVertex(xMax, yMax - width, zMax);
+		tess.addVertex(xMax, yMin - width, zMax);
+		tess.addVertex(xMax, yMin + width, zMin);
+	}
+	
 	public static void renderWestFace(Tessellator tess, double xMin, double yMin, double zMin, double yMax, double zMax) {
 		//west
 		tess.addVertex(xMin, yMin, zMin);
 		tess.addVertex(xMin, yMin, zMax);
 		tess.addVertex(xMin, yMax, zMax);
 		tess.addVertex(xMin, yMax, zMin);
+	}
+	
+	public static void renderWestFaceEndpoints(Tessellator tess, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
+		//west
+		tess.addVertex(xMin, yMin + width, zMin);
+		tess.addVertex(xMin, yMin - width, zMax);
+		tess.addVertex(xMin, yMax - width, zMax);
+		tess.addVertex(xMin, yMax + width, zMin);
 	}
 	
 	public static void renderTopFaceWithUV(Tessellator tess, double yMax, double xMin, double zMin, double xMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
@@ -377,6 +406,6 @@ public class RenderHelper {
 		renderSouthFaceWithUV(tess, zMax, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax);
 		renderEastFaceWithUV(tess, xMax, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax);
 		renderWestFaceWithUV(tess, xMin, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax);
-		renderBottomFaceWithUV(tess, yMax, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
+		renderBottomFaceWithUV(tess, yMin, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
 	}
 }
