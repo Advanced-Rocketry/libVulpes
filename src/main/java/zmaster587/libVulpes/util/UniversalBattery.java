@@ -22,11 +22,11 @@ public class UniversalBattery implements IUniversalEnergy {
 			boolean simulate) {
 
 		if(maxReceive > maxEnergy - energy) {
-			
+			int returnAmt = maxEnergy - energy;
 			if(!simulate)
 				energy = maxEnergy;
 			
-			return maxEnergy - energy;
+			return returnAmt;
 		}
 		
 		if(!simulate)
