@@ -39,9 +39,10 @@ public class UniversalBattery implements IUniversalEnergy {
 	public int extractEnergy(int maxExtract,
 			boolean simulate) {
 		if(maxExtract > energy) {
+			int ret = energy;
 			if(!simulate)
 				energy = 0;
-			return energy;
+			return ret;
 		}
 		
 		if(!simulate)
