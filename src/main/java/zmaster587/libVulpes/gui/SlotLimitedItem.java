@@ -6,16 +6,16 @@ import net.minecraft.item.ItemStack;
 
 public class SlotLimitedItem extends Slot {
 	
-	IlimitedItemSlotEntity tile;
+	IInventory tile;
 	
-	public SlotLimitedItem(IInventory inventory, int slotIndex, int x, int y, IlimitedItemSlotEntity entity) {
+	public SlotLimitedItem(IInventory inventory, int slotIndex, int x, int y) {
 		super(inventory, slotIndex, x, y);
-		this.tile = entity;
+		this.tile = inventory;
 	}
 	
 	@Override
 	public boolean isItemValid(ItemStack stack)
 	{
-		return tile.isItemValidForLimitedSlot(this.slotNumber, stack);
+		return tile.isItemValidForSlot(this.slotNumber, stack);
 	}
 }
