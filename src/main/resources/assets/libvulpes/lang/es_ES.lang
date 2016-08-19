@@ -1,0 +1,12 @@
+tile.hatch.0.name=Entrada
+tile.hatch.1.name=Salida
+tile.hatch.2.name=Entrada de líquidos
+tile.hatch.3.name=Salida de líquidos
+
+tile.rfBattery.name=Enchufe de flujo de redstone (RF)
+tile.IC2Plug.name=Enchufe de IC2 (EU)
+tile.structureMachine.name=Estructura de máquina
+tile.blockGenericMachine.name=Bloque de control de máquinas
+
+
+item.holoProjector.name=Proyector de hologramas

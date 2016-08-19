@@ -1,0 +1,10 @@
+tile.hatch.0.name=Входной люк
+tile.hatch.1.name=Выходной люк
+tile.hatch.2.name=Элемен приёма жидкостей
+tile.hatch.3.name=Элемент вывода жидкостей
+tile.rfBattery.name=RF-разъём
+tile.IC2Plug.name=IC2(EU)-разъём
+tile.structureMachine.name=Структурный блок
+tile.blockGenericMachine.name=Блок контроллера
+
+item.holoProjector.name=Голо-проектор

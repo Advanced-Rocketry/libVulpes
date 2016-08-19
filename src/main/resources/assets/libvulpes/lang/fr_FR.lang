@@ -1,0 +1,9 @@
+tile.hatch.0.name=Écoutille d'entrée
+tile.hatch.1.name=Écoutille de sortie
+tile.hatch.4.name=Écoutille d'entrée de fluide
+tile.hatch.5.name=Écoutille de sortie de fluide
+tile.rfBattery.name=Interface Redstone Flux(RF)
+tile.IC2Plug.name=Interface IC2(EU)
+tile.structureMachine.name=Structure de machine
+
+item.holoProjector.name=Holo-projecteur

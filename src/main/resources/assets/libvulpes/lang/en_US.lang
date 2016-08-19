@@ -1,1 +1,14 @@
+itemGRoup.multiBlock=Multi Block Machine Parts
 item.Linker.name=Linker
+
+tile.hatch.0.name=Input Hatch
+tile.hatch.1.name=Output Hatch
+tile.hatch.2.name=Fluid Input Hatch
+tile.hatch.3.name=Fluid Output Hatch
+
+tile.rfBattery.name=Redstone Flux(RF) Input Plug
+tile.IC2Plug.name=IC2 Plug(EU)
+tile.structureMachine.name=Machine Structure
+tile.blockGenericMachine.name=Machine Controller Block
+
+item.holoProjector.name=Holo-Projector
