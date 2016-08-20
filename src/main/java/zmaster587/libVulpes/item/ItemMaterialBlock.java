@@ -2,8 +2,8 @@ package zmaster587.libVulpes.item;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import zmaster587.advancedRocketry.tile.TileMaterial;
-import zmaster587.libVulpes.api.material.MaterialRegistry;
+import zmaster587.libVulpes.api.material.Material;
+import zmaster587.libVulpes.tile.TileMaterial;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlockWithMetadata;
@@ -27,7 +27,7 @@ public class ItemMaterialBlock extends ItemBlockWithMetadata {
 		if(succeeded) {
 			TileEntity tile = world.getTileEntity(x, y, z);
 			if(tile instanceof TileMaterial) {
-				((TileMaterial)tile).setMaterial(MaterialRegistry.Materials.values()[stack.getItemDamage()]);
+				((TileMaterial)tile).setMaterial(Material.Materials.values()[stack.getItemDamage()]);
 			}
 		}
 
@@ -44,11 +44,11 @@ public class ItemMaterialBlock extends ItemBlockWithMetadata {
 		return StatCollector.translateToLocal("material." + getMaterial(itemstack).getUnlocalizedName() + ".name") + " " + StatCollector.translateToLocal(this.getUnlocalizedName());
 	}
 	
-	public MaterialRegistry.Materials getMaterial(ItemStack stack) {
-		if(stack.getItemDamage() < 0 || stack.getItemDamage() >= MaterialRegistry.Materials.values().length)
-			return MaterialRegistry.Materials.values()[0];
+	public Material.Materials getMaterial(ItemStack stack) {
+		if(stack.getItemDamage() < 0 || stack.getItemDamage() >= Material.Materials.values().length)
+			return Material.Materials.values()[0];
 
-		return MaterialRegistry.Materials.values()[stack.getItemDamage()];
+		return Material.Materials.values()[stack.getItemDamage()];
 	}
 
 	@Override

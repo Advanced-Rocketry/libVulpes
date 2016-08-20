@@ -5,5 +5,34 @@ tile.hatch.5.name=Écoutille de sortie de fluide
 tile.rfBattery.name=Interface Redstone Flux(RF)
 tile.IC2Plug.name=Interface IC2(EU)
 tile.structureMachine.name=Structure de machine
+tile.coil.silicon.name=Bobine en silicone
+tile.coil.copper.name=Bobine en cuivre
+tile.coil.tin.name=Bobine en étain
+tile.coil.steel.name=Bobine en en acier
+tile.coil=Bobine
+tile.Copper.name=Minerai de cuivre
+tile.Tin.name=Minerai d'étain
+tile.Rutile.name=Minerai de rutile
 
 item.holoProjector.name=Holo-projecteur
+
+material.Gold.name=Or
+material.Iron.name=Fer
+material.Silicon.name=Silicone
+material.Copper.name=Cuivre
+material.Tin.name=Étain
+material.Steel.name=Acier
+material.Titanium.name=Titane
+material.Rutile.name=Rutile
+
+type.crystal.name=Cristal
+type.dust.name=Poussière
+type.boule.name=Barreau
+type.ingot.name=Lingot
+type.nugget.name=Pépite
+type.stick.name=Baton
+type.plate.name=Plaque
+type.ore.name=Minerai
+type.block.name=Bloc
+type.coil.name=Bobine
+type.fan.name=Ventilateur

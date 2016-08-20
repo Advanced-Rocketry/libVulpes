@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.logging.log4j.Logger;
 
 import codechicken.nei.api.API;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
@@ -20,6 +21,9 @@ import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.libVulpes.common.CommonProxy;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.LibVulpesItems;
+import zmaster587.libVulpes.api.material.AllowedProducts;
+import zmaster587.libVulpes.api.material.Material.Materials;
+import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.BlockAlphaTexture;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.BlockPhantom;
@@ -81,6 +85,16 @@ public class LibVulpes {
 		}
 	};
 
+	public static CreativeTabs tabLibVulpesOres = new CreativeTabs("advancedRocketryOres") {
+
+		@Override
+		public Item getTabIconItem() {
+			return Materials.COPPER.getProduct(AllowedProducts.getProductByName("ORE")).getItem();
+		}
+	};
+
+	public static MaterialRegistry materialRegistry = new MaterialRegistry();
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
@@ -99,17 +113,15 @@ public class LibVulpes {
 		PacketHandler.addDiscriminator(PacketEntity.class);
 		PacketHandler.addDiscriminator(PacketChangeKeyState.class);
 
-
-
 		//Register Items
-		itemLinker = new ItemLinker().setUnlocalizedName("Linker").setCreativeTab(CreativeTabs.tabTransport).setTextureName("libvulpes:Linker");
+		itemLinker = new ItemLinker().setUnlocalizedName("Linker").setCreativeTab(tabMultiblock).setTextureName("libvulpes:Linker");
 		LibVulpesItems.itemBattery = new ItemIngredient(1).setUnlocalizedName("libvulpes:battery").setCreativeTab(tabMultiblock);
 		LibVulpesItems.itemHoloProjector = new ItemProjector().setUnlocalizedName("holoProjector").setTextureName("advancedRocketry:holoProjector").setCreativeTab(tabMultiblock);
 
 		GameRegistry.registerItem(itemLinker, "Linker");
 		GameRegistry.registerItem(LibVulpesItems.itemBattery, LibVulpesItems.itemBattery.getUnlocalizedName());
 		GameRegistry.registerItem(LibVulpesItems.itemHoloProjector, LibVulpesItems.itemHoloProjector.getUnlocalizedName());
-		
+
 
 		//Register Blocks
 		LibVulpesBlocks.blockPhantom = new BlockPhantom(Material.circuits).setBlockName("blockPhantom");
@@ -151,6 +163,38 @@ public class LibVulpes {
 
 		//Ore dict stuff
 		OreDictionary.registerOre("battery", new ItemStack(LibVulpesItems.itemBattery,1,0));
+
+		/*DUST,
+		INGOT,
+		CRYSTAL,
+		BOULE,
+		NUGGET,
+		COIL(true, AdvancedRocketryBlocks.blockCoil),
+		PLATE,
+		STICK,
+		BLOCK(true, LibVulpesBlocks.blockMetal),
+		ORE(true, LibVulpesBlocks.blockOre),
+		FAN,
+		SHEET,
+		GEAR;*/
+
+		//Register allowedProducts
+		AllowedProducts.registerProduct("DUST");
+		AllowedProducts.registerProduct("INGOT");
+		AllowedProducts.registerProduct("CRYSTAL");
+		AllowedProducts.registerProduct("BOULE");
+		AllowedProducts.registerProduct("NUGGET");
+		AllowedProducts.registerProduct("COIL", true);
+		AllowedProducts.registerProduct("PLATE");
+		AllowedProducts.registerProduct("STICK");
+		AllowedProducts.registerProduct("BLOCK", true);
+		AllowedProducts.registerProduct("ORE", true);
+		AllowedProducts.registerProduct("FAN");
+		AllowedProducts.registerProduct("SHEET");
+		AllowedProducts.registerProduct("GEAR");
+
+		materialRegistry.registerOres(tabLibVulpesOres);
+		zmaster587.libVulpes.api.material.Material.Materials.registry = materialRegistry;
 	}
 
 	@EventHandler
@@ -228,7 +272,7 @@ public class LibVulpes {
 				else
 					mapping.remap(Item.getItemFromBlock(LibVulpesBlocks.blockPhantom));
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:" + LibVulpesItems.itemHoloProjector.getUnlocalizedName())) {
 				mapping.remap(LibVulpesItems.itemHoloProjector);
 			}
@@ -275,6 +319,68 @@ public class LibVulpes {
 					} else
 						mapping.remap(Item.getItemFromBlock(LibVulpesBlocks.blockIC2Plug));
 				}
+			}
+
+			if(mapping.name.equalsIgnoreCase("advancedrocketry:metal0")) {
+				if(mapping.type == mapping.type.BLOCK) {
+					mapping.remap(Block.getBlockFromItem(Materials.COPPER.getProduct(AllowedProducts.getProductByName("BLOCK")).getItem()));
+				} else
+					mapping.remap(Materials.COPPER.getProduct(AllowedProducts.getProductByName("BLOCK")).getItem());
+			}
+
+			if(mapping.name.equalsIgnoreCase("advancedrocketry:coil0")) {
+				if(mapping.type == mapping.type.BLOCK) {
+					mapping.remap(Block.getBlockFromItem(Materials.COPPER.getProduct(AllowedProducts.getProductByName("COIL")).getItem()));
+				} else
+					mapping.remap(Materials.COPPER.getProduct(AllowedProducts.getProductByName("COIL")).getItem());
+
+			}
+
+			if(mapping.name.equalsIgnoreCase("advancedrocketry:ore0")) {
+				if(mapping.type == mapping.type.BLOCK) {
+					mapping.remap(Block.getBlockFromItem(Materials.COPPER.getProduct(AllowedProducts.getProductByName("ORE")).getItem()));
+				} else
+					mapping.remap(Materials.COPPER.getProduct(AllowedProducts.getProductByName("ORE")).getItem());
+			}
+			
+			if(mapping.name.equalsIgnoreCase("advancedrocketry:productingot")) {
+				mapping.remap(Materials.COPPER.getProduct(AllowedProducts.getProductByName("INGOT")).getItem());
+			}
+			
+			if(mapping.name.equalsIgnoreCase("advancedrocketry:productboule")) {
+				mapping.remap(Materials.SILICON.getProduct(AllowedProducts.getProductByName("BOULE")).getItem());
+			}
+			
+			if(mapping.name.equalsIgnoreCase("advancedrocketry:productgear")) {
+				mapping.remap(Materials.TITANIUM.getProduct(AllowedProducts.getProductByName("GEAR")).getItem());
+			}
+			
+			if(mapping.name.equalsIgnoreCase("advancedrocketry:productplate")) {
+				mapping.remap(Materials.TITANIUM.getProduct(AllowedProducts.getProductByName("PLATE")).getItem());
+			}
+			
+			if(mapping.name.equalsIgnoreCase("advancedrocketry:productdust")) {
+				mapping.remap(Materials.TITANIUM.getProduct(AllowedProducts.getProductByName("DUST")).getItem());
+			}
+			
+			if(mapping.name.equalsIgnoreCase("advancedrocketry:productrod")) {
+				mapping.remap(Materials.TITANIUM.getProduct(AllowedProducts.getProductByName("STICK")).getItem());
+			}
+			
+			if(mapping.name.equalsIgnoreCase("advancedrocketry:productfan")) {
+				mapping.remap(Materials.STEEL.getProduct(AllowedProducts.getProductByName("FAN")).getItem());
+			}
+			
+			if(mapping.name.equalsIgnoreCase("advancedrocketry:productcrystal")) {
+				mapping.remap(Materials.DILITHIUM.getProduct(AllowedProducts.getProductByName("CRYSTAL")).getItem());
+			}
+			
+			if(mapping.name.equalsIgnoreCase("advancedrocketry:productnugget")) {
+				mapping.remap(Materials.COPPER.getProduct(AllowedProducts.getProductByName("NUGGET")).getItem());
+			}
+			
+			if(mapping.name.equalsIgnoreCase("advancedrocketry:productsheet")) {
+				mapping.remap(Materials.TITANIUM.getProduct(AllowedProducts.getProductByName("SHEET")).getItem());
 			}
 		}
 	}

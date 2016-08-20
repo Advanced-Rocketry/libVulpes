@@ -1,6 +1,8 @@
 package zmaster587.libVulpes.api.material;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -18,23 +20,31 @@ public class AllowedProducts {
 		product.flagValue = currentFlagValue;
 		product.name = name;
 		currentFlagValue++;
-		map.put(name, new AllowedProducts());
+		map.put(name, product);
+		list.add(product);
 	}
 
-	public static void registerProduct(String name, boolean isBlock, List<Block> blockArray) {
-		AllowedProducts product = new AllowedProducts(isBlock, blockArray);
+	public static void registerProduct(String name, boolean isBlock) {
+		AllowedProducts product = new AllowedProducts(isBlock);
 		product.flagValue = currentFlagValue;
 		product.name = name;
 		currentFlagValue++;
-		map.put(name, new AllowedProducts());
+		MaterialRegistry.productBlockListMapping.put(product, new ArrayList<Block>());
+		map.put(name, product);
+		list.add(product);
 	}
 	
 	public static AllowedProducts getProductByName(String name) {
 		return map.get(name);
 	}
 	
+	public static List<AllowedProducts> getAllAllowedProducts() {
+		return list;
+	}
+	
 	private static short currentFlagValue = 1;
 	private static HashMap<String, AllowedProducts> map = new HashMap<String, AllowedProducts>();
+	private static List<AllowedProducts> list = new LinkedList<AllowedProducts>();
 	/*DUST,
 	INGOT,
 	CRYSTAL,
@@ -52,19 +62,21 @@ public class AllowedProducts {
 	short flagValue = 0;
 	String name;
 	boolean isBlock;
-	List<Block> blockArray;
 
 	private AllowedProducts() {
 		this.isBlock = false;
 	}
 
-	private AllowedProducts(boolean isBlock,List<Block> blockArray) {
+	private AllowedProducts(boolean isBlock) {
 		this.isBlock = isBlock;
-		this.blockArray = blockArray;
 	}
 
 	public int getFlagValue() {
 		return 1 << flagValue;
+	}
+	
+	public int ordinal() {
+		return flagValue-1;
 	}
 
 	/**
@@ -85,4 +97,6 @@ public class AllowedProducts {
 	public boolean isBlock() {
 		return isBlock;
 	}
+	
+	public String name() { return name; }
 }

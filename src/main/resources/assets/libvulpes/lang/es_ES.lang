@@ -2,11 +2,41 @@ tile.hatch.0.name=Entrada
 tile.hatch.1.name=Salida
 tile.hatch.2.name=Entrada de líquidos
 tile.hatch.3.name=Salida de líquidos
-
 tile.rfBattery.name=Enchufe de flujo de redstone (RF)
 tile.IC2Plug.name=Enchufe de IC2 (EU)
 tile.structureMachine.name=Estructura de máquina
 tile.blockGenericMachine.name=Bloque de control de máquinas
+tile.coil.silicon.name=Bobina de silicio
+tile.coil.copper.name=Bobina de cobre
+tile.coil.tin.name=Bobina de estaño
+tile.coil.steel.name=Bobina de acero
+tile.coil=Bobina
+tile.Copper.name=Mena de cobre
+tile.Tin.name=Mena de estaño
+tile.Rutile.name=Mena de rutilo
 
 
 item.holoProjector.name=Proyector de hologramas
+
+material.Gold.name=Oro
+material.Iron.name=Hierro
+material.Silicon.name=Silicio
+material.Copper.name=Cobre
+material.Tin.name=Aluminio
+material.Steel.name=Acero
+material.Titanium.name=Titanio
+material.Rutile.name=Rutilo
+
+type.crystal.name=Cristal
+type.dust.name=Polvo
+type.boule.name=Boulé
+type.ingot.name=Lingote
+type.nugget.name=Pepita
+type.stick.name=Vara
+type.plate.name=Placa
+type.ore.name=Mena
+type.block.name=Bloque
+type.coil.name=Bobina
+type.fan.name=Ventilador
+type.sheet.name=Lámina
+type.gear.name=Engranaje

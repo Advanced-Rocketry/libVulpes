@@ -6,5 +6,36 @@ tile.rfBattery.name=RF-разъём
 tile.IC2Plug.name=IC2(EU)-разъём
 tile.structureMachine.name=Структурный блок
 tile.blockGenericMachine.name=Блок контроллера
+tile.coil.silicon.name=Кремниевая катушка
+tile.coil.copper.name=Медная катушка
+tile.coil.tin.name=Оловянная катушка
+tile.coil.steel.name=Стальная катушка
+tile.coil=Катушка
+tile.Copper.name=Медная руда
+tile.Tin.name=Оловянная руда
+tile.Rutile.name=Руда рутила
 
 item.holoProjector.name=Голо-проектор
+
+material.Gold.name=Золотой
+material.Iron.name=Железный
+material.Silicon.name=Кремниевый
+material.Copper.name=Медный
+material.Tin.name=Оловянный
+material.Steel.name=Стальной
+material.Titanium.name=Титановый
+material.Rutile.name=Рутиловый
+ 
+type.crystal.name=кристалл
+type.dust.name=порошок
+type.boule.name=буль
+type.ingot.name=слиток
+type.nugget.name=самородок
+type.stick.name=стержень
+type.plate.name=листок
+type.ore.name=руда
+type.block.name=блок
+type.coil.name=моток
+type.fan.name=пропеллер
+type.sheet.name=лист
+type.gear.name=механизм

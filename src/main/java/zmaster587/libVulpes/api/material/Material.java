@@ -2,41 +2,42 @@ package zmaster587.libVulpes.api.material;
 
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.LibVulpesItems;
-import zmaster587.libVulpes.api.material.MaterialRegistry.AllowedProducts;
-import zmaster587.libVulpes.api.material.MaterialRegistry.Materials;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class Material {
 	
 	public static enum Materials {
-		DILITHIUM("Dilithium", "pickaxe", 3, 0xddcecb, AllowedProducts.DUST.getFlagValue() | AllowedProducts.CRYSTAL.getFlagValue()),
-		IRON("Iron", "pickaxe", 1, 0xafafaf, AllowedProducts.SHEET.getFlagValue() | AllowedProducts.STICK.getFlagValue() | AllowedProducts.DUST.getFlagValue() | AllowedProducts.PLATE.getFlagValue(), false),
-		GOLD("Gold", "pickaxe", 1, 0xffff5d, AllowedProducts.DUST.getFlagValue() | AllowedProducts.PLATE.getFlagValue(), false),
-		SILICON("Silicon", "pickaxe", 1, 0x2c2c2b, AllowedProducts.INGOT.getFlagValue() | AllowedProducts.DUST.getFlagValue() | AllowedProducts.BOULE.getFlagValue() | AllowedProducts.NUGGET.getFlagValue() | AllowedProducts.PLATE.getFlagValue(), false),
-		COPPER("Copper", "pickaxe", 1, 0xd55e28, AllowedProducts.COIL.getFlagValue() | AllowedProducts.BLOCK.getFlagValue() | AllowedProducts.STICK.getFlagValue() | AllowedProducts.INGOT.getFlagValue() | AllowedProducts.NUGGET.getFlagValue() | AllowedProducts.DUST.getFlagValue() | AllowedProducts.PLATE.getFlagValue()),
-		TIN("Tin", "pickaxe", 1, 0xcdd5d8, AllowedProducts.BLOCK.getFlagValue() | AllowedProducts.PLATE.getFlagValue() | AllowedProducts.INGOT.getFlagValue() | AllowedProducts.NUGGET.getFlagValue() | AllowedProducts.DUST.getFlagValue()),
-		STEEL("Steel", "pickaxe", 1, 0x55555d, AllowedProducts.BLOCK.getFlagValue() | AllowedProducts.FAN.getFlagValue() | AllowedProducts.PLATE.getFlagValue() | AllowedProducts.INGOT.getFlagValue() | AllowedProducts.NUGGET.getFlagValue() | AllowedProducts.DUST.getFlagValue() | AllowedProducts.STICK.getFlagValue() | AllowedProducts.GEAR.getFlagValue() | AllowedProducts.SHEET.getFlagValue(), false),
-		TITANIUM("Titanium", "pickaxe", 1, 0xb2669e, AllowedProducts.PLATE.getFlagValue() | AllowedProducts.INGOT.getFlagValue() | AllowedProducts.NUGGET.getFlagValue() | AllowedProducts.DUST.getFlagValue() | AllowedProducts.STICK.getFlagValue() | AllowedProducts.BLOCK.getFlagValue() | AllowedProducts.GEAR.getFlagValue() | AllowedProducts.SHEET.getFlagValue(), false),
-		RUTILE("Rutile", "pickaxe", 1, 0xbf936a, AllowedProducts.ORE.getFlagValue(), new String[] {"Rutile", "Titanium"}),
-		ALUMINUM("Aluminum", "pickaxe", 1, 0xb3e4dc, AllowedProducts.BLOCK.getFlagValue() | AllowedProducts.INGOT.getFlagValue() | AllowedProducts.PLATE.getFlagValue() | AllowedProducts.SHEET.getFlagValue() | AllowedProducts.DUST.getFlagValue() | AllowedProducts.NUGGET.getFlagValue() | AllowedProducts.SHEET.getFlagValue());
+		DILITHIUM("Dilithium", "pickaxe", 3, 0xddcecb, AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("CRYSTAL").getFlagValue()),
+		IRON("Iron", "pickaxe", 1, 0xafafaf, AllowedProducts.getProductByName("SHEET").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue(), false),
+		GOLD("Gold", "pickaxe", 1, 0xffff5d, AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue(), false),
+		SILICON("Silicon", "pickaxe", 1, 0x2c2c2b, AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("BOULE").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue(), false),
+		COPPER("Copper", "pickaxe", 1, 0xd55e28, AllowedProducts.getProductByName("COIL").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue()),
+		TIN("Tin", "pickaxe", 1, 0xcdd5d8, AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue()),
+		STEEL("Steel", "pickaxe", 1, 0x55555d, AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("FAN").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("GEAR").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue(), false),
+		TITANIUM("Titanium", "pickaxe", 1, 0xb2669e, AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("GEAR").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue(), false),
+		RUTILE("Rutile", "pickaxe", 1, 0xbf936a, AllowedProducts.getProductByName("ORE").getFlagValue(), new String[] {"Rutile", "Titanium"}),
+		ALUMINUM("Aluminum", "pickaxe", 1, 0xb3e4dc, AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue());
 
 		String unlocalizedName, tool;
 		String[] oreDictNames;
 		int harvestLevel;
 		int allowedProducts;
 		int color;
-
+		//Hack assigning in libvulpes preinit
+		public static MaterialRegistry registry;
+		
 		private Materials(String unlocalizedName, String tool, int level, int color, int allowedProducts, boolean hasOre) {
-			this(unlocalizedName, tool, level, color, hasOre ? AllowedProducts.ORE.getFlagValue() | allowedProducts : allowedProducts, new String[] {unlocalizedName});
+			this(unlocalizedName, tool, level, color, hasOre ? AllowedProducts.getProductByName("ORE").getFlagValue() | allowedProducts : allowedProducts, new String[] {unlocalizedName});
 		}
 
 		private Materials(String unlocalizedName, String tool, int level, int color, int allowedProducts, MixedMaterial ... products) {
-			this(unlocalizedName, tool, level, color, allowedProducts | AllowedProducts.ORE.getFlagValue(), new String[] {unlocalizedName});
+			this(unlocalizedName, tool, level, color, allowedProducts | AllowedProducts.getProductByName("ORE").getFlagValue(), new String[] {unlocalizedName});
 		}
 
 		private Materials(String unlocalizedName, String tool, int level, int color, int allowedProducts) {
-			this(unlocalizedName, tool, level, color, allowedProducts | AllowedProducts.ORE.getFlagValue(), new String[] {unlocalizedName});
+			this(unlocalizedName, tool, level, color, allowedProducts | AllowedProducts.getProductByName("ORE").getFlagValue(), new String[] {unlocalizedName});
 		}
 
 		private Materials(String unlocalizedName, String tool, int level, int color, int allowedProducts, String[] oreDictNames) {
@@ -61,8 +62,13 @@ public class Material {
 		 * @return Itemstack representing the product of this material, or null if nonexistant
 		 */
 		public ItemStack getProduct(AllowedProducts product, int amount) {
+			/*ItemStack stack = OreDictionary.getOres(product.getName() + this.name()).get(0);
+			stack = stack.copy();
+			stack.stackSize = amount;
+			return stack;*/
+
 			if(product.isBlock()) {
-				return new ItemStack(product.blockArray.get(this.ordinal()/16), amount, getMeta());
+				return new ItemStack(registry.getBlockListForProduct(product).get(this.ordinal()/16), amount, getMeta());
 			}
 			return new ItemStack(LibVulpesItems.itemOreProduct[product.ordinal()], amount, getMeta());
 		}
@@ -116,7 +122,8 @@ public class Material {
 
 		@Deprecated
 		public Block getBlock() {
-			return LibVulpesBlocks.blockOre.get(this.ordinal()/16);
+			return registry.getBlockListForProduct(AllowedProducts.getProductByName("ORE")).get(this.ordinal()/16);
+			//return LibVulpesBlocks.blockOre.get(this.ordinal()/16);
 		}
 
 		/**

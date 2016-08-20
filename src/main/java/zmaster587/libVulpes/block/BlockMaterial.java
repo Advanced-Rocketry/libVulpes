@@ -3,10 +3,9 @@ package zmaster587.libVulpes.block;
 import java.util.ArrayList;
 import java.util.List;
 
-import zmaster587.advancedRocketry.tile.TileMaterial;
-import zmaster587.libVulpes.api.material.MaterialRegistry;
+import zmaster587.libVulpes.api.material.Material.Materials;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockStructure;
-import net.minecraft.block.material.Material;
+import zmaster587.libVulpes.tile.TileMaterial;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
@@ -25,7 +24,7 @@ public class BlockMaterial extends BlockMultiblockStructure {
 	String side, poles;
 	IIcon sideIcon, polesIcon;
 
-	public BlockMaterial(Material mat, String side, String poles) {
+	public BlockMaterial(net.minecraft.block.material.Material mat, String side, String poles) {
 		super(mat);
 		this.side = side;
 		this.poles = poles;
@@ -60,15 +59,15 @@ public class BlockMaterial extends BlockMultiblockStructure {
 
 	@Override
 	public int getRenderColor(int meta) {
-		if(meta > 0 && meta < MaterialRegistry.Materials.values().length )
-			return MaterialRegistry.Materials.values()[meta].getColor();
-		return MaterialRegistry.Materials.values()[0].getColor();
+		if(meta > 0 && meta < Materials.values().length )
+			return Materials.values()[meta].getColor();
+		return Materials.values()[0].getColor();
 	}
 
 	@Override
 	public void getSubBlocks(Item item, CreativeTabs tab,
 			List list) {
-		for(int i = 0; i < MaterialRegistry.Materials.values().length; i++) {
+		for(int i = 0; i < Materials.values().length; i++) {
 			list.add(new ItemStack(item, 1, i));
 		}
 	}
