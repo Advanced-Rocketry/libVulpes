@@ -209,10 +209,6 @@ public class LibVulpes {
 		if(Loader.isModLoaded("IC2")) {
 			GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockIC2Plug), LibVulpesBlocks.blockStructureBlock, IC2Items.getItem("mvTransformer"), LibVulpesItems.itemBattery);
 		}
-
-		//Hide stuff from NEI
-		API.hideItem(new ItemStack(LibVulpesBlocks.blockPlaceHolder));
-		API.hideItem(new ItemStack(LibVulpesBlocks.blockPhantom));
 	}
 
 	@EventHandler
