@@ -17,7 +17,7 @@ buildscript {
 apply plugin: 'forge'
 apply from: "gradle/scripts/getbuildnumber.gradle"
 minecraft {
-    version = "1.7.10-10.13.4.1492-1.7.10"
+    version = "1.7.10-10.13.4.1614-1.7.10"
     runDir = "eclipse/assets"
     replace "@MAJOR@", version_major
     replace "@MINOR@", version_minor
