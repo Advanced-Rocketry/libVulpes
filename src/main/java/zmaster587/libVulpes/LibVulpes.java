@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.apache.logging.log4j.Logger;
 
-import codechicken.nei.api.API;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
