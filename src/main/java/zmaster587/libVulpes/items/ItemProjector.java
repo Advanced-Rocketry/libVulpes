@@ -146,7 +146,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 					int globalZ = posZ + (x* direction.offsetX)  + (z*direction.offsetZ);
 					int globalY = -y + structure.length + posY - 1;
 
-					if((world.isAirBlock(globalX, globalY, globalZ) && block.get(0).getBlock().getMaterial() != Material.air) || world.getBlock(globalX, globalY, globalZ).isReplaceable(world, globalX, globalY, globalZ)) {
+					if((world.isAirBlock(globalX, globalY, globalZ) || world.getBlock(globalX, globalY, globalZ).isReplaceable(world, globalX, globalY, globalZ)) && block.get(0).getBlock().getMaterial() != Material.air) {
 						//block = (Block)structure[y][z][x];
 						world.setBlock(globalX, globalY, globalZ, LibVulpesBlocks.blockPhantom, block.get(0).getMeta(), 3);
 						TileEntity newTile = world.getTileEntity(globalX, globalY, globalZ);
