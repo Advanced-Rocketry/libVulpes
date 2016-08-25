@@ -1,8 +1,11 @@
 package zmaster587.libVulpes.api;
 
+import java.util.List;
+
 import zmaster587.libVulpes.client.ResourceIcon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -12,6 +15,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public interface IArmorComponent {
 	
@@ -39,6 +43,10 @@ public interface IArmorComponent {
 	public void onArmorDamaged(EntityLivingBase entity, ItemStack armorStack, ItemStack componentStack, DamageSource source, int damage);
 	
 	public boolean isAllowedInSlot(ItemStack componentStack, int targetSlot);
+
+	@SideOnly(Side.CLIENT)
+	public void renderScreen(ItemStack componentStack, List<ItemStack> modules,
+			RenderGameOverlayEvent event, Gui gui);
 	
 	/**
 	 * @param armorStack
@@ -46,4 +54,6 @@ public interface IArmorComponent {
 	 */
 	@SideOnly(Side.CLIENT)
 	public ResourceIcon getComponentIcon(ItemStack armorStack);
+
+
 }
