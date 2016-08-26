@@ -188,6 +188,9 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			
 			MovingObjectPosition pos = Minecraft.getMinecraft().objectMouseOver;
 			
+			if(pos.sideHit == 0)
+				setBasePosition(stack, pos.blockX - globalX, pos.blockY- tile.getStructure().length, pos.blockZ - globalZ);
+			else
 			setBasePosition(stack, pos.blockX - globalX, pos.blockY+1, pos.blockZ - globalZ);
 			setDirection(stack, dir.ordinal());
 

@@ -1,5 +1,7 @@
 package zmaster587.libVulpes.inventory.modules;
 
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
@@ -23,8 +25,10 @@ public class ModuleImage extends ModuleBase {
 			FontRenderer font) {
 		super.renderBackground(gui, x, y, mouseX, mouseY, font);
 		
+		GL11.glEnable(GL11.GL_BLEND);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(icon.getResourceLocation());
 		gui.drawTexturedModalRect(x + offsetX, y + offsetY, icon.getxLoc(), icon.getyLoc(), icon.getxSize(), icon.getySize());
+		GL11.glDisable(GL11.GL_BLEND);
 	}
 	
 }

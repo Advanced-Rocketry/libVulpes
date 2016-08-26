@@ -168,7 +168,7 @@ public class ModuleContainerPan extends ModuleBase {
 			moveContainerInterior(0, 20);
 		}
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void renderForeground(int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel,
@@ -178,7 +178,7 @@ public class ModuleContainerPan extends ModuleBase {
 		int d;
 		if((d = Mouse.getDWheel()) != 0)
 			onScroll(d);
-		
+
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
 		setUpScissor(gui, offsetX + guiOffsetX, guiOffsetY + offsetY, screenSizeX, screenSizeY);
@@ -280,7 +280,7 @@ public class ModuleContainerPan extends ModuleBase {
 			module.offsetY += deltaY;
 		}
 	}
-	
+
 	//DO the actual scrolling
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -323,9 +323,11 @@ public class ModuleContainerPan extends ModuleBase {
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		setUpScissor(gui, x + offsetX, y + offsetY, screenSizeX, screenSizeY);
 
-		gui.mc.getTextureManager().bindTexture(backdrop);
-		gui.drawTexturedModalRect(x + offsetX, y + offsetY, (int)(-0.1*currentPosX), (int)(-0.1*currentPosY), screenSizeX, screenSizeY);
-
+		if(backdrop != null) {
+			gui.mc.getTextureManager().bindTexture(backdrop);
+			gui.drawTexturedModalRect(x + offsetX, y + offsetY, (int)(-0.1*currentPosX), (int)(-0.1*currentPosY), screenSizeX, screenSizeY);
+		}
+		
 		for(GuiButton button : buttonList)
 			button.drawButton(gui.mc, mouseX, mouseY);
 

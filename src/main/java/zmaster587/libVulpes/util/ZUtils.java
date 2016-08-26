@@ -1,5 +1,9 @@
 package zmaster587.libVulpes.util;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
@@ -29,6 +33,18 @@ public class ZUtils {
 			l = 4;
 		
 		return l;
+	}
+	
+	public static List copyRandomElements(List fromList, int maxElements) {
+		
+		List returnList = new LinkedList();
+		List moveList = new LinkedList(fromList);
+		Random rand = new Random(System.nanoTime());
+		
+		for(int i = 0; i < maxElements && !moveList.isEmpty(); i++) {
+			returnList.add(moveList.remove(rand.nextInt(moveList.size())));
+		}
+		return returnList;
 	}
 	
 	/**
