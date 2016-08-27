@@ -1,4 +1,4 @@
-package zmaster587.libVulpes.item;
+package zmaster587.libVulpes.items;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -18,7 +18,7 @@ public class ItemMaterialBlock extends ItemBlockWithMetadata {
 		super(block,block);
 	}
 
-	@Override
+	/*@Override
 	public boolean placeBlockAt(ItemStack stack, EntityPlayer player,
 			World world, int x, int y, int z, int side, float hitX, float hitY,
 			float hitZ, int metadata) {
@@ -55,6 +55,6 @@ public class ItemMaterialBlock extends ItemBlockWithMetadata {
 	@SideOnly(Side.CLIENT)
 	public int getColorFromItemStack(ItemStack stack, int p_82790_2_) {
 		return getMaterial(stack).getColor();
-	}
+	}*/
 
 }

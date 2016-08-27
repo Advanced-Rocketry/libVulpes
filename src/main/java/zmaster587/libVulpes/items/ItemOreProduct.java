@@ -1,4 +1,4 @@
-package zmaster587.libVulpes.item;
+package zmaster587.libVulpes.items;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemOreProduct extends Item {
 
-	HashMap<Integer, Material.Materials> properties;
+	HashMap<Integer, Material> properties;
 	String outputType;
 
 	public ItemOreProduct(String outputType) {
@@ -27,10 +27,10 @@ public class ItemOreProduct extends Item {
 		setMaxDamage(0);
 		this.outputType = outputType;
 		setTextureName("libvulpes:" + outputType);
-		properties = new HashMap<Integer, Material.Materials>();
+		properties = new HashMap<Integer, Material>();
 	}
 
-	public void registerItem(int meta, Material.Materials ore) {
+	public void registerItem(int meta, Material ore) {
 		properties.put(meta, ore);
 		for(String oreDictName : ore.getOreDictNames())
 			OreDictionary.registerOre(outputType + oreDictName, new ItemStack(this, 1, meta));
@@ -41,7 +41,7 @@ public class ItemOreProduct extends Item {
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List itemList) {
 
-		for(Entry<Integer, Material.Materials> entry : properties.entrySet()) {
+		for(Entry<Integer, Material> entry : properties.entrySet()) {
 			itemList.add(new ItemStack(this, 1, entry.getKey()));
 		}
 	}

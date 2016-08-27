@@ -1,4 +1,4 @@
-package zmaster587.libVulpes.item;
+package zmaster587.libVulpes.items;
 
 import zmaster587.libVulpes.block.BlockOre;
 import zmaster587.libVulpes.block.INamedMetaBlock;

@@ -21,7 +21,6 @@ import zmaster587.libVulpes.common.CommonProxy;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.LibVulpesItems;
 import zmaster587.libVulpes.api.material.AllowedProducts;
-import zmaster587.libVulpes.api.material.Material.Materials;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.BlockAlphaTexture;
 import zmaster587.libVulpes.block.BlockMeta;
@@ -30,9 +29,9 @@ import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.block.multiblock.BlockMultiMachineBattery;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockPlaceHolder;
 import zmaster587.libVulpes.inventory.GuiHandler;
-import zmaster587.libVulpes.item.ItemBlockMeta;
-import zmaster587.libVulpes.item.ItemLinker;
+import zmaster587.libVulpes.items.ItemBlockMeta;
 import zmaster587.libVulpes.items.ItemIngredient;
+import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.items.ItemProjector;
 import zmaster587.libVulpes.network.PacketChangeKeyState;
 import zmaster587.libVulpes.network.PacketEntity;
@@ -88,7 +87,7 @@ public class LibVulpes {
 
 		@Override
 		public Item getTabIconItem() {
-			return Materials.COPPER.getProduct(AllowedProducts.getProductByName("ORE")).getItem();
+			return MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("ORE")).getItem();
 		}
 	};
 
@@ -191,9 +190,21 @@ public class LibVulpes {
 		AllowedProducts.registerProduct("FAN");
 		AllowedProducts.registerProduct("SHEET");
 		AllowedProducts.registerProduct("GEAR");
+		
+		//Register Ores
+		
+		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Dilithium", "pickaxe", 3, 0xddcecb, AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("CRYSTAL").getFlagValue()));
+		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Iron", "pickaxe", 1, 0xafafaf, AllowedProducts.getProductByName("SHEET").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue(), false));
+		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Gold", "pickaxe", 1, 0xffff5d, AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue(), false));
+		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Silicon", "pickaxe", 1, 0x2c2c2b, AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("BOULE").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue(), false));
+		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Copper", "pickaxe", 1, 0xd55e28, AllowedProducts.getProductByName("COIL").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue()));
+		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Tin", "pickaxe", 1, 0xcdd5d8, AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue()));
+		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Steel", "pickaxe", 1, 0x55555d, AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("FAN").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("GEAR").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue(), false));
+		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Titanium", "pickaxe", 1, 0xb2669e, AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("GEAR").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue(), false));
+		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Rutile", "pickaxe", 1, 0xbf936a, AllowedProducts.getProductByName("ORE").getFlagValue(), new String[] {"Rutile", "Titanium"}));
+		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Aluminum", "pickaxe", 1, 0xb3e4dc, AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue()));
 
 		materialRegistry.registerOres(tabLibVulpesOres);
-		zmaster587.libVulpes.api.material.Material.Materials.registry = materialRegistry;
 	}
 
 	@EventHandler
@@ -318,64 +329,64 @@ public class LibVulpes {
 
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:metal0")) {
 				if(mapping.type == mapping.type.BLOCK) {
-					mapping.remap(Block.getBlockFromItem(Materials.COPPER.getProduct(AllowedProducts.getProductByName("BLOCK")).getItem()));
+					mapping.remap(Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("BLOCK")).getItem()));
 				} else
-					mapping.remap(Materials.COPPER.getProduct(AllowedProducts.getProductByName("BLOCK")).getItem());
+					mapping.remap(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("BLOCK")).getItem());
 			}
 
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:coil0")) {
 				if(mapping.type == mapping.type.BLOCK) {
-					mapping.remap(Block.getBlockFromItem(Materials.COPPER.getProduct(AllowedProducts.getProductByName("COIL")).getItem()));
+					mapping.remap(Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem()));
 				} else
-					mapping.remap(Materials.COPPER.getProduct(AllowedProducts.getProductByName("COIL")).getItem());
+					mapping.remap(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("COIL")).getItem());
 
 			}
 
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:ore0")) {
 				if(mapping.type == mapping.type.BLOCK) {
-					mapping.remap(Block.getBlockFromItem(Materials.COPPER.getProduct(AllowedProducts.getProductByName("ORE")).getItem()));
+					mapping.remap(Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("ORE")).getItem()));
 				} else
-					mapping.remap(Materials.COPPER.getProduct(AllowedProducts.getProductByName("ORE")).getItem());
+					mapping.remap(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("ORE")).getItem());
 			}
 			
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:productingot")) {
-				mapping.remap(Materials.COPPER.getProduct(AllowedProducts.getProductByName("INGOT")).getItem());
+				mapping.remap(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("INGOT")).getItem());
 			}
 			
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:productboule")) {
-				mapping.remap(Materials.SILICON.getProduct(AllowedProducts.getProductByName("BOULE")).getItem());
+				mapping.remap(MaterialRegistry.getMaterialFromName("Silicon").getProduct(AllowedProducts.getProductByName("BOULE")).getItem());
 			}
 			
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:productgear")) {
-				mapping.remap(Materials.TITANIUM.getProduct(AllowedProducts.getProductByName("GEAR")).getItem());
+				mapping.remap(MaterialRegistry.getMaterialFromName("Titanium").getProduct(AllowedProducts.getProductByName("GEAR")).getItem());
 			}
 			
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:productplate")) {
-				mapping.remap(Materials.TITANIUM.getProduct(AllowedProducts.getProductByName("PLATE")).getItem());
+				mapping.remap(MaterialRegistry.getMaterialFromName("Titanium").getProduct(AllowedProducts.getProductByName("PLATE")).getItem());
 			}
 			
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:productdust")) {
-				mapping.remap(Materials.TITANIUM.getProduct(AllowedProducts.getProductByName("DUST")).getItem());
+				mapping.remap(MaterialRegistry.getMaterialFromName("Titanium").getProduct(AllowedProducts.getProductByName("DUST")).getItem());
 			}
 			
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:productrod")) {
-				mapping.remap(Materials.TITANIUM.getProduct(AllowedProducts.getProductByName("STICK")).getItem());
+				mapping.remap(MaterialRegistry.getMaterialFromName("Titanium").getProduct(AllowedProducts.getProductByName("STICK")).getItem());
 			}
 			
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:productfan")) {
-				mapping.remap(Materials.STEEL.getProduct(AllowedProducts.getProductByName("FAN")).getItem());
+				mapping.remap(MaterialRegistry.getMaterialFromName("Steel").getProduct(AllowedProducts.getProductByName("FAN")).getItem());
 			}
 			
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:productcrystal")) {
-				mapping.remap(Materials.DILITHIUM.getProduct(AllowedProducts.getProductByName("CRYSTAL")).getItem());
+				mapping.remap(MaterialRegistry.getMaterialFromName("Dilithium").getProduct(AllowedProducts.getProductByName("CRYSTAL")).getItem());
 			}
 			
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:productnugget")) {
-				mapping.remap(Materials.COPPER.getProduct(AllowedProducts.getProductByName("NUGGET")).getItem());
+				mapping.remap(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("NUGGET")).getItem());
 			}
 			
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:productsheet")) {
-				mapping.remap(Materials.TITANIUM.getProduct(AllowedProducts.getProductByName("SHEET")).getItem());
+				mapping.remap(MaterialRegistry.getMaterialFromName("Titanium").getProduct(AllowedProducts.getProductByName("SHEET")).getItem());
 			}
 		}
 	}

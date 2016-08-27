@@ -3,7 +3,6 @@ package zmaster587.libVulpes.block;
 import java.util.ArrayList;
 import java.util.List;
 
-import zmaster587.libVulpes.api.material.Material.Materials;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockStructure;
 import zmaster587.libVulpes.tile.TileMaterial;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -23,6 +22,8 @@ public class BlockMaterial extends BlockMultiblockStructure {
 
 	String side, poles;
 	IIcon sideIcon, polesIcon;
+	public zmaster587.libVulpes.api.material.Material[] ores = new zmaster587.libVulpes.api.material.Material[16];
+	
 
 	public BlockMaterial(net.minecraft.block.material.Material mat, String side, String poles) {
 		super(mat);
@@ -51,7 +52,7 @@ public class BlockMaterial extends BlockMultiblockStructure {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		int meta = 0;
 		if(tile instanceof TileMaterial) {
-			meta = ((TileMaterial)tile).getMaterial().ordinal();
+			meta = ((TileMaterial)tile).getMaterial().getMeta();
 		}
 
 		return new ItemStack(this, 1, meta);
@@ -59,15 +60,13 @@ public class BlockMaterial extends BlockMultiblockStructure {
 
 	@Override
 	public int getRenderColor(int meta) {
-		if(meta > 0 && meta < Materials.values().length )
-			return Materials.values()[meta].getColor();
-		return Materials.values()[0].getColor();
+		return ores[meta].getColor();
 	}
 
 	@Override
 	public void getSubBlocks(Item item, CreativeTabs tab,
 			List list) {
-		for(int i = 0; i < Materials.values().length; i++) {
+		for(int i = 0; i < ores.length && ores[i] != null; i++) {
 			list.add(new ItemStack(item, 1, i));
 		}
 	}
@@ -102,7 +101,7 @@ public class BlockMaterial extends BlockMultiblockStructure {
 		if(!player.capabilities.isCreativeMode) {
 			TileEntity tile = world.getTileEntity(x, y, z);
 			if(tile instanceof TileMaterial) {
-				world.spawnEntityInWorld(new EntityItem(world, x + .5f, y + .5f, z+ .5f, new ItemStack(this, 1, ((TileMaterial)tile).getMaterial().ordinal())));
+				world.spawnEntityInWorld(new EntityItem(world, x + .5f, y + .5f, z+ .5f, new ItemStack(this, 1, ((TileMaterial)tile).getMaterial().getIndex())));
 			}
 		}
 	}

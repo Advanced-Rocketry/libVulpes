@@ -1,4 +1,4 @@
-package zmaster587.libVulpes.item;
+package zmaster587.libVulpes.items;
 
 import java.util.List;
 

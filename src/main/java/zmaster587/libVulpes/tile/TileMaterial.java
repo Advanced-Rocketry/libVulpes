@@ -1,6 +1,6 @@
 package zmaster587.libVulpes.tile;
 
-import zmaster587.libVulpes.api.material.Material.Materials;
+import zmaster587.libVulpes.api.material.Material;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -9,7 +9,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 
 public class TileMaterial extends TilePointer {
 
-	Materials materialType;
+	Material materialType;
 
 	public TileMaterial() {
 		super();
@@ -20,11 +20,11 @@ public class TileMaterial extends TilePointer {
 		return false;
 	}
 
-	public Materials getMaterial() {
+	public Material getMaterial() {
 		return materialType;
 	}
 
-	public void setMaterial(Materials material) {
+	public void setMaterial(Material material) {
 		materialType = material;
 	}
 
@@ -32,27 +32,27 @@ public class TileMaterial extends TilePointer {
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
 
-		nbt.setInteger("material", materialType.ordinal());
+		nbt.setString("material", materialType.getUnlocalizedName());
 
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, worldObj.provider.dimensionId, nbt);
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		materialType = Materials.values()[pkt.func_148857_g().getInteger("material")];
+		materialType = MaterialRegistry.getMaterialFromName(pkt.func_148857_g().getString("material"));
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		if(materialType != null)
-			nbt.setInteger("material", materialType.ordinal());
+			nbt.setString("material", materialType.getUnlocalizedName());
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		if(nbt.hasKey("material"))
-			materialType = Materials.values()[nbt.getInteger("material")];
+			materialType = MaterialRegistry.getMaterialFromName(nbt.getString("material"));
 	}
 }

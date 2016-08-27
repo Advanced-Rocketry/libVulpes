@@ -3,7 +3,6 @@ package zmaster587.libVulpes.block;
 import java.util.List;
 
 import zmaster587.libVulpes.api.material.AllowedProducts;
-import zmaster587.libVulpes.api.material.Material.Materials;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -14,7 +13,7 @@ import net.minecraft.util.IIcon;
 
 public class BlockOre extends Block implements INamedMetaBlock {
 	
-	public Materials[] ores = new Materials[16];
+	public zmaster587.libVulpes.api.material.Material[] ores = new zmaster587.libVulpes.api.material.Material[16];
 	IIcon[] textures = new IIcon[16];
 	public byte numBlocks;
 	public AllowedProducts product;

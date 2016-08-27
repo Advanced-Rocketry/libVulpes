@@ -2,16 +2,16 @@ package zmaster587.libVulpes.api.material;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import zmaster587.libVulpes.api.LibVulpesItems;
-import zmaster587.libVulpes.api.material.Material.Materials;
 import zmaster587.libVulpes.block.BlockCoil;
 import zmaster587.libVulpes.block.BlockMetalBlock;
 import zmaster587.libVulpes.block.BlockOre;
-import zmaster587.libVulpes.item.ItemOre;
-import zmaster587.libVulpes.item.ItemOreProduct;
+import zmaster587.libVulpes.items.ItemOre;
+import zmaster587.libVulpes.items.ItemOreProduct;
 import zmaster587.libVulpes.util.ItemStackMapping;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -24,29 +24,42 @@ public class MaterialRegistry {
 
 	static HashMap<Object, MixedMaterial> mixedMaterialList = new HashMap<Object, MixedMaterial>();
 	static HashMap<AllowedProducts, List<Block>> productBlockListMapping;
-	
-	
+	static List<MaterialRegistry> registries = new LinkedList<MaterialRegistry>();
+
+	public HashMap<String, zmaster587.libVulpes.api.material.Material> strToMaterial = new HashMap<String, zmaster587.libVulpes.api.material.Material>();
+	public List<zmaster587.libVulpes.api.material.Material> materialList = new LinkedList<zmaster587.libVulpes.api.material.Material>();
+	public Item[] oreProducts;
+
+
 	public MaterialRegistry() {
 		productBlockListMapping = new HashMap<AllowedProducts, List<Block>>();
+		registries.add(this);
 	}
-	
+
+	public void registerMaterial(zmaster587.libVulpes.api.material.Material material) {
+		strToMaterial.put(material.getUnlocalizedName(), material);
+		material.setIndex(materialList.size());
+		material.registry = this;
+		materialList.add(material);
+	}
+
 	//TODO: allow more block types
 	public void registerOres(CreativeTabs tab) {
-		int len = Materials.values().length;
+		int len = materialList.size();
 		int numberOfOreBlocks = (len/16) + 1;
 		BlockOre ores;
 		BlockOre metalBlocks;
 		BlockOre coilBlocks;
-		
+
 		List<AllowedProducts> allAllowedProducts = AllowedProducts.getAllAllowedProducts();
 
-		LibVulpesItems.itemOreProduct = new ItemOreProduct[allAllowedProducts.size()];
+		oreProducts = new ItemOreProduct[allAllowedProducts.size()];
 
 		for(int i = 0; i < allAllowedProducts.size(); i++) {
 
 			if(!allAllowedProducts.get(i).isBlock()) {
-				LibVulpesItems.itemOreProduct[i] = new ItemOreProduct(allAllowedProducts.get(i).name().toLowerCase()).setCreativeTab(tab);
-				GameRegistry.registerItem(LibVulpesItems.itemOreProduct[i], "product" + allAllowedProducts.get(i).getName().toLowerCase());
+				oreProducts[i] = new ItemOreProduct(allAllowedProducts.get(i).name().toLowerCase()).setCreativeTab(tab);
+				GameRegistry.registerItem(oreProducts[i], "product" + allAllowedProducts.get(i).getName().toLowerCase());
 			}
 		}
 
@@ -70,14 +83,14 @@ public class MaterialRegistry {
 			coilBlocks.setBlockName(coilName).setCreativeTab(tab).setHardness(4f).setBlockTextureName("coil");
 			coilBlocks.numBlocks = (byte)Math.min(len - (16*i), 16);
 			coilBlocks.product = AllowedProducts.getProductByName("COIL");
-			
+
 			GameRegistry.registerBlock(ores, ItemOre.class, name + i);
 			GameRegistry.registerBlock(metalBlocks, ItemOre.class, metalBlockName + i);
 			GameRegistry.registerBlock(coilBlocks, ItemOre.class, coilName + i);
 
 			for(int j = 0; j < 16 && j < 16*i + (len % 16); j++) {
 				int index = i*16 + j;
-				Materials ore = Materials.values()[index];
+				zmaster587.libVulpes.api.material.Material ore = materialList.get(index);
 
 				ores.ores[j] = ore;
 				ores.setHarvestLevel(ore.getTool(), ore.getHarvestLevel(), j);
@@ -90,7 +103,7 @@ public class MaterialRegistry {
 
 				for(AllowedProducts product : allAllowedProducts) {
 					if(!product.isBlock() && product.isOfType(ore.getAllowedProducts()))
-						((ItemOreProduct)LibVulpesItems.itemOreProduct[product.ordinal()]).registerItem(index, ore);
+						((ItemOreProduct)oreProducts[product.ordinal()]).registerItem(index, ore);
 				}
 
 				for(String str : ore.getOreDictNames()) {
@@ -102,44 +115,45 @@ public class MaterialRegistry {
 						OreDictionary.registerOre("coil" + str, new ItemStack(coilBlocks, 1 , j));
 				}
 			}
-			
+
 			getBlockListForProduct(AllowedProducts.getProductByName("BLOCK")).add(metalBlocks);
 			getBlockListForProduct(AllowedProducts.getProductByName("COIL")).add(coilBlocks);
 			getBlockListForProduct(AllowedProducts.getProductByName("ORE")).add(ores);
 		}
 	}
-	
+
 	public List<Block> getBlockListForProduct(AllowedProducts product) {
 		return productBlockListMapping.get(product);
 	}
-	
+
 	/**
 	 * @param stack the item stack to get the material of
 	 * @return {@link Materials} of the itemstack if it exists, otherwise null
 	 */
-	public static Materials getMaterialFromItemStack(ItemStack stack) {
+	public static zmaster587.libVulpes.api.material.Material getMaterialFromItemStack(ItemStack stack) {
 		Item item = stack.getItem();
 
 		//If items is an itemOreProduct it must have been registered
 
-		for(Item i : LibVulpesItems.itemOreProduct) {
-			if(item == i) {
-				return Materials.values()[stack.getItemDamage()];
+		for(MaterialRegistry  registry : registries) {
+			for(Item i : registry.oreProducts) {
+				if(item == i) {
+					return registry.materialList.get(stack.getItemDamage());
+				}
 			}
-		}
 
-		int[] ids = OreDictionary.getOreIDs(stack);
+			int[] ids = OreDictionary.getOreIDs(stack);
 
-		//Check all ores against list
-		for(Materials ore : Materials.values()) {
-			for(String str : ore.getOreDictNames()) {
-				for(int i : ids) {
-					if(OreDictionary.getOreName(i).contains(str)) 
-						return ore;
+			//Check all ores against list
+			for(zmaster587.libVulpes.api.material.Material ore : registry.materialList) {
+				for(String str : ore.getOreDictNames()) {
+					for(int i : ids) {
+						if(OreDictionary.getOreName(i).contains(str)) 
+							return ore;
+					}
 				}
 			}
 		}
-
 		return null;
 	}
 
@@ -148,7 +162,7 @@ public class MaterialRegistry {
 	 * @param product
 	 * @return an itemstack of size one containing the product with the given material, or null if one does not exist
 	 */
-	public static ItemStack getItemStackFromMaterialAndType(Materials material,AllowedProducts product) {
+	public static ItemStack getItemStackFromMaterialAndType(String material,AllowedProducts product) {
 		return getItemStackFromMaterialAndType(material, product,1);
 	}
 
@@ -158,8 +172,14 @@ public class MaterialRegistry {
 	 * @param amount stackSize
 	 * @return an itemstack of stackSize amount containing the product with the given material, or null if one does not exist
 	 */
-	public static ItemStack getItemStackFromMaterialAndType(Materials ore,AllowedProducts product, int amount) {
-		return new ItemStack( LibVulpesItems.itemOreProduct[product.ordinal()], amount, ore.ordinal());
+	public static ItemStack getItemStackFromMaterialAndType(String ore,AllowedProducts product, int amount) {
+		for(MaterialRegistry  registry : registries) {
+			zmaster587.libVulpes.api.material.Material ore2 = registry.strToMaterial.get(ore);
+			
+			if(ore2 != null && product != null)
+				return new ItemStack( registry.oreProducts[product.ordinal()], amount, ore2.index);
+		}
+		return null;
 	}
 
 	/**
@@ -191,12 +211,12 @@ public class MaterialRegistry {
 
 	public static int getColorFromItemMaterial(ItemStack stack) {
 
-		Materials material = getMaterialFromItemStack(stack);
+		zmaster587.libVulpes.api.material.Material material = getMaterialFromItemStack(stack);
 		if(material == null) {
 			return 0x7a7a7a;
 			/*Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationItemsTexture);
 			TextureAtlasSprite tas = (TextureAtlasSprite)stack.getIconIndex();
-			
+
 			IntBuffer pixels = BufferUtils.createIntBuffer(Math.max(tas.getIconWidth() * tas.getIconHeight(),1024));
 			GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, tas.getOriginX(), tas.getOriginY(), tas.getIconWidth(), tas.getIconHeight(), GL11.GL_RGBA, GL11.GL_INT, pixels);
 			int[] texture = new int[pixels.remaining()];
@@ -230,6 +250,26 @@ public class MaterialRegistry {
 	public static Collection<MixedMaterial> getMixedMaterialList() {
 		return mixedMaterialList.values();
 	}
-	
-	
+
+	public static zmaster587.libVulpes.api.material.Material getMaterialFromName(
+			String string) {
+		for(MaterialRegistry registry : registries) {
+			zmaster587.libVulpes.api.material.Material  material = registry.strToMaterial.get(string);
+			
+			if(material != null)
+				return material;
+		}
+		return null;
+	}
+
+	public static List<zmaster587.libVulpes.api.material.Material> getAllMaterials() {
+		List<zmaster587.libVulpes.api.material.Material> list = new LinkedList<zmaster587.libVulpes.api.material.Material>();
+		for(MaterialRegistry registry : registries) {
+			list.addAll(registry.materialList);
+		}
+		
+		return list;
+	}
+
+
 }
