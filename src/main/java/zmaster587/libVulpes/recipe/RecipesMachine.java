@@ -191,13 +191,20 @@ public class RecipesMachine {
 		ArrayList<FluidStack> inputFluidStacks = new ArrayList<FluidStack>();
 
 		try {
-
 			for(int i = 0; i < inputs.length; i++) {
 				LinkedList<ItemStack> innerList = new LinkedList<ItemStack>();
 				if(inputs[i] != null) {
 					if(inputs[i] instanceof String) {
 						for (ItemStack itemStack : OreDictionary.getOres((String)inputs[i])) {
 							innerList.add(itemStack.copy());
+						}
+					}
+					else if(inputs[i] instanceof NumberedOreDictStack) {
+						for (ItemStack itemStack : OreDictionary.getOres(((NumberedOreDictStack)inputs[i]).getOre())) {
+							int number  = ((NumberedOreDictStack)inputs[i]).getNumber();
+							ItemStack stack2 = itemStack.copy();
+							stack2.stackSize = number;
+							innerList.add(stack2);
 						}
 					}
 					else if(inputs[i] instanceof FluidStack)

@@ -44,7 +44,7 @@ public class MaterialRegistry {
 	}
 
 	//TODO: allow more block types
-	public void registerOres(CreativeTabs tab) {
+	public void registerOres(CreativeTabs tab, String nameSpace) {
 		int len = materialList.size();
 		int numberOfOreBlocks = (len/16) + 1;
 		BlockOre ores;
@@ -59,7 +59,7 @@ public class MaterialRegistry {
 
 			if(!allAllowedProducts.get(i).isBlock()) {
 				oreProducts[i] = new ItemOreProduct(allAllowedProducts.get(i).name().toLowerCase()).setCreativeTab(tab);
-				GameRegistry.registerItem(oreProducts[i], "product" + allAllowedProducts.get(i).getName().toLowerCase());
+				GameRegistry.registerItem(oreProducts[i], nameSpace + "product" + allAllowedProducts.get(i).getName().toLowerCase());
 			}
 		}
 
@@ -84,9 +84,9 @@ public class MaterialRegistry {
 			coilBlocks.numBlocks = (byte)Math.min(len - (16*i), 16);
 			coilBlocks.product = AllowedProducts.getProductByName("COIL");
 
-			GameRegistry.registerBlock(ores, ItemOre.class, name + i);
-			GameRegistry.registerBlock(metalBlocks, ItemOre.class, metalBlockName + i);
-			GameRegistry.registerBlock(coilBlocks, ItemOre.class, coilName + i);
+			GameRegistry.registerBlock(ores, ItemOre.class, nameSpace + name + i);
+			GameRegistry.registerBlock(metalBlocks, ItemOre.class, nameSpace + metalBlockName + i);
+			GameRegistry.registerBlock(coilBlocks, ItemOre.class, nameSpace + coilName + i);
 
 			for(int j = 0; j < 16 && j < 16*i + (len % 16); j++) {
 				int index = i*16 + j;
