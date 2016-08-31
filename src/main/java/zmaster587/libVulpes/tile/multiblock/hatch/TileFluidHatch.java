@@ -7,6 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.Packet;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -28,12 +30,17 @@ import zmaster587.libVulpes.util.IconResource;
 
 public class TileFluidHatch extends TilePointer implements IFluidHandler, IModularInventory, IInventory {
 
-	private FluidTank fluidTank;
+	protected FluidTank fluidTank;
 	private EmbeddedInventory inventory;
 	private boolean outputOnly;
-
+	
 	public TileFluidHatch() {
 		fluidTank = new FluidTank(16000);
+		inventory = new EmbeddedInventory(2);
+	}
+	
+	public TileFluidHatch(int capacity) {
+		fluidTank = new FluidTank(capacity);
 		inventory = new EmbeddedInventory(2);
 	}
 
@@ -46,7 +53,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 	public boolean isOutputOnly() {
 		return outputOnly;
 	}
-
+	
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
 		if(doFill && this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
@@ -57,9 +64,12 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 		int fillAmt = fluidTank.fill(resource, doFill);
 		while(useBucket(0, getStackInSlot(0)));
 		
+		
 		return fillAmt;
 	}
 
+
+	
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource,
 			boolean doDrain) {
@@ -67,6 +77,8 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 		if(resource.isFluidEqual(fluidTank.getFluid())) {
 			FluidStack fluidStack = fluidTank.drain(resource.amount, doDrain);
 			while(useBucket(0, getStackInSlot(0)));
+			
+			
 			return fluidStack;
 		}
 		return null;
@@ -196,7 +208,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 
 	//Yes i was lazy
 	//TODO: make better
-	private boolean useBucket( int slot, ItemStack stack) {
+	protected boolean useBucket( int slot, ItemStack stack) {
 
 		if(FluidContainerRegistry.isFilledContainer(stack)) {
 			if(!outputOnly && slot == 0 && fluidTank.getFluidAmount() + FluidContainerRegistry.getContainerCapacity(stack) <= fluidTank.getCapacity()) {
@@ -271,7 +283,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 					if(getStackInSlot(1) == null) {
 						inventory.setInventorySlotContents(1, stack);
 					}
-					else if(ItemStack.areItemStackTagsEqual(getStackInSlot(1), stack) && getStackInSlot(1).getItem().equals(stack.getItem()) && getStackInSlot(1).getItemDamage() == stack.getItemDamage() && stack.getItem().getItemStackLimit(stack) < getStackInSlot(1).stackSize) {
+					else if(ItemStack.areItemStackTagsEqual(getStackInSlot(1), stack) && getStackInSlot(1).getItem().equals(stack.getItem()) && getStackInSlot(1).getItemDamage() == stack.getItemDamage() && stack.getItem().getItemStackLimit(stack) > getStackInSlot(1).stackSize) {
 						getStackInSlot(1).stackSize++;
 
 					}
