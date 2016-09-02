@@ -66,9 +66,7 @@ public class PacketHandler {
 	}
 
 	
-	@SideOnly(Side.SERVER)
 	public static final void sendToPlayersTrackingEntity(BasePacket packet, Entity entity) {
-
 		for( EntityPlayer player : ((WorldServer)entity.worldObj).getEntityTracker().getTrackingPlayers(entity)) {
 
 			channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);

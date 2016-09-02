@@ -194,6 +194,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 
 		nbt.setBoolean("outputOnly", outputOnly);
 		inventory.writeToNBT(nbt);
+		nbt.setInteger("capacity", fluidTank.getCapacity());
 		fluidTank.writeToNBT(nbt);
 	}
 
@@ -203,6 +204,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 
 		outputOnly = nbt.getBoolean("outputOnly");
 		inventory.readFromNBT(nbt);
+		fluidTank = new FluidTank(nbt.getInteger("capacity"));
 		fluidTank.readFromNBT(nbt);
 	}
 
@@ -277,7 +279,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 			else {
 				fluidStack = fluidItem.drain(stack, fluidTank.getCapacity() - fluidTank.getFluidAmount(), false);
 
-				int amountDrained = fluidTank.fill(fluidStack, true);
+				int amountDrained = fluidTank.fill(fluidStack, false);
 				fluidItem.drain(stack, amountDrained, true);
 				if (fluidItem.getFluid(stack) == null || fluidItem.getFluid(stack).amount == 0) {
 					if(getStackInSlot(1) == null) {
@@ -291,8 +293,10 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 						return false;
 
 					decrStackSize(0, 1);
-
+					fluidTank.fill(fluidStack, true);
+					
 					return true;
+					
 				}
 			}
 		}
