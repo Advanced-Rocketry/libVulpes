@@ -36,7 +36,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 	//TODO: sync changes
 	@Override
 	public int numberOfChangesToSend() {
-		return 2;
+		return 3;
 	}
 
 	@Override
@@ -44,8 +44,10 @@ public class ModuleLiquidIndicator extends ModuleBase {
 			int variableId, int localId) {
 		FluidTankInfo info = tile.getTankInfo(ForgeDirection.UNKNOWN)[0];
 		if(localId == 0 && info.fluid != null)
-			crafter.sendProgressBarUpdate(container, variableId, info.fluid.amount);
-		else if(localId == 1)
+			crafter.sendProgressBarUpdate(container, variableId, info.fluid.amount & 0xFFFF);
+		else if(localId == 1 && info.fluid != null)
+			crafter.sendProgressBarUpdate(container, variableId, (info.fluid.amount >>> 16) & 0xFFFF);
+		else if(localId == 2)
 			if(info.fluid == null) 
 				crafter.sendProgressBarUpdate(container, variableId, invalidFluid);
 			else
@@ -56,7 +58,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 	public void onChangeRecieved(int slot, int value) {
 		FluidTankInfo info[] = tile.getTankInfo(ForgeDirection.UNKNOWN);
 
-		if(slot == 1) {
+		if(slot == 2) {
 			if(info[0].fluid == null && value != invalidFluid) {
 				tile.fill(ForgeDirection.UNKNOWN, new FluidStack(FluidRegistry.getFluid(value), 1), true);
 			}
@@ -70,8 +72,14 @@ public class ModuleLiquidIndicator extends ModuleBase {
 				tile.fill(ForgeDirection.UNKNOWN, stack, true);
 			}
 		}
-		else if(slot == 0 && info[0].fluid != null) {
-			int difference = value - info[0].fluid.amount;
+		else if((slot == 0 || slot == 1) && info[0].fluid != null) {
+			int difference;
+			
+			if(slot == 0) {
+				difference = (value & 0xFFFF) - (info[0].fluid.amount & 0xFFFF);
+			}
+			else
+				difference = ((value << 16) & 0xFFFF0000) - (info[0].fluid.amount & 0xFFFF0000);
 
 			if(difference > 0) {
 				tile.fill(ForgeDirection.UNKNOWN, new FluidStack(info[0].fluid.getFluid(), difference), true);
@@ -84,10 +92,10 @@ public class ModuleLiquidIndicator extends ModuleBase {
 	@Override
 	public boolean needsUpdate(int localId) {
 		FluidTankInfo info = tile.getTankInfo(ForgeDirection.UNKNOWN)[0];
-		if(localId == 0) {
+		if(localId == 0 || localId == 1) {
 			return (info.fluid != null && prevLiquidAmt != info.fluid.amount);
 		}
-		else if(localId == 1) {
+		else if(localId == 2) {
 			if(info.fluid == null)
 				return prevLiquidUUID != invalidFluid;
 			else

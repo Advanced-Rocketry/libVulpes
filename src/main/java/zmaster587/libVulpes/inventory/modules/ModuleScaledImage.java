@@ -52,6 +52,10 @@ public class ModuleScaledImage extends ModuleBase {
 		this.alpha = alpha;
 	}
 	
+	public void setResourceLocation(ResourceLocation location ) {
+		this.icon = location;
+	}
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY,

@@ -38,6 +38,9 @@ public class ItemLinker extends Item {
 			par3List.add("X: " + getMasterX(par1ItemStack));
 			par3List.add("Y: " + getMasterY(par1ItemStack));
 			par3List.add("Z: " + getMasterZ(par1ItemStack));
+			int dimId = getDimId(par1ItemStack);
+			if(dimId != -1)
+				par3List.add("Dim: " + dimId);
 		}
 	}
 
@@ -66,6 +69,31 @@ public class ItemLinker extends Item {
 		nbt = nbt.getCompoundTag("MasterPos");
 
 		return nbt.getInteger("MasterZ");
+	}
+	
+	public static void setDimId(ItemStack itemStack, int id) {
+		NBTTagCompound nbt;
+		if(!itemStack.hasTagCompound()) {
+			nbt = new NBTTagCompound();
+			itemStack.setTagCompound(nbt);
+		}
+		else
+			nbt = itemStack.getTagCompound();
+		
+		nbt.setInteger("dimId", id);
+		
+	}
+	
+	public static int getDimId(ItemStack itemStack) {
+		NBTTagCompound nbt;
+		if(!itemStack.hasTagCompound()) {
+			nbt = new NBTTagCompound();
+		}
+		else
+			nbt = itemStack.getTagCompound();
+		
+		return nbt.getInteger("dimId");
+		
 	}
 
 	public static void setMasterX(ItemStack itemStack, int num) {
@@ -107,6 +135,7 @@ public class ItemLinker extends Item {
 		position.setInteger("MasterX", EMPTYSETTING);
 		position.setInteger("MasterY", EMPTYSETTING);
 		position.setInteger("MasterZ", EMPTYSETTING);
+		position.setInteger("dimId", -1);
 
 		itemStack.setTagInfo("MasterPos", position);
 	}

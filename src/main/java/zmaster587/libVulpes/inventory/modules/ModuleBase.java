@@ -35,12 +35,14 @@ public abstract class ModuleBase {
 	boolean isSendingChanges = false;
 	
 	private boolean enabled;
+	private boolean visible;
 
 	protected ModuleBase(int offsetX, int offsetY) {
 		this.offsetX = offsetX;
 		this.offsetY = offsetY;
 		slotList = new LinkedList<Slot>();
 		enabled = true;
+		visible = true;
 	}
 
 	protected long getCurrentTime() {
@@ -67,6 +69,14 @@ public abstract class ModuleBase {
 	
 	public void setEnabled(boolean state) {
 		enabled = state;
+	}
+	
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+	
+	public boolean getVisible() {
+		return this.visible;
 	}
 	
 	public boolean isEnabled() {

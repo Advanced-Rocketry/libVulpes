@@ -68,7 +68,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class LibVulpes {
 	public static Logger logger;
 	public static int time = 0;
-	public static Item itemLinker;
 
 	@Instance(value = "libVulpes")
 	public static LibVulpes instance;
@@ -79,7 +78,7 @@ public class LibVulpes {
 	private static CreativeTabs tabMultiblock = new CreativeTabs("multiBlock") {
 		@Override
 		public Item getTabIconItem() {
-			return itemLinker;// AdvancedRocketryItems.itemSatelliteIdChip;
+			return LibVulpesItems.itemLinker;// AdvancedRocketryItems.itemSatelliteIdChip;
 		}
 	};
 
@@ -112,11 +111,11 @@ public class LibVulpes {
 		PacketHandler.addDiscriminator(PacketChangeKeyState.class);
 
 		//Register Items
-		itemLinker = new ItemLinker().setUnlocalizedName("Linker").setCreativeTab(tabMultiblock).setTextureName("libvulpes:Linker");
+		LibVulpesItems.itemLinker = new ItemLinker().setUnlocalizedName("Linker").setCreativeTab(tabMultiblock).setTextureName("libvulpes:Linker");
 		LibVulpesItems.itemBattery = new ItemIngredient(2).setUnlocalizedName("libvulpes:battery").setCreativeTab(tabMultiblock);
 		LibVulpesItems.itemHoloProjector = new ItemProjector().setUnlocalizedName("holoProjector").setTextureName("advancedRocketry:holoProjector").setCreativeTab(tabMultiblock);
 
-		GameRegistry.registerItem(itemLinker, "Linker");
+		GameRegistry.registerItem(LibVulpesItems.itemLinker, "Linker");
 		GameRegistry.registerItem(LibVulpesItems.itemBattery, LibVulpesItems.itemBattery.getUnlocalizedName());
 		GameRegistry.registerItem(LibVulpesItems.itemHoloProjector, LibVulpesItems.itemHoloProjector.getUnlocalizedName());
 
@@ -209,7 +208,7 @@ public class LibVulpes {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		GameRegistry.addShapedRecipe(new ItemStack(itemLinker), "x","y","z", 'x', Items.redstone, 'y', Items.gold_ingot, 'z', Items.iron_ingot);
+		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesItems.itemLinker), "x","y","z", 'x', Items.redstone, 'y', Items.gold_ingot, 'z', Items.iron_ingot);
 		FMLCommonHandler.instance().bus().register(this);
 
 		PacketHandler.init();
