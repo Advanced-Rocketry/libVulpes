@@ -42,7 +42,7 @@ public class ModuleRadioButton  extends ModuleBase {
 		return -1;
 	}
 
-	public void setOptionSeleted(int option) {
+	public void setOptionSelected(int option) {
 		for(int i = 0; i < buttons.size(); i++){
 			if(i == option) {
 				buttons.get(i).setToggleState(true);
@@ -79,7 +79,7 @@ public class ModuleRadioButton  extends ModuleBase {
 
 	@Override
 	public void onChangeRecieved(int slot, int value) {
-		setOptionSeleted(value);
+		setOptionSelected(value);
 	}
 
 	@Override

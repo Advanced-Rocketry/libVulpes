@@ -106,6 +106,10 @@ public abstract class TileEntityRFConsumer extends TileEntity implements IEnergy
 		return energy.getMaxEnergyStored();
 	}
 
+	public void setMaxEnergyStored(int max) {
+		energy.setEnergyStored(max);
+	}
+	
 	@Override
 	public int acceptEnergy(int amt, boolean simulate) {
 		return energy.acceptEnergy(amt, simulate);

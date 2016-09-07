@@ -50,6 +50,15 @@ public class MultiBattery implements IUniversalEnergy {
 
 		return energyStored;
 	}
+	
+	@Override
+	public void setMaxEnergyStored(int max) {
+		max /= batteries.size();
+		
+		for(IUniversalEnergy battery : batteries) {
+			battery.setMaxEnergyStored(max);
+		}
+	}
 
 	@Override
 	public int acceptEnergy(int amt, boolean simulate) {

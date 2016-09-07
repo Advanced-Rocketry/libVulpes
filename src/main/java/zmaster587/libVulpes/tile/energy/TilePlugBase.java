@@ -33,6 +33,12 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 		return (int)Math.pow(10,teir)*10000;
 	}
 	
+	@Override
+	public void setMaxEnergyStored(int max) {
+		storage.setMaxEnergyStored(max);
+		
+	}
+	
 	protected int getMaxDrainRate(int teir) {
 		return 250*(int)Math.pow(2, teir);
 	}

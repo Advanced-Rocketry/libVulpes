@@ -117,7 +117,9 @@ public class RecipesMachine {
 				}
 				else {
 					LinkedList<ItemStack> list = new LinkedList<ItemStack>();
-					list.add(new ItemStack(block));
+					ItemStack stack2 = new ItemStack(block);
+					stack2.stackSize = stack.amount;
+					list.add(stack2);
 					recipe.input.add(list);
 				}
 			}

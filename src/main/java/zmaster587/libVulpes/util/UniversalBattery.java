@@ -60,6 +60,11 @@ public class UniversalBattery implements IUniversalEnergy {
 	public int getMaxEnergyStored() {
 		return maxEnergy;
 	}
+	
+	@Override
+	public void setMaxEnergyStored(int max) {
+		maxEnergy = max;
+	}
 
 	@Override
 	public void setEnergyStored(int energy) {

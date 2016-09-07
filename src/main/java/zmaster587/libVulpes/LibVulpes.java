@@ -17,6 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import zmaster587.libVulpes.common.CommonProxy;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.LibVulpesItems;
@@ -124,10 +125,10 @@ public class LibVulpes {
 		LibVulpesBlocks.blockPhantom = new BlockPhantom(Material.circuits).setBlockName("blockPhantom");
 		LibVulpesBlocks.blockHatch = new BlockHatch(Material.rock).setBlockName("hatch").setCreativeTab(tabMultiblock).setHardness(3f);
 		LibVulpesBlocks.blockPlaceHolder = new BlockMultiblockPlaceHolder().setBlockName("placeHolder").setBlockTextureName("libvulpes:machineGeneric").setHardness(1f);
+		LibVulpesBlocks.blockAdvStructureBlock = new BlockAlphaTexture(Material.rock).setBlockName("advStructureMachine").setBlockTextureName("libvulpes:advStructureBlock").setCreativeTab(tabMultiblock).setHardness(3f);
 		LibVulpesBlocks.blockStructureBlock = new BlockAlphaTexture(Material.rock).setBlockName("structureMachine").setBlockTextureName("libvulpes:structureBlock").setCreativeTab(tabMultiblock).setHardness(3f);
 		LibVulpesBlocks.blockRFBattery = new BlockMultiMachineBattery(Material.rock, TilePlugInputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("rfBattery").setBlockTextureName("libvulpes:batteryRF").setCreativeTab(tabMultiblock).setHardness(3f);
 		LibVulpesBlocks.blockRFOutput = new BlockMultiMachineBattery(Material.rock, TilePlugOutputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("rfOutput").setBlockTextureName("libvulpes:batteryRF").setCreativeTab(tabMultiblock).setHardness(3f);
-
 
 
 		//Register Blocks
@@ -137,6 +138,7 @@ public class LibVulpes {
 		GameRegistry.registerBlock(LibVulpesBlocks.blockStructureBlock, "blockStructureBlock");
 		GameRegistry.registerBlock(LibVulpesBlocks.blockRFBattery, "rfBattery");
 		GameRegistry.registerBlock(LibVulpesBlocks.blockRFOutput, "batteryOutputRF");
+		GameRegistry.registerBlock(LibVulpesBlocks.blockAdvStructureBlock, LibVulpesBlocks.blockAdvStructureBlock.getUnlocalizedName());
 
 		//Register Tile
 		GameRegistry.registerTileEntity(TileOutputHatch.class, "ARoutputHatch");
@@ -218,6 +220,11 @@ public class LibVulpes {
 		if(Loader.isModLoaded("IC2")) {
 			GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockIC2Plug), LibVulpesBlocks.blockStructureBlock, IC2Items.getItem("mvTransformer"), LibVulpesItems.itemBattery);
 		}
+		
+		//Recipes
+		GameRegistry.addRecipe(new ShapedOreRecipe(LibVulpesBlocks.blockStructureBlock, "sps", "psp", "sps", 'p', "plateIron", 's', "stickIron"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(LibVulpesBlocks.blockAdvStructureBlock, "sps", "psp", "sps", 'p', "plateTitanium", 's', "stickTitanium"));
+		
 	}
 
 	@EventHandler
