@@ -5,6 +5,8 @@ import java.util.List;
 
 import io.netty.buffer.ByteBuf;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -79,6 +81,15 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		return true;
 	}
 
+	
+	public String getSound() {
+		return null;
+	}
+	
+	public int getSoundDuration() {
+		return 1;
+	}
+	
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
@@ -125,8 +136,17 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		//Increment for both client and server
 		currentTime++;
 
+		String str;
+		if(worldObj.isRemote && (str = getSound()) != null && worldObj.getWorldTime() % getSoundDuration() == 0) {
+			playMachineSound(str);
+		}
+		
 		if(currentTime == completionTime)
 			processComplete();
+	}
+	
+	protected void playMachineSound(String str) {
+		worldObj.playSound(xCoord, yCoord, zCoord, str, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.BLOCKS),  0.975f + worldObj.rand.nextFloat()*0.05f, false);
 	}
 
 	public void setMachineEnabled(boolean enabled) {
