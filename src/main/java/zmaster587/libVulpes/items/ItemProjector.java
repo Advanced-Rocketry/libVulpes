@@ -13,6 +13,7 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.BlockTile;
+import zmaster587.libVulpes.block.multiblock.BlockMultiblockMachine;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.inventory.modules.IButtonInventory;
@@ -26,6 +27,7 @@ import zmaster587.libVulpes.network.PacketItemModifcation;
 import zmaster587.libVulpes.tile.TileSchematic;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
+import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 import zmaster587.libVulpes.util.ZUtils;
 import net.minecraft.block.material.Material;
@@ -75,9 +77,9 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			}
 		}
 	}
-	
+
 	private void clearStructure(World world, TileMultiBlock tile, ItemStack stack) {
-		
+
 		int id = getMachineId(stack);
 		ForgeDirection direction = ForgeDirection.getOrientation(getDirection(stack));
 
@@ -112,9 +114,9 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 		TileMultiBlock multiblock = machineList.get(id);
 		Object[][][] structure;
-		
+
 		clearStructure(world, tile, stack);
-		
+
 		structure = multiblock.getStructure();
 		direction = orientation;
 
@@ -178,26 +180,64 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		if(!player.isSneaking() && id != -1 && world.isRemote) {
 			ForgeDirection dir = ForgeDirection.getOrientation(ZUtils.getDirectionFacing(player.rotationYaw - 180));
 			TileMultiBlock tile = machineList.get(getMachineId(stack));
-			
-			
+
+
 			int x = tile.getStructure()[0][0].length;
 			int z = tile.getStructure()[0].length;
-			
+
 			int globalX = (-x*dir.offsetZ + z*dir.offsetX)/2;
 			int globalZ = ((x* dir.offsetX)  + (z*dir.offsetZ))/2;
-			
+
 			MovingObjectPosition pos = Minecraft.getMinecraft().objectMouseOver;
-			
+
+			TileEntity tile2;
+			if((tile2 = world.getTileEntity(pos.blockX, pos.blockY, pos.blockZ)) instanceof TileMultiBlock) {
+				for(TileMultiBlock tiles:  machineList) {
+					if(tile2.getClass() == tiles.getClass()) {
+
+						setMachineId(stack, machineList.indexOf(tiles));
+						Object[][][] structure = tiles.getStructure();
+
+						BlockPosition controller = getControllerOffset(structure);
+						dir = BlockMultiblockMachine.getFront(tile2.getBlockMetadata()).getOpposite();
+						
+						controller.y = (short) (structure.length - controller.y);
+						
+						globalX = (-controller.x*dir.offsetZ + controller.z*dir.offsetX);
+						globalZ = ((controller.x* dir.offsetX)  + (controller.z*dir.offsetZ));
+						
+						setDirection(stack, dir.ordinal());
+						
+						setBasePosition(stack, pos.blockX - globalX, pos.blockY - controller.y  + 1, pos.blockZ - globalZ);
+						PacketHandler.sendToServer(new PacketItemModifcation(this, player, (byte)0));
+						PacketHandler.sendToServer(new PacketItemModifcation(this, player, (byte)2));
+						return super.onItemRightClick(stack, world, player);
+					}
+				}
+			}
+
 			if(pos.sideHit == 0)
 				setBasePosition(stack, pos.blockX - globalX, pos.blockY- tile.getStructure().length, pos.blockZ - globalZ);
 			else
-			setBasePosition(stack, pos.blockX - globalX, pos.blockY+1, pos.blockZ - globalZ);
+				setBasePosition(stack, pos.blockX - globalX, pos.blockY+1, pos.blockZ - globalZ);
 			setDirection(stack, dir.ordinal());
 
 			PacketHandler.sendToServer(new PacketItemModifcation(this, player, (byte)2));
 		}
 
 		return super.onItemRightClick(stack, world, player);
+	}
+
+	protected BlockPosition getControllerOffset(Object[][][] structure) {
+		for(int y = 0; y < structure.length; y++) {
+			for(int z = 0; z < structure[0].length; z++) {
+				for(int x = 0; x< structure[0][0].length; x++) {
+					if(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c')
+						return new BlockPosition(x, y, z);
+				}
+			}
+		}
+		return null;
 	}
 
 	@Override
@@ -370,7 +410,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		else if(id == 1)
 			out.writeInt(getYLevel(stack));
 		else if(id == 2) {
-			
+
 			Vector3F<Integer> pos = getBasePosition(stack);
 			out.writeInt(pos.x);
 			out.writeInt(pos.y);
@@ -414,7 +454,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			int y = nbt.getInteger("y");
 			int z = nbt.getInteger("z");
 			int dir = nbt.getInteger("dir");
-			
+
 			RebuildStructure(player.worldObj, this.machineList.get(getMachineId(stack)), stack, x, y, z, ForgeDirection.getOrientation(dir));
 		}
 	}

@@ -10,9 +10,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class FxErrorBlock extends EntityFX {
-	
+
 	public static final ResourceLocation icon = new ResourceLocation("libvulpes:textures/fx/x.png");
-	
+
 	public FxErrorBlock(World world, double x,
 			double y, double z) {
 		super(world, x, y, z);
@@ -22,43 +22,48 @@ public class FxErrorBlock extends EntityFX {
 
 		this.particleMaxAge = 100;
 	}
-	
+
 	@Override
 	public void renderParticle(Tessellator tess, float x1,
 			float y1, float z1, float x2,
 			float y2, float z2) {
-		
-		
+
+
 		Minecraft.getMinecraft().getTextureManager().bindTexture(icon);
-		tess.draw();
+		//Finish current draw, we need to kill depth test
+		//tess.draw();
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		// Draw the box
-        float f11 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)x1 - interpPosX);
-        float f12 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)x1 - interpPosY);
-        float f13 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)x1 - interpPosZ);
-        float f10 = 0.25F * this.particleScale;
-        
-        tess.startDrawingQuads();
-        tess.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, 1f);
-        tess.addVertexWithUV((double)(f11 - y1 * f10 - y2 * f10), (double)(f12 - z1 * f10), (double)(f13 - x2 * f10 - z2 * f10), 1, 1);
-        tess.addVertexWithUV((double)(f11 - y1 * f10 + y2 * f10), (double)(f12 + z1 * f10), (double)(f13 - x2 * f10 + z2 * f10), 1, 0);
-        tess.addVertexWithUV((double)(f11 + y1 * f10 + y2 * f10), (double)(f12 + z1 * f10), (double)(f13 + x2 * f10 + z2 * f10), 0, 0);
-        tess.addVertexWithUV((double)(f11 + y1 * f10 - y2 * f10), (double)(f12 - z1 * f10), (double)(f13 + x2 * f10 - z2 * f10), 0, 1);
-        tess.draw();
-        
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-        
+		float f11 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)x1 - interpPosX);
+		float f12 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)x1 - interpPosY);
+		float f13 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)x1 - interpPosZ);
+		float f10 = 0.25F * this.particleScale;
+
 		tess.startDrawingQuads();
+		tess.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, 1f);
+		tess.addVertexWithUV((double)(f11 - y1 * f10 - y2 * f10), (double)(f12 - z1 * f10), (double)(f13 - x2 * f10 - z2 * f10), 1, 1);
+		tess.addVertexWithUV((double)(f11 - y1 * f10 + y2 * f10), (double)(f12 + z1 * f10), (double)(f13 - x2 * f10 + z2 * f10), 1, 0);
+		tess.addVertexWithUV((double)(f11 + y1 * f10 + y2 * f10), (double)(f12 + z1 * f10), (double)(f13 + x2 * f10 + z2 * f10), 0, 0);
+		tess.addVertexWithUV((double)(f11 + y1 * f10 - y2 * f10), (double)(f12 - z1 * f10), (double)(f13 + x2 * f10 - z2 * f10), 0, 1);
+		tess.draw();
+
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+
+		//continue happily
+		//tess.startDrawingQuads();
 	}
-	
-	
+
+	@Override
+	public int getFXLayer() {
+		return 3;
+	}	
 
 	@Override
 	public void onUpdate() {
-        if (this.particleAge++ >= this.particleMaxAge)
-        {
-            this.setDead();
-        }
+		if (this.particleAge++ >= this.particleMaxAge)
+		{
+			this.setDead();
+		}
 	}
-	
+
 }
