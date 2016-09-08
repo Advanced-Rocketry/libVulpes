@@ -137,7 +137,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		currentTime++;
 
 		String str;
-		if(worldObj.isRemote && (str = getSound()) != null && worldObj.getWorldTime() % getSoundDuration() == 0) {
+		if(worldObj.isRemote && (str = getSound()) != null && worldObj.getTotalWorldTime() % getSoundDuration() == 0) {
 			playMachineSound(str);
 		}
 		
