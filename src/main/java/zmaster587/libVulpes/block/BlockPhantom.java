@@ -1,17 +1,19 @@
 package zmaster587.libVulpes.block;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import zmaster587.libVulpes.tile.TileSchematic;
 import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -22,7 +24,7 @@ public class BlockPhantom extends Block {
 	}
 
 	@Override
-	public boolean hasTileEntity(int metadata) {
+	public boolean hasTileEntity(IBlockState state) {
 		return true;
 	}
 
@@ -32,78 +34,52 @@ public class BlockPhantom extends Block {
 	}
 	
 	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z,
-			int metadata, int fortune) {
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos,
+			IBlockState state, int fortune) {
 		return new ArrayList<ItemStack>();
 	}
 	
 	
 	@Override
-	public TileEntity createTileEntity(World world, int metadata) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileSchematic();
 	}
-
-	@Override
-	public IIcon getIcon(IBlockAccess access, int x,
-			int y, int z, int side) {
-
-		TileEntity tile = access.getTileEntity(x, y, z);
-
-		if(tile instanceof TilePlaceholder) {
-			TilePlaceholder placeHolder = (TilePlaceholder)tile;
-
-			if(placeHolder.getReplacedBlock() != null)
-				return placeHolder.getReplacedBlock().getIcon(side, placeHolder.getReplacedBlockMeta());
-		}
-
-		return super.getIcon(access, x, y, z,
-				side);
-	}
-
 	
 	@Override
-	public ItemStack getPickBlock(MovingObjectPosition target, World world,
-			int x, int y, int z, EntityPlayer player) {
-		TileEntity tile = world.getTileEntity(x, y, z);
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target,
+			World world, BlockPos pos, EntityPlayer player) {
+		TileEntity tile = world.getTileEntity(pos);
 		
-		if(tile != null && tile instanceof TilePlaceholder && ((TilePlaceholder)tile).getReplacedBlock() != null) {
-			Block block = ((TilePlaceholder)tile).getReplacedBlock();
-			ItemStack stack = ((TilePlaceholder)tile).getReplacedBlock().getPickBlock(target, world, x, y, z, player);
-			stack.setItemDamage(block.damageDropped(((TilePlaceholder)tile).getReplacedBlockMeta()));
+		if(tile != null && tile instanceof TilePlaceholder && ((TilePlaceholder)tile).getReplacedState() != null) {
+			Block block = ((TilePlaceholder)tile).getReplacedState().getBlock();
+			ItemStack stack = ((TilePlaceholder)tile).getReplacedState().getBlock().getPickBlock(state, target, world, pos, player);
+			
+			
+			stack.setItemDamage(block.damageDropped(block.getStateFromMeta(((TilePlaceholder)tile).getReplacedMeta())));
 			return stack;
 		}
-		return super.getPickBlock(target, world, x, y, z, player);
-	}
-	
-	@Override
-	public int getDamageValue(World world, int x,
-			int y, int z) {
-		
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if(tile instanceof TilePlaceholder)
-			return ((TilePlaceholder)tile).getReplacedBlockMeta();
-		return super.getDamageValue(world, x, y, z);
+		return super.getPickBlock(state, target, world, pos, player);
 	}
 
 	@Override
-	public boolean shouldSideBeRendered(IBlockAccess p_149646_1_,
-			int p_149646_2_, int p_149646_3_, int p_149646_4_, int p_149646_5_) {
+	public boolean shouldSideBeRendered(IBlockState blockState,
+			IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
 		return false;
 	}
 	
 	@Override
-	public boolean isOpaqueCube() {
-		return false;
+	public boolean isOpaqueCube(IBlockState state) {
+		return super.isOpaqueCube(state);
 	}
 
 	@Override
-	public boolean isReplaceable(IBlockAccess world, int x, int y, int z) {
+	public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos) {
 		return true;
 	}
 	
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_,
-			int p_149668_2_, int p_149668_3_, int p_149668_4_) {
+	public net.minecraft.util.math.AxisAlignedBB getCollisionBoundingBox(
+			IBlockState blockState, World worldIn, BlockPos pos) {
 		return null;
 	}
 }

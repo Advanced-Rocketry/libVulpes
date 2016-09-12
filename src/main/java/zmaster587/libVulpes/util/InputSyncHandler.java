@@ -1,21 +1,15 @@
 package zmaster587.libVulpes.util;
 
 import java.util.HashMap;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-
-import org.lwjgl.input.Keyboard;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 
 import zmaster587.libVulpes.api.IJetPack;
 import zmaster587.libVulpes.api.IModularArmor;
-import zmaster587.libVulpes.network.PacketChangeKeyState;
-import zmaster587.libVulpes.network.PacketHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 
 public class InputSyncHandler {
 
@@ -33,7 +27,8 @@ public class InputSyncHandler {
 		ItemStack stack;
 		switch(key) {
 		case 0:
-			stack = player.getEquipmentInSlot(3);
+			
+			stack = player.inventory.armorInventory[3];
 			if(stack != null) {
 				IJetPack pack;
 				if(stack.getItem() instanceof IJetPack) {
@@ -56,7 +51,7 @@ public class InputSyncHandler {
 			break;
 			
 		case 1:
-			stack = player.getEquipmentInSlot(3);
+			stack = player.inventory.armorInventory[3];
 			if(stack != null) {
 				IJetPack pack;
 				if(stack.getItem() instanceof IJetPack) {

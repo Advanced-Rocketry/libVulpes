@@ -2,23 +2,23 @@ package zmaster587.libVulpes.client.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
 /**
  * Used to display an arrow or some other image moving along a bar
  *
  */
 public class IndicatorBarImage extends ProgressBarImage {
 
-	public IndicatorBarImage(int backOffsetX, int backOffsetY, int backWidth, int backHeight, int foreOffsetX, int foreOffsetY, int foreWidth, int foreHeight, int insetX, int insetY, ForgeDirection direction, ResourceLocation image) {
+	public IndicatorBarImage(int backOffsetX, int backOffsetY, int backWidth, int backHeight, int foreOffsetX, int foreOffsetY, int foreWidth, int foreHeight, int insetX, int insetY, EnumFacing direction, ResourceLocation image) {
 		super(backOffsetX, backOffsetY, backWidth, backHeight, foreOffsetX, foreOffsetY, foreWidth, foreHeight, insetX, insetY, direction,image);
 	}
 	
-	public IndicatorBarImage(int backOffsetX, int backOffsetY, int backWidth, int backHeight, int foreOffsetX, int foreOffsetY, int foreWidth, int foreHeight,ForgeDirection direction, ResourceLocation image) {
+	public IndicatorBarImage(int backOffsetX, int backOffsetY, int backWidth, int backHeight, int foreOffsetX, int foreOffsetY, int foreWidth, int foreHeight,EnumFacing direction, ResourceLocation image) {
 		super(backOffsetX, backOffsetY, backWidth, backHeight, foreOffsetX, foreOffsetY, foreWidth, foreHeight, 0, 0, direction, image);
 	}
 	
-	public IndicatorBarImage(int backOffsetX, int backOffsetY, int backWidth, int backHeight, int foreOffsetX, int foreOffsetY, ForgeDirection direction, ResourceLocation image) {
+	public IndicatorBarImage(int backOffsetX, int backOffsetY, int backWidth, int backHeight, int foreOffsetX, int foreOffsetY, EnumFacing direction, ResourceLocation image) {
 		super(backOffsetX, backOffsetY, backWidth, backHeight, foreOffsetX, foreOffsetY, backWidth, backHeight, 0, 0, direction, image);
 	}
 	
@@ -31,16 +31,16 @@ public class IndicatorBarImage extends ProgressBarImage {
 		
 		int xProgress = 0, yProgress = 0;
 		
-		if(direction == ForgeDirection.WEST)
+		if(direction == EnumFacing.WEST)
 			xProgress = (int) (backWidth - insetX - ( ( backWidth - ( insetX*2 ) )*percent)) - foreHeight/2;
-		else if(direction == ForgeDirection.EAST)
+		else if(direction == EnumFacing.EAST)
 			xProgress = (int) (insetX - foreWidth + ( ( backWidth - ( insetX*2 ) )*percent));
 		else
 			xProgress = insetX;
 		
-		if(direction == ForgeDirection.UP)
+		if(direction == EnumFacing.UP)
 			yProgress = (int) (backHeight - insetY - ( ( backHeight - ( insetY*2 ) )*percent)) - foreHeight/2;
-		else if(direction == ForgeDirection.DOWN)
+		else if(direction == EnumFacing.DOWN)
 			yProgress = (int) (insetY + ( ( backHeight - ( insetY*2 ) )*percent)) + foreHeight/2;
 		else
 			yProgress = insetY;

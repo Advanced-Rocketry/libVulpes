@@ -1,6 +1,7 @@
 package zmaster587.libVulpes.tile;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 
 public interface IMultiblock {
 	
@@ -8,9 +9,9 @@ public interface IMultiblock {
 	
 	public TileEntity getMasterBlock();
 	
-	public void setComplete(int x, int y, int z);
+	public void setComplete(BlockPos pos);
 	
 	public void setIncomplete();
 	
-	public void setMasterBlock(int x, int y, int z);
+	public void setMasterBlock(BlockPos pos);
 }

@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import zmaster587.libVulpes.interfaces.INetworkEntity;
 import zmaster587.libVulpes.util.INetworkMachine;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -15,9 +13,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PacketItemModifcation extends BasePacket {
 
@@ -54,21 +55,17 @@ public class PacketItemModifcation extends BasePacket {
 	}
 
 	private void write(PacketBuffer out) {
-		out.writeInt(entity.worldObj.provider.dimensionId);
+		out.writeInt(entity.worldObj.provider.getDimension());
 		out.writeInt(entity.getEntityId());
 		out.writeByte(packetId);
 
 		out.writeBoolean(!nbt.hasNoTags());
 
 		if(!nbt.hasNoTags()) {
-			try {
-				out.writeNBTTagCompoundToBuffer(nbt);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			out.writeNBTTagCompoundToBuffer(nbt);
 		}
-		
-		machine.writeDataToNetwork(out, packetId, entity.getHeldItem());
+
+		machine.writeDataToNetwork(out, packetId, entity.getHeldItem(EnumHand.MAIN_HAND));
 	}
 
 	@Override
@@ -100,7 +97,7 @@ public class PacketItemModifcation extends BasePacket {
 		}
 
 		if(ent != null && ent instanceof EntityPlayer) {
-			ItemStack itemStack = ((EntityPlayer)ent).getHeldItem();
+			ItemStack itemStack = ((EntityPlayer)ent).getHeldItem(EnumHand.MAIN_HAND);
 			if(itemStack != null && itemStack.getItem() instanceof INetworkItem) {
 				((INetworkItem)itemStack.getItem()).readDataFromNetwork(in, packetId, nbt, itemStack);
 			}
@@ -111,9 +108,9 @@ public class PacketItemModifcation extends BasePacket {
 	}
 
 	public void execute(EntityPlayer player, Side side) {
-		
+
 		if(player != null) {
-			ItemStack itemStack = player.getHeldItem();
+			ItemStack itemStack = player.getHeldItem(EnumHand.MAIN_HAND);
 			if(itemStack != null && itemStack.getItem() instanceof INetworkItem) {
 				((INetworkItem)itemStack.getItem()).useNetworkData(player, side, packetId, nbt, itemStack);
 			}
@@ -162,7 +159,7 @@ public class PacketItemModifcation extends BasePacket {
 		}
 
 		if(ent != null && ent instanceof EntityPlayer) {
-			ItemStack itemStack = ((EntityPlayer)ent).getHeldItem();
+			ItemStack itemStack = ((EntityPlayer)ent).getHeldItem(EnumHand.MAIN_HAND);
 			if(itemStack != null && itemStack.getItem() instanceof INetworkItem) {
 				((INetworkItem)itemStack.getItem()).readDataFromNetwork(in, packetId, nbt, itemStack);
 			}

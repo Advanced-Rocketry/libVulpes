@@ -1,18 +1,22 @@
 package zmaster587.libVulpes.block.multiblock;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -23,61 +27,65 @@ import net.minecraft.world.World;
 public class BlockMultiblockPlaceHolder extends BlockContainer {
 
 	public BlockMultiblockPlaceHolder() {
-		super(Material.iron);
+		super(Material.IRON);
 	}
-
+	
 	//Make invisible
 	@Override
-	public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int x, int y, int z, int l) {
+	public boolean shouldSideBeRendered(IBlockState blockState,
+			IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
 		return false;
 	}
 	
 	@Override
-	public boolean isBlockNormalCube() {
-		return false;
-	}
-	@Override
-	public boolean isOpaqueCube() {
+	public boolean isBlockNormalCube(IBlockState state) {
 		return false;
 	}
 	
 	@Override
-	public boolean hasTileEntity(int metadata) {
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
+
+	@Override
+	public boolean hasTileEntity(IBlockState state) {
 		return true;
 	}
 
 	//Make sure to get the block this one is storing rather than the placeholder itself
 	@Override
-	public ItemStack getPickBlock(MovingObjectPosition target, World world,
-			int x, int y, int z, EntityPlayer player) {
-		TilePlaceholder tile = (TilePlaceholder)world.getTileEntity(x, y, z);
-		return new ItemStack(tile.getReplacedBlock(), 1,tile.getReplacedBlockMeta());
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target,
+			World world, BlockPos pos, EntityPlayer player) {
+		
+		TilePlaceholder tile = (TilePlaceholder)world.getTileEntity(pos);
+		return new ItemStack(tile.getReplacedState().getBlock(), 1, tile.getReplacedMeta());
 	}
+	
+	
 
 	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z,
-			int metadata, int fortune) {
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos,
+			IBlockState state, int fortune) {
 		return new ArrayList<ItemStack>();
 	}
 	
 	@Override
-	public void onBlockHarvested(World world, int x,
-			int y, int z, int meta,
-			EntityPlayer player) {
-
-		super.onBlockHarvested(world, x, y, z, meta, player);
+	public void onBlockHarvested(World world, BlockPos pos,
+			IBlockState state, EntityPlayer player) {
+		
+		super.onBlockHarvested(world, pos, state, player);
 
 		if(!world.isRemote && !player.capabilities.isCreativeMode) {
-			TilePlaceholder tile = (TilePlaceholder)world.getTileEntity(x, y, z);
+			TilePlaceholder tile = (TilePlaceholder)world.getTileEntity(pos);
 
-			Block newBlock = tile.getReplacedBlock();
-			meta = tile.getReplacedBlockMeta();
+			Block newBlock = tile.getReplacedState().getBlock();
+			int meta = tile.getReplacedMeta();
 
-			if(newBlock != null && newBlock != Blocks.air && player.canHarvestBlock(newBlock)) {
-				ArrayList<ItemStack> stackList = newBlock.getDrops(world, x, y, z, meta, 0);
+			if(newBlock != null && newBlock != Blocks.AIR && player.canHarvestBlock(newBlock.getStateFromMeta(meta))) {
+				List<ItemStack> stackList = newBlock.getDrops(world, pos, state, 0);
 
 				for(ItemStack stack : stackList) {
-					EntityItem entityItem = new EntityItem(world, x, y, z, stack);
+					EntityItem entityItem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 					world.spawnEntityInWorld(entityItem);
 
 				}
@@ -87,27 +95,27 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 
 
 	@Override
-	public void onBlockPreDestroy(World world, int x,
-			int y, int z, int oldmeta) {
-		super.onBlockPreDestroy(world, x, y, z,
-				oldmeta);
+	public void onBlockDestroyedByPlayer(World world, BlockPos pos,
+			IBlockState state) {
+		super.onBlockDestroyedByPlayer(world, pos,
+				state);
 
-		TileEntity tile = world.getTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(pos);
 
 		if(tile != null && tile instanceof TilePlaceholder) {
 			tile = ((TilePlaceholder)tile).getMasterBlock();
 			if(tile instanceof TileMultiBlock)
-				((TileMultiBlock)tile).deconstructMultiBlock(world,x,y,z,true);
+				((TileMultiBlock)tile).deconstructMultiBlock(world, pos, true);
 		}
 	}
 
 	@Override
-	public TileEntity createTileEntity(World world, int metadata) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TilePlaceholder();
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int metadata) {
-		return createTileEntity(world, metadata);
+	public TileEntity createNewTileEntity(World worldIn, int meta) {
+		return new TilePlaceholder();
 	}
 }

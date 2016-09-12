@@ -6,7 +6,7 @@ import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
@@ -50,14 +50,14 @@ public class ContainerModular extends Container {
 	}
 
 	@Override
-	public void addCraftingToCrafters(ICrafting crafter) {
-		super.addCraftingToCrafters(crafter);
+	public void addListener(IContainerListener listener) {
+		super.addListener(listener);
 
 		int moduleIndex = 0;
 
 		for(ModuleBase module : modules) {
 			//for(int i = 0; i < module.numChangesToSend(); i++) {
-			module.sendInitialChanges(this, crafter, moduleIndex);
+			module.sendInitialChanges(this, listener, moduleIndex);
 
 			moduleIndex+= module.numberOfChangesToSend();
 			//}
@@ -74,8 +74,8 @@ public class ContainerModular extends Container {
 			for(int i = 0; i < module.numberOfChangesToSend(); i++) {
 				if(module.isUpdateRequired(i)) {
 
-					for (int j = 0; j < this.crafters.size(); ++j) {
-						module.sendChanges(this, ((ICrafting)this.crafters.get(j)), moduleIndex, i);
+					for (int j = 0; j < this.listeners.size(); ++j) {
+						module.sendChanges(this, ((IContainerListener)this.listeners.get(j)), moduleIndex, i);
 					}
 				}
 				moduleIndex++;

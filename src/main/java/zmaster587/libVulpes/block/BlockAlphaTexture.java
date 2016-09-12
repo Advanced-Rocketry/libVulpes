@@ -2,6 +2,7 @@ package zmaster587.libVulpes.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 
 public class BlockAlphaTexture extends Block {
 
@@ -10,7 +11,8 @@ public class BlockAlphaTexture extends Block {
 	}
 
 	@Override
-	public boolean isOpaqueCube() {
+	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
+	
 }

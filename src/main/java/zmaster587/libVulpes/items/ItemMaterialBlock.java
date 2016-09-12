@@ -1,21 +1,18 @@
 package zmaster587.libVulpes.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.libVulpes.api.material.Material;
 import zmaster587.libVulpes.tile.TileMaterial;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlockWithMetadata;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
-public class ItemMaterialBlock extends ItemBlockWithMetadata {
+public class ItemMaterialBlock extends ItemBlock {
 
 	public ItemMaterialBlock(Block block) {
-		super(block,block);
+		super(block);
 	}
 
 	/*@Override

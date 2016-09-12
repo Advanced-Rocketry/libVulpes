@@ -8,10 +8,11 @@ import org.apache.commons.lang3.ArrayUtils;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ITickable;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 
-public class TileSchematic extends TilePlaceholder {
+public class TileSchematic extends TilePlaceholder implements ITickable {
 
 	private final int ttl = 6000;
 	private int timeAlive = 0;
@@ -30,49 +31,20 @@ public class TileSchematic extends TilePlaceholder {
 		possibleBlocks = block;
 	}
 
-	@Override
-	public void setReplacedBlock(Block block) {
-		super.setReplacedBlock(block);
-		possibleBlocks.clear();
-	}
 
 	@Override
-	public void setReplacedBlockMeta(byte meta) {
-		super.setReplacedBlockMeta(meta);
-		possibleBlocks.clear();
-	}
-
-	@Override
-	public Block getReplacedBlock() {
-		if(possibleBlocks.isEmpty())
-			return super.getReplacedBlock();
-		else {
-			return possibleBlocks.get((timeAlive/20) % possibleBlocks.size()).getBlock();
-		}
-	}
-
-	@Override
-	public byte getReplacedBlockMeta() {
-		if(possibleBlocks.isEmpty())
-			return super.getReplacedBlockMeta();
-		else
-			return possibleBlocks.get((timeAlive/20) % possibleBlocks.size()).getMeta();
-	}
-
-	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
 
 		if(!worldObj.isRemote) {
 			if(timeAlive == ttl) {
-				worldObj.setBlockToAir(xCoord, yCoord, zCoord);
+				worldObj.setBlockToAir(pos);
 			}
 		}
 		timeAlive++;
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setInteger("timeAlive", timeAlive);
 
@@ -89,6 +61,8 @@ public class TileSchematic extends TilePlaceholder {
 			nbt.setIntArray("blockIds", ArrayUtils.toPrimitive(blockIds.toArray(bufferSpace1)));
 			nbt.setIntArray("blockMetas", ArrayUtils.toPrimitive(blockMetas.toArray(bufferSpace2)));
 		}
+		
+		return nbt;
 	}
 
 	@Override
@@ -102,7 +76,7 @@ public class TileSchematic extends TilePlaceholder {
 			possibleBlocks.clear();
 
 			for(int i = 0; i < block.length; i++) {
-				if(Block.getBlockById(block[i]) != Blocks.air)
+				if(Block.getBlockById(block[i]) != Blocks.AIR)
 					possibleBlocks.add(new BlockMeta(Block.getBlockById(block[i]), metas[i]));
 			}
 		}

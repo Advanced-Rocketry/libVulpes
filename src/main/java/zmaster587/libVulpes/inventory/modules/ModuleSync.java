@@ -1,7 +1,7 @@
 package zmaster587.libVulpes.inventory.modules;
 
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 
 public class ModuleSync extends ModuleBase {
 
@@ -30,7 +30,7 @@ public class ModuleSync extends ModuleBase {
 	}
 	
 	@Override
-	public void sendChanges(Container container, ICrafting crafter,
+	public void sendChanges(Container container, IContainerListener crafter,
 			int variableId, int localId) {
 		crafter.sendProgressBarUpdate(container, variableId, tile.getData(id));
 	}

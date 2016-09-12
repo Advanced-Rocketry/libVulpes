@@ -12,8 +12,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PacketEntity extends BasePacket {
 
@@ -47,18 +47,14 @@ public class PacketEntity extends BasePacket {
 	}
 
 	private void write(PacketBuffer out) {
-		out.writeInt(((Entity)entity).worldObj.provider.dimensionId);
+		out.writeInt(((Entity)entity).worldObj.provider.getDimension());
 		out.writeInt(((Entity)entity).getEntityId());
 		out.writeByte(packetId);
 
 		out.writeBoolean(!nbt.hasNoTags());
 
 		if(!nbt.hasNoTags()) {
-			try {
-				out.writeNBTTagCompoundToBuffer(nbt);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			out.writeNBTTagCompoundToBuffer(nbt);
 		}
 
 		entity.writeDataToNetwork(out, packetId);

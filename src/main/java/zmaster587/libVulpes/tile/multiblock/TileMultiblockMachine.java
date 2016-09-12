@@ -5,7 +5,6 @@ import io.netty.buffer.ByteBuf;
 import java.util.LinkedList;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.util.ZUtils;
@@ -15,12 +14,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
@@ -47,31 +46,26 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	}
 
 	@Override
-	public Packet getDescriptionPacket() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
 
 		writeToNBT(nbt);
 		nbt.setBoolean("built", canRender);
 		nbt.setBoolean("hadPowerLastTick", hadPowerLastTick);
-		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, nbt);
+		return new SPacketUpdateTileEntity(pos, 0, nbt);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		NBTTagCompound nbt = pkt.func_148857_g();
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		NBTTagCompound nbt = pkt.getNbtCompound();
 		canRender = nbt.getBoolean("built");
 		hadPowerLastTick = nbt.getBoolean("hadPowerLastTick");
 		readFromNBT(nbt);
 	}
 
 	@Override
-	public boolean canUpdate() {
-		return true;
-	}
-
-	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
+		super.update();
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0  && !worldObj.isRemote) {
@@ -99,7 +93,6 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 					if(!hadPowerLastTick) {
 						hadPowerLastTick = true;
 						markDirty();
-						worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 					}
 
 					useEnergy(powerPerTick);
@@ -110,7 +103,6 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 			else if(!worldObj.isRemote && hadPowerLastTick) { //If server and out of power check to see if client needs update
 				hadPowerLastTick = false;
 				markDirty();
-				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			}
 		}
 	}
@@ -134,10 +126,11 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	 * @param destroyedZ z coord of destroyed block
 	 * @param blockBroken set true if the block is being broken, otherwise some other means is being used to disassemble the machine
 	 */
-	public void deconstructMultiBlock(World world, int destroyedX, int destroyedY, int destroyedZ, boolean blockBroken) {
+	@Override
+	public void deconstructMultiBlock(World world, BlockPos destroyedPos, boolean blockBroken) {
 		outputItemStacks = null;
 		outputFluidStacks = null;
-		super.deconstructMultiBlock(world, destroyedX, destroyedY, destroyedZ, blockBroken);
+		super.deconstructMultiBlock(world, destroyedPos, blockBroken);
 	}
 
 	protected void processComplete() {
@@ -152,7 +145,6 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		onInventoryUpdated();
 
 		this.markDirty();
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	//When the output of the recipe is dumped to the inventory
@@ -178,7 +170,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 		//Handle fluids
 		for(int i = 0; i < outputFluidStacks.size() ; i++) {
-			fluidOutPorts.get(i).fill(ForgeDirection.UNKNOWN, outputFluidStacks.get(i), true);
+			fluidOutPorts.get(i).fill(outputFluidStacks.get(i), true);
 		}
 	}
 
@@ -253,7 +245,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 				fluidStack.amount = fluidInputCounter[i];
 
 				FluidStack drainedFluid;
-				drainedFluid = fluidInput.drain(ForgeDirection.UNKNOWN, recipe.getFluidIngredients().get(i), true);
+				drainedFluid = fluidInput.drain(recipe.getFluidIngredients().get(i), true);
 
 				if(drainedFluid != null)
 					fluidInputCounter[i] -= drainedFluid.amount;
@@ -364,7 +356,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		//Populate Fluid Counters
 		for(IFluidHandler fluidInput : fluidInPorts) {
 			for(int i = 0; i < recipe.getFluidIngredients().size(); i++) {
-				FluidStack fluidStack = fluidInput.drain(ForgeDirection.UNKNOWN, recipe.getFluidIngredients().get(i), false);
+				FluidStack fluidStack = fluidInput.drain(recipe.getFluidIngredients().get(i), false);
 
 				if(fluidStack != null)
 					fluidInputCounter[i] += fluidStack.amount;
@@ -392,7 +384,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 		//Populate Fluid Counters
 		for(int i = 0; i < recipe.getFluidOutputs().size(); i++) {
-			fluidOutputCounter[i] -= fluidOutPorts.get(i).fill(ForgeDirection.UNKNOWN, recipe.getFluidOutputs().get(i), false);
+			fluidOutputCounter[i] -= fluidOutPorts.get(i).fill(recipe.getFluidOutputs().get(i), false);
 		}
 
 		for(int i = 0; i < fluidOutputCounter.length; i++)
@@ -435,7 +427,6 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 				outputFluidStacks = recipe.getFluidOutputs();
 
 				markDirty();
-				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 
 				setMachineRunning(true); //turn on machine
 
@@ -455,7 +446,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
 		//Save output items if applicable
@@ -482,6 +473,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 			}
 			nbt.setTag("outputFluids", list);
 		}
+		return nbt;
 	}
 
 	@Override

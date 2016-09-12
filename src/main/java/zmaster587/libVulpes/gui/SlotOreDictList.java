@@ -19,15 +19,16 @@ public class SlotOreDictList extends Slot {
 	@Override
 	public boolean isItemValid(ItemStack stack)
 	{
-		int stackId = OreDictionary.getOreID(stack);
-		if(stackId == -1)
-			return false;
-		
-		for(String str : allowed) {
-			if(OreDictionary.getOreName(stackId).contains(str))
-				return true;
+		for(String acceptedNames : allowed) {
+			int oreId = OreDictionary.getOreID(acceptedNames);
+			if(oreId == -1)
+				continue;
+
+			for(int i : OreDictionary.getOreIDs(stack)) {
+				if(i == oreId)
+					return true;
+			}
 		}
-		
 		return false;
 	}
 }

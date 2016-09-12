@@ -2,16 +2,14 @@ package zmaster587.libVulpes.block;
 
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockMulti extends Block {
 
@@ -20,7 +18,6 @@ public class BlockMulti extends Block {
 	}
 
 	protected String[] names;
-	protected IIcon[] textures;
 	
 	
 	/**
@@ -33,26 +30,15 @@ public class BlockMulti extends Block {
 	}
 	
 	@Override
-	public int damageDropped(int meta) {
-		return meta;
+	public int damageDropped(IBlockState state) {
+		state.get
+		return super.damageDropped(state);
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int metadata)
-	{
-		return textures[metadata];
+	public int damageDropped(int meta) {
+		return meta;
 	}
-	
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerBlockIcons(IIconRegister reg)
-    {
-    	textures = new IIcon[names.length];
-    	for(int i = 0; i < names.length; i++) {
-    		textures[i] = reg.registerIcon(names[i]);
-    	}
-    }
     
     @Override 
     public int getDamageValue(World world, int x, int y, int z)

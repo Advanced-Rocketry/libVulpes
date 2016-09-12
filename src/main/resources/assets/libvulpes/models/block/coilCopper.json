@@ -1,0 +1,7 @@
+{
+    "parent": "block/cube_column",
+    "textures": {
+        "end": "libvulpes:blocks/coilPole",
+        "side": "libvulpes:blocks/coilSide"
+    }
+}

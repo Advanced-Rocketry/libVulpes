@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.inventory.modules;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -7,9 +8,6 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import zmaster587.libVulpes.inventory.GuiModular;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -21,6 +19,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ModuleContainerPan extends ModuleBase {
 
@@ -206,7 +206,7 @@ public class ModuleContainerPan extends ModuleBase {
 	public void onMouseClicked(GuiModular gui,int x, int y, int button) {
 		super.onMouseClicked(gui, x, y, button);
 
-		ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft(), Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
+		ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());
 		int i = scaledresolution.getScaledWidth();
 		int j = scaledresolution.getScaledHeight();
 		int scaledX = Mouse.getX() * i / Minecraft.getMinecraft().displayWidth;
@@ -227,10 +227,16 @@ public class ModuleContainerPan extends ModuleBase {
 					ActionPerformedEvent.Pre event = new ActionPerformedEvent.Pre(gui, button2, buttonList);
 					if(MinecraftForge.EVENT_BUS.post(event))
 						break;
-					event.button.func_146113_a(gui.mc.getSoundHandler());
-					gui.actionPerformed(event.button);
+					event.getButton().playPressSound(gui.mc.getSoundHandler());
+					
+					try {
+						gui.actionPerformed(event.getButton());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					
 					if(gui.equals(gui.mc.currentScreen))
-						MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(gui, event.button, buttonList));
+						MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(gui, event.getButton(), buttonList));
 
 				}
 			}
@@ -288,7 +294,7 @@ public class ModuleContainerPan extends ModuleBase {
 
 		if(isMouseInBounds(0, 0, x, y) ) {
 
-			ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft(), Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
+			ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());
 			int i = scaledresolution.getScaledWidth();
 			int j = scaledresolution.getScaledHeight();
 			final int k = Mouse.getX() * i / Minecraft.getMinecraft().displayWidth;

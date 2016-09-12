@@ -5,15 +5,14 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ModulePower extends ModuleBase {
 
@@ -91,7 +90,7 @@ public class ModulePower extends ModuleBase {
 	}
 
 	@Override
-	public void sendChanges(Container container, ICrafting crafter, int variableId, int localId) {
+	public void sendChanges(Container container, IContainerListener crafter, int variableId, int localId) {
 
 		if(localId == 0) {
 			int data = (tile.getEnergyStored() & 0xFFFF);

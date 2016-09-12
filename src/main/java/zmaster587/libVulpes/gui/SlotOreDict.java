@@ -17,10 +17,15 @@ public class SlotOreDict extends Slot {
 	@Override
 	public boolean isItemValid(ItemStack stack)
 	{
-		int stackId = OreDictionary.getOreID(stack);
-		if(stackId == -1)
+		int oreId = OreDictionary.getOreID(acceptedNames);
+		if(oreId == -1)
 			return false;
 		
-		return OreDictionary.getOreName(stackId).contains(acceptedNames);
+		for(int i : OreDictionary.getOreIDs(stack)) {
+			if(i == oreId)
+				return true;
+		}
+		
+		return false;
 	}
 }

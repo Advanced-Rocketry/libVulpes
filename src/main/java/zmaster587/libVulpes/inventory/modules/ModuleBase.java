@@ -10,17 +10,19 @@ import org.lwjgl.opengl.GL12;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.inventory.GuiModular;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class ModuleBase {
 
@@ -154,7 +156,7 @@ public abstract class ModuleBase {
 	 * @param variableId container id to send
 	 * @param localId id of the object, scoped to this module
 	 */
-	public void sendChanges(Container container, ICrafting crafter, int variableId, int localId) {
+	public void sendChanges(Container container, IContainerListener crafter, int variableId, int localId) {
 
 	}
 
@@ -164,7 +166,7 @@ public abstract class ModuleBase {
 	 * @param crafter crafter to send the information to
 	 * @param variableId non-scoped id of the object to send
 	 */
-	public void sendInitialChanges(Container container, ICrafting crafter, int variableId) {
+	public void sendInitialChanges(Container container, IContainerListener crafter, int variableId) {
 		for(int i = 0; i < numberOfChangesToSend(); i++) {
 			sendChanges(container, crafter, variableId + i, i);
 		}
@@ -305,14 +307,16 @@ public abstract class ModuleBase {
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.setColorRGBA_F(f1, f2, f3, f);
-		tessellator.addVertex((double)x2, (double)y1, (double)zLevel);
-		tessellator.addVertex((double)x1, (double)y1, (double)zLevel);
-		tessellator.setColorRGBA_F(f5, f6, f7, f4);
-		tessellator.addVertex((double)x1, (double)y2, (double)zLevel);
-		tessellator.addVertex((double)x2, (double)y2, (double)zLevel);
+		Tessellator tessellator = Tessellator.getInstance();
+		VertexBuffer vertex = tessellator.getBuffer();
+		vertex.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		vertex.color(f1, f2, f3, f);
+		
+		vertex.pos((double)x2, (double)y1, (double)zLevel);
+		vertex.pos((double)x1, (double)y1, (double)zLevel);
+		vertex.color(f5, f6, f7, f4);
+		vertex.pos((double)x1, (double)y2, (double)zLevel);
+		vertex.pos((double)x2, (double)y2, (double)zLevel);
 		tessellator.draw();
 		GL11.glShadeModel(GL11.GL_FLAT);
 		GL11.glDisable(GL11.GL_BLEND);

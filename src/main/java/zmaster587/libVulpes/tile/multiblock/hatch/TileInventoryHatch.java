@@ -14,6 +14,7 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 
 public class TileInventoryHatch extends TilePointer implements ISidedInventory, IModularInventory {
 
@@ -28,9 +29,10 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		inventory.writeToNBT(nbt);
+		return nbt;
 	}
 
 	@Override
@@ -56,11 +58,6 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) {
-		return inventory.getStackInSlotOnClosing(slot);
-	}
-
-	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		setInventorySlotContentsNoUpdate(slot, stack);
 		if(this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
@@ -73,8 +70,8 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
-		return inventory.hasCustomInventoryName();
+	public boolean hasCustomName() {
+		return inventory.hasCustomName();
 	}
 
 	@Override
@@ -84,16 +81,16 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player) {
-		return player.getDistance(xCoord, yCoord, zCoord) < 64;
+		return player.getDistanceSq(pos) < 64;
 	}
 
 	@Override
-	public void openInventory() {
+	public void openInventory(EntityPlayer entity) {
 
 	}
 
 	@Override
-	public void closeInventory() {
+	public void closeInventory(EntityPlayer entity) {
 
 	}
 
@@ -103,21 +100,20 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int side) {
-
-		return inventory.getAccessibleSlotsFromSide(side);
+	public int[] getSlotsForFace(EnumFacing side) {
+		return inventory.getSlotsForFace(side);
 	}
 
 	@Override
-	public boolean canInsertItem(int p_102007_1_, ItemStack p_102007_2_,
-			int p_102007_3_) {
-		return inventory.canInsertItem(p_102007_1_, p_102007_2_, p_102007_3_);
+	public boolean canInsertItem(int index, ItemStack itemStackIn,
+			EnumFacing direction) {
+		return inventory.canInsertItem(index, itemStackIn, direction);
 	}
 
 	@Override
-	public boolean canExtractItem(int p_102008_1_, ItemStack p_102008_2_,
-			int p_102008_3_) {
-		return inventory.canExtractItem(p_102008_1_, p_102008_2_, p_102008_3_);
+	public boolean canExtractItem(int index, ItemStack stack,
+			EnumFacing direction) {
+		return inventory.canExtractItem(index, stack, direction);
 	}
 
 	@Override
@@ -130,7 +126,7 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	}
 
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 		return getModularInventoryName();
 	}
 
@@ -153,6 +149,32 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 				((TileMultiBlock) tile).invalidateComponent(this);
 			}
 		}
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		return inventory.removeStackFromSlot(index);
+	}
+
+	@Override
+	public int getField(int id) {
+		return inventory.getField(id);
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		inventory.setField(id, value);
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		return inventory.getFieldCount();
+	}
+
+	@Override
+	public void clear() {
+		inventory.clear();
 	}
 
 }

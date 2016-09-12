@@ -10,6 +10,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class ItemLinker extends Item {
@@ -21,7 +26,7 @@ public class ItemLinker extends Item {
 		super();
 
 		this.maxStackSize = 1;
-		this.setCreativeTab(CreativeTabs.tabTransport);
+		this.setCreativeTab(CreativeTabs.TRANSPORTATION);
 		dimId = 0;
 	}
 
@@ -141,31 +146,33 @@ public class ItemLinker extends Item {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world,
-			EntityPlayer player) {
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world,
+			EntityPlayer player, EnumHand hand) {
 
 		if(player.isSneaking()) {
 			resetPosition(stack);
 		}
-		return super.onItemRightClick(stack, world, player);
+		return super.onItemRightClick(stack, world, player, hand);
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
-	{
-		TileEntity entity = world.getTileEntity(par4, par5, par6);
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn,
+			World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
+			float hitX, float hitY, float hitZ) {
+		
+		TileEntity entity = worldIn.getTileEntity(pos);
 
 		if(entity != null) {
 			if(entity instanceof ILinkableTile) {
-				applySettings(itemStack, (ILinkableTile)entity, player, world);
-				return true;
+				applySettings(stack, (ILinkableTile)entity, playerIn, worldIn);
+				return EnumActionResult.FAIL;
 			}
 		}
-		else if(player.isSneaking()) {
-			resetPosition(itemStack);
+		else if(playerIn.isSneaking()) {
+			resetPosition(stack);
 		}
 
-		return false;
+		return EnumActionResult.FAIL;
 	}
 
 	protected void applySettings(ItemStack itemStack, ILinkableTile pad, EntityPlayer player, World world) {

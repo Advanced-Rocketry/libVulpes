@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleOutputSlotArray;
 
@@ -26,8 +27,8 @@ public class TileOutputHatch extends TileInventoryHatch {
 	}
 
 	@Override
-	public boolean canInsertItem(int p_102007_1_, ItemStack p_102007_2_,
-			int p_102007_3_) {
+	public boolean canInsertItem(int index, ItemStack itemStackIn,
+			EnumFacing direction) {
 		return false;
 	}
 

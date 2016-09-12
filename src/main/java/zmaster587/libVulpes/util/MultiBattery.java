@@ -2,7 +2,6 @@ package zmaster587.libVulpes.util;
 
 import java.util.LinkedList;
 
-import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 
 public class MultiBattery implements IUniversalEnergy {

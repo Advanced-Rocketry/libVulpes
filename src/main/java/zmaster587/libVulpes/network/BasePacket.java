@@ -3,10 +3,11 @@ package zmaster587.libVulpes.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class BasePacket {
 	public static final String CHANNEL = "advancedRocketry";

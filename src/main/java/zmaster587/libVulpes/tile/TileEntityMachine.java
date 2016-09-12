@@ -1,22 +1,22 @@
 package zmaster587.libVulpes.tile;
 
 
-import cofh.api.energy.EnergyStorage;
+import zmaster587.libVulpes.util.UniversalBattery;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
 
-public abstract class TileEntityMachine extends TileEntity implements ISidedInventory  {
+public abstract class TileEntityMachine extends TileEntity implements ISidedInventory, ITickable  {
 	
 	
-	protected EnergyStorage energy;
+	protected UniversalBattery energy;
 	
 	protected ItemStack inv[];
 	
@@ -31,10 +31,11 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 	public void setTotalProgressTime(int time) { totalTime = time; }
 	
 	protected void setRunning(boolean on, World world) {
-		if(on)
+		//TODO set block state
+		/*if(on)
 			world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) | 8, 2);
 		else
-			world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) & (~8), 2);
+			world.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, world.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) & (~8), 2);*/
 	}
 	
 	protected boolean getIsRunning() {
@@ -42,20 +43,20 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 	}
 	
 	@Override
-	public Packet getDescriptionPacket() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);
 
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
+		return new SPacketUpdateTileEntity(this.pos, 0, nbt);
 	}
 	
 	@Override 
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.func_148857_g());
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		this.readFromNBT(pkt.getNbtCompound());
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
 		NBTTagList list = new NBTTagList();
@@ -76,6 +77,8 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 		
 		nbt.setInteger("progress", progress);
 		nbt.setInteger("totalTime", totalTime);
+		
+		return nbt;
 	}
 
 	@Override
@@ -130,11 +133,6 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 		return ret;
 	}
 	
-	@Override
-	public ItemStack getStackInSlotOnClosing(int i) {
-		return inv[i];
-	}
-	
 	public abstract void onInventoryUpdate();
 	
 	@Override
@@ -152,13 +150,6 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 	
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-		return entityplayer.getDistanceSq(this.xCoord, this.yCoord, this.zCoord) < 64;
+		return entityplayer.getDistanceSq(this.pos) < 64;
 	}
-	@Override
-	public void openInventory() {}
-	@Override
-	public void closeInventory() {}
-	
-	@Override
-	public boolean hasCustomInventoryName() { return false; }
 }

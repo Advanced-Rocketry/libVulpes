@@ -1,20 +1,20 @@
 package zmaster587.libVulpes.tile;
 
 import zmaster587.libVulpes.api.IUniversalEnergy;
+import zmaster587.libVulpes.energy.IPower;
+import zmaster587.libVulpes.util.UniversalBattery;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyHandler;
+import net.minecraft.util.EnumFacing;
 
+public abstract class TileEntityPowerMachine extends TileEntityMachine implements IPower, IUniversalEnergy {
 
-public abstract class TileEntityRFMachine extends TileEntityMachine implements IEnergyHandler, IUniversalEnergy {
-
-	protected EnergyStorage energy;
+	protected UniversalBattery energy;
 	
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		energy.writeToNBT(nbt);
+		return nbt;
 	}
 	
 	@Override
@@ -24,24 +24,24 @@ public abstract class TileEntityRFMachine extends TileEntityMachine implements I
 	}
 	
 	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive,
+	public int receiveEnergy(EnumFacing from, int maxReceive,
 			boolean simulate) {
-		return energy.receiveEnergy(maxReceive, simulate);
+		return energy.acceptEnergy(maxReceive, simulate);
 	}
 
 	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract,
+	public int extractEnergy(EnumFacing from, int maxExtract,
 			boolean simulate) {
 		return 0;
 	}
 
 	@Override
-	public int getEnergyStored(ForgeDirection from) {
+	public int getEnergyStored(EnumFacing from) {
 		return energy.getEnergyStored();
 	}
 
 	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
+	public int getMaxEnergyStored(EnumFacing from) {
 		return energy.getMaxEnergyStored();
 	}
 	
@@ -63,7 +63,7 @@ public abstract class TileEntityRFMachine extends TileEntityMachine implements I
 	}
 
 	@Override
-	public boolean canConnectEnergy(ForgeDirection arg0) {
+	public boolean canConnectEnergy(EnumFacing arg0) {
 		return true;
 	}
 }

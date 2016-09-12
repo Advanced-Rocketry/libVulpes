@@ -1,7 +1,6 @@
 package zmaster587.libVulpes.util;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 
 public class UniversalBattery implements IUniversalEnergy {

@@ -3,15 +3,15 @@ package zmaster587.libVulpes.inventory.modules;
 import java.util.LinkedList;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.libVulpes.gui.GuiToggleButtonImage;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ModuleToggleSwitch extends ModuleButton {
 
@@ -97,7 +97,7 @@ public class ModuleToggleSwitch extends ModuleButton {
 	}
 	
 	@Override
-	public void sendChanges(Container container, ICrafting crafter,
+	public void sendChanges(Container container, IContainerListener crafter,
 			int variableId, int localId) {
 		crafter.sendProgressBarUpdate(container, variableId, currentState ? 1 : 0);
 	}

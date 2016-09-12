@@ -5,13 +5,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import zmaster587.libVulpes.client.util.ProgressBarImage;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
-import net.minecraft.util.MathHelper;
+import net.minecraft.inventory.IContainerListener;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ModuleProgress extends ModuleBase {
 
@@ -86,7 +86,7 @@ public class ModuleProgress extends ModuleBase {
 	}
 
 	@Override
-	public void sendChanges(Container container, ICrafting crafter, int variableId, int localId) {
+	public void sendChanges(Container container, IContainerListener crafter, int variableId, int localId) {
 		switch(localId) {
 		case 0:
 			crafter.sendProgressBarUpdate(container, variableId, progress.getProgress(id));

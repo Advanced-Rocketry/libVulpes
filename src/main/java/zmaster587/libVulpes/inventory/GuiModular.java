@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.inventory;
 
+import java.io.IOException;
 import java.util.List;
 
 import zmaster587.libVulpes.gui.CommonResources;
@@ -39,7 +40,7 @@ public class GuiModular extends GuiContainer {
 	}
 
 	@Override
-	public void actionPerformed(GuiButton button) {
+	public void actionPerformed(GuiButton button) throws IOException {
 		super.actionPerformed(button);
 
 		for(ModuleBase module : modules) {
@@ -49,7 +50,7 @@ public class GuiModular extends GuiContainer {
 	}
 
 	@Override
-	protected void keyTyped(char key, int something) {
+	protected void keyTyped(char key, int something) throws IOException {
 		super.keyTyped(key, something);
 		for(ModuleBase module : modules)
 			module.keyTyped(key, something);
@@ -69,7 +70,7 @@ public class GuiModular extends GuiContainer {
 	}
 
 	@Override
-	protected void mouseClicked(int x, int y, int button) {
+	protected void mouseClicked(int x, int y, int button) throws IOException {
 
 		super.mouseClicked(x, y, button);
 

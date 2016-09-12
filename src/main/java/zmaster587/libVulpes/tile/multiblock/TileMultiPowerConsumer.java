@@ -4,13 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
-import cpw.mods.fml.relauncher.Side;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
@@ -25,7 +25,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine.NetworkPackets
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.MultiBattery;
 
-public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMachine, IModularInventory, IProgressBar, IToggleButton {
+public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMachine, IModularInventory, IProgressBar, IToggleButton, ITickable {
 
 	protected MultiBattery batteries = new MultiBattery();
 
@@ -75,12 +75,6 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 		return completionTime > 0 ? currentTime/(float)completionTime : 0f;
 	}
-
-	@Override
-	public boolean canUpdate() {
-		return true;
-	}
-
 	
 	public String getSound() {
 		return null;
@@ -91,8 +85,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 	
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0 && !worldObj.isRemote) {
@@ -104,7 +97,6 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		if(!worldObj.isRemote && worldObj.getTotalWorldTime() % 1000L == 0 && !isComplete()) {
 			attemptCompleteStructure();
 			markDirty();
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 		
 		if(isRunning()) {
@@ -118,7 +110,6 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 					if(!hadPowerLastTick) {
 						hadPowerLastTick = true;
 						markDirty();
-						worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 					}
 
 					useEnergy(powerPerTick);
@@ -127,7 +118,6 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 			else if(!worldObj.isRemote && hadPowerLastTick) { //If server and out of power check to see if client needs update
 				hadPowerLastTick = false;
 				markDirty();
-				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			}
 		}
 	}
@@ -146,7 +136,8 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 	
 	protected void playMachineSound(String str) {
-		worldObj.playSound(xCoord, yCoord, zCoord, str, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.BLOCKS),  0.975f + worldObj.rand.nextFloat()*0.05f, false);
+		//Screw you too
+		//worldObj.playSound(Minecraft.getMinecraft().thePlayer, pos, str, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.BLOCKS),  0.975f + worldObj.rand.nextFloat()*0.05f);
 	}
 
 	public void setMachineEnabled(boolean enabled) {
@@ -169,13 +160,14 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	 * @param destroyedZ z coord of destroyed block
 	 * @param blockBroken set true if the block is being broken, otherwise some other means is being used to disassemble the machine
 	 */
-	public void deconstructMultiBlock(World world, int destroyedX, int destroyedY, int destroyedZ, boolean blockBroken) {
+	@Override
+	public void deconstructMultiBlock(World world, BlockPos destroyedPos, boolean blockBroken) {
 		resetCache();
 		completionTime = 0;
 		currentTime = 0;
 		enabled = false;
 
-		super.deconstructMultiBlock(world, destroyedX, destroyedY, destroyedZ, blockBroken);
+		super.deconstructMultiBlock(world, destroyedPos, blockBroken);
 	}
 
 	protected void processComplete() {
@@ -183,7 +175,6 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		currentTime = 0;
 
 		this.markDirty();
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	/**
@@ -202,23 +193,12 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		return batteries.getEnergyStored() >= amt;
 	}
 
-	public void setMachineRunning(boolean running) {
-		if(running && this.getBlockMetadata() < 8) {
-			this.blockMetadata = getBlockMetadata() | 8;
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.blockMetadata, 2);
-		}
-		else if(!running && this.blockMetadata >= 8) {
-			this.blockMetadata = getBlockMetadata() & 7;
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.blockMetadata, 2); //Turn off machine
-		}
-	}
-
 	@Override
 	protected void integrateTile(TileEntity tile) {
 		super.integrateTile(tile);
 
 		for(BlockMeta block : TileMultiBlock.getMapping('P')) {
-			if(block.getBlock() == worldObj.getBlock(tile.xCoord, tile.yCoord, tile.zCoord))
+			if(block.getBlock() == worldObj.getBlockState(tile.getPos()))
 				batteries.addBattery((IUniversalEnergy) tile);
 		}
 	}
@@ -275,7 +255,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 			//Last ditch effort to update the toggle switch when it's flipped
 			if(!worldObj.isRemote)
-				PacketHandler.sendToNearby(new PacketMachine(this, (byte)NetworkPackets.TOGGLE.ordinal()), worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 64);
+				PacketHandler.sendToNearby(new PacketMachine(this, (byte)NetworkPackets.TOGGLE.ordinal()), worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64);
 		}
 	}
 

@@ -10,9 +10,11 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInputHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,84 +22,40 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockHatch extends BlockMultiblockStructure {
-
-	protected IIcon output;
-
-	IIcon fluidInput;
-
-	IIcon fluidOutput;
 	
 	private final Random random = new Random();
 	
 	public BlockHatch(Material material) {
 		super(material);
 		isBlockContainer = true;
+		this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT,0));
 	}
 	
+    protected BlockStateContainer createBlockState()
+    {
+        return new BlockStateContainer(this, new IProperty[] {VARIANT});
+    }
 	
 	@Override
-	public boolean hasTileEntity(int metadata) {
+	public boolean hasTileEntity(IBlockState state) {
 		return true;
 	}
 	
 	@Override
-	public int damageDropped(int meta) {
-		return meta & 7;
-	}
-
-	
-	@Override
-	public int isProvidingWeakPower(IBlockAccess world,
-			int x, int y, int z, int dir) {
-		ForgeDirection direction = ForgeDirection.getOrientation(dir);
-		boolean isPointer = world.getTileEntity(x - direction.offsetX , y- direction.offsetY, z - direction.offsetZ) instanceof TilePointer;
-		if(isPointer)
-			isPointer = isPointer && !(((TilePointer)world.getTileEntity(x - direction.offsetX , y- direction.offsetY, z- direction.offsetZ)).getMasterBlock() instanceof TileMultiBlock);
-		
-		
-		return !isPointer && (world.getBlockMetadata(x, y, z) & 8) != 0 ? 15 : 0;
+	public int damageDropped(IBlockState state) {
+		return super.damageDropped(state);
 	}
 	
 	@Override
-	public boolean canProvidePower() {
-		return true;
-	}
-	
-	public void setRedstoneState(World world, int x, int y, int z, boolean state) {
-		if(state && (world.getBlockMetadata(x, y, z) & 8) == 0) {
-			world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z) | 8, 3);
-		}
-		else if(!state && (world.getBlockMetadata(x, y, z) & 8) != 0) {
-			world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z) & 7, 3);
-		}
-	}
-	
-	@Override
-	public void registerBlockIcons(IIconRegister iconRegister) {
-		super.registerBlockIcons(iconRegister);
-		output = iconRegister.registerIcon("libvulpes:outputHatch");
-		blockIcon = iconRegister.registerIcon("libvulpes:inputHatch");
-		fluidInput = iconRegister.registerIcon("libvulpes:fluidInput");
-		fluidOutput = iconRegister.registerIcon("libvulpes:fluidOutput");
-	}
-	
-	@Override
-	public IIcon getIcon(int side, int meta) {
-		if((meta & 7) == 0) {
-			return blockIcon;
-		}else if((meta & 7) == 1 ) {
-			return output;
-		}
-		else if((meta & 7) == 2 )
-			return fluidInput;
-		else
-			return fluidOutput;
+	public BlockStateContainer getBlockState() {
+		return super.getBlockState();
 	}
 	
 	@Override
@@ -110,8 +68,9 @@ public class BlockHatch extends BlockMultiblockStructure {
 	}
 	
 	@Override
-	public TileEntity createTileEntity(World world, int metadata) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		//TODO: multiple sized Hatches
+		int metadata = state.getValue(VARIANT);
 		if((metadata & 7) == 0)
 			return new TileInputHatch(4);
 		else if((metadata & 7) == 1)
@@ -125,9 +84,9 @@ public class BlockHatch extends BlockMultiblockStructure {
 	}
 
 	@Override
-	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		
-		TileEntity tile = world.getTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(pos);
 		if(tile != null && tile instanceof IInventory) {
 			IInventory inventory = (IInventory)tile;
 			for(int i = 0; i < inventory.getSizeInventory(); i++) {
@@ -136,7 +95,7 @@ public class BlockHatch extends BlockMultiblockStructure {
 				if(stack == null)
 					continue;
 				
-				EntityItem entityitem = new EntityItem(world, x, y, z, stack);
+				EntityItem entityitem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 				
 				float mult = 0.05F;
 				
@@ -148,28 +107,31 @@ public class BlockHatch extends BlockMultiblockStructure {
 			}
 		}
 		
-		super.breakBlock(world, x, y, z, block, meta);
+		super.breakBlock(world, pos, state);
 	}
-	
+
 	@Override
-	public boolean shouldSideBeRendered(IBlockAccess access, int x, int y, int z, int side) {
-		ForgeDirection direction = ForgeDirection.getOrientation(side);
-		boolean isPointer = access.getTileEntity(x - direction.offsetX , y- direction.offsetY, z - direction.offsetZ) instanceof TilePointer;
-		if(isPointer)
-			isPointer = isPointer && !(((TilePointer)access.getTileEntity(x - direction.offsetX , y- direction.offsetY, z- direction.offsetZ)).getMasterBlock() instanceof TileMultiBlock);
-		return ( isPointer || access.getBlockMetadata(x - direction.offsetX, y- direction.offsetY, z - direction.offsetZ) < 8);
-	}
-	
-	@Override
-	public boolean onBlockActivated(World world, int x,
-			int y, int z, EntityPlayer player,
-			int arg1, float arg2, float arg3,
-			float arg4) {
+	public boolean shouldSideBeRendered(IBlockState blockState,
+			IBlockAccess blockAccess, BlockPos pos, EnumFacing direction) {
+
 		
-		int meta = world.getBlockMetadata(x, y, z);
+		boolean isPointer = blockAccess.getTileEntity(pos.offset(direction.getOpposite())) instanceof TilePointer;
+		if(isPointer)
+			isPointer = isPointer && !(((TilePointer)blockAccess.getTileEntity(pos.offset(direction.getOpposite()))).getMasterBlock() instanceof TileMultiBlock);
+		
+		return ( isPointer || blockAccess.getBlockState(pos).getValue(VARIANT) < 8);
+	
+	}
+	
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos,
+			IBlockState state, EntityPlayer playerIn, EnumHand hand,
+			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
+			float hitZ) {
+		int meta = worldIn.getBlockState(pos).getValue(VARIANT);
 		//Handlue gui through modular system
 		if((meta & 7) < 6 )
-			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULAR.ordinal(), world, x, y, z);
+			playerIn.openGui(LibVulpes.instance, GuiHandler.guiId.MODULAR.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 		
 		return true;
 	}

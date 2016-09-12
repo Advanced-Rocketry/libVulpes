@@ -6,10 +6,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.libVulpes.util.IconResource;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class ModuleScaledImage extends ModuleBase {
 	
@@ -70,13 +71,11 @@ public class ModuleScaledImage extends ModuleBase {
 		}
 			
 		Minecraft.getMinecraft().getTextureManager().bindTexture(icon);
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV((double)(x + this.offsetX), (double)(y + this.offsetY + sizeY), (double)0, minX, maxY);
-        tessellator.addVertexWithUV((double)(x + this.offsetX + sizeX), (double)(y + this.offsetY + sizeY), (double)0, maxX, maxY);
-        tessellator.addVertexWithUV((double)(x + this.offsetX + sizeX), (double)(y + this.offsetY), (double)0, maxX, minY);
-        tessellator.addVertexWithUV((double)(x + this.offsetX), (double)(y + this.offsetY), (double)0, minX, minY);
-        tessellator.draw();
+        VertexBuffer buff = Tessellator.getInstance().getBuffer();
+        buff.pos((double)(x + this.offsetX), (double)(y + this.offsetY + sizeY), (double)0).tex(minX, maxY).color(alpha, alpha, alpha, alpha).endVertex();
+        buff.pos((double)(x + this.offsetX + sizeX), (double)(y + this.offsetY + sizeY), (double)0).tex(maxX, maxY).color(alpha, alpha, alpha, alpha).endVertex();
+        buff.pos((double)(x + this.offsetX + sizeX), (double)(y + this.offsetY), (double)0).tex(maxX, minY).color(alpha, alpha, alpha, alpha).endVertex();
+        buff.pos((double)(x + this.offsetX), (double)(y + this.offsetY), (double)0).tex(minX, minY).color(alpha, alpha, alpha, alpha).endVertex();
         
         if(alpha < 1f) {
 			GL11.glColor4d(1f, 1f, 1f, 1f);

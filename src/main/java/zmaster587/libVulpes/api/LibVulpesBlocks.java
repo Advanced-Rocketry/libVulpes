@@ -1,12 +1,27 @@
 package zmaster587.libVulpes.api;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
+
+import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class LibVulpesBlocks {
+	public static final Set<Block> blocks = new HashSet<>();
+
 	public static Block blockHatch;
 	public static Block blockPhantom;
 	public static Block blockPlaceHolder;
@@ -19,5 +34,68 @@ public class LibVulpesBlocks {
 	//public static List<Block> blockMetal = new ArrayList<Block>();
 	public static Item[] itemOreProduct;
 	//public static List<Block> blockCoil = new ArrayList<Block>();
-	
+
+
+
+	/**
+	 * Register a Block with the default ItemBlock class.
+	 *
+	 * @param block The Block instance
+	 * @param <BLOCK>   The Block type
+	 * @return The Block instance
+	 */
+	public static <BLOCK extends Block> BLOCK registerBlock(BLOCK block) {
+		return registerBlock(block, ItemBlock.class, true);
+	}
+
+	public static <ITEM extends Item> ITEM registerItem(ITEM item) {
+
+		return GameRegistry.register(item);
+	}
+
+	/**
+	 * Register a Block with a custom ItemBlock class.
+	 *
+	 * @param <BLOCK>     The Block type
+	 * @param block       The Block instance
+	 * @param itemFactory A function that creates the ItemBlock instance, or null if no ItemBlock should be created
+	 * @return The Block instance
+	 */
+	public static <BLOCK extends Block> BLOCK registerBlock(BLOCK block, Class<? extends ItemBlock> clazz, boolean registerItemStates) {
+		GameRegistry.register(block);
+
+		if (clazz != null) {
+			ItemBlock itemBlock;
+			try {
+
+				itemBlock = clazz.getDeclaredConstructor(Block.class).newInstance(block);
+
+				if(FMLCommonHandler.instance().getSide().isClient() && registerItemStates) {
+					ModelLoader.setCustomModelResourceLocation(itemBlock, 0, new ModelResourceLocation(block.getRegistryName(), "inventory"));
+				}
+
+				GameRegistry.register(itemBlock.setRegistryName(block.getRegistryName()));
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		blocks.add(block);
+		return block;
+	}
 }

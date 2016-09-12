@@ -6,15 +6,19 @@ import java.util.Map.Entry;
 
 import zmaster587.libVulpes.api.material.Material;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemOreProduct extends Item {
+public class ItemOreProduct extends Item implements IItemColor {
 
 	HashMap<Integer, Material> properties;
 	String outputType;
@@ -26,7 +30,6 @@ public class ItemOreProduct extends Item {
 		setHasSubtypes(true);
 		setMaxDamage(0);
 		this.outputType = outputType;
-		setTextureName("libvulpes:" + outputType);
 		properties = new HashMap<Integer, Material>();
 	}
 
@@ -34,6 +37,12 @@ public class ItemOreProduct extends Item {
 		properties.put(meta, ore);
 		for(String oreDictName : ore.getOreDictNames())
 			OreDictionary.registerOre(outputType + oreDictName, new ItemStack(this, 1, meta));
+		
+		if(FMLCommonHandler.instance().getSide().isClient()) {
+			for(Entry<Integer, Material> entry : properties.entrySet()) {
+				ModelLoader.setCustomModelResourceLocation(this, entry.getKey(), new ModelResourceLocation(String.format("%s", this.getRegistryName()), "inventory"));
+			}
+		}
 	}
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
@@ -46,19 +55,19 @@ public class ItemOreProduct extends Item {
 		}
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getColorFromItemStack(ItemStack stack, int int1) {
-		int itemDamage = stack.getItemDamage();
-		//Sanity check if anyone somehow gets an invalid damage
-		if(!properties.containsKey(itemDamage))
-			return 0xFFFFFFFF;
-		return properties.get(itemDamage).getColor();
-	}
-
 
 	@Override
 	public String getItemStackDisplayName(ItemStack itemstack) {
-			return StatCollector.translateToLocal("material." + properties.get(itemstack.getItemDamage()).getUnlocalizedName() + ".name") + " " + StatCollector.translateToLocal("type." + outputType + ".name");
+		try {
+			return I18n.translateToLocal("material." + properties.get(itemstack.getItemDamage()).getUnlocalizedName() + ".name") + " " + I18n.translateToLocal("type." + outputType + ".name");
+		} catch (NullPointerException e) {
+			return "No name!!!";
+		}
+	}
+
+	@Override
+	public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+		return ((ItemOreProduct)stack.getItem()).properties.get(stack.getMetadata()).getColor();
+		
 	}
 }

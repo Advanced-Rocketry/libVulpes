@@ -7,7 +7,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
@@ -51,7 +51,7 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 
 			//Last ditch effort to update the toggle switch when it's flipped
 			if(!worldObj.isRemote)
-				PacketHandler.sendToNearby(new PacketMachine(this, (byte)NetworkPackets.TOGGLE.ordinal()), worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 64);
+				PacketHandler.sendToNearby(new PacketMachine(this, (byte)NetworkPackets.TOGGLE.ordinal()), worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64);
 		}
 	}
 	
@@ -124,22 +124,11 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 		super.integrateTile(tile);
 
 		for(BlockMeta block : TileMultiBlock.getMapping('p')) {
-			if(block.getBlock() == worldObj.getBlock(tile.xCoord, tile.yCoord, tile.zCoord))
+			if(block.getBlock() == worldObj.getBlockState(tile.getPos()).getBlock())
 				batteries.addBattery((IUniversalEnergy) tile);
 		}
 	}
 
-	public void setMachineRunning(boolean running) {
-		if(running && this.getBlockMetadata() < 8) {
-			this.blockMetadata = getBlockMetadata() | 8;
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.blockMetadata, 2);
-		}
-		else if(!running && this.blockMetadata >= 8) {
-			this.blockMetadata = getBlockMetadata() & 7;
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.blockMetadata, 2); //Turn off machine
-		}
-	}
-	
 	@Override
 	protected void writeNetworkData(NBTTagCompound nbt) {
 		super.writeNetworkData(nbt);

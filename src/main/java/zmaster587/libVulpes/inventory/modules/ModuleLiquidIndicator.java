@@ -5,20 +5,17 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
-import net.minecraft.util.IIcon;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 public class ModuleLiquidIndicator extends ModuleBase {
 
@@ -40,23 +37,24 @@ public class ModuleLiquidIndicator extends ModuleBase {
 	}
 
 	@Override
-	public void sendChanges(Container container, ICrafting crafter,
+	public void sendChanges(Container container, IContainerListener crafter,
 			int variableId, int localId) {
-		FluidTankInfo info = tile.getTankInfo(ForgeDirection.UNKNOWN)[0];
-		if(localId == 0 && info.fluid != null)
-			crafter.sendProgressBarUpdate(container, variableId, info.fluid.amount & 0xFFFF);
-		else if(localId == 1 && info.fluid != null)
-			crafter.sendProgressBarUpdate(container, variableId, (info.fluid.amount >>> 16) & 0xFFFF);
+		IFluidTankProperties info = tile.getTankProperties()[0];
+		
+		if(localId == 0 && info.getContents() != null)
+			crafter.sendProgressBarUpdate(container, variableId, info.getContents().amount & 0xFFFF);
+		else if(localId == 1 && info..getContents() != null)
+			crafter.sendProgressBarUpdate(container, variableId, (info.getContents().amount >>> 16) & 0xFFFF);
 		else if(localId == 2)
-			if(info.fluid == null) 
+			if(info.getContents() == null) 
 				crafter.sendProgressBarUpdate(container, variableId, invalidFluid);
 			else
-				crafter.sendProgressBarUpdate(container, variableId, info.fluid.getFluidID());
+				crafter.sendProgressBarUpdate(container, variableId, info.getContents().getFluid());
 	}
 
 	@Override
 	public void onChangeRecieved(int slot, int value) {
-		FluidTankInfo info[] = tile.getTankInfo(ForgeDirection.UNKNOWN);
+		IFluidTankProperties info = tile.getTankProperties()[0];
 
 		if(slot == 2) {
 			if(info[0].fluid == null && value != invalidFluid) {

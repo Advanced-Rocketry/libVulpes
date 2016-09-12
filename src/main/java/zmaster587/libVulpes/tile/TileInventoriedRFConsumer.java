@@ -5,7 +5,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 
 public abstract class TileInventoriedRFConsumer extends TileEntityRFConsumer implements ISidedInventory {
 
@@ -17,10 +16,11 @@ public abstract class TileInventoriedRFConsumer extends TileEntityRFConsumer imp
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		
 		inventory.writeToNBT(nbt);
+		return nbt;
 	}
 	
 	@Override
@@ -45,25 +45,12 @@ public abstract class TileInventoriedRFConsumer extends TileEntityRFConsumer imp
 		return inventory.decrStackSize(slot, amt);
 	}
 
-	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) {
-		return inventory.getStackInSlot(slot);
-	}
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
 	}
 
-	@Override
-	public boolean hasCustomInventoryName() {
-		return false;
-	}
-	
-	@Override
-	public String getInventoryName() {
-		return null;
-	}
 
 	@Override
 	public int getInventoryStackLimit() {
@@ -72,29 +59,15 @@ public abstract class TileInventoriedRFConsumer extends TileEntityRFConsumer imp
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player) {
-		return player.getDistance(xCoord, yCoord, zCoord) < 64;
+		return player.getDistanceSq(this.pos) < 64;
 	}
-
-
 	@Override
-	public boolean canInsertItem(int p_102007_1_, ItemStack p_102007_2_,
-			int p_102007_3_) {
-		return true;
-	}
-
-	@Override
-	public boolean canExtractItem(int p_102008_1_, ItemStack p_102008_2_,
-			int p_102008_3_) {
-		return true;
-	}
-	
-	@Override
-	public void openInventory() {
+	public void openInventory(EntityPlayer player) {
 		
 	}
 
 	@Override
-	public void closeInventory() {
+	public void closeInventory(EntityPlayer player) {
 		
 	}
 }

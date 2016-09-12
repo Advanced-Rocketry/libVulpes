@@ -5,28 +5,24 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class TilePointer extends TileEntity implements IMultiblock, ILinkableTile {
-	int masterX, masterY, masterZ;
+	BlockPos masterBlockPos;
 
 	TileEntity masterBlock;
-	
+
 	public TilePointer() {
 		super();
-		masterX = 0;
-		masterY = -1;
-		masterZ = 0;
+		masterBlockPos = null;
 	}
 
-	public TilePointer(int x, int y, int z) {
+	public TilePointer(BlockPos pos) {
 		super();
-		masterX = x;
-		masterY = y;
-		masterZ = z;
+		masterBlockPos = pos;
 	}
 
 	public boolean onLinkStart(ItemStack item, TileEntity entity, EntityPlayer player, World world) {
@@ -48,22 +44,23 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 		return false;
 	}
 
-	public boolean isSet() { return masterY != -1;}
+	public boolean isSet() { return masterBlockPos != null;}
 
-	public int getX() {return masterX;}
-	public int getY() {return masterY;}
-	public int getZ() {return masterZ;}
+	public BlockPos getMasterPos() {
+		return masterBlockPos;
+	}
 
-	public void setX(int x) {masterX = x;}
-	public void setY(int y) {masterY = y;}
-	public void setZ(int z) {masterZ = z;}
+	public void setBlockPos(BlockPos pos) {
+		masterBlockPos = pos;
+	}
 
-	public void setMasterBlock(int x, int y, int z) {
-		setComplete(x, y, z);
+	@Override
+	public void setMasterBlock(BlockPos pos) {
+		setComplete(pos);
 	}
 
 	public TileEntity getFinalPointedTile() {
-		TileEntity pointedTile = this.worldObj.getTileEntity(masterX, masterY, masterZ);
+		TileEntity pointedTile = this.worldObj.getTileEntity(masterBlockPos);
 		if(pointedTile == null)
 			return null;
 		else if(pointedTile instanceof TilePointer)
@@ -73,34 +70,33 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 	}
 
 	@Override
-	public Packet getDescriptionPacket() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound comp = new NBTTagCompound();
 
 		writeToNBTHelper(comp);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, comp);
+		return new SPacketUpdateTileEntity(this.pos, 0, comp);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 
 		if(this.worldObj.isRemote)
 		{
-			readFromNBTHelper(pkt.func_148857_g());
+			readFromNBTHelper(pkt.getNbtCompound());
 		}
 	}
 
 
 	@Override
 	public boolean hasMaster() {
-		// TODO Auto-generated method stub
-		return masterY != -1;
+		return isSet();
 	}
 
 	@Override
 	public TileEntity getMasterBlock() {
 		if(hasMaster()) {
 			if(masterBlock == null || masterBlock.isInvalid())
-				masterBlock = this.worldObj.getTileEntity(masterX, masterY, masterZ);
+				masterBlock = this.worldObj.getTileEntity(masterBlockPos);
 			return masterBlock;
 		}
 		return null;
@@ -109,32 +105,30 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 	public boolean canUpdate() {return false;}
 
 	@Override
-	public void setComplete(int x, int y, int z) {
-		this.masterX = x;
-		this.masterY = y;
-		this.masterZ = z;
-
+	public void setComplete(BlockPos pos) {
+		masterBlockPos = pos;
 	}
 
 	@Override
 	public void setIncomplete() {
-		this.masterX = -1;
-		this.masterY = -1;
-		this.masterZ = -1;
+		masterBlockPos = null;
 		masterBlock = null;
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbtTagCompound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
 		super.writeToNBT(nbtTagCompound);
 
-		writeToNBTHelper(nbtTagCompound);
+		return writeToNBTHelper(nbtTagCompound);
 	}
 
-	protected void writeToNBTHelper(NBTTagCompound nbtTagCompound) {
-		nbtTagCompound.setInteger("masterX", masterX);
-		nbtTagCompound.setInteger("masterY", masterY);
-		nbtTagCompound.setInteger("masterZ", masterZ);
+	protected NBTTagCompound writeToNBTHelper(NBTTagCompound nbtTagCompound) {
+		if(masterBlockPos != null) {
+			nbtTagCompound.setInteger("masterX", masterBlockPos.getX());
+			nbtTagCompound.setInteger("masterY", masterBlockPos.getY());
+			nbtTagCompound.setInteger("masterZ", masterBlockPos.getZ());
+		}
+		return nbtTagCompound;
 	}
 
 	@Override
@@ -145,8 +139,12 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 	}
 
 	protected void readFromNBTHelper(NBTTagCompound nbtTagCompound) {
-		masterX = nbtTagCompound.getInteger("masterX");
-		masterY = nbtTagCompound.getInteger("masterY");
-		masterZ = nbtTagCompound.getInteger("masterZ");
+		if(nbtTagCompound.hasKey("masterX")) {
+			masterBlockPos = new BlockPos(nbtTagCompound.getInteger("masterX"),
+					nbtTagCompound.getInteger("masterY"),
+					nbtTagCompound.getInteger("masterZ"));
+		}
+		else
+			masterBlockPos = null;
 	}
 }

@@ -19,14 +19,14 @@ import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.world.WorldServer;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.FMLEmbeddedChannel;
-import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
-import cpw.mods.fml.common.network.FMLOutboundHandler;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.handshake.NetworkDispatcher;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.network.FMLEmbeddedChannel;
+import net.minecraftforge.fml.common.network.FMLIndexedMessageToMessageCodec;
+import net.minecraftforge.fml.common.network.FMLOutboundHandler;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PacketHandler {
 	public static final EnumMap<Side, FMLEmbeddedChannel> channels = Maps.newEnumMap(Side.class);
@@ -38,14 +38,18 @@ public class PacketHandler {
 		if (!channels.isEmpty()) // avoid duplicate inits..
 			return;
 		
-		channels.putAll(NetworkRegistry.INSTANCE.newChannel("libVulpes", codec, new HandlerServer()));
-
+		HandlerServer handle = new HandlerServer();
+		
+		channels.putAll(NetworkRegistry.INSTANCE.newChannel("libVulpes", handle));
+		
+		
 		// add handlers
 		if (FMLCommonHandler.instance().getSide().isClient())
 		{
 			// for the client
 			FMLEmbeddedChannel channel = channels.get(Side.CLIENT);
-			String codecName = channel.findChannelHandlerNameForType(Codec.class);
+			
+			String codecName = channel.findChannelHandlerNameForType(handle.getClass());
 			channel.pipeline().addAfter(codecName, "ClientHandler", new HandlerClient());
 		}
 	}

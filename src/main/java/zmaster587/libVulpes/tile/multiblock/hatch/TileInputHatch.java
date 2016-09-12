@@ -1,10 +1,11 @@
 package zmaster587.libVulpes.tile.multiblock.hatch;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 
 public class TileInputHatch extends TileInventoryHatch   {
 
-	
+
 
 	public TileInputHatch() {
 		super();
@@ -20,8 +21,8 @@ public class TileInputHatch extends TileInventoryHatch   {
 	}
 
 	@Override
-	public boolean canExtractItem(int p_102008_1_, ItemStack p_102008_2_,
-			int p_102008_3_) {
+	public boolean canExtractItem(int index, ItemStack stack,
+			EnumFacing direction) {
 		return false;
 	}
 }

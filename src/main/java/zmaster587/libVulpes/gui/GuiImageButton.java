@@ -7,8 +7,12 @@ import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 
 public class GuiImageButton extends GuiButton {
 
@@ -46,11 +50,11 @@ public class GuiImageButton extends GuiButton {
 	}
 
 	@Override
-	public void func_146113_a(SoundHandler sound) {
+	public void playPressSound(SoundHandler sound) {
 		if(soundString.isEmpty())
-			super.func_146113_a(sound);
+			super.playPressSound(sound);
 		else
-			sound.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("advancedrocketry:" + soundString), 1.0F));
+			sound.playSound(PositionedSoundRecord.getMasterRecord(new SoundEvent(new ResourceLocation("advancedrocketry:" + soundString)), 1.0F));
 	}
 
 	@Override
@@ -59,8 +63,8 @@ public class GuiImageButton extends GuiButton {
 		if (this.visible)
 		{
 			//
-			this.field_146123_n = par2 >= this.xPosition && par3 >= this.yPosition && par2 < this.xPosition + this.width && par3 < this.yPosition + this.height;
-			int hoverState = this.getHoverState(this.field_146123_n);
+			this.hovered = par2 >= this.xPosition && par3 >= this.yPosition && par2 < this.xPosition + this.width && par3 < this.yPosition + this.height;
+			int hoverState = this.getHoverState(this.hovered);
 
 			/*if(mousePressed(minecraft, par2, par3) && buttonTexture[2] != null)
 				minecraft.getTextureManager().bindTexture(buttonTexture[2]);*/
@@ -78,17 +82,19 @@ public class GuiImageButton extends GuiButton {
 
 			//Draw the button...each button should contain 3 images default state, hover, and pressed
 
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glDisable(GL11.GL_ALPHA_TEST);
-			Tessellator tessellator = Tessellator.instance;
-			tessellator.startDrawingQuads();
-			tessellator.addVertexWithUV(xPosition, yPosition + height, (double)this.zLevel, 0, 1);
-			tessellator.addVertexWithUV(xPosition + width, yPosition + height, (double)this.zLevel, 1, 1);
-			tessellator.addVertexWithUV(xPosition + width, yPosition, (double)this.zLevel, 1, 0);
-			tessellator.addVertexWithUV(xPosition, yPosition, (double)this.zLevel, 0, 0);
-			tessellator.draw();
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glEnable(GL11.GL_ALPHA_TEST);
+			GlStateManager.enableBlend();
+            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+           
+			
+	        Tessellator tessellator = Tessellator.getInstance();
+	        VertexBuffer vertexbuffer = tessellator.getBuffer();
+	        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+	        vertexbuffer.pos(xPosition, yPosition + height, (double)this.zLevel).tex(0, 1).endVertex();
+	        vertexbuffer.pos(xPosition + width, yPosition + height, (double)this.zLevel).tex( 1, 1).endVertex();
+	        vertexbuffer.pos(xPosition + width, yPosition, (double)this.zLevel).tex(1, 0).endVertex();
+	        vertexbuffer.pos(xPosition, yPosition, (double)this.zLevel).tex(0, 0).endVertex();
+	        tessellator.draw();
 			
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 

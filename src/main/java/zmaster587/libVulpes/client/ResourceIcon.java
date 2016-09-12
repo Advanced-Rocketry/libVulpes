@@ -1,9 +1,8 @@
 package zmaster587.libVulpes.client;
 
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
-public class ResourceIcon implements IIcon {
+public class ResourceIcon  {
 
 	ResourceLocation location;
 	IIcon subIcon;

@@ -44,10 +44,12 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setInteger("teir", teir);
 		storage.writeToNBT(nbt);
+		
+		return nbt;
 	}
 	
 	@Override
@@ -81,17 +83,12 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int p_70304_1_) {
-		return null;
-	}
-
-	@Override
 	public void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_) {
 		
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 		return true;
 	}
 
@@ -106,20 +103,44 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	}
 
 	@Override
-	public void openInventory() {
+	public void openInventory(EntityPlayer player) {
 		
 	}
 
 	@Override
-	public void closeInventory() {
+	public void closeInventory(EntityPlayer player) {
 		
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) {
-		return false;
+	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+		return true;
 	}
 
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		return null;
+	}
+
+	@Override
+	public int getField(int id) {
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		
+	}
 	
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {

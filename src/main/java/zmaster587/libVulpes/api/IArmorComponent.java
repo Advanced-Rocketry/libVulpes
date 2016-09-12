@@ -2,20 +2,16 @@ package zmaster587.libVulpes.api;
 
 import java.util.List;
 
-import zmaster587.libVulpes.client.ResourceIcon;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public interface IArmorComponent {
 	
@@ -52,8 +48,8 @@ public interface IArmorComponent {
 	 * @param armorStack
 	 * @return The Icon for the HUD, null if none
 	 */
-	@SideOnly(Side.CLIENT)
-	public ResourceIcon getComponentIcon(ItemStack armorStack);
+	//@SideOnly(Side.CLIENT)
+	//public ResourceIcon getComponentIcon(ItemStack armorStack);
 
 
 }

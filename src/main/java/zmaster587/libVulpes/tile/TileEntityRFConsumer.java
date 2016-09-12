@@ -1,13 +1,14 @@
 package zmaster587.libVulpes.tile;
 
 import zmaster587.libVulpes.api.IUniversalEnergy;
+import zmaster587.libVulpes.energy.IPower;
 import zmaster587.libVulpes.util.UniversalBattery;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
-import cofh.api.energy.IEnergyHandler;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 
-public abstract class TileEntityRFConsumer extends TileEntity implements IEnergyHandler, IUniversalEnergy {
+public abstract class TileEntityRFConsumer extends TileEntity implements IPower, IUniversalEnergy, ITickable {
 	protected UniversalBattery energy;
 
 	protected TileEntityRFConsumer(int energy) {
@@ -15,14 +16,15 @@ public abstract class TileEntityRFConsumer extends TileEntity implements IEnergy
 	}
 
 	@Override
-	public boolean canConnectEnergy(ForgeDirection arg0) {
+	public boolean canConnectEnergy(EnumFacing arg0) {
 		return true;
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		energy.writeToNBT(nbt);
+		return nbt;
 	}
 
 	@Override
@@ -32,13 +34,13 @@ public abstract class TileEntityRFConsumer extends TileEntity implements IEnergy
 	}
 
 	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive,
+	public int receiveEnergy(EnumFacing from, int maxReceive,
 			boolean simulate) {
 		return acceptEnergy(maxReceive, simulate);
 	}
 
 	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract,
+	public int extractEnergy(EnumFacing from, int maxExtract,
 			boolean simulate) {
 		return extractEnergy(maxExtract, simulate);
 	}
@@ -55,8 +57,7 @@ public abstract class TileEntityRFConsumer extends TileEntity implements IEnergy
 
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
 
 		if(canPerformFunction()) {
 
@@ -76,12 +77,12 @@ public abstract class TileEntityRFConsumer extends TileEntity implements IEnergy
 	}
 
 	@Override
-	public int getEnergyStored(ForgeDirection from) {
+	public int getEnergyStored(EnumFacing from) {
 		return energy.getEnergyStored();
 	}
 
 	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
+	public int getMaxEnergyStored(EnumFacing from) {
 		return energy.getMaxEnergyStored();
 	}
 

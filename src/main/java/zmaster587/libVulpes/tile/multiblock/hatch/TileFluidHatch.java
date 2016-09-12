@@ -9,19 +9,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidContainerItem;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleImage;
-import zmaster587.libVulpes.inventory.modules.ModuleLiquidIndicator;
 import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
 import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
@@ -55,10 +55,10 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 	}
 	
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+	public int fill(FluidStack resource, boolean doFill) {
 		if(doFill && this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
 			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
-		if(outputOnly && from != ForgeDirection.UNKNOWN)
+		if(outputOnly)
 			return 0;
 		
 		int fillAmt = fluidTank.fill(resource, doFill);
@@ -71,7 +71,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 
 	
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource,
+	public FluidStack drain(FluidStack resource,
 			boolean doDrain) {
 
 		if(resource.isFluidEqual(fluidTank.getFluid())) {
@@ -85,23 +85,14 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+	public FluidStack drain(int maxDrain, boolean doDrain) {
 		return fluidTank.drain(maxDrain, doDrain);
 	}
 
-	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
-		return outputOnly;
-	}
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
-		return true;
-	}
-
-	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
-		return new FluidTankInfo[] { fluidTank.getInfo()};
+	public IFluidTankProperties[] getTankProperties() {
+		return fluidTank.getTankProperties();
 	}
 
 	@Override
@@ -112,7 +103,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 		list.add(new ModuleSlotArray(45, 54, this, 1, 2));
 		if(worldObj.isRemote)
 			list.add(new ModuleImage(44, 35, new IconResource(194, 0, 18, 18, CommonResources.genericBackground)));
-		list.add(new ModuleLiquidIndicator(27, 18, this));
+		//list.add(new ModuleLiquidIndicator(27, 18, this));
 
 		return list;
 	}
@@ -143,24 +134,9 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) {
-		return inventory.getStackInSlotOnClosing(slot);
-	}
-
-	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
 		while(useBucket(0, getStackInSlot(0)));
-	}
-
-	@Override
-	public String getInventoryName() {
-		return getModularInventoryName();
-	}
-
-	@Override
-	public boolean hasCustomInventoryName() {
-		return false;
 	}
 
 	@Override
@@ -174,28 +150,19 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 	}
 
 	@Override
-	public void openInventory() {
-
-	}
-
-	@Override
-	public void closeInventory() {
-
-	}
-
-	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		return inventory.isItemValidForSlot(slot, stack);
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
 		nbt.setBoolean("outputOnly", outputOnly);
 		inventory.writeToNBT(nbt);
 		nbt.setInteger("capacity", fluidTank.getCapacity());
 		fluidTank.writeToNBT(nbt);
+		return nbt;
 	}
 
 	@Override
@@ -301,5 +268,50 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public String getName() {
+		return getModularInventoryName();
+	}
+
+	@Override
+	public boolean hasCustomName() {
+		return false;
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		return null;
+	}
+
+	@Override
+	public void openInventory(EntityPlayer player) {
+		
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player) {
+		
+	}
+
+	@Override
+	public int getField(int id) {
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		
 	}
 }
