@@ -55,6 +55,11 @@ public class BlockMultiblockStructure extends Block {
 		world.setBlockState(pos, state.withProperty(VARIANT, state.getValue(VARIANT) | 8));
 	}
 	
+	@Override
+	public int damageDropped(IBlockState state) {
+		return state.getValue(VARIANT) & 7;
+	}
+	
 	public void completeStructure(World world, BlockPos pos, IBlockState state) {
 		
 	}
@@ -76,7 +81,7 @@ public class BlockMultiblockStructure extends Block {
 	}
 	
 	@Override
-	public void onBlockDestroyedByPlayer(World world, BlockPos pos,
+	public void breakBlock(World world, BlockPos pos,
 			IBlockState state) {
 		
 		TileEntity tile = world.getTileEntity(pos);
@@ -85,22 +90,9 @@ public class BlockMultiblockStructure extends Block {
 			
 			if(tileMulti.hasMaster()) {
 				if(tileMulti.getMasterBlock() instanceof TileMultiBlock)
-					((TileMultiBlock)tileMulti.getMasterBlock()).deconstructMultiBlock(world, pos,true);
+					((TileMultiBlock)tileMulti.getMasterBlock()).deconstructMultiBlock(world, pos,true, world.getBlockState(tileMulti.getMasterBlock().getPos()));
 			}
 		}
-	}
-	
-	@Override
-	public void onBlockDestroyedByExplosion(World world, BlockPos pos,
-			Explosion explosionIn) {
-		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof IMultiblock) {
-			IMultiblock tileMulti = (IMultiblock)tile;
-			
-			if(tileMulti.hasMaster()) {
-				if(tileMulti.getMasterBlock() instanceof TileMultiBlock)
-					((TileMultiBlock)tileMulti.getMasterBlock()).deconstructMultiBlock(world, pos,true);
-			}
-		}
+		super.breakBlock(world, pos, state);
 	}
 }

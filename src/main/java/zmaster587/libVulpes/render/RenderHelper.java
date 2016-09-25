@@ -8,12 +8,20 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockGrass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -344,54 +352,63 @@ public class RenderHelper {
 	
 	public static void renderTopFaceWithUV(VertexBuffer buff, double yMax, double xMin, double zMin, double xMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
 		//top
-		buff.pos(xMin, yMax, zMin).normal(0, 1, 0).tex(uMin, vMin).endVertex();
-		buff.pos(xMin, yMax, zMax).normal(0, 1, 0).tex(uMin, vMax).endVertex();
-		buff.pos(xMax, yMax, zMax).normal(0, 1, 0).tex(uMax, vMax).endVertex();
-		buff.pos(xMax, yMax, zMin).normal(0, 1, 0).tex(uMax, vMin).endVertex();
+		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
+		buff.pos(xMin, yMax, zMax).tex(uMin, vMax).endVertex();
+		buff.pos(xMax, yMax, zMax).tex(uMax, vMax).endVertex();
+		buff.pos(xMax, yMax, zMin).tex(uMax, vMin).endVertex();
 		
 		
 	}
 	
 	public static void renderBottomFaceWithUV(VertexBuffer buff, double yMax, double xMin, double zMin, double xMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
 		//bottom
-		buff.pos(xMax, yMax, zMin).normal(0, -1, 0).tex(uMin, vMax).endVertex();
-		buff.pos(xMax, yMax, zMax).normal(0, -1, 0).tex(uMax, vMax).endVertex();
-		buff.pos(xMin, yMax, zMax).normal(0, -1, 0).tex(uMax, vMin).endVertex();
-		buff.pos(xMin, yMax, zMin).normal(0, -1, 0).tex(uMin, vMin).endVertex();
+		
+		buff.pos(xMax, yMax, zMax).tex(uMax, vMax).endVertex();
+		buff.pos(xMin, yMax, zMax).tex(vMin, uMax).endVertex();
+		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
+		buff.pos(xMax, yMax, zMin).tex(vMax, uMin).endVertex();
 		
 	}
 	
 	public static void renderNorthFaceWithUV(VertexBuffer buff, double zMin, double xMin, double yMin, double xMax, double yMax, double uMin, double uMax, double vMin, double vMax) {
 		//north
-		buff.pos(xMin, yMax, zMin).normal(0, 0, 1).tex(uMin, vMin).endVertex();
-		buff.pos(xMax, yMax, zMin).normal(0, 0, 1).tex(uMax, vMin).endVertex();
-		buff.pos(xMax, yMin, zMin).normal(0, 0, 1).tex(uMax, vMax).endVertex();
-		buff.pos(xMin, yMin, zMin).normal(0, 0, 1).tex(uMin, vMax).endVertex();
+		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
+		buff.pos(xMax, yMax, zMin).tex(uMax, vMin).endVertex();
+		buff.pos(xMax, yMin, zMin).tex(uMax, vMax).endVertex();
+		buff.pos(xMin, yMin, zMin).tex(uMin, vMax).endVertex();
+	}
+	
+	public static void renderNorthFaceWithUVNoNormal(VertexBuffer buff, double zMin, double xMin, double yMin, double xMax, double yMax, double uMin, double uMax, double vMin, double vMax) {
+		//north
+		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
+		buff.pos(xMax, yMax, zMin).tex(uMax, vMin).endVertex();
+		buff.pos(xMax, yMin, zMin).tex(uMax, vMax).endVertex();
+		buff.pos(xMin, yMin, zMin).tex(uMin, vMax).endVertex();
 	}
 	
 	public static void renderSouthFaceWithUV(VertexBuffer buff, double zMax, double xMin, double yMin, double xMax, double yMax, double uMin, double uMax, double vMin, double vMax) {
 		//south
-		buff.pos(xMin, yMax, zMax).normal(0, 0, -1).tex(uMin, vMin).endVertex();
-		buff.pos(xMin, yMin, zMax).normal(0, 0, -1).tex(uMin, vMax).endVertex();
-		buff.pos(xMax, yMin, zMax).normal(0, 0, -1).tex(uMax, vMax).endVertex();
-		buff.pos(xMax, yMax, zMax).normal(0, 0, -1).tex(uMax, vMin).endVertex();
+		buff.pos(xMin, yMax, zMax).tex(uMin, vMin).endVertex();
+		buff.pos(xMin, yMin, zMax).tex(uMin, vMax).endVertex();
+		buff.pos(xMax, yMin, zMax).tex(uMax, vMax).endVertex();
+		buff.pos(xMax, yMax, zMax).tex(uMax, vMin).endVertex();
 	}
 		
 	public static void renderEastFaceWithUV(VertexBuffer buff, double xMax, double yMin, double zMin, double yMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
 		//east
-		buff.pos(xMax, yMax, zMin).normal(1, 0, 0).tex(uMin, vMin).endVertex();
-		buff.pos(xMax, yMax, zMax).normal(1, 0, 0).tex(uMax, vMin).endVertex();
-		buff.pos(xMax, yMin, zMax).normal(1, 0, 0).tex(uMax, vMax).endVertex();
-		buff.pos(xMax, yMin, zMin).normal(1, 0, 0).tex(uMin, vMax).endVertex();
+		buff.pos(xMax, yMax, zMin).tex(uMin, vMin).endVertex();
+		buff.pos(xMax, yMax, zMax).tex(uMax, vMin).endVertex();
+		buff.pos(xMax, yMin, zMax).tex(uMax, vMax).endVertex();
+		buff.pos(xMax, yMin, zMin).tex(uMin, vMax).endVertex();
 	}
 	
 	
 	public static void renderWestFaceWithUV(VertexBuffer buff, double xMin, double yMin, double zMin, double yMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
 		//west
-		buff.pos(xMin, yMin, zMin).normal(-1, 0, 0).tex(uMin, vMax).endVertex();
-		buff.pos(xMin, yMin, zMax).normal(-1, 0, 0).tex(uMax, vMax).endVertex();
-		buff.pos(xMin, yMax, zMax).normal(-1, 0, 0).tex(uMax, vMin).endVertex();
-		buff.pos(xMin, yMax, zMin).normal(-1, 0, 0).tex(uMin, vMin).endVertex();
+		buff.pos(xMin, yMin, zMin).tex(uMin, vMax).endVertex();
+		buff.pos(xMin, yMin, zMax).tex(uMax, vMax).endVertex();
+		buff.pos(xMin, yMax, zMax).tex(uMax, vMin).endVertex();
+		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
 	}
 	
 	public static void renderCubeWithUV(VertexBuffer buff, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
@@ -403,5 +420,69 @@ public class RenderHelper {
 		renderEastFaceWithUV(buff, xMax, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax);
 		renderWestFaceWithUV(buff, xMin, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax);
 		renderBottomFaceWithUV(buff, yMin, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
+	}
+	
+	public static void renderCube(VertexBuffer buff, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
+		
+		
+		renderTopFace(buff, yMax, xMin, zMin, xMax, zMax);
+		renderNorthFace(buff, zMin, xMin, yMin, xMax, yMax);
+		renderSouthFace(buff, zMax, xMin, yMin, xMax, yMax);
+		renderEastFace(buff, xMax, yMin, zMin, yMax, zMax);
+		renderWestFace(buff, xMin, yMin, zMin, yMax, zMax);
+		renderBottomFace(buff, yMin, xMin, zMin, xMax, zMax);
+	}
+	
+	public static void renderItem(TileEntity tile, ItemStack itemstack, RenderItem dummyItem)
+	{
+		if (itemstack != null)
+		{
+			EntityItem entityitem = new EntityItem(tile.getWorld(), 0.0D, 0.0D, 0.0D, itemstack);
+			Item item = entityitem.getEntityItem().getItem();
+			entityitem.getEntityItem().stackSize = 1;
+			entityitem.hoverStart = 0.0F;
+			GlStateManager.disableLighting();
+
+
+
+			GlStateManager.scale(0.5F, 0.5F, 0.5F);
+
+			if (!dummyItem.shouldRenderItemIn3D(entityitem.getEntityItem()))
+			{
+				GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+			}
+
+			GlStateManager.pushAttrib();
+			net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
+			dummyItem.renderItem(entityitem.getEntityItem(), ItemCameraTransforms.TransformType.FIXED);
+			net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+			GlStateManager.popAttrib();
+
+
+
+			GlStateManager.enableLighting();
+		}
+	}
+	
+	public static void renderItem(TileEntity tile, EntityItem entityitem, RenderItem dummyItem)
+	{
+			GlStateManager.disableLighting();
+			GlStateManager.scale(0.5F, 0.5F, 0.5F);
+
+			if (!dummyItem.shouldRenderItemIn3D(entityitem.getEntityItem()))
+			{
+				GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+			}
+
+			GlStateManager.pushAttrib();
+			net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
+			dummyItem.renderItem(entityitem.getEntityItem(), ItemCameraTransforms.TransformType.FIXED);
+			net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+			GlStateManager.popAttrib();
+
+
+
+			GlStateManager.enableLighting();
+		
 	}
 }

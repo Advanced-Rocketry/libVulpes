@@ -40,6 +40,7 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 	public void setMachineEnabled(boolean enabled) {
 		this.enabled = enabled;
 		this.markDirty();
+		worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 	}
 
 	@Override

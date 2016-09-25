@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
@@ -31,6 +32,12 @@ public class TileSchematic extends TilePlaceholder implements ITickable {
 		possibleBlocks = block;
 	}
 
+	@Override
+	public IBlockState getReplacedState() {
+		if(possibleBlocks.size() > 0 && possibleBlocks.get((timeAlive / 20) % possibleBlocks.size()).getBlock() != null)
+			return possibleBlocks.get((timeAlive / 20) % possibleBlocks.size()).getBlock().getStateFromMeta(possibleBlocks.get((timeAlive / 20) % possibleBlocks.size()).getMeta());
+		return Blocks.AIR.getDefaultState();
+	}
 
 	@Override
 	public void update() {
@@ -61,7 +68,7 @@ public class TileSchematic extends TilePlaceholder implements ITickable {
 			nbt.setIntArray("blockIds", ArrayUtils.toPrimitive(blockIds.toArray(bufferSpace1)));
 			nbt.setIntArray("blockMetas", ArrayUtils.toPrimitive(blockMetas.toArray(bufferSpace2)));
 		}
-		
+
 		return nbt;
 	}
 

@@ -2,17 +2,23 @@ package zmaster587.libVulpes.tile.energy;
 
 import net.minecraft.util.EnumFacing;
 import zmaster587.libVulpes.energy.IPower;
+import zmaster587.libVulpes.util.CreativeBattery;
 import zmaster587.libVulpes.util.UniversalBattery;
 
 public class TilePowerInput extends TilePlugBase implements IPower {
 
-	UniversalBattery storage;
-	int teir;
-	
 	public TilePowerInput() {
-		super(1);
+		//super(1);
+		//DEBUG
+		storage = new CreativeBattery();
 	}
 
+	public TilePowerInput(int teir) {
+		//super(1);
+		//DEBUG
+		storage = new CreativeBattery();
+	}
+	
 	@Override
 	public int extractEnergy(EnumFacing dir, int amt, boolean sim) {
 		return extractEnergy(amt, sim);
@@ -20,7 +26,7 @@ public class TilePowerInput extends TilePlugBase implements IPower {
 
 	@Override
 	public int getEnergyStored(EnumFacing arg0) {
-		return getEnergyStored();
+		return getEnergyStored();//getEnergyStored();
 	}
 
 	@Override

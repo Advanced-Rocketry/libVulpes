@@ -13,6 +13,7 @@ import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModulePower;
 import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.TilePointer;
+import zmaster587.libVulpes.util.CreativeBattery;
 import zmaster587.libVulpes.util.UniversalBattery;
 
 public abstract class TilePlugBase extends TilePointer implements IModularInventory, IUniversalEnergy, IMultiblock, IInventory {
@@ -58,7 +59,8 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 		
 		teir = nbt.getInteger("teir");
 		
-		storage = new UniversalBattery(getMaxEnergy(teir));
+		//DEBUG
+		storage = new CreativeBattery();///new UniversalBattery(getMaxEnergy(teir));
 		storage.readFromNBT(nbt);
 	}
 

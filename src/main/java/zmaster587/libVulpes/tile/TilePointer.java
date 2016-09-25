@@ -1,6 +1,7 @@
 package zmaster587.libVulpes.tile;
 
 import zmaster587.libVulpes.interfaces.ILinkableTile;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,6 +24,12 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 	public TilePointer(BlockPos pos) {
 		super();
 		masterBlockPos = pos;
+	}
+	
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos,
+			IBlockState oldState, IBlockState newState) {
+		return oldState.getBlock() != newState.getBlock();
 	}
 
 	public boolean onLinkStart(ItemStack item, TileEntity entity, EntityPlayer player, World world) {
@@ -68,24 +75,11 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 		else
 			return pointedTile;
 	}
-
+	
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound comp = new NBTTagCompound();
-
-		writeToNBTHelper(comp);
-		return new SPacketUpdateTileEntity(this.pos, 0, comp);
+	public NBTTagCompound getUpdateTag() {
+		return writeToNBT(new NBTTagCompound());
 	}
-
-	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-
-		if(this.worldObj.isRemote)
-		{
-			readFromNBTHelper(pkt.getNbtCompound());
-		}
-	}
-
 
 	@Override
 	public boolean hasMaster() {

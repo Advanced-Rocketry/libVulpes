@@ -34,7 +34,7 @@ public class BlockMultiBlockComponentVisible extends BlockMultiblockStructure {
 	public boolean shouldSideBeRendered(IBlockState blockState,
 			IBlockAccess blockAccess, BlockPos pos, EnumFacing direction) {
 		
-		return blockAccess.getBlockState(pos.offset(direction)).isOpaqueCube();
+		return true;//blockAccess.getBlockState(pos.offset(direction)).isOpaqueCube();
 	}
 	
 	@Override

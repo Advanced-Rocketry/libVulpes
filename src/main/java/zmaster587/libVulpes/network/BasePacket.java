@@ -1,15 +1,22 @@
 package zmaster587.libVulpes.network;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 
-public abstract class BasePacket {
+public abstract class BasePacket implements IMessage {
 	public static final String CHANNEL = "advancedRocketry";
 	private static final BiMap<Integer,Class<? extends BasePacket>> idMap;
 
@@ -27,27 +34,27 @@ public abstract class BasePacket {
 			return clazz.newInstance();
 		}
 	}
-	
 
-	
 
-    public static class ProtocolException extends Exception {
 
-            public ProtocolException() {
-            }
 
-            public ProtocolException(String message, Throwable cause) {
-                    super(message, cause);
-            }
+	public static class ProtocolException extends Exception {
 
-            public ProtocolException(String message) {
-                    super(message);
-            }
+		public ProtocolException() {
+		}
 
-            public ProtocolException(Throwable cause) {
-                    super(cause);
-            }
-    }
+		public ProtocolException(String message, Throwable cause) {
+			super(message, cause);
+		}
+
+		public ProtocolException(String message) {
+			super(message);
+		}
+
+		public ProtocolException(Throwable cause) {
+			super(cause);
+		}
+	}
 
 	public final int getPacketId() {
 		if(idMap.inverse().containsKey(getClass())) {
@@ -60,11 +67,66 @@ public abstract class BasePacket {
 	public abstract void write(ByteBuf out);
 
 	public abstract void readClient(ByteBuf in);
-	
+
 	public abstract void read(ByteBuf in);
 
 	@SideOnly(Side.CLIENT)
 	public abstract void executeClient(EntityPlayer thePlayer);
-	
+
 	public abstract void executeServer(EntityPlayerMP player);
+
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		switch(FMLCommonHandler.instance().getEffectiveSide()) {
+		case CLIENT:
+			readClient(buf);
+			break;
+		case SERVER:
+			read(buf);
+			break;
+		}
+	}
+
+	@Override
+	public void toBytes(ByteBuf buf) {
+		write(buf);
+	}
+
+	public static class BasePacketHandler implements IMessageHandler<BasePacket, IMessage> {
+		@Override
+		public IMessage onMessage(BasePacket message, MessageContext ctx) {
+			switch(ctx.side) {
+			case CLIENT:
+				Minecraft.getMinecraft().addScheduledTask(new executor(message, Minecraft.getMinecraft().thePlayer, ctx.side));
+				break;
+			case SERVER:
+				((WorldServer) ctx.getServerHandler().playerEntity.worldObj).addScheduledTask(new executor(message, ctx.getServerHandler().playerEntity, ctx.side));
+				break;
+			}
+
+			return null;
+		}
+
+		public class executor implements Runnable {
+
+			final Side side;
+			final BasePacket packet;
+			final EntityPlayer player;
+
+			public executor(BasePacket packet, EntityPlayer player, Side side) {
+				this.packet = packet;
+				this.player = player;
+				this.side = side;
+			}
+
+			@Override
+			public void run() {
+				if(side.isClient()) {
+					packet.executeClient(player);
+				}
+				else
+					packet.executeServer((EntityPlayerMP) player);
+			}
+		}
+	}
 }

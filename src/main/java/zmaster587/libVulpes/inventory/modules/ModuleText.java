@@ -52,13 +52,11 @@ public class ModuleText extends ModuleBase {
 	@Override
 	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY, FontRenderer font) {
 
-		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 		for(int i = 0; i < text.size(); i++) {
 			if(centered)
 				font.drawString(text.get(i), x + offsetX - (font.getStringWidth(text.get(i))/2), y + offsetY + i*font.FONT_HEIGHT, color);
 			else
 				font.drawString(text.get(i), x + offsetX, y + offsetY + i*font.FONT_HEIGHT, color);
 		}
-		GL11.glPopAttrib();
 	}
 }

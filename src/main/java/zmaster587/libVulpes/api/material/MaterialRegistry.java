@@ -14,6 +14,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -55,11 +56,19 @@ public class MaterialRegistry {
 				}
 			}
 
-			for(Block block : getBlockListForProduct(AllowedProducts.getProductByName("BLOCK")))
-				Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)block, block);
 			
-			for(Block block : getBlockListForProduct(AllowedProducts.getProductByName("COIL")))
-				Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)block, block);
+			
+			for(Block block : getBlockListForProduct(AllowedProducts.getProductByName("BLOCK"))) {
+				Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)block, block);
+				Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)block,  Item.getItemFromBlock(block));
+			}
+
+			
+			for(Block block : getBlockListForProduct(AllowedProducts.getProductByName("COIL"))) {
+				Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)block, block);
+				Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)block, Item.getItemFromBlock(block));
+			}
+				
 			
 			//getBlockListForProduct(AllowedProducts.getProductByName("ORE"))
 		}

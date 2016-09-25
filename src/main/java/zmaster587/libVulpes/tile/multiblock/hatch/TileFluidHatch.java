@@ -22,13 +22,15 @@ import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleImage;
+import zmaster587.libVulpes.inventory.modules.ModuleLiquidIndicator;
 import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
 import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.EmbeddedInventory;
+import zmaster587.libVulpes.util.IFluidHandlerInternal;
 import zmaster587.libVulpes.util.IconResource;
 
-public class TileFluidHatch extends TilePointer implements IFluidHandler, IModularInventory, IInventory {
+public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal, IModularInventory, IInventory {
 
 	protected FluidTank fluidTank;
 	private EmbeddedInventory inventory;
@@ -56,18 +58,12 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 	
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
-		if(doFill && this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
-			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
+
 		if(outputOnly)
 			return 0;
-		
-		int fillAmt = fluidTank.fill(resource, doFill);
-		while(useBucket(0, getStackInSlot(0)));
-		
-		
-		return fillAmt;
-	}
+		return fillInternal(resource, doFill);
 
+	}
 
 	
 	@Override
@@ -88,8 +84,30 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 	public FluidStack drain(int maxDrain, boolean doDrain) {
 		return fluidTank.drain(maxDrain, doDrain);
 	}
+	@Override
+	public FluidStack drainInternal(FluidStack maxDrain, boolean doDrain) {
+		return drain(maxDrain, doDrain);
+	}
 
+	@Override
+	public int fillInternal(FluidStack resource, boolean doFill) {
+		if(doFill && this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
+			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
+		
+		
+		int fillAmt = fluidTank.fill(resource, doFill);
+		while(useBucket(0, getStackInSlot(0)));
+		
+		
+		return fillAmt;
+	}
 
+	@Override
+	public FluidStack drainInternal(int maxDrain, boolean doDrain) {
+		return drain(maxDrain, doDrain);
+	}
+	
+	
 	@Override
 	public IFluidTankProperties[] getTankProperties() {
 		return fluidTank.getTankProperties();
@@ -103,7 +121,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 		list.add(new ModuleSlotArray(45, 54, this, 1, 2));
 		if(worldObj.isRemote)
 			list.add(new ModuleImage(44, 35, new IconResource(194, 0, 18, 18, CommonResources.genericBackground)));
-		//list.add(new ModuleLiquidIndicator(27, 18, this));
+		list.add(new ModuleLiquidIndicator(27, 18, this));
 
 		return list;
 	}

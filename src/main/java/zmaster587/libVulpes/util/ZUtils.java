@@ -339,10 +339,10 @@ public class ZUtils {
 		return inv.getSizeInventory();
 	}
 
-	public static int getContinuousBlockLength(World world, EnumFacing direction, int startx, int starty, int startz, int maxDist, Block block) {
+	public static int getContinuousBlockLength(World world, EnumFacing direction, BlockPos pos, int maxDist, Block block) {
 		int dist = 0;
 		for(int i = 0; i < maxDist; i++) {
-			if(world.getBlockState(new BlockPos(startx + (i*direction.getFrontOffsetX()), starty + (i*direction.getFrontOffsetY()), startz + (i*direction.getFrontOffsetZ()))).getBlock() != block) 
+			if(world.getBlockState(new BlockPos(pos.add((i*direction.getFrontOffsetX()), (i*direction.getFrontOffsetY()), (i*direction.getFrontOffsetZ())))).getBlock() != block) 
 				break;
 
 			dist = i+1;

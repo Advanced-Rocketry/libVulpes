@@ -37,6 +37,19 @@ public class TileMaterial extends TilePointer {
 	}
 
 	@Override
+	public NBTTagCompound getUpdateTag() {
+		NBTTagCompound nbt = super.getUpdateTag();
+		nbt.setString("material", materialType.getUnlocalizedName());
+		return nbt;
+	}
+	
+	@Override
+	public void handleUpdateTag(NBTTagCompound tag) {
+		super.handleUpdateTag(tag);
+		materialType = MaterialRegistry.getMaterialFromName(tag.getString("material"));
+	}
+	
+	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		materialType = MaterialRegistry.getMaterialFromName(pkt.getNbtCompound().getString("material"));
 	}

@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -90,13 +91,14 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0 && !worldObj.isRemote) {
 			if(isComplete())
-				canRender = completeStructure = completeStructure();
+				canRender = completeStructure = completeStructure(worldObj.getBlockState(pos));
 			timeAlive = 0x1;
 		}
 		
 		if(!worldObj.isRemote && worldObj.getTotalWorldTime() % 1000L == 0 && !isComplete()) {
-			attemptCompleteStructure();
+			attemptCompleteStructure(worldObj.getBlockState(pos));
 			markDirty();
+			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 		}
 		
 		if(isRunning()) {
@@ -110,6 +112,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 					if(!hadPowerLastTick) {
 						hadPowerLastTick = true;
 						markDirty();
+						worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 					}
 
 					useEnergy(powerPerTick);
@@ -118,6 +121,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 			else if(!worldObj.isRemote && hadPowerLastTick) { //If server and out of power check to see if client needs update
 				hadPowerLastTick = false;
 				markDirty();
+				worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 			}
 		}
 	}
@@ -142,6 +146,10 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 	public void setMachineEnabled(boolean enabled) {
 		this.enabled = enabled;
+		if(!worldObj.isRemote) {
+			this.markDirty();
+			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
+		}
 	}
 
 	public boolean getMachineEnabled() {
@@ -161,13 +169,13 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	 * @param blockBroken set true if the block is being broken, otherwise some other means is being used to disassemble the machine
 	 */
 	@Override
-	public void deconstructMultiBlock(World world, BlockPos destroyedPos, boolean blockBroken) {
+	public void deconstructMultiBlock(World world, BlockPos destroyedPos, boolean blockBroken, IBlockState state) {
 		resetCache();
 		completionTime = 0;
 		currentTime = 0;
 		enabled = false;
 
-		super.deconstructMultiBlock(world, destroyedPos, blockBroken);
+		super.deconstructMultiBlock(world, destroyedPos, blockBroken, state);
 	}
 
 	protected void processComplete() {
@@ -175,6 +183,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		currentTime = 0;
 
 		this.markDirty();
+		worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 	}
 
 	/**
@@ -190,7 +199,8 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	public boolean hasEnergy(int amt) {
-		return batteries.getEnergyStored() >= amt;
+		//DEBUG
+		return true;//batteries.getEnergyStored() >= amt;
 	}
 
 	@Override
@@ -198,7 +208,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		super.integrateTile(tile);
 
 		for(BlockMeta block : TileMultiBlock.getMapping('P')) {
-			if(block.getBlock() == worldObj.getBlockState(tile.getPos()))
+			if(block.getBlock() == worldObj.getBlockState(tile.getPos()).getBlock())
 				batteries.addBattery((IUniversalEnergy) tile);
 		}
 	}

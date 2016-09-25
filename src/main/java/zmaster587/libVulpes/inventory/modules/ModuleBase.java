@@ -309,14 +309,12 @@ public abstract class ModuleBase {
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 		Tessellator tessellator = Tessellator.getInstance();
 		VertexBuffer vertex = tessellator.getBuffer();
-		vertex.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		vertex.color(f1, f2, f3, f);
+		vertex.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 		
-		vertex.pos((double)x2, (double)y1, (double)zLevel);
-		vertex.pos((double)x1, (double)y1, (double)zLevel);
-		vertex.color(f5, f6, f7, f4);
-		vertex.pos((double)x1, (double)y2, (double)zLevel);
-		vertex.pos((double)x2, (double)y2, (double)zLevel);
+		vertex.pos((double)x2, (double)y1, (double)zLevel).color(f1, f2, f3, f).endVertex();
+		vertex.pos((double)x1, (double)y1, (double)zLevel).color(f1, f2, f3, f).endVertex();
+		vertex.pos((double)x1, (double)y2, (double)zLevel).color(f5, f6, f7, f4).endVertex();
+		vertex.pos((double)x2, (double)y2, (double)zLevel).color(f5, f6, f7, f4).endVertex();
 		tessellator.draw();
 		GL11.glShadeModel(GL11.GL_FLAT);
 		GL11.glDisable(GL11.GL_BLEND);

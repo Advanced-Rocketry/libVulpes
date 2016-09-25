@@ -53,12 +53,14 @@ public class ItemLinker extends Item {
 		return getMasterY(stack) != 0;
 	}
 
+	@Deprecated
 	public static int getMasterX(ItemStack itemStack) {
 		NBTTagCompound nbt = itemStack.getTagCompound();
 		nbt = nbt.getCompoundTag("MasterPos");
 
 		return nbt.getInteger("MasterX");
 	}
+	@Deprecated
 	public static int getMasterY(ItemStack itemStack) {
 		NBTTagCompound nbt = itemStack.getTagCompound();
 
@@ -69,6 +71,7 @@ public class ItemLinker extends Item {
 
 		return nbt.getInteger("MasterY");
 	}
+	@Deprecated
 	public static int getMasterZ(ItemStack itemStack) {
 		NBTTagCompound nbt = itemStack.getTagCompound();
 		nbt = nbt.getCompoundTag("MasterPos");
@@ -133,7 +136,30 @@ public class ItemLinker extends Item {
 		setMasterY(stack, y);
 		setMasterZ(stack, z);
 	}
+	
+	public static void setMasterCoords(ItemStack stack, BlockPos pos) {
+		if(!stack.hasTagCompound()) {
 
+			NBTTagCompound nbt = new NBTTagCompound();
+			nbt.setTag("MasterPos", new NBTTagCompound());
+			stack.setTagCompound(nbt);
+		}
+		setMasterX(stack, pos.getX());
+		setMasterY(stack, pos.getY());
+		setMasterZ(stack, pos.getZ());
+	}
+
+	public static BlockPos getMasterCoords(ItemStack stack ) {
+		if(!stack.hasTagCompound()) {
+
+			NBTTagCompound nbt = new NBTTagCompound();
+			nbt.setTag("MasterPos", new NBTTagCompound());
+			stack.setTagCompound(nbt);
+		}
+		
+		return new BlockPos(getMasterX(stack),getMasterY(stack),getMasterZ(stack));
+	}
+	
 	public static void resetPosition(ItemStack itemStack) {
 		NBTTagCompound position = new NBTTagCompound();
 

@@ -3,7 +3,6 @@ package zmaster587.libVulpes.inventory.modules;
 import java.util.List;
 
 import zmaster587.libVulpes.inventory.ContainerModular;
-import zmaster587.libVulpes.inventory.slot.SlotArmor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -45,7 +44,8 @@ public class ModuleSlotArmor extends ModuleBase {
 
 			Slot slot;
 			final int k = (endSlot - startSlot) - i - 1;
-			slot = new SlotArmor(player.inventory, k + startSlot, offsetX + 18 * (i / 9), offsetY + 18*(i%9), player, 3- k);
+			
+			slot = new Slot(player.inventory, k + startSlot, offsetX + 18 * (i / 9), offsetY + 18*(i%9));
 
 
 			slotList.add(slot);

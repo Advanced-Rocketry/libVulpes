@@ -10,12 +10,15 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 
-public class BlockOre extends Block implements INamedMetaBlock, IItemColor {
+public class BlockOre extends Block implements INamedMetaBlock, IBlockColor, IItemColor {
 	
 	public zmaster587.libVulpes.api.material.Material[] ores = new zmaster587.libVulpes.api.material.Material[16];
 	public static final PropertyInteger VARIANT = PropertyInteger.create("varient", 0, 15);
@@ -70,6 +73,13 @@ public class BlockOre extends Block implements INamedMetaBlock, IItemColor {
 		return  "material." + ores[itemDamage].getUnlocalizedName();
 	}
 
+	@Override
+	public int colorMultiplier(IBlockState state, IBlockAccess worldIn,
+			BlockPos pos, int tintIndex) {
+		
+		return ores[getMetaFromState(state)].getColor();
+	}
+	
 	@Override
 	public int getColorFromItemstack(ItemStack stack, int tintIndex) {
 		return ((BlockOre)Block.getBlockFromItem(stack.getItem())).ores[stack.getMetadata()].getColor();

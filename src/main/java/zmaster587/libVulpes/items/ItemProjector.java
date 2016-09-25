@@ -26,7 +26,7 @@ import zmaster587.libVulpes.network.PacketItemModifcation;
 import zmaster587.libVulpes.tile.TileSchematic;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
-import zmaster587.libVulpes.util.BlockPosition;
+import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 import zmaster587.libVulpes.util.ZUtils;
 import net.minecraft.block.material.Material;
@@ -38,6 +38,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -162,7 +163,8 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 						//TODO: compatibility fixes with the tile entity not reflecting current block
 						if(newTile instanceof TilePlaceholder) {
 							((TileSchematic)newTile).setReplacedBlock(block);
-							((TilePlaceholder)newTile).setReplacedTileEntity(block.get(0).getBlock().createTileEntity(null, block.get(0).getBlock().getDefaultState()));
+							
+							((TilePlaceholder)newTile).setReplacedTileEntity(block.get(0).getBlock().createTileEntity(world, block.get(0).getBlock().getDefaultState()));
 						}
 					}
 				}
@@ -174,11 +176,14 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack stack,
-			World world, EntityPlayer player, EnumHand hand) {
-		if(!world.isRemote && player.isSneaking()) {
+	public EnumActionResult onItemUseFirst(ItemStack stack,
+			EntityPlayer player, World world, BlockPos pos2, EnumFacing facing,
+			float hitX, float hitY, float hitZ, EnumHand hand) {
+		
+		if( player.isSneaking()) {
+			if(!world.isRemote)
 			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), world, -1, -1, 0);
-			return super.onItemRightClick(stack, world, player, hand);
+			return super.onItemUse(stack, player, world, pos2, hand, facing,hitX, hitY, hitZ);
 		}
 
 		int id = getMachineId(stack);
@@ -203,7 +208,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 						setMachineId(stack, machineList.indexOf(tiles));
 						Object[][][] structure = tiles.getStructure();
 
-						BlockPosition controller = getControllerOffset(structure);
+						HashedBlockPosition controller = getControllerOffset(structure);
 						dir = BlockMultiblockMachine.getFront(world.getBlockState(tile2.getPos())).getOpposite();
 						
 						controller.y = (short) (structure.length - controller.y);
@@ -216,7 +221,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 						setBasePosition(stack, pos.getBlockPos().getX() - globalX, pos.getBlockPos().getY() - controller.y  + 1, pos.getBlockPos().getZ() - globalZ);
 						PacketHandler.sendToServer(new PacketItemModifcation(this, player, (byte)0));
 						PacketHandler.sendToServer(new PacketItemModifcation(this, player, (byte)2));
-						return super.onItemRightClick(stack, world, player, hand);
+						return super.onItemUseFirst(stack, player, world, pos2, facing,hitX, hitY, hitZ, hand);
 					}
 				}
 			}
@@ -230,15 +235,15 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			PacketHandler.sendToServer(new PacketItemModifcation(this, player, (byte)2));
 		}
 
-		return super.onItemRightClick(stack, world, player, hand);
+		return super.onItemUseFirst(stack, player, world, pos2, facing,hitX, hitY, hitZ, hand);
 	}
 
-	protected BlockPosition getControllerOffset(Object[][][] structure) {
+	protected HashedBlockPosition getControllerOffset(Object[][][] structure) {
 		for(int y = 0; y < structure.length; y++) {
 			for(int z = 0; z < structure[0].length; z++) {
 				for(int x = 0; x< structure[0][0].length; x++) {
 					if(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c')
-						return new BlockPosition(x, y, z);
+						return new HashedBlockPosition(x, y, z);
 				}
 			}
 		}

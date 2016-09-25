@@ -12,6 +12,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -30,10 +31,13 @@ public class LibVulpesBlocks {
 	public static Block blockRFOutput;
 	public static Block blockStructureBlock;
 	public static Block blockAdvStructureBlock;
+	public static Block blockInputPlug;
 	//public static List<Block> blockOre = new ArrayList<Block>();
 	//public static List<Block> blockMetal = new ArrayList<Block>();
 	public static Item[] itemOreProduct;
 	//public static List<Block> blockCoil = new ArrayList<Block>();
+
+	
 
 
 

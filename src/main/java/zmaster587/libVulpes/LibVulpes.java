@@ -60,6 +60,7 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.tile.TileInventoriedPointer;
 import zmaster587.libVulpes.tile.TileSchematic;
+import zmaster587.libVulpes.tile.energy.TilePowerInput;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
@@ -128,6 +129,7 @@ public class LibVulpes {
 		LibVulpesBlocks.blockPlaceHolder = new BlockMultiblockPlaceHolder().setUnlocalizedName("placeHolder").setHardness(1f);
 		LibVulpesBlocks.blockAdvStructureBlock = new BlockAlphaTexture(Material.ROCK).setUnlocalizedName("advStructureMachine").setCreativeTab(tabMultiblock).setHardness(3f);
 		LibVulpesBlocks.blockStructureBlock = new BlockAlphaTexture(Material.ROCK).setUnlocalizedName("structureMachine").setCreativeTab(tabMultiblock).setHardness(3f);
+		LibVulpesBlocks.blockInputPlug = new BlockMultiMachineBattery(Material.ROCK, TilePowerInput.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("powerBattery").setCreativeTab(tabMultiblock).setHardness(3f);
 		//LibVulpesBlocks.blockRFBattery = new BlockMultiMachineBattery(Material.ROCK, TilePlugInputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("rfBattery").setCreativeTab(tabMultiblock).setHardness(3f);
 		//LibVulpesBlocks.blockRFOutput = new BlockMultiMachineBattery(Material.ROCK, TilePlugOutputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("rfOutput").setCreativeTab(tabMultiblock).setHardness(3f);
 
@@ -137,6 +139,7 @@ public class LibVulpes {
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockHatch.setRegistryName(LibVulpesBlocks.blockHatch.getUnlocalizedName().substring(5)), ItemBlockMeta.class, false);
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockPlaceHolder.setRegistryName(LibVulpesBlocks.blockPlaceHolder.getUnlocalizedName().substring(5)));
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockStructureBlock.setRegistryName(LibVulpesBlocks.blockStructureBlock.getUnlocalizedName().substring(5)));
+		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockInputPlug.setRegistryName(LibVulpesBlocks.blockInputPlug.getUnlocalizedName().substring(5)));
 		//LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockRFBattery.setRegistryName(LibVulpesBlocks.blockRFBattery.getUnlocalizedName()));
 		//LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockRFOutput.setRegistryName(LibVulpesBlocks.blockRFOutput.getUnlocalizedName()));
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockAdvStructureBlock.setRegistryName(LibVulpesBlocks.blockAdvStructureBlock.getUnlocalizedName().substring(5)));
@@ -147,6 +150,7 @@ public class LibVulpes {
 		GameRegistry.registerTileEntity(TilePlaceholder.class, "ARplaceHolder");
 		GameRegistry.registerTileEntity(TileFluidHatch.class, "ARFluidHatch");
 		GameRegistry.registerTileEntity(TileSchematic.class, "ARTileSchematic");
+		GameRegistry.registerTileEntity(TilePowerInput.class, "ARBattery");
 		//GameRegistry.registerTileEntity(TilePlugInputRF.class, "ARrfBattery");
 		//GameRegistry.registerTileEntity(TilePlugOutputRF.class, "ARrfOutputRF");
 		GameRegistry.registerTileEntity(TilePointer.class, "TilePointer");
@@ -160,10 +164,10 @@ public class LibVulpes {
 			//GameRegistry.registerBlock(LibVulpesBlocks.blockIC2Plug, LibVulpesBlocks.blockIC2Plug.getUnlocalizedName());
 			//GameRegistry.registerTileEntity(TilePlugInputIC2.class, "ARIC2Plug");
 		}
-		
-		
-		
-		
+
+
+
+
 		if(FMLCommonHandler.instance().getSide().isClient()) {
 			//Register Block models
 			Item blockItem = Item.getItemFromBlock(LibVulpesBlocks.blockHatch);
@@ -171,14 +175,14 @@ public class LibVulpes {
 			ModelLoader.setCustomModelResourceLocation(blockItem, 1, new ModelResourceLocation("libvulpes:outputHatch", "inventory"));
 			ModelLoader.setCustomModelResourceLocation(blockItem, 2, new ModelResourceLocation("libvulpes:fluidInputHatch", "inventory"));
 			ModelLoader.setCustomModelResourceLocation(blockItem, 3, new ModelResourceLocation("libvulpes:fluidOutputHatch", "inventory"));
-			
+
 			//Register Item models
 			ModelLoader.setCustomModelResourceLocation(LibVulpesItems.itemLinker, 0, new ModelResourceLocation(LibVulpesItems.itemLinker.getRegistryName(), "inventory"));
 			ModelLoader.setCustomModelResourceLocation(LibVulpesItems.itemHoloProjector, 0, new ModelResourceLocation(LibVulpesItems.itemHoloProjector.getRegistryName(), "inventory"));
 			ModelLoader.setCustomModelResourceLocation(LibVulpesItems.itemBattery, 0, new ModelResourceLocation("libvulpes:smallBattery", "inventory"));
 			ModelLoader.setCustomModelResourceLocation(LibVulpesItems.itemBattery, 1, new ModelResourceLocation("libvulpes:small2xBattery", "inventory"));
 		}
-		
+
 		//Ore dict stuff
 		OreDictionary.registerOre("battery", new ItemStack(LibVulpesItems.itemBattery,1,0));
 
@@ -210,9 +214,9 @@ public class LibVulpes {
 		AllowedProducts.registerProduct("FAN");
 		AllowedProducts.registerProduct("SHEET");
 		AllowedProducts.registerProduct("GEAR");
-		
+
 		//Register Ores
-		
+
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Dilithium", "pickaxe", 3, 0xddcecb, AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("CRYSTAL").getFlagValue()));
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Iron", "pickaxe", 1, 0xafafaf, AllowedProducts.getProductByName("SHEET").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue(), false));
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Gold", "pickaxe", 1, 0xffff5d, AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue(), false));
@@ -239,18 +243,17 @@ public class LibVulpes {
 		if(Loader.isModLoaded("IC2")) {
 			//GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockIC2Plug), LibVulpesBlocks.blockStructureBlock, IC2Items.getItem("mvTransformer"), LibVulpesItems.itemBattery);
 		}
-		
+
 		//Recipes
 		GameRegistry.addRecipe(new ShapedOreRecipe(LibVulpesBlocks.blockStructureBlock, "sps", "psp", "sps", 'p', "plateIron", 's', "stickIron"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(LibVulpesBlocks.blockAdvStructureBlock, "sps", "psp", "sps", 'p', "plateTitanium", 's', "stickTitanium"));
-		
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		
+
 		materialRegistry.postInit();
-		
+
 		//Init TileMultiblock
 
 		//Item output
@@ -267,14 +270,17 @@ public class LibVulpes {
 
 		//Power input
 		list = new LinkedList<BlockMeta>();
-		list.add(new BlockMeta(LibVulpesBlocks.blockRFBattery, BlockMeta.WILDCARD));
+		list.add(new BlockMeta(LibVulpesBlocks.blockInputPlug, BlockMeta.WILDCARD));
+		if(LibVulpesBlocks.blockRFBattery != null)
+			list.add(new BlockMeta(LibVulpesBlocks.blockRFBattery, BlockMeta.WILDCARD));
 		if(LibVulpesBlocks.blockIC2Plug != null)
 			list.add(new BlockMeta(LibVulpesBlocks.blockIC2Plug, BlockMeta.WILDCARD));
 		TileMultiBlock.addMapping('P', list);
 
 		//Power output
 		list = new LinkedList<BlockMeta>();
-		list.add(new BlockMeta(LibVulpesBlocks.blockRFOutput, BlockMeta.WILDCARD));
+		if(LibVulpesBlocks.blockRFOutput != null)
+			list.add(new BlockMeta(LibVulpesBlocks.blockRFOutput, BlockMeta.WILDCARD));
 		TileMultiBlock.addMapping('p', list);
 
 		//Liquid input

@@ -5,9 +5,7 @@ import io.netty.buffer.ByteBuf;
 import java.util.LinkedList;
 import java.util.List;
 
-import zmaster587.libVulpes.interfaces.IRecipe;
-import zmaster587.libVulpes.recipe.RecipesMachine;
-import zmaster587.libVulpes.util.ZUtils;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -20,6 +18,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.libVulpes.interfaces.IRecipe;
+import zmaster587.libVulpes.recipe.RecipesMachine;
+import zmaster587.libVulpes.util.IFluidHandlerInternal;
+import zmaster587.libVulpes.util.ZUtils;
 
 public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
@@ -54,6 +56,22 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		nbt.setBoolean("hadPowerLastTick", hadPowerLastTick);
 		return new SPacketUpdateTileEntity(pos, 0, nbt);
 	}
+	
+	
+	@Override
+	public NBTTagCompound getUpdateTag() {
+		NBTTagCompound nbt = writeToNBT(new NBTTagCompound());
+		nbt.setBoolean("built", canRender);
+		nbt.setBoolean("hadPowerLastTick", hadPowerLastTick);
+		return nbt;
+	}
+	
+	@Override
+	public void handleUpdateTag(NBTTagCompound nbt) {
+		super.handleUpdateTag(nbt);
+		canRender = nbt.getBoolean("built");
+		hadPowerLastTick = nbt.getBoolean("hadPowerLastTick");
+	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
@@ -71,7 +89,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		if(timeAlive == 0  && !worldObj.isRemote) {
 
 			if(isComplete())
-				setComplete(completeStructure());
+				setComplete(completeStructure(worldObj.getBlockState(pos)));
 
 			if(isComplete() && !worldObj.isRemote)
 				onInventoryUpdated();
@@ -93,6 +111,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 					if(!hadPowerLastTick) {
 						hadPowerLastTick = true;
 						markDirty();
+						worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 					}
 
 					useEnergy(powerPerTick);
@@ -103,6 +122,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 			else if(!worldObj.isRemote && hadPowerLastTick) { //If server and out of power check to see if client needs update
 				hadPowerLastTick = false;
 				markDirty();
+				worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 			}
 		}
 	}
@@ -127,10 +147,10 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	 * @param blockBroken set true if the block is being broken, otherwise some other means is being used to disassemble the machine
 	 */
 	@Override
-	public void deconstructMultiBlock(World world, BlockPos destroyedPos, boolean blockBroken) {
+	public void deconstructMultiBlock(World world, BlockPos destroyedPos, boolean blockBroken, IBlockState state) {
 		outputItemStacks = null;
 		outputFluidStacks = null;
-		super.deconstructMultiBlock(world, destroyedPos, blockBroken);
+		super.deconstructMultiBlock(world, destroyedPos, blockBroken, state);
 	}
 
 	protected void processComplete() {
@@ -145,6 +165,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		onInventoryUpdated();
 
 		this.markDirty();
+		worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 	}
 
 	//When the output of the recipe is dumped to the inventory
@@ -170,7 +191,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 		//Handle fluids
 		for(int i = 0; i < outputFluidStacks.size() ; i++) {
-			fluidOutPorts.get(i).fill(outputFluidStacks.get(i), true);
+			fluidOutPorts.get(i).fillInternal(outputFluidStacks.get(i), true);
 		}
 	}
 
@@ -239,13 +260,13 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		}
 
 		//Drain Fluid containers
-		for(IFluidHandler fluidInput : fluidInPorts) {
+		for(IFluidHandlerInternal fluidInput : fluidInPorts) {
 			for(int i = 0; i < recipe.getFluidIngredients().size(); i++) {
 				FluidStack fluidStack = recipe.getFluidIngredients().get(i).copy();
 				fluidStack.amount = fluidInputCounter[i];
 
 				FluidStack drainedFluid;
-				drainedFluid = fluidInput.drain(recipe.getFluidIngredients().get(i), true);
+				drainedFluid = fluidInput.drainInternal(recipe.getFluidIngredients().get(i), true);
 
 				if(drainedFluid != null)
 					fluidInputCounter[i] -= drainedFluid.amount;
@@ -354,9 +375,9 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		int[] fluidInputCounter = new int[recipe.getFluidIngredients().size()];
 
 		//Populate Fluid Counters
-		for(IFluidHandler fluidInput : fluidInPorts) {
+		for(IFluidHandlerInternal fluidInput : fluidInPorts) {
 			for(int i = 0; i < recipe.getFluidIngredients().size(); i++) {
-				FluidStack fluidStack = fluidInput.drain(recipe.getFluidIngredients().get(i), false);
+				FluidStack fluidStack = fluidInput.drainInternal(recipe.getFluidIngredients().get(i), false);
 
 				if(fluidStack != null)
 					fluidInputCounter[i] += fluidStack.amount;
@@ -384,7 +405,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 		//Populate Fluid Counters
 		for(int i = 0; i < recipe.getFluidOutputs().size(); i++) {
-			fluidOutputCounter[i] -= fluidOutPorts.get(i).fill(recipe.getFluidOutputs().get(i), false);
+			fluidOutputCounter[i] -= fluidOutPorts.get(i).fillInternal(recipe.getFluidOutputs().get(i), false);
 		}
 
 		for(int i = 0; i < fluidOutputCounter.length; i++)
@@ -416,7 +437,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	public void onInventoryUpdated() {
 		//If we are already processing something don't bother
 
-		if(!invCheckFlag && outputItemStacks == null && outputFluidStacks == null) {
+		if(!invCheckFlag && outputItemStacks == null && (outputFluidStacks == null || outputFluidStacks.isEmpty())) {
 			IRecipe recipe;
 
 			if(enabled && (recipe = getRecipe(getMachineRecipeList())) != null && canProcessRecipe(recipe)) {
@@ -427,6 +448,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 				outputFluidStacks = recipe.getFluidOutputs();
 
 				markDirty();
+				worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 
 				setMachineRunning(true); //turn on machine
 
@@ -505,7 +527,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	}
 
 	public boolean attemptCompleteStructure() {
-		boolean completeStructure = super.attemptCompleteStructure();
+		boolean completeStructure = super.attemptCompleteStructure(worldObj.getBlockState(pos));
 		if(completeStructure)
 			onInventoryUpdated();
 

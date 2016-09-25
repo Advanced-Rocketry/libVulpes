@@ -2,6 +2,7 @@ package zmaster587.libVulpes.tile.multiblock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -16,6 +17,8 @@ public class TilePlaceholder extends TilePointer {
 	TileEntity replacedTile;
 	
 	public IBlockState getReplacedState() {
+		if(replacedState == null)
+			return Blocks.AIR.getDefaultState();
 		return replacedState;
 	}
 	
@@ -42,6 +45,18 @@ public class TilePlaceholder extends TilePointer {
 		writeToNBT(nbt);
 		return new SPacketUpdateTileEntity(pos, 0, nbt);
 	}
+	
+	@Override
+	public NBTTagCompound getUpdateTag() {
+		NBTTagCompound nbt = new NBTTagCompound();
+
+		return writeToNBT(nbt);
+	}
+	
+	@Override
+	public void handleUpdateTag(NBTTagCompound tag) {
+		super.handleUpdateTag(tag);
+	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
@@ -53,8 +68,8 @@ public class TilePlaceholder extends TilePointer {
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		
-		nbt.setInteger("ID", Block.getIdFromBlock(replacedState.getBlock()));
-		nbt.setInteger("damage", replacedState.getBlock().getMetaFromState(replacedState));
+		nbt.setInteger("ID", Block.getIdFromBlock(getReplacedState().getBlock()));
+		nbt.setInteger("damage", getReplacedState().getBlock().getMetaFromState(getReplacedState()));
 		NBTTagCompound tag = new NBTTagCompound();
 		
 		if(replacedTile != null) {

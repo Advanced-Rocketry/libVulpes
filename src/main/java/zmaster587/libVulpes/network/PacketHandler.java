@@ -7,8 +7,6 @@ import io.netty.channel.ChannelHandler.Sharable;
 
 import java.util.EnumMap;
 
-import zmaster587.libVulpes.LibVulpes;
-
 import com.google.common.collect.Maps;
 
 import net.minecraft.client.Minecraft;
@@ -18,18 +16,23 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.FMLEmbeddedChannel;
 import net.minecraftforge.fml.common.network.FMLIndexedMessageToMessageCodec;
 import net.minecraftforge.fml.common.network.FMLOutboundHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PacketHandler {
 	public static final EnumMap<Side, FMLEmbeddedChannel> channels = Maps.newEnumMap(Side.class);
+	
+	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel("mymodid");
 
 	private static int discriminatorNumber = 0;
 	static Codec codec = new Codec();
@@ -54,40 +57,47 @@ public class PacketHandler {
 		}
 	}
 	
-	public static final void addDiscriminator(Class<? extends BasePacket> clazz) {
-		if(codec != null) {
+	public static final void addDiscriminator(Class clazz) {
+		INSTANCE.registerMessage(BasePacket.BasePacketHandler.class, clazz, discriminatorNumber++, Side.CLIENT);
+		INSTANCE.registerMessage(BasePacket.BasePacketHandler.class, clazz, discriminatorNumber++, Side.SERVER);
+		
+		/*if(codec != null) {
 			codec.addDiscriminator(discriminatorNumber, clazz);
 			discriminatorNumber++;
 		}
 		else
-			LibVulpes.logger.warn("Trying to register " + clazz.getName() + " after preinit!!");
+			LibVulpes.logger.warn("Trying to register " + clazz.getName() + " after preinit!!");*/
 	}
 
 
 	public static final void sendToServer(BasePacket packet) {
-		channels.get(Side.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
-		channels.get(Side.CLIENT).writeOutbound(packet);
+		INSTANCE.sendToServer(packet);
+		//channels.get(Side.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
+		//channels.get(Side.CLIENT).writeOutbound(packet);
 	}
 
 	
 	public static final void sendToPlayersTrackingEntity(BasePacket packet, Entity entity) {
 		for( EntityPlayer player : ((WorldServer)entity.worldObj).getEntityTracker().getTrackingPlayers(entity)) {
 
-			channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
-			channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
-			channels.get(Side.SERVER).writeOutbound(packet);
+			INSTANCE.sendTo(packet, (EntityPlayerMP)player);
+			//channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
+			//channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
+			//channels.get(Side.SERVER).writeOutbound(packet);
 		}
 	}
 
 	public static final void sendToAll(BasePacket packet) {
-		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
-		channels.get(Side.SERVER).writeOutbound(packet);
+		INSTANCE.sendToAll(packet);
+		//channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
+		//channels.get(Side.SERVER).writeOutbound(packet);
 	}
 	
 	public static final void sendToPlayer(BasePacket packet, EntityPlayer player) {
-		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
-		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
-		channels.get(Side.SERVER).writeOutbound(packet);
+		INSTANCE.sendTo(packet, (EntityPlayerMP)player);
+		//channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
+		//channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
+		//channels.get(Side.SERVER).writeOutbound(packet);
 	}
 
 	public static final void sendToDispatcher(BasePacket packet, NetworkManager netman) {
@@ -97,11 +107,16 @@ public class PacketHandler {
 	}
 	
 	public static final void sendToNearby(BasePacket packet,int dimId, int x, int y, int z, double dist) {
-		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
-		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(new NetworkRegistry.TargetPoint(dimId, x, y, z,dist));
-		channels.get(Side.SERVER).writeOutbound(packet);
+		INSTANCE.sendToAllAround(packet, new TargetPoint(dimId, x, y, z, dist));
+		//channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
+		//channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(new NetworkRegistry.TargetPoint(dimId, x, y, z,dist));
+		//channels.get(Side.SERVER).writeOutbound(packet);
 	}
 
+	public static final void sendToNearby(BasePacket packet,int dimId, BlockPos pos, double dist) {
+		sendToNearby(packet, dimId, pos.getX(), pos.getY(), pos.getZ(), dist);
+	}
+	
 	private static final class Codec extends FMLIndexedMessageToMessageCodec<BasePacket> {
 
 		@Override

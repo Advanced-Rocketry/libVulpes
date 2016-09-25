@@ -93,20 +93,17 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 		}
 	}
 
-
 	@Override
-	public void onBlockDestroyedByPlayer(World world, BlockPos pos,
-			IBlockState state) {
-		super.onBlockDestroyedByPlayer(world, pos,
-				state);
-
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		TileEntity tile = world.getTileEntity(pos);
 
 		if(tile != null && tile instanceof TilePlaceholder) {
 			tile = ((TilePlaceholder)tile).getMasterBlock();
 			if(tile instanceof TileMultiBlock)
-				((TileMultiBlock)tile).deconstructMultiBlock(world, pos, true);
+				((TileMultiBlock)tile).deconstructMultiBlock(world, pos, true, world.getBlockState(tile.getPos()));
 		}
+		
+		super.breakBlock(world, pos, state);
 	}
 
 	@Override

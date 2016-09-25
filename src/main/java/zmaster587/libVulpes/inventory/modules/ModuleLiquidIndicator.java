@@ -5,22 +5,30 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import zmaster587.libVulpes.util.IFluidHandlerInternal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ModuleLiquidIndicator extends ModuleBase {
 
 	IFluidHandler tile;
+	IFluidHandlerInternal tile2;
 
+	ResourceLocation fluidIcon = new ResourceLocation("advancedrocketry:textures/blocks/fluid/oxygen_flow.png");
+	
 	int prevLiquidUUID;
 	int prevLiquidAmt;
 	private static final int invalidFluid = -1;
@@ -28,6 +36,8 @@ public class ModuleLiquidIndicator extends ModuleBase {
 	public ModuleLiquidIndicator(int offsetX, int offsetY, IFluidHandler progress) {
 		super(offsetX, offsetY);
 		this.tile = progress;
+		if(progress instanceof IFluidHandlerInternal)
+			this.tile2 = (IFluidHandlerInternal)progress;
 	}
 
 	//TODO: sync changes
@@ -40,16 +50,16 @@ public class ModuleLiquidIndicator extends ModuleBase {
 	public void sendChanges(Container container, IContainerListener crafter,
 			int variableId, int localId) {
 		IFluidTankProperties info = tile.getTankProperties()[0];
-		
+
 		if(localId == 0 && info.getContents() != null)
 			crafter.sendProgressBarUpdate(container, variableId, info.getContents().amount & 0xFFFF);
-		else if(localId == 1 && info..getContents() != null)
+		else if(localId == 1 && info.getContents() != null)
 			crafter.sendProgressBarUpdate(container, variableId, (info.getContents().amount >>> 16) & 0xFFFF);
 		else if(localId == 2)
 			if(info.getContents() == null) 
 				crafter.sendProgressBarUpdate(container, variableId, invalidFluid);
 			else
-				crafter.sendProgressBarUpdate(container, variableId, info.getContents().getFluid());
+				crafter.sendProgressBarUpdate(container, variableId, FluidRegistry.getFluidID(info.getContents().getFluid()));
 	}
 
 	@Override
@@ -57,47 +67,65 @@ public class ModuleLiquidIndicator extends ModuleBase {
 		IFluidTankProperties info = tile.getTankProperties()[0];
 
 		if(slot == 2) {
-			if(info[0].fluid == null && value != invalidFluid) {
-				tile.fill(ForgeDirection.UNKNOWN, new FluidStack(FluidRegistry.getFluid(value), 1), true);
+			if(info.getContents() == null && value != invalidFluid) {
+				if(tile2 != null)
+					tile2.fillInternal(new FluidStack(FluidRegistry.getFluid(value), 1), true);
+				else
+					tile.fill(new FluidStack(FluidRegistry.getFluid(value), 1), true);
 			}
 			else if(value == invalidFluid) {
-				tile.drain(ForgeDirection.UNKNOWN, info[0].capacity, true);
+				if(tile2 != null) 
+					tile2.drainInternal(info.getCapacity(), true);
+				else
+					tile.drain(info.getCapacity(), true);
 			}
-			else if(info[0].fluid != null && value != info[0].fluid.getFluidID()) { //Empty the tank then fill it back up with new resource
-				FluidStack stack = tile.drain(ForgeDirection.UNKNOWN, info[0].capacity, true);
-				stack = new FluidStack(FluidRegistry.getFluid(stack.getFluidID()), stack.amount);
+			else if(info.getContents()  != null && value != FluidRegistry.getFluidID(info.getContents().getFluid())) { //Empty the tank then fill it back up with new resource
+				FluidStack stack;
+				if(tile2 != null)
+					stack = tile2.drainInternal(info.getCapacity(), true);
+				else
+					stack = tile.drain(info.getCapacity(), true);
 
-				tile.fill(ForgeDirection.UNKNOWN, stack, true);
+				stack = new FluidStack(stack.getFluid(), stack.amount);
+
+				tile.fill(stack, true);
 			}
 		}
-		else if((slot == 0 || slot == 1) && info[0].fluid != null) {
+		else if((slot == 0 || slot == 1) && info.getContents() != null) {
 			int difference;
-			
+
 			if(slot == 0) {
-				difference = (value & 0xFFFF) - (info[0].fluid.amount & 0xFFFF);
+				difference = (value & 0xFFFF) - (info.getContents().amount & 0xFFFF);
 			}
 			else
-				difference = ((value << 16) & 0xFFFF0000) - (info[0].fluid.amount & 0xFFFF0000);
+				difference = ((value << 16) & 0xFFFF0000) - (info.getContents().amount & 0xFFFF0000);
 
 			if(difference > 0) {
-				tile.fill(ForgeDirection.UNKNOWN, new FluidStack(info[0].fluid.getFluid(), difference), true);
+				if(tile2 != null)
+					tile2.fillInternal(new FluidStack(info.getContents().getFluid(), difference), true);
+				else
+					tile.fill(new FluidStack(info.getContents().getFluid(), difference), true);
 			}
 			else
-				tile.drain(ForgeDirection.UNKNOWN, -difference, true);
+				if(tile2 != null)
+					tile2.drainInternal(-difference, true);
+				else
+					tile.drain(-difference, true);
 		}
 	}
 
 	@Override
 	public boolean needsUpdate(int localId) {
-		FluidTankInfo info = tile.getTankInfo(ForgeDirection.UNKNOWN)[0];
+		IFluidTankProperties info = tile.getTankProperties()[0];
+
 		if(localId == 0 || localId == 1) {
-			return (info.fluid != null && prevLiquidAmt != info.fluid.amount);
+			return (info.getContents() != null && prevLiquidAmt != info.getContents().amount);
 		}
 		else if(localId == 2) {
-			if(info.fluid == null)
+			if(info.getContents() == null)
 				return prevLiquidUUID != invalidFluid;
 			else
-				return info.fluid.getFluidID() != prevLiquidUUID;
+				return FluidRegistry.getFluidID(info.getContents().getFluid()) != prevLiquidUUID;
 		}
 
 		return false;
@@ -105,26 +133,26 @@ public class ModuleLiquidIndicator extends ModuleBase {
 
 	@Override
 	protected void updatePreviousState(int localId) {
-		FluidTankInfo info = tile.getTankInfo(ForgeDirection.UNKNOWN)[0];
-		if(localId == 0 && info.fluid != null)
-			prevLiquidAmt = info.fluid.amount;
+		IFluidTankProperties info = tile.getTankProperties()[0];
+		if(localId == 0 && info.getContents() != null)
+			prevLiquidAmt =  info.getContents().amount;
 		else if(localId == 1)
-			if(info.fluid == null) 
+			if( info.getContents() == null) 
 				prevLiquidUUID = invalidFluid;
 			else
-				prevLiquidUUID = info.fluid.getFluidID();
+				prevLiquidUUID = FluidRegistry.getFluidID(info.getContents().getFluid());
 	}
 
 	protected float getProgress() {
-		FluidTankInfo[] info = tile.getTankInfo(ForgeDirection.UNKNOWN);
+		IFluidTankProperties[] info = tile.getTankProperties();
 
 		int capacity = 0;
 		int fillAmount = 0;
 
-		for(FluidTankInfo fluidInfo : info) {
-			capacity += fluidInfo.capacity;
-			if(fluidInfo.fluid != null)
-				fillAmount += fluidInfo.fluid.amount;
+		for(IFluidTankProperties fluidInfo : info) {
+			capacity += fluidInfo.getCapacity();
+			if(fluidInfo.getContents() != null)
+				fillAmount += fluidInfo.getContents().amount;
 		}
 
 		return fillAmount/(float)capacity;
@@ -141,17 +169,17 @@ public class ModuleLiquidIndicator extends ModuleBase {
 
 		if( relativeX > 0 && relativeX < xSize && relativeY > 0 && relativeY < ySize) {
 			List<String> list = new LinkedList<String>();
-			FluidStack fluidStack = tile.getTankInfo(ForgeDirection.UNKNOWN)[0].fluid;
+			FluidStack fluidStack = tile.getTankProperties()[0].getContents();
 
 			if(fluidStack!= null) {
-				
-				list.add(fluidStack.getLocalizedName()+": "+fluidStack.amount + " / " + tile.getTankInfo(ForgeDirection.UNKNOWN)[0].capacity + " mB");
 
-				
+				list.add(fluidStack.getLocalizedName()+": "+fluidStack.amount + " / " + tile.getTankProperties()[0].getCapacity() + " mB");
+
+
 			}
 			else
 				list.add("Empty");
-			
+
 			this.drawTooltip(gui, list, mouseX, mouseY, zLevel, font);
 		}
 
@@ -164,25 +192,34 @@ public class ModuleLiquidIndicator extends ModuleBase {
 		gui.drawTexturedModalRect(x + offsetX, y + offsetY, 176, 58, 14, 54);
 
 		//Draw Fluid
-		FluidTankInfo info = tile.getTankInfo(ForgeDirection.UNKNOWN)[0];
-		if(info.fluid != null) {
-			IIcon fluidIcon = info.fluid.getFluid().getIcon();
+		IFluidTankProperties info = tile.getTankProperties()[0];
 
-			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
+		if(info.getContents() != null) {
 
-			int color = info.fluid.getFluid().getColor(info.fluid);
 
-			GL11.glColor3b((byte)((color >> 16) & 127), (byte)((color >> 8) & 127), (byte)(color & 127));
+			Minecraft.getMinecraft().renderEngine.bindTexture(fluidIcon);
+
+			TextureMap map = Minecraft.getMinecraft().getTextureMapBlocks();
+			TextureAtlasSprite sprite = map.getTextureExtry(info.getContents().getFluid().getStill().toString());
+			
+			int color = info.getContents().getFluid().getColor(info.getContents());
+
+			GL11.glColor3b((byte)((color >>> 16) & 127), (byte)((color >>> 8) & 127), (byte)(color & 127));
 			//GL11.glColor3b((byte)127, (byte)127, (byte)127);
 
 			float percent = getProgress();
 			int ySize = 52;
 			int xSize = 12;
-			
-			if(fluidIcon != null)
-				gui.drawTexturedModelRectFromIcon(offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), fluidIcon, xSize, (int)(percent*ySize));
 
-			//this.drawProgressBarIconVertical(x + 27, y + 18, fluidIcon, 12, 52, getProgress());
+			if(sprite == null)
+				gui.drawTexturedModalRect(offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), 0, 0, xSize, (int)(percent*ySize));
+			else {
+				Minecraft.getMinecraft().renderEngine.bindTexture(Minecraft.getMinecraft().getTextureMapBlocks().LOCATION_BLOCKS_TEXTURE);
+				gui.drawTexturedModalRect(offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), sprite, xSize, (int)(percent*ySize));
+			}
+			//gui.drawTexturedModelRectFrom(offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), fluidIcon, xSize, (int)(percent*ySize));
+
+			//this.drawProgressBarIconVertical(x + 27, y + 18,, 12, 52, getProgress());
 		}
 	}
 

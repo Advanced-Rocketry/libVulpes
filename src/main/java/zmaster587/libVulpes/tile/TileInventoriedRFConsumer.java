@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 
 public abstract class TileInventoriedRFConsumer extends TileEntityRFConsumer implements ISidedInventory {
 
@@ -51,6 +52,16 @@ public abstract class TileInventoriedRFConsumer extends TileEntityRFConsumer imp
 		inventory.setInventorySlotContents(slot, stack);
 	}
 
+	
+	@Override
+	public boolean hasCustomName() {
+		return false;
+	}
+	
+	@Override
+	public String getName() {
+		return null;
+	}
 
 	@Override
 	public int getInventoryStackLimit() {
@@ -63,11 +74,48 @@ public abstract class TileInventoriedRFConsumer extends TileEntityRFConsumer imp
 	}
 	@Override
 	public void openInventory(EntityPlayer player) {
-		
+		inventory.openInventory(player);
 	}
 
 	@Override
 	public void closeInventory(EntityPlayer player) {
-		
+		inventory.closeInventory(player);
+	}
+	
+	@Override
+	public boolean canInsertItem(int index, ItemStack itemStackIn,
+			EnumFacing direction) {
+		return inventory.canInsertItem(index, itemStackIn, direction);
+	}
+
+	@Override
+	public boolean canExtractItem(int index, ItemStack stack,
+			EnumFacing direction) {
+		return inventory.canExtractItem(index, stack, direction);
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		return inventory.removeStackFromSlot(index);
+	}
+
+	@Override
+	public int getField(int id) {
+		return inventory.getField(id);
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		inventory.setField(id, value);
+	}
+
+	@Override
+	public int getFieldCount() {
+		return inventory.getFieldCount();
+	}
+
+	@Override
+	public void clear() {
+		inventory.clear();
 	}
 }

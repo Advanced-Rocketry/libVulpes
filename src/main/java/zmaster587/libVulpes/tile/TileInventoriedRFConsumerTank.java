@@ -36,7 +36,11 @@ public abstract class TileInventoriedRFConsumerTank extends TileInventoriedRFCon
 
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
-		return tank.fill(resource, doFill);
+		return canFill(resource.getFluid()) ? tank.fill(resource, doFill) : 0;
+	}
+	
+	public boolean canFill(Fluid fluid) {
+		return true;
 	}
 
 	@Override

@@ -37,23 +37,24 @@ public class BlockMultiblockMachine extends BlockTile {
 	
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-		super.breakBlock(worldIn, pos,	state);
+		
 
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if(tile instanceof TileMultiBlock) {
 			TileMultiBlock tileMulti = (TileMultiBlock)tile;
 			if(tileMulti.isComplete())
-				tileMulti.deconstructMultiBlock(worldIn, pos, false);
+				tileMulti.deconstructMultiBlock(worldIn, pos, false, state);
 		}
+		super.breakBlock(worldIn, pos,	state);
 	}
 	
 	@Override
 	public boolean shouldSideBeRendered(IBlockState blockState,
 			IBlockAccess access, BlockPos pos2, EnumFacing direction) {
 		
-		BlockPos pos = pos2.offset(direction.getOpposite());
+		BlockPos pos = pos2;//pos2.offset(direction.getOpposite());
 		
-		TileEntity tile = access.getTileEntity(pos);
+		TileEntity tile = access.getTileEntity(pos2);
 		if(tile instanceof TileMultiBlock) {
 			return !((TileMultiBlock)tile).shouldHideBlock(tile.getWorld(), pos, access.getBlockState(pos)) || !((TileMultiBlock)tile).canRender();
 		}
@@ -84,7 +85,7 @@ public class BlockMultiblockMachine extends BlockTile {
 					playerIn.openGui(LibVulpes.instance, guiId, worldIn, pos.getX(), pos.getY(), pos.getZ());
 			}
 			else
-				return tileMulti.attemptCompleteStructure();
+				return tileMulti.attemptCompleteStructure(state);
 		}
 		return true;
 	}

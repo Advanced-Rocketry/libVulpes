@@ -11,6 +11,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -52,7 +53,7 @@ public class BlockPhantom extends Block {
 		
 		if(tile != null && tile instanceof TilePlaceholder && ((TilePlaceholder)tile).getReplacedState() != null) {
 			Block block = ((TilePlaceholder)tile).getReplacedState().getBlock();
-			ItemStack stack = ((TilePlaceholder)tile).getReplacedState().getBlock().getPickBlock(state, target, world, pos, player);
+			ItemStack stack = ((TilePlaceholder)tile).getReplacedState().getBlock().getPickBlock(((TilePlaceholder)tile).getReplacedState(), target, world, pos, player);
 			
 			
 			stack.setItemDamage(block.damageDropped(block.getStateFromMeta(((TilePlaceholder)tile).getReplacedMeta())));
@@ -62,6 +63,12 @@ public class BlockPhantom extends Block {
 	}
 
 	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		// TODO Auto-generated method stub
+		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+	}
+	
+	@Override
 	public boolean shouldSideBeRendered(IBlockState blockState,
 			IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
 		return false;
@@ -69,8 +76,9 @@ public class BlockPhantom extends Block {
 	
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
-		return super.isOpaqueCube(state);
+		return false;
 	}
+	
 
 	@Override
 	public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos) {

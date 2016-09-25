@@ -25,9 +25,6 @@ import zmaster587.libVulpes.util.IAdjBlockUpdate;
 public class BlockTile extends RotatableBlock {
 
 	protected Class<? extends TileEntity> tileClass;
-	protected String textureSideName, textureFrontName, textureTopName, textureBottomName, textureRearName;
-	protected String textureSideName_active, textureFrontName_active, textureTopName_active, textureBottomName_active, textureRearName_active;
-
 	protected int guiId;
 	public static final PropertyBool STATE = PropertyBool.create("state");
 
@@ -49,6 +46,10 @@ public class BlockTile extends RotatableBlock {
     public int getMetaFromState(IBlockState state) {
     	return state.getValue(FACING).getIndex() | (state.getValue(STATE).booleanValue() ? 8 : 0);
     }
+    
+	public void setBlockState(World world, IBlockState state, BlockPos pos, boolean newState) {
+		world.setBlockState(pos, state.withProperty(STATE, newState), 2);
+	}
     
 	@Override
 	public boolean hasTileEntity(IBlockState state) { return true; }

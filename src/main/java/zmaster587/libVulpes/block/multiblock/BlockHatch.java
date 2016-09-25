@@ -29,35 +29,56 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockHatch extends BlockMultiblockStructure {
-	
+
 	private final Random random = new Random();
-	
+
 	public BlockHatch(Material material) {
 		super(material);
 		isBlockContainer = true;
 		this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT,0));
 	}
-	
-    protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer(this, new IProperty[] {VARIANT});
-    }
-	
+
+	protected BlockStateContainer createBlockState()
+	{
+		return new BlockStateContainer(this, new IProperty[] {VARIANT});
+	}
+
 	@Override
 	public boolean hasTileEntity(IBlockState state) {
 		return true;
 	}
-	
+
 	@Override
 	public int damageDropped(IBlockState state) {
 		return super.damageDropped(state);
 	}
-	
+
 	@Override
 	public BlockStateContainer getBlockState() {
 		return super.getBlockState();
 	}
-	
+
+	@Override
+	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess,
+			BlockPos pos, EnumFacing side) {
+		side = side.getOpposite();
+		boolean isPointer = blockAccess.getTileEntity(pos.offset(side)) instanceof TilePointer;
+		if(isPointer)
+			isPointer = isPointer && !(((TilePointer)blockAccess.getTileEntity(pos.offset(side))).getMasterBlock() instanceof TileMultiBlock);
+
+
+		return !isPointer && (blockState.getValue(VARIANT) & 8) != 0 ? 15 : 0;
+	}
+
+	public void setRedstoneState(World world, IBlockState bstate , BlockPos pos, boolean state) {
+		if(state && (bstate.getValue(VARIANT) & 8) == 0) {
+			world.setBlockState(pos, bstate.withProperty(VARIANT, bstate.getValue(VARIANT) | 8));
+		}
+		else if(!state && (bstate.getValue(VARIANT) & 8) != 0) {
+			world.setBlockState(pos, bstate.withProperty(VARIANT, bstate.getValue(VARIANT) & 7));
+		}
+	}
+
 	@Override
 	public void getSubBlocks(Item item, CreativeTabs tab,
 			List list) {
@@ -66,7 +87,7 @@ public class BlockHatch extends BlockMultiblockStructure {
 		list.add(new ItemStack(item, 1, 2));
 		list.add(new ItemStack(item, 1, 3));
 	}
-	
+
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		//TODO: multiple sized Hatches
@@ -79,50 +100,52 @@ public class BlockHatch extends BlockMultiblockStructure {
 			return new TileFluidHatch(false);	
 		else if((metadata & 7) == 3)
 			return new TileFluidHatch(true);	
-		
+
 		return null;
 	}
 
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
-		
+
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile != null && tile instanceof IInventory) {
 			IInventory inventory = (IInventory)tile;
 			for(int i = 0; i < inventory.getSizeInventory(); i++) {
 				ItemStack stack = inventory.getStackInSlot(i);
-				
+
 				if(stack == null)
 					continue;
-				
+
 				EntityItem entityitem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-				
+
 				float mult = 0.05F;
-				
-                entityitem.motionX = (double)((float)this.random.nextGaussian() * mult);
-                entityitem.motionY = (double)((float)this.random.nextGaussian() * mult + 0.2F);
-                entityitem.motionZ = (double)((float)this.random.nextGaussian() * mult);
-                
-                world.spawnEntityInWorld(entityitem);
+
+				entityitem.motionX = (double)((float)this.random.nextGaussian() * mult);
+				entityitem.motionY = (double)((float)this.random.nextGaussian() * mult + 0.2F);
+				entityitem.motionZ = (double)((float)this.random.nextGaussian() * mult);
+
+				world.spawnEntityInWorld(entityitem);
 			}
 		}
-		
+
 		super.breakBlock(world, pos, state);
 	}
 
+	
+	
 	@Override
 	public boolean shouldSideBeRendered(IBlockState blockState,
 			IBlockAccess blockAccess, BlockPos pos, EnumFacing direction) {
 
-		
+
 		boolean isPointer = blockAccess.getTileEntity(pos.offset(direction.getOpposite())) instanceof TilePointer;
 		if(isPointer)
 			isPointer = isPointer && !(((TilePointer)blockAccess.getTileEntity(pos.offset(direction.getOpposite()))).getMasterBlock() instanceof TileMultiBlock);
-		
-		return ( isPointer || blockAccess.getBlockState(pos).getValue(VARIANT) < 8);
-	
+
+		return blockState.getValue(VARIANT) < 8;
+
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos,
 			IBlockState state, EntityPlayer playerIn, EnumHand hand,
@@ -132,7 +155,7 @@ public class BlockHatch extends BlockMultiblockStructure {
 		//Handlue gui through modular system
 		if((meta & 7) < 6 )
 			playerIn.openGui(LibVulpes.instance, GuiHandler.guiId.MODULAR.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
-		
+
 		return true;
 	}
 }
