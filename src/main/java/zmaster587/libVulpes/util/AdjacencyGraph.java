@@ -1,4 +1,4 @@
-package zmaster587.advancedRocketry.util;
+package zmaster587.libVulpes.util;
 
 import java.util.Collection;
 import java.util.HashMap;
