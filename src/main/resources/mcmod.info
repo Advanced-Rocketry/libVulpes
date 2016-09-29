@@ -1,11 +1,11 @@
 [
 {
   "modid": "libVulpes",
-  "name": "${modname}",
-  "description": "${description}",
+  "name": "libVulpes",
+  "description": "A Library containing code for multiblocks and ore/item registration and access",
   "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "${url}",
+  "mcversion": "${mcversion},
+  "url": "http://minecraft.curseforge.com/projects/libvulpes",
   "updateUrl": "",
   "authorList": ["zmaster587"],
   "credits": "",
