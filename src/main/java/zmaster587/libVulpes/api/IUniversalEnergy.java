@@ -1,8 +1,6 @@
 package zmaster587.libVulpes.api;
 
-import net.minecraftforge.fml.common.Optional.Interface;
 
-@Interface(iface="ic2.api.energy.tile.IEnergySink",modid="IndustrialCraft")
 public interface IUniversalEnergy  {
 	public void setEnergyStored(int amt);
 

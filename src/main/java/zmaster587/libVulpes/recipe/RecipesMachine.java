@@ -16,9 +16,9 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class RecipesMachine {
-	public class Recipe implements IRecipe {
+	public static class Recipe implements IRecipe {
 
-		private LinkedList<LinkedList<ItemStack>> input;
+		private List<List<ItemStack>> input;
 		private LinkedList<FluidStack> fluidInput;
 		private LinkedList<ItemStack> output;
 		private LinkedList<FluidStack> fluidOutput;
@@ -26,11 +26,11 @@ public class RecipesMachine {
 
 		public Recipe() {}
 
-		public Recipe(List<ItemStack> output, LinkedList<LinkedList<ItemStack>> input, int completionTime, int powerReq) {
+		public Recipe(List<ItemStack> output, List<List<ItemStack>> input, int completionTime, int powerReq) {
 			this.output = new LinkedList<ItemStack>();
 			this.output.addAll(output);
 
-			this.input = new LinkedList<LinkedList<ItemStack>>();
+			this.input = new LinkedList<List<ItemStack>>();
 		
 			this.input.addAll(input);
 
@@ -41,7 +41,7 @@ public class RecipesMachine {
 			this.fluidOutput = new LinkedList<FluidStack>();
 		}
 
-		public Recipe(List<ItemStack> output, LinkedList<LinkedList<ItemStack>> input, List<FluidStack> fluidOutput, List<FluidStack> fluidInput, int completionTime, int powerReq) {
+		public Recipe(List<ItemStack> output, List<List<ItemStack>> input, List<FluidStack> fluidOutput, List<FluidStack> fluidInput, int completionTime, int powerReq) {
 			this(output, input, completionTime, powerReq);
 
 			this.fluidInput.addAll(fluidInput);
@@ -56,7 +56,7 @@ public class RecipesMachine {
 		}
 
 		@Override
-		public LinkedList<LinkedList<ItemStack>> getIngredients() {
+		public List<List<ItemStack>> getIngredients() {
 			return input;
 		}
 
@@ -188,7 +188,7 @@ public class RecipesMachine {
 		}
 
 
-		LinkedList<LinkedList<ItemStack>> stack = new LinkedList<LinkedList<ItemStack>>();
+		LinkedList<List<ItemStack>> stack = new LinkedList<List<ItemStack>>();
 
 		ArrayList<FluidStack> inputFluidStacks = new ArrayList<FluidStack>();
 

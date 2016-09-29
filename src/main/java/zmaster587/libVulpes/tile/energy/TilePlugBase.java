@@ -22,7 +22,7 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	protected int teir;
 	
 	public TilePlugBase() {
-		
+		storage = new UniversalBattery(getMaxEnergy(0));
 	}
 	
 	public TilePlugBase(int teir) {
@@ -59,8 +59,7 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 		
 		teir = nbt.getInteger("teir");
 		
-		//DEBUG
-		storage = new CreativeBattery();///new UniversalBattery(getMaxEnergy(teir));
+		storage = new UniversalBattery(getMaxEnergy(teir));
 		storage.readFromNBT(nbt);
 	}
 

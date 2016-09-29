@@ -1,4 +1,4 @@
-package zmaster587.libVulpes;
+/*package zmaster587.libVulpes;
 
 import net.minecraft.item.ItemStack;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
@@ -26,4 +26,4 @@ public class NEILibVulpesConfig implements IConfigureNEI {
 		
 	}
 
-}
+}*/

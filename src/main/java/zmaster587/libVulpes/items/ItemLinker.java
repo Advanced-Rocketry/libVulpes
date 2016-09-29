@@ -126,27 +126,24 @@ public class ItemLinker extends Item {
 	}
 
 	public static void setMasterCoords(ItemStack stack , int x, int y, int z) {
+		NBTTagCompound nbt;
 		if(!stack.hasTagCompound()) {
-
-			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setTag("MasterPos", new NBTTagCompound());
+			nbt = new NBTTagCompound();
 			stack.setTagCompound(nbt);
 		}
-		setMasterX(stack, x);
-		setMasterY(stack, y);
-		setMasterZ(stack, z);
+		else {
+			nbt = stack.getTagCompound();
+		}
+		NBTTagCompound tag = new NBTTagCompound();
+		
+		tag.setInteger("MasterX", x);
+		tag.setInteger("MasterY", y);
+		tag.setInteger("MasterZ", z);
+		nbt.setTag("MasterPos", tag);
 	}
 	
 	public static void setMasterCoords(ItemStack stack, BlockPos pos) {
-		if(!stack.hasTagCompound()) {
-
-			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setTag("MasterPos", new NBTTagCompound());
-			stack.setTagCompound(nbt);
-		}
-		setMasterX(stack, pos.getX());
-		setMasterY(stack, pos.getY());
-		setMasterZ(stack, pos.getZ());
+		setMasterCoords(stack, pos.getX(), pos.getY(), pos.getZ());
 	}
 
 	public static BlockPos getMasterCoords(ItemStack stack ) {
@@ -175,9 +172,9 @@ public class ItemLinker extends Item {
 	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world,
 			EntityPlayer player, EnumHand hand) {
 
-		if(player.isSneaking()) {
-			resetPosition(stack);
-		}
+		//if(player.isSneaking()) {
+			//resetPosition(stack);
+		//}
 		return super.onItemRightClick(stack, world, player, hand);
 	}
 

@@ -31,11 +31,17 @@ public class LibVulpesBlocks {
 	public static Block blockRFOutput;
 	public static Block blockStructureBlock;
 	public static Block blockAdvStructureBlock;
-	public static Block blockInputPlug;
+	public static Block blockCreativeInputPlug;
+	public static Block blockForgeInputPlug;
+	public static Block blockForgeOutputPlug;
 	//public static List<Block> blockOre = new ArrayList<Block>();
 	//public static List<Block> blockMetal = new ArrayList<Block>();
 	public static Item[] itemOreProduct;
 	//public static List<Block> blockCoil = new ArrayList<Block>();
+
+	
+
+	
 
 	
 

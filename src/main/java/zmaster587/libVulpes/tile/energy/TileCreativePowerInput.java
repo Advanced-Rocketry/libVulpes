@@ -1,22 +1,31 @@
 package zmaster587.libVulpes.tile.energy;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import zmaster587.libVulpes.energy.IPower;
 import zmaster587.libVulpes.util.CreativeBattery;
 import zmaster587.libVulpes.util.UniversalBattery;
 
-public class TilePowerInput extends TilePlugBase implements IPower {
+public class TileCreativePowerInput extends TilePlugBase implements IPower {
 
-	public TilePowerInput() {
+	public TileCreativePowerInput() {
 		//super(1);
-		//DEBUG
 		storage = new CreativeBattery();
 	}
 
-	public TilePowerInput(int teir) {
+	public TileCreativePowerInput(int teir) {
 		//super(1);
-		//DEBUG
 		storage = new CreativeBattery();
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		
+		teir = nbt.getInteger("teir");
+		
+		storage = new CreativeBattery();//new UniversalBattery(getMaxEnergy(teir));
+		storage.readFromNBT(nbt);
 	}
 	
 	@Override
@@ -47,7 +56,7 @@ public class TilePowerInput extends TilePlugBase implements IPower {
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.rfBattery.name";
+		return "tile.creativePowerBattery.name";
 	}
 
 	@Override

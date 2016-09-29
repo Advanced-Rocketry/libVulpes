@@ -1,6 +1,9 @@
 package zmaster587.libVulpes.client.util;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -57,6 +60,7 @@ public class ProgressBarImage {
 		this(backOffsetX, backOffsetY, backWidth, backHeight, foreOffsetX, foreOffsetY, backWidth, backHeight, 0, 0, direction, image);
 	}
 	
+	public ResourceLocation getResourceLocation() { return image; } 
 	public int getBackOffsetX() { return backOffsetX; }
 	public int getBackOffsetY() { return backOffsetY; }
 	public int getForeOffsetX() { return foreOffsetX; }
@@ -121,4 +125,36 @@ public class ProgressBarImage {
 		else if(direction == EnumFacing.DOWN)
 			gui.drawTexturedModalRect(x + insetX, y + insetY, foreOffsetX, foreOffsetY, foreWidth, (int)(percent*foreHeight) );
 	}
+	
+	@SideOnly(Side.CLIENT)
+	public void renderProgressBar(int x, int zLevel, int y, float percent) {
+		Minecraft.getMinecraft().getTextureManager().bindTexture(image);
+		//backdrop
+		drawTexturedModalRect(x, zLevel, y, backOffsetX, backOffsetY, backWidth, backHeight);
+		
+		if(direction == EnumFacing.EAST )//Left to right
+			drawTexturedModalRect(x + insetX,zLevel, y + insetY, foreOffsetX, foreOffsetY, (int)(percent*foreWidth), foreHeight);
+		else if(direction == EnumFacing.WEST ) 
+			drawTexturedModalRect(x + insetX + foreWidth - (int)(percent*foreWidth),zLevel, y + insetY, foreOffsetX + foreWidth - (int)(percent*foreWidth), foreOffsetY, (int)(percent*foreWidth), foreHeight);
+		else if(direction == EnumFacing.UP) // bottom to top
+			drawTexturedModalRect(x + insetX,zLevel, y + insetY + foreHeight - (int)(percent*foreHeight), foreOffsetX, foreOffsetY + foreHeight - (int)(percent*foreHeight), foreWidth, (int)(percent*foreHeight) );
+		else if(direction == EnumFacing.DOWN)
+			drawTexturedModalRect(x + insetX,zLevel, y + insetY, foreOffsetX, foreOffsetY, foreWidth, (int)(percent*foreHeight) );
+	}
+	
+	@SideOnly(Side.CLIENT)
+    public void drawTexturedModalRect(int x, int zLevel, int y, int textureX, int textureY, int width, int height)
+    {
+        float f = 0.00390625F;
+        float f1 = 0.00390625F;
+        Tessellator tessellator = Tessellator.getInstance();
+        VertexBuffer vertexbuffer = tessellator.getBuffer();
+        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+        vertexbuffer.pos((double)(x + 0), (double)(y + height), (double)zLevel).tex((double)((float)(textureX + 0) * 0.00390625F), (double)((float)(textureY + height) * 0.00390625F)).endVertex();
+        vertexbuffer.pos((double)(x + width), (double)(y + height), (double)zLevel).tex((double)((float)(textureX + width) * 0.00390625F), (double)((float)(textureY + height) * 0.00390625F)).endVertex();
+        vertexbuffer.pos((double)(x + width), (double)(y + 0), (double)zLevel).tex((double)((float)(textureX + width) * 0.00390625F), (double)((float)(textureY + 0) * 0.00390625F)).endVertex();
+        vertexbuffer.pos((double)(x + 0), (double)(y + 0), (double)zLevel).tex((double)((float)(textureX + 0) * 0.00390625F), (double)((float)(textureY + 0) * 0.00390625F)).endVertex();
+        tessellator.draw();
+    }
+	
 }

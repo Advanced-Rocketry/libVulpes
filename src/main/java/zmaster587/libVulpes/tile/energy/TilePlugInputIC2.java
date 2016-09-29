@@ -1,6 +1,6 @@
 package zmaster587.libVulpes.tile.energy;
 
-import zmaster587.libVulpes.Configuration;
+/*import zmaster587.libVulpes.Configuration;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -74,4 +74,4 @@ public class TilePlugInputIC2 extends TilePlugBase implements IEnergySink {
 		return 0;
 	}
 
-}
+}*/

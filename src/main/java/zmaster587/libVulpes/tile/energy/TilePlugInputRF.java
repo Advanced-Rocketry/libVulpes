@@ -1,4 +1,4 @@
-package zmaster587.libVulpes.tile.energy;
+/*package zmaster587.libVulpes.tile.energy;
 
 import cofh.api.energy.IEnergyHandler;
 import zmaster587.libVulpes.util.UniversalBattery;
@@ -49,4 +49,4 @@ public class TilePlugInputRF extends TilePlugBase implements IEnergyHandler {
 		return null;
 	}
 
-}
+}*/

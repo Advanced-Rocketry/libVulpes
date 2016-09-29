@@ -11,7 +11,7 @@ public interface IRecipe {
 	
 	public List<FluidStack> getFluidOutputs();
 	
-	public LinkedList<LinkedList<ItemStack>> getIngredients();
+	public List<List<ItemStack>> getIngredients();
 	
 	public List<FluidStack> getFluidIngredients();
 	

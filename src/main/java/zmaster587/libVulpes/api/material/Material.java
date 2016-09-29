@@ -65,7 +65,7 @@ public class Material {
 			return stack;*/
 
 		if(product.isBlock()) {
-			return new ItemStack(registry.getBlockListForProduct(product).get(index/16), amount, getMeta());
+			return new ItemStack(registry.getBlockForProduct(product, this, index), amount, getMeta());
 		}
 		
 		return new ItemStack(registry.oreProducts[product.ordinal()], amount, getMeta());

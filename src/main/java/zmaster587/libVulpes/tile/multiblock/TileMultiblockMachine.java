@@ -228,11 +228,11 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 
 	public void consumeItems(IRecipe recipe) {
-		LinkedList<LinkedList<ItemStack>> ingredients = recipe.getIngredients();
+		List<List<ItemStack>> ingredients = recipe.getIngredients();
 
 		for(int ingredientNum = 0;ingredientNum < ingredients.size(); ingredientNum++) {
 
-			LinkedList<ItemStack> ingredient = ingredients.get(ingredientNum);
+			List<ItemStack> ingredient = ingredients.get(ingredientNum);
 
 			ingredientCheck:
 
@@ -287,7 +287,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		boolean itemCheck = outputItems.size() == 0;
 
 
-		LinkedList<LinkedList<ItemStack>> ingredients = recipe.getIngredients();
+		List<List<ItemStack>> ingredients = recipe.getIngredients();
 		short mask = 0x0;
 		recipeCheck:
 

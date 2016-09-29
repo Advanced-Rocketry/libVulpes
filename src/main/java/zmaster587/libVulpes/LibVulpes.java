@@ -2,15 +2,12 @@ package zmaster587.libVulpes;
 
 
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
@@ -26,8 +23,6 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
-import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -51,7 +46,6 @@ import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.items.ItemBlockMeta;
 import zmaster587.libVulpes.items.ItemIngredient;
 import zmaster587.libVulpes.items.ItemLinker;
-import zmaster587.libVulpes.items.ItemOreProduct;
 import zmaster587.libVulpes.items.ItemProjector;
 import zmaster587.libVulpes.network.PacketChangeKeyState;
 import zmaster587.libVulpes.network.PacketEntity;
@@ -60,7 +54,9 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.tile.TileInventoriedPointer;
 import zmaster587.libVulpes.tile.TileSchematic;
-import zmaster587.libVulpes.tile.energy.TilePowerInput;
+import zmaster587.libVulpes.tile.energy.TileCreativePowerInput;
+import zmaster587.libVulpes.tile.energy.TileForgePowerInput;
+import zmaster587.libVulpes.tile.energy.TileForgePowerOutput;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
@@ -129,7 +125,10 @@ public class LibVulpes {
 		LibVulpesBlocks.blockPlaceHolder = new BlockMultiblockPlaceHolder().setUnlocalizedName("placeHolder").setHardness(1f);
 		LibVulpesBlocks.blockAdvStructureBlock = new BlockAlphaTexture(Material.ROCK).setUnlocalizedName("advStructureMachine").setCreativeTab(tabMultiblock).setHardness(3f);
 		LibVulpesBlocks.blockStructureBlock = new BlockAlphaTexture(Material.ROCK).setUnlocalizedName("structureMachine").setCreativeTab(tabMultiblock).setHardness(3f);
-		LibVulpesBlocks.blockInputPlug = new BlockMultiMachineBattery(Material.ROCK, TilePowerInput.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("powerBattery").setCreativeTab(tabMultiblock).setHardness(3f);
+		LibVulpesBlocks.blockCreativeInputPlug = new BlockMultiMachineBattery(Material.ROCK, TileCreativePowerInput.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("creativePowerBattery").setCreativeTab(tabMultiblock).setHardness(3f);
+		LibVulpesBlocks.blockForgeInputPlug = new BlockMultiMachineBattery(Material.ROCK, TileForgePowerInput.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("forgePowerInput").setCreativeTab(tabMultiblock).setHardness(3f);
+		LibVulpesBlocks.blockForgeOutputPlug = new BlockMultiMachineBattery(Material.ROCK, TileForgePowerOutput.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("forgePowerOutput").setCreativeTab(tabMultiblock).setHardness(3f);
+		
 		//LibVulpesBlocks.blockRFBattery = new BlockMultiMachineBattery(Material.ROCK, TilePlugInputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("rfBattery").setCreativeTab(tabMultiblock).setHardness(3f);
 		//LibVulpesBlocks.blockRFOutput = new BlockMultiMachineBattery(Material.ROCK, TilePlugOutputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("rfOutput").setCreativeTab(tabMultiblock).setHardness(3f);
 
@@ -139,22 +138,27 @@ public class LibVulpes {
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockHatch.setRegistryName(LibVulpesBlocks.blockHatch.getUnlocalizedName().substring(5)), ItemBlockMeta.class, false);
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockPlaceHolder.setRegistryName(LibVulpesBlocks.blockPlaceHolder.getUnlocalizedName().substring(5)));
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockStructureBlock.setRegistryName(LibVulpesBlocks.blockStructureBlock.getUnlocalizedName().substring(5)));
-		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockInputPlug.setRegistryName(LibVulpesBlocks.blockInputPlug.getUnlocalizedName().substring(5)));
+		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockCreativeInputPlug.setRegistryName(LibVulpesBlocks.blockCreativeInputPlug.getUnlocalizedName().substring(5)));
+		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockForgeInputPlug.setRegistryName(LibVulpesBlocks.blockForgeInputPlug.getUnlocalizedName().substring(5)));
+		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockForgeOutputPlug.setRegistryName(LibVulpesBlocks.blockForgeOutputPlug.getUnlocalizedName().substring(5)));
+		
 		//LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockRFBattery.setRegistryName(LibVulpesBlocks.blockRFBattery.getUnlocalizedName()));
 		//LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockRFOutput.setRegistryName(LibVulpesBlocks.blockRFOutput.getUnlocalizedName()));
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockAdvStructureBlock.setRegistryName(LibVulpesBlocks.blockAdvStructureBlock.getUnlocalizedName().substring(5)));
 
 		//Register Tile
-		GameRegistry.registerTileEntity(TileOutputHatch.class, "ARoutputHatch");
-		GameRegistry.registerTileEntity(TileInputHatch.class, "ARinputHatch");
-		GameRegistry.registerTileEntity(TilePlaceholder.class, "ARplaceHolder");
-		GameRegistry.registerTileEntity(TileFluidHatch.class, "ARFluidHatch");
-		GameRegistry.registerTileEntity(TileSchematic.class, "ARTileSchematic");
-		GameRegistry.registerTileEntity(TilePowerInput.class, "ARBattery");
+		GameRegistry.registerTileEntity(TileOutputHatch.class, "vulpesoutputHatch");
+		GameRegistry.registerTileEntity(TileInputHatch.class, "vulpesinputHatch");
+		GameRegistry.registerTileEntity(TilePlaceholder.class, "vulpesplaceHolder");
+		GameRegistry.registerTileEntity(TileFluidHatch.class, "vulpesFluidHatch");
+		GameRegistry.registerTileEntity(TileSchematic.class, "vulpesTileSchematic");
+		GameRegistry.registerTileEntity(TileCreativePowerInput.class, "vulpesCreativeBattery");
+		GameRegistry.registerTileEntity(TileForgePowerInput.class, "vulpesForgePowerInput");
+		GameRegistry.registerTileEntity(TileForgePowerOutput.class, "vulpesForgePowerOutput");
 		//GameRegistry.registerTileEntity(TilePlugInputRF.class, "ARrfBattery");
 		//GameRegistry.registerTileEntity(TilePlugOutputRF.class, "ARrfOutputRF");
-		GameRegistry.registerTileEntity(TilePointer.class, "TilePointer");
-		GameRegistry.registerTileEntity(TileInventoriedPointer.class, "TileInvPointer");
+		GameRegistry.registerTileEntity(TilePointer.class, "vulpesTilePointer");
+		GameRegistry.registerTileEntity(TileInventoriedPointer.class, "vulpesTileInvPointer");
 
 
 		//MOD-SPECIFIC ENTRIES --------------------------------------------------------------------------------------------------------------------------
@@ -229,10 +233,12 @@ public class LibVulpes {
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Aluminum", "pickaxe", 1, 0xb3e4dc, AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue()));
 
 		materialRegistry.registerOres(tabLibVulpesOres);
+		
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
+		proxy.init();
 		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesItems.itemLinker), "x","y","z", 'x', Items.REDSTONE, 'y', Items.GOLD_INGOT, 'z', Items.IRON_INGOT);
 		MinecraftForge.EVENT_BUS.register(this);
 
@@ -247,15 +253,19 @@ public class LibVulpes {
 		//Recipes
 		GameRegistry.addRecipe(new ShapedOreRecipe(LibVulpesBlocks.blockStructureBlock, "sps", "psp", "sps", 'p', "plateIron", 's', "stickIron"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(LibVulpesBlocks.blockAdvStructureBlock, "sps", "psp", "sps", 'p', "plateTitanium", 's', "stickTitanium"));
+		
+		//Plugs
+		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockForgeInputPlug), " x ", "xmx"," x ", 'x', LibVulpesItems.itemBattery, 'm', LibVulpesBlocks.blockStructureBlock);
+		
+		//GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockRFBattery), new ItemStack(LibVulpesBlocks.blockRFOutput));
+		//GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockRFOutput), new ItemStack(LibVulpesBlocks.blockRFBattery));
+		GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockForgeInputPlug), new ItemStack(LibVulpesBlocks.blockRFOutput));
+		GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockForgeOutputPlug), new ItemStack(LibVulpesBlocks.blockRFBattery));
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-
-		materialRegistry.postInit();
-
 		//Init TileMultiblock
-
 		//Item output
 		List<BlockMeta> list = new LinkedList<BlockMeta>();
 		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 1));
@@ -270,7 +280,8 @@ public class LibVulpes {
 
 		//Power input
 		list = new LinkedList<BlockMeta>();
-		list.add(new BlockMeta(LibVulpesBlocks.blockInputPlug, BlockMeta.WILDCARD));
+		list.add(new BlockMeta(LibVulpesBlocks.blockCreativeInputPlug, BlockMeta.WILDCARD));
+		list.add(new BlockMeta(LibVulpesBlocks.blockForgeInputPlug, BlockMeta.WILDCARD));
 		if(LibVulpesBlocks.blockRFBattery != null)
 			list.add(new BlockMeta(LibVulpesBlocks.blockRFBattery, BlockMeta.WILDCARD));
 		if(LibVulpesBlocks.blockIC2Plug != null)
@@ -279,6 +290,7 @@ public class LibVulpes {
 
 		//Power output
 		list = new LinkedList<BlockMeta>();
+		list.add(new BlockMeta(LibVulpesBlocks.blockForgeOutputPlug, BlockMeta.WILDCARD));
 		if(LibVulpesBlocks.blockRFOutput != null)
 			list.add(new BlockMeta(LibVulpesBlocks.blockRFOutput, BlockMeta.WILDCARD));
 		TileMultiBlock.addMapping('p', list);

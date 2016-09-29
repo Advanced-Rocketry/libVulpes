@@ -10,6 +10,7 @@ import zmaster587.libVulpes.block.BlockOre;
 import zmaster587.libVulpes.items.ItemOre;
 import zmaster587.libVulpes.items.ItemOreProduct;
 import zmaster587.libVulpes.util.ItemStackMapping;
+import zmaster587.libVulpes.util.OreProductColorizer;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -22,6 +23,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class MaterialRegistry {
@@ -29,6 +32,9 @@ public class MaterialRegistry {
 	static HashMap<Object, MixedMaterial> mixedMaterialList = new HashMap<Object, MixedMaterial>();
 	static HashMap<AllowedProducts, List<Block>> productBlockListMapping;
 	static List<MaterialRegistry> registries = new LinkedList<MaterialRegistry>();
+	
+	@SideOnly(Side.CLIENT)
+	static Object oreProductColorizer;
 
 	public HashMap<String, zmaster587.libVulpes.api.material.Material> strToMaterial = new HashMap<String, zmaster587.libVulpes.api.material.Material>();
 	public List<zmaster587.libVulpes.api.material.Material> materialList = new LinkedList<zmaster587.libVulpes.api.material.Material>();
@@ -47,32 +53,31 @@ public class MaterialRegistry {
 		materialList.add(material);
 	}
 
-	public void postInit()	{
-		//register color handles
-		if(FMLCommonHandler.instance().getSide().isClient()) {
-			for(int i = 0; i < AllowedProducts.getAllAllowedProducts().size(); i++) {
-				if(!AllowedProducts.getAllAllowedProducts().get(i).isBlock()) {
-					Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)oreProducts[i], oreProducts[i]);
-				}
-			}
-
-			
-			
+	@SideOnly(Side.CLIENT)
+	public void init() {
+		if(oreProductColorizer == null)
+			oreProductColorizer = new OreProductColorizer();
+			//register color handles
 			for(Block block : getBlockListForProduct(AllowedProducts.getProductByName("BLOCK"))) {
-				Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)block, block);
-				Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)block,  Item.getItemFromBlock(block));
+				Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)oreProductColorizer, new Block[] {block});
+				Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)oreProductColorizer,  Item.getItemFromBlock(block));
 			}
 
 			
 			for(Block block : getBlockListForProduct(AllowedProducts.getProductByName("COIL"))) {
-				Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)block, block);
-				Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)block, Item.getItemFromBlock(block));
+				Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)oreProductColorizer, new Block[] { block});
+				Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)oreProductColorizer, Item.getItemFromBlock(block));
 			}
-				
+			
+			for(int i = 0; i < AllowedProducts.getAllAllowedProducts().size(); i++) {
+				if(!AllowedProducts.getAllAllowedProducts().get(i).isBlock()) {
+					Minecraft.getMinecraft().getItemColors().registerItemColorHandler((OreProductColorizer)oreProductColorizer, oreProducts[i]);
+				}
+			}
 			
 			//getBlockListForProduct(AllowedProducts.getProductByName("ORE"))
-		}
 	}
+
 	//TODO: allow more block types
 	public void registerOres(CreativeTabs tab) {
 		int len = materialList.size();
@@ -186,6 +191,14 @@ public class MaterialRegistry {
 
 	public List<Block> getBlockListForProduct(AllowedProducts product) {
 		return productBlockListMapping.get(product);
+	}
+	
+	public Block getBlockForProduct(AllowedProducts product, zmaster587.libVulpes.api.material.Material material, int index) {
+		for(Block block : productBlockListMapping.get(product) ) {
+			if(((BlockOre)block).ores[index] == material)
+			return block;
+		}
+		return null;
 	}
 
 	/**

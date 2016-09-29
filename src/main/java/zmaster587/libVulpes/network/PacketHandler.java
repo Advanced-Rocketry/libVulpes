@@ -7,6 +7,9 @@ import io.netty.channel.ChannelHandler.Sharable;
 
 import java.util.EnumMap;
 
+import zmaster587.libVulpes.network.BasePacket.BasePacketHandlerClient;
+import zmaster587.libVulpes.network.BasePacket.BasePacketHandlerServer;
+
 import com.google.common.collect.Maps;
 
 import net.minecraft.client.Minecraft;
@@ -58,8 +61,9 @@ public class PacketHandler {
 	}
 	
 	public static final void addDiscriminator(Class clazz) {
-		INSTANCE.registerMessage(BasePacket.BasePacketHandler.class, clazz, discriminatorNumber++, Side.CLIENT);
-		INSTANCE.registerMessage(BasePacket.BasePacketHandler.class, clazz, discriminatorNumber++, Side.SERVER);
+		if(FMLCommonHandler.instance().getSide().isClient())
+			INSTANCE.registerMessage(BasePacketHandlerClient.class, clazz, discriminatorNumber++, Side.CLIENT);
+		INSTANCE.registerMessage(BasePacketHandlerServer.class, clazz, discriminatorNumber++, Side.SERVER);
 		
 		/*if(codec != null) {
 			codec.addDiscriminator(discriminatorNumber, clazz);

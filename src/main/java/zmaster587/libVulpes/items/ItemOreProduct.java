@@ -18,9 +18,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class ItemOreProduct extends Item implements IItemColor {
+public class ItemOreProduct extends Item {
 
-	HashMap<Integer, Material> properties;
+	public HashMap<Integer, Material> properties;
 	String outputType;
 
 	public ItemOreProduct(String outputType) {
@@ -63,11 +63,5 @@ public class ItemOreProduct extends Item implements IItemColor {
 		} catch (NullPointerException e) {
 			return "No name!!!";
 		}
-	}
-
-	@Override
-	public int getColorFromItemstack(ItemStack stack, int tintIndex) {
-		return ((ItemOreProduct)stack.getItem()).properties.get(stack.getMetadata()).getColor();
-		
 	}
 }

@@ -1,8 +1,9 @@
 package zmaster587.libVulpes.energy;
 
+import zmaster587.libVulpes.api.IUniversalEnergy;
 import net.minecraft.util.EnumFacing;
 
-public interface IPower {
+public interface IPower extends IUniversalEnergy {
 	
 	public boolean canConnectEnergy(EnumFacing facing);
 	

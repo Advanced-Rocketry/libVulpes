@@ -92,7 +92,37 @@ public abstract class BasePacket implements IMessage {
 		write(buf);
 	}
 
-	public static class BasePacketHandler implements IMessageHandler<BasePacket, IMessage> {
+	public static class BasePacketHandlerServer implements IMessageHandler<BasePacket, IMessage> {
+		@Override
+		public IMessage onMessage(BasePacket message, MessageContext ctx) {
+
+			((WorldServer) ctx.getServerHandler().playerEntity.worldObj).addScheduledTask(new executor(message, ctx.getServerHandler().playerEntity, ctx.side));
+
+
+
+			return null;
+		}
+
+		public class executor implements Runnable {
+
+			final Side side;
+			final BasePacket packet;
+			final EntityPlayer player;
+
+			public executor(BasePacket packet, EntityPlayer player, Side side) {
+				this.packet = packet;
+				this.player = player;
+				this.side = side;
+			}
+
+			@Override
+			public void run() {
+					packet.executeServer((EntityPlayerMP) player);
+			}
+		}
+	}
+
+	public static class BasePacketHandlerClient implements IMessageHandler<BasePacket, IMessage> {
 		@Override
 		public IMessage onMessage(BasePacket message, MessageContext ctx) {
 			switch(ctx.side) {

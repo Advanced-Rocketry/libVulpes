@@ -11,34 +11,34 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 public abstract class TileInventoriedRFConsumerTank extends TileInventoriedRFConsumer implements IFluidHandler {
 
 	protected FluidTank tank;
-	
+
 	protected TileInventoriedRFConsumerTank(int energy, int invSize, int tankSize) {
 		super(energy,invSize);
 		tank = new FluidTank(tankSize);
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		NBTTagCompound tanks = new NBTTagCompound();
 		tank.writeToNBT(tanks);
-		
+
 		nbt.setTag("tank", tanks);
 		return nbt;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		
-		tank.readFromNBT((NBTTagCompound)nbt.getTag("tank"));
+		if(nbt.hasKey("tank"))
+			tank.readFromNBT((NBTTagCompound)nbt.getTag("tank"));
 	}
 
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
 		return canFill(resource.getFluid()) ? tank.fill(resource, doFill) : 0;
 	}
-	
+
 	public boolean canFill(Fluid fluid) {
 		return true;
 	}

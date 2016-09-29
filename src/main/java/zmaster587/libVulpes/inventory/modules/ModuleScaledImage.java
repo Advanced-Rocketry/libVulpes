@@ -5,8 +5,10 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -71,12 +73,14 @@ public class ModuleScaledImage extends ModuleBase {
 		}
 			
 		Minecraft.getMinecraft().getTextureManager().bindTexture(icon);
+		GlStateManager.color(alpha, alpha, alpha, alpha);
         VertexBuffer buff = Tessellator.getInstance().getBuffer();
-        buff.pos((double)(x + this.offsetX), (double)(y + this.offsetY + sizeY), (double)0).tex(minX, maxY).color(alpha, alpha, alpha, alpha).endVertex();
-        buff.pos((double)(x + this.offsetX + sizeX), (double)(y + this.offsetY + sizeY), (double)0).tex(maxX, maxY).color(alpha, alpha, alpha, alpha).endVertex();
-        buff.pos((double)(x + this.offsetX + sizeX), (double)(y + this.offsetY), (double)0).tex(maxX, minY).color(alpha, alpha, alpha, alpha).endVertex();
-        buff.pos((double)(x + this.offsetX), (double)(y + this.offsetY), (double)0).tex(minX, minY).color(alpha, alpha, alpha, alpha).endVertex();
-        
+        buff.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        buff.pos((double)(x + this.offsetX), (double)(y + this.offsetY + sizeY), (double)0).tex(minX, maxY).endVertex();
+        buff.pos((double)(x + this.offsetX + sizeX), (double)(y + this.offsetY + sizeY), (double)0).tex(maxX, maxY).endVertex();
+        buff.pos((double)(x + this.offsetX + sizeX), (double)(y + this.offsetY), (double)0).tex(maxX, minY).endVertex();
+        buff.pos((double)(x + this.offsetX), (double)(y + this.offsetY), (double)0).tex(minX, minY).endVertex();
+        Tessellator.getInstance().draw();
         if(alpha < 1f) {
 			GL11.glColor4d(1f, 1f, 1f, 1f);
 			GL11.glDisable(GL11.GL_BLEND);

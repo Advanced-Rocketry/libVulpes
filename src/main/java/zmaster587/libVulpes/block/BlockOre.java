@@ -18,7 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
-public class BlockOre extends Block implements INamedMetaBlock, IBlockColor, IItemColor {
+public class BlockOre extends Block implements INamedMetaBlock {
 	
 	public zmaster587.libVulpes.api.material.Material[] ores = new zmaster587.libVulpes.api.material.Material[16];
 	public static final PropertyInteger VARIANT = PropertyInteger.create("varient", 0, 15);
@@ -71,17 +71,5 @@ public class BlockOre extends Block implements INamedMetaBlock, IBlockColor, IIt
 	@Override
 	public String getUnlocalizedName(int itemDamage) {
 		return  "material." + ores[itemDamage].getUnlocalizedName();
-	}
-
-	@Override
-	public int colorMultiplier(IBlockState state, IBlockAccess worldIn,
-			BlockPos pos, int tintIndex) {
-		
-		return ores[getMetaFromState(state)].getColor();
-	}
-	
-	@Override
-	public int getColorFromItemstack(ItemStack stack, int tintIndex) {
-		return ((BlockOre)Block.getBlockFromItem(stack.getItem())).ores[stack.getMetadata()].getColor();
 	}
 }

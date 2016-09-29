@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.client;
 
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesItems;
 import zmaster587.libVulpes.common.CommonProxy;
 import zmaster587.libVulpes.entity.fx.FxErrorBlock;
@@ -12,6 +13,11 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public String getLocalizedString(String str) {
 		return I18n.format(str);
+	}
+	
+	@Override
+	public void init() {
+		LibVulpes.materialRegistry.init();
 	}
 	
 	@Override

@@ -1,4 +1,4 @@
-package zmaster587.libVulpes.tile.energy;
+/*package zmaster587.libVulpes.tile.energy;
 
 import zmaster587.libVulpes.energy.IPower;
 import net.minecraft.tileentity.TileEntity;
@@ -74,4 +74,4 @@ public class TilePlugOutputRF extends TilePlugBase implements IPower, ITickable 
 		return storage.acceptEnergy(amt, simulate);
 	}
 
-}
+}*/

@@ -21,9 +21,11 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 apply from: "gradle/scripts/getbuildnumber.gradle"
 minecraft {
-    version = "1.10-12.18.0.2000-1.10.0"
+    version = "1.10.2-12.18.1.2093"
     runDir = "run"
     mappings = "snapshot_20160518"
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
     replace "@MAJOR@", version_major
     replace "@MINOR@", version_minor
     replace "@REVIS@", version_revis
@@ -47,6 +49,10 @@ repositories {
         name = "chickenbones"
         url = "http://chickenbones.net/maven/"
     }
+    maven {
+            name = "mezz.jei"
+            url = "http://dvs1.progwml6.com/files/maven"
+        }
      ivy {
 		name "CoFHCore"
 		url = "http://addons-origin.cursecdn.com/files/2246/919/"
@@ -60,6 +66,12 @@ dependencies {
     //compile "some.group:artifact:version:classifier"
     //compile "some.group:artifact:version"
       
+      
+    // compile against the JEI API
+    deobfCompile "mezz.jei:jei_1.10.2:3.11.2.280:api"
+    // at runtime, use the full JEI jar
+    runtime "mezz.jei:jei_1.10.2:3.11.2.280"
+  
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:7.0.20:dev'  // adds buildcraft to the dev env
     

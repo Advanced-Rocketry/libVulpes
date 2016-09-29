@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 
 public class ModuleText extends ModuleBase {
@@ -58,5 +59,6 @@ public class ModuleText extends ModuleBase {
 			else
 				font.drawString(text.get(i), x + offsetX, y + offsetY + i*font.FONT_HEIGHT, color);
 		}
+		GlStateManager.color(1f, 1f, 1f);
 	}
 }
