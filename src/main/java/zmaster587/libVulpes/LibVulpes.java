@@ -105,9 +105,9 @@ public class LibVulpes {
 		config.save();
 
 		//
-		PacketHandler.addDiscriminator(PacketMachine.class);
-		PacketHandler.addDiscriminator(PacketEntity.class);
-		PacketHandler.addDiscriminator(PacketChangeKeyState.class);
+		PacketHandler.INSTANCE.addDiscriminator(PacketMachine.class);
+		PacketHandler.INSTANCE.addDiscriminator(PacketEntity.class);
+		PacketHandler.INSTANCE.addDiscriminator(PacketChangeKeyState.class);
 
 		//Register Items
 		LibVulpesItems.itemLinker = new ItemLinker().setUnlocalizedName("Linker").setCreativeTab(tabMultiblock);
@@ -304,7 +304,7 @@ public class LibVulpes {
 		//Liquid output
 		list = new LinkedList<BlockMeta>();
 		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 3));
-		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 12));
+		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 11));
 		TileMultiBlock.addMapping('l', list);
 	}
 

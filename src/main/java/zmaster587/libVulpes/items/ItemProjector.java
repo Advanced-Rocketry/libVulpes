@@ -176,15 +176,24 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	}
 	
 	@Override
-	public EnumActionResult onItemUseFirst(ItemStack stack,
-			EntityPlayer player, World world, BlockPos pos2, EnumFacing facing,
-			float hitX, float hitY, float hitZ, EnumHand hand) {
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stack,
+			World world, EntityPlayer player, EnumHand hand) {
+
 		
 		if( player.isSneaking()) {
 			if(!world.isRemote)
 			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), world, -1, -1, 0);
-			return super.onItemUse(stack, player, world, pos2, hand, facing,hitX, hitY, hitZ);
+			return super.onItemRightClick(stack, world, player, hand);
 		}
+		return super.onItemRightClick(stack, world, player, hand);
+	}
+	
+	
+	@Override
+	public EnumActionResult onItemUseFirst(ItemStack stack,
+			EntityPlayer player, World world, BlockPos pos1, EnumFacing side,
+			float hitX, float hitY, float hitZ, EnumHand hand) {
+
 
 		int id = getMachineId(stack);
 		if(!player.isSneaking() && id != -1 && world.isRemote) {
@@ -221,7 +230,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 						setBasePosition(stack, pos.getBlockPos().getX() - globalX, pos.getBlockPos().getY() - controller.y  + 1, pos.getBlockPos().getZ() - globalZ);
 						PacketHandler.sendToServer(new PacketItemModifcation(this, player, (byte)0));
 						PacketHandler.sendToServer(new PacketItemModifcation(this, player, (byte)2));
-						return super.onItemUseFirst(stack, player, world, pos2, facing,hitX, hitY, hitZ, hand);
+						return super.onItemUseFirst(stack, player, world, pos1, side, hitX, hitY, hitZ, hand);
 					}
 				}
 			}
@@ -234,8 +243,8 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 			PacketHandler.sendToServer(new PacketItemModifcation(this, player, (byte)2));
 		}
-
-		return super.onItemUseFirst(stack, player, world, pos2, facing,hitX, hitY, hitZ, hand);
+		
+		return super.onItemUseFirst(stack, player, world, pos1, side, hitX, hitY, hitZ, hand);
 	}
 
 	protected HashedBlockPosition getControllerOffset(Object[][][] structure) {

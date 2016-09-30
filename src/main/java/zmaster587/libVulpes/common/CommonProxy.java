@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.common;
 
+import zmaster587.libVulpes.network.BasePacket;
 import net.minecraft.world.World;
 
 public class CommonProxy {
@@ -18,6 +19,11 @@ public class CommonProxy {
 	}
 
 	public void init() {
+		
+	}
+
+	public void addScheduledTask(BasePacket packet) {
+		// TODO Auto-generated method stub
 		
 	}
 }

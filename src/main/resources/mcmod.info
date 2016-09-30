@@ -4,7 +4,7 @@
   "name": "libVulpes",
   "description": "A Library containing code for multiblocks and ore/item registration and access",
   "version": "${version}",
-  "mcversion": "${mcversion},
+  "mcversion": "${mcversion}",
   "url": "http://minecraft.curseforge.com/projects/libvulpes",
   "updateUrl": "",
   "authorList": ["zmaster587"],

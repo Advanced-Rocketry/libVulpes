@@ -31,6 +31,11 @@ public class TileSchematic extends TilePlaceholder implements ITickable {
 	public void setReplacedBlock(List<BlockMeta> block) {
 		possibleBlocks = block;
 	}
+	
+	@Override
+	public int getBlockMetadata() {
+		return possibleBlocks.get((timeAlive / 20) % possibleBlocks.size()).getMeta();
+	}
 
 	@Override
 	public IBlockState getReplacedState() {

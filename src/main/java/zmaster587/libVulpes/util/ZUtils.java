@@ -63,7 +63,7 @@ public class ZUtils {
 
 		try
 		{
-			oclass = ((Map < String, Class <? extends TileEntity >>)ObfuscationReflectionHelper.getPrivateValue(TileEntity.class, null, "nameToClassMap")).get(s);
+			oclass = ((Map < String, Class <? extends TileEntity >>)ObfuscationReflectionHelper.getPrivateValue(TileEntity.class, null, "field_145855_i", "nameToClassMap")).get(s);
 
 			if (oclass != null)
 			{

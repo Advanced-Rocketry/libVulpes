@@ -77,7 +77,7 @@ public abstract class BasePacket implements IMessage {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		switch(FMLCommonHandler.instance().getEffectiveSide()) {
+		switch(FMLCommonHandler.instance().getSide()) {
 		case CLIENT:
 			readClient(buf);
 			break;

@@ -4,10 +4,13 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesItems;
 import zmaster587.libVulpes.common.CommonProxy;
 import zmaster587.libVulpes.entity.fx.FxErrorBlock;
+import zmaster587.libVulpes.network.BasePacket;
+import zmaster587.libVulpes.network.ExecutorClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class ClientProxy extends CommonProxy {
 	@Override
@@ -31,5 +34,9 @@ public class ClientProxy extends CommonProxy {
 			FxErrorBlock fx = new FxErrorBlock(world, x, y, z);
 			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 		}
+	}
+	@Override
+	public void addScheduledTask(BasePacket packet) {
+		Minecraft.getMinecraft().addScheduledTask(new ExecutorClient(packet, Minecraft.getMinecraft().thePlayer, Side.CLIENT));
 	}
 }

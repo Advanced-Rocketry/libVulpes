@@ -40,6 +40,11 @@ public class BlockPhantom extends Block {
 		return new ArrayList<ItemStack>();
 	}
 	
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		return this.getDefaultState();
+	}
+	
 	
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
