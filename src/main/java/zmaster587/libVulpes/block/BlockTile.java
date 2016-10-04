@@ -48,7 +48,7 @@ public class BlockTile extends RotatableBlock {
     }
     
 	public void setBlockState(World world, IBlockState state, BlockPos pos, boolean newState) {
-		world.setBlockState(pos, state.withProperty(STATE, newState), 2);
+		world.setBlockState(pos, state.withProperty(STATE, newState), 3);
 	}
     
 	@Override

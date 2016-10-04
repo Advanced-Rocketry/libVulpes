@@ -23,6 +23,7 @@ tile.Copper.name=Copper Ore
 tile.Tin.name=Tin Ore
 tile.Rutile.name=Rutile Ore
 tile.Aluminum.name=Aluminum Ore
+tile.coalGenerator.name=Coal Generator
 
 item.holoProjector.name=Holo-Projector
 

@@ -49,16 +49,6 @@ public class BlockHatch extends BlockMultiblockStructure {
 	}
 
 	@Override
-	public int damageDropped(IBlockState state) {
-		return super.damageDropped(state);
-	}
-
-	@Override
-	public BlockStateContainer getBlockState() {
-		return super.getBlockState();
-	}
-
-	@Override
 	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess,
 			BlockPos pos, EnumFacing side) {
 		side = side.getOpposite();

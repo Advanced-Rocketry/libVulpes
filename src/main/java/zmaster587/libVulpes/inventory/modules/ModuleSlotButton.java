@@ -57,7 +57,6 @@ public class ModuleSlotButton extends ModuleButton {
 		float f4;
 
 
-
 		textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 
@@ -78,11 +77,11 @@ public class ModuleSlotButton extends ModuleButton {
 		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
 		IBlockState block =  Block.getBlockFromItem(stack.getItem()).getStateFromMeta(stack.getItemDamage());
 
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+		//buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 		//Requires world OBJ for some stupid reason involving DEBUG WORLD check... why not idk... have a var for that?
 		
-		Minecraft.getMinecraft().getBlockRendererDispatcher().renderBlock(block, new BlockPos(0, 0, 0), worldObj, buffer);
-		Tessellator.getInstance().draw();
+		//Minecraft.getMinecraft().getBlockRendererDispatcher().renderBlock(block, new BlockPos(0, 0, 0), worldObj, buffer);
+		//Tessellator.getInstance().draw();
 
 		GL11.glPopMatrix();
 

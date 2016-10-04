@@ -39,6 +39,8 @@ public class LibVulpesBlocks {
 	public static Item[] itemOreProduct;
 	//public static List<Block> blockCoil = new ArrayList<Block>();
 
+	public static Block blockCoalGenerator;
+
 	
 
 	

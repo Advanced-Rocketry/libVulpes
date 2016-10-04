@@ -5,13 +5,17 @@ import java.util.List;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
@@ -76,15 +80,15 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 		return completionTime > 0 ? currentTime/(float)completionTime : 0f;
 	}
-	
-	public String getSound() {
+
+	public SoundEvent getSound() {
 		return null;
 	}
-	
+
 	public int getSoundDuration() {
 		return 1;
 	}
-	
+
 	@Override
 	public void update() {
 
@@ -94,13 +98,13 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 				canRender = completeStructure = completeStructure(worldObj.getBlockState(pos));
 			timeAlive = 0x1;
 		}
-		
+
 		if(!worldObj.isRemote && worldObj.getTotalWorldTime() % 1000L == 0 && !isComplete()) {
 			attemptCompleteStructure(worldObj.getBlockState(pos));
 			markDirty();
 			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 		}
-		
+
 		if(isRunning()) {
 			if(hasEnergy(powerPerTick) || (worldObj.isRemote && hadPowerLastTick)) {
 
@@ -130,18 +134,18 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		//Increment for both client and server
 		currentTime++;
 
-		String str;
+		SoundEvent str;
 		if(worldObj.isRemote && (str = getSound()) != null && worldObj.getTotalWorldTime() % getSoundDuration() == 0) {
 			playMachineSound(str);
 		}
-		
+
 		if(currentTime == completionTime)
 			processComplete();
 	}
-	
-	protected void playMachineSound(String str) {
+
+	protected void playMachineSound(SoundEvent str) {
 		//Screw you too
-		//worldObj.playSound(Minecraft.getMinecraft().thePlayer, pos, str, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.BLOCKS),  0.975f + worldObj.rand.nextFloat()*0.05f);
+		LibVulpes.proxy.playSound(worldObj, pos, str, SoundCategory.BLOCKS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.BLOCKS), 0.975f + worldObj.rand.nextFloat()*0.05f);
 	}
 
 	public void setMachineEnabled(boolean enabled) {
@@ -199,8 +203,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	public boolean hasEnergy(int amt) {
-		//DEBUG
-		return true;//batteries.getEnergyStored() >= amt;
+		return batteries.getEnergyStored() >= amt;
 	}
 
 	@Override
@@ -221,7 +224,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		nbt.setInteger("powerPerTick", this.powerPerTick);
 		nbt.setBoolean("enabled", enabled);
 	}
-	
+
 	@Override
 	protected void readNetworkData(NBTTagCompound nbt) {
 		super.readNetworkData(nbt);

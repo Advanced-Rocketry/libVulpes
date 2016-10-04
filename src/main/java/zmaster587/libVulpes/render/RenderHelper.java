@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
@@ -185,7 +186,7 @@ public class RenderHelper {
         }
 
         return flag;
-    }
+    }*/
 	
 	public static void renderTag(double distanceSq, String displayString, double x, double y, double z, int sizeOnScreen) {
         double d3 = distanceSq;
@@ -199,7 +200,6 @@ public class RenderHelper {
             float f1 = 0.016666668F * f;
             GL11.glPushMatrix();
             GL11.glTranslatef((float)x + 0.0F, (float)y + 0.5F, (float)z);
-            GL11.glNormal3f(0.0F, 1.0F, 0.0F);
             GL11.glRotatef(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
             GL11.glScalef(-f1, -f1, f1);
@@ -208,17 +208,19 @@ public class RenderHelper {
             GL11.glDisable(GL11.GL_DEPTH_TEST);
             GL11.glEnable(GL11.GL_BLEND);
             OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-            Tessellator tessellator = Tessellator.instance;
+            Tessellator tessellator = Tessellator.getInstance();
             byte b0 = 0;
 
+            VertexBuffer buffer = tessellator.getBuffer();
+            
             GL11.glDisable(GL11.GL_TEXTURE_2D);
-            tessellator.startDrawingQuads();
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
             int j = fontrenderer.getStringWidth(displayString) / 2;
-            tessellator.setColorRGBA_F(0.0F, 0.0F, 0.0F, 0.25F);
-            tessellator.addVertex((double)(-j - 1), (double)(-1 + b0), 0.0D);
-            tessellator.addVertex((double)(-j - 1), (double)(8 + b0), 0.0D);
-            tessellator.addVertex((double)(j + 1), (double)(8 + b0), 0.0D);
-            tessellator.addVertex((double)(j + 1), (double)(-1 + b0), 0.0D);
+            GlStateManager.color(0.0F, 0.0F, 0.0F, 0.25F);
+            buffer.pos((double)(-j - 1), (double)(-1 + b0), 0.0D).endVertex();
+            buffer.pos((double)(-j - 1), (double)(8 + b0), 0.0D).endVertex();
+            buffer.pos((double)(j + 1), (double)(8 + b0), 0.0D).endVertex();
+            buffer.pos((double)(j + 1), (double)(-1 + b0), 0.0D).endVertex();
             tessellator.draw();
             GL11.glEnable(GL11.GL_TEXTURE_2D);
             fontrenderer.drawString(displayString, -fontrenderer.getStringWidth(displayString) / 2, b0, 553648127);
@@ -231,7 +233,7 @@ public class RenderHelper {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             GL11.glPopMatrix();
         }
-	}*/
+	}
 	
 	public static void renderBlockWithEndPointers(VertexBuffer buff, double radius, double x1, double y1, double z1, double x2, double y2, double z2) {
 		double buffer;

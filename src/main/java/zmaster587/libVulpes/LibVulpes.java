@@ -39,9 +39,11 @@ import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.BlockAlphaTexture;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.BlockPhantom;
+import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.block.multiblock.BlockMultiMachineBattery;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockPlaceHolder;
+import zmaster587.libVulpes.block.RotatableMachineBlock;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.items.ItemBlockMeta;
 import zmaster587.libVulpes.items.ItemIngredient;
@@ -54,6 +56,7 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.tile.TileInventoriedPointer;
 import zmaster587.libVulpes.tile.TileSchematic;
+import zmaster587.libVulpes.tile.energy.TileCoalGenerator;
 import zmaster587.libVulpes.tile.energy.TileCreativePowerInput;
 import zmaster587.libVulpes.tile.energy.TileForgePowerInput;
 import zmaster587.libVulpes.tile.energy.TileForgePowerOutput;
@@ -128,7 +131,7 @@ public class LibVulpes {
 		LibVulpesBlocks.blockCreativeInputPlug = new BlockMultiMachineBattery(Material.ROCK, TileCreativePowerInput.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("creativePowerBattery").setCreativeTab(tabMultiblock).setHardness(3f);
 		LibVulpesBlocks.blockForgeInputPlug = new BlockMultiMachineBattery(Material.ROCK, TileForgePowerInput.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("forgePowerInput").setCreativeTab(tabMultiblock).setHardness(3f);
 		LibVulpesBlocks.blockForgeOutputPlug = new BlockMultiMachineBattery(Material.ROCK, TileForgePowerOutput.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("forgePowerOutput").setCreativeTab(tabMultiblock).setHardness(3f);
-		
+		LibVulpesBlocks.blockCoalGenerator = new BlockTile(TileCoalGenerator.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("coalGenerator").setCreativeTab(tabMultiblock).setHardness(3f);
 		//LibVulpesBlocks.blockRFBattery = new BlockMultiMachineBattery(Material.ROCK, TilePlugInputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("rfBattery").setCreativeTab(tabMultiblock).setHardness(3f);
 		//LibVulpesBlocks.blockRFOutput = new BlockMultiMachineBattery(Material.ROCK, TilePlugOutputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("rfOutput").setCreativeTab(tabMultiblock).setHardness(3f);
 
@@ -141,6 +144,7 @@ public class LibVulpes {
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockCreativeInputPlug.setRegistryName(LibVulpesBlocks.blockCreativeInputPlug.getUnlocalizedName().substring(5)));
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockForgeInputPlug.setRegistryName(LibVulpesBlocks.blockForgeInputPlug.getUnlocalizedName().substring(5)));
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockForgeOutputPlug.setRegistryName(LibVulpesBlocks.blockForgeOutputPlug.getUnlocalizedName().substring(5)));
+		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockCoalGenerator.setRegistryName(LibVulpesBlocks.blockCoalGenerator.getUnlocalizedName().substring(5)));
 		
 		//LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockRFBattery.setRegistryName(LibVulpesBlocks.blockRFBattery.getUnlocalizedName()));
 		//LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockRFOutput.setRegistryName(LibVulpesBlocks.blockRFOutput.getUnlocalizedName()));
@@ -155,6 +159,7 @@ public class LibVulpes {
 		GameRegistry.registerTileEntity(TileCreativePowerInput.class, "vulpesCreativeBattery");
 		GameRegistry.registerTileEntity(TileForgePowerInput.class, "vulpesForgePowerInput");
 		GameRegistry.registerTileEntity(TileForgePowerOutput.class, "vulpesForgePowerOutput");
+		GameRegistry.registerTileEntity(TileCoalGenerator.class, "vulpesCoalGenerator");
 		//GameRegistry.registerTileEntity(TilePlugInputRF.class, "ARrfBattery");
 		//GameRegistry.registerTileEntity(TilePlugOutputRF.class, "ARrfOutputRF");
 		GameRegistry.registerTileEntity(TilePointer.class, "vulpesTilePointer");

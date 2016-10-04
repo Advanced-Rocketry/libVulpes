@@ -34,6 +34,8 @@ public class TileSchematic extends TilePlaceholder implements ITickable {
 	
 	@Override
 	public int getBlockMetadata() {
+		if(possibleBlocks.size() == 0)
+			return 0;
 		return possibleBlocks.get((timeAlive / 20) % possibleBlocks.size()).getMeta();
 	}
 

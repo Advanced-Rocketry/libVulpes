@@ -8,6 +8,9 @@ import zmaster587.libVulpes.network.BasePacket;
 import zmaster587.libVulpes.network.ExecutorClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
@@ -38,5 +41,11 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void addScheduledTask(BasePacket packet) {
 		Minecraft.getMinecraft().addScheduledTask(new ExecutorClient(packet, Minecraft.getMinecraft().thePlayer, Side.CLIENT));
+	}
+	
+	@Override
+	public void playSound(World worldObj, BlockPos pos, SoundEvent event, SoundCategory cat, float volume, float pitch) {
+		worldObj.playSound(Minecraft.getMinecraft().thePlayer, pos, event, SoundCategory.BLOCKS, Minecraft.getMinecraft().gameSettings.getSoundLevel(cat)*volume,  0.975f + worldObj.rand.nextFloat()*0.05f);
+		
 	}
 }

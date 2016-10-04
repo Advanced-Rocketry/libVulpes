@@ -25,7 +25,7 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 		super();
 		masterBlockPos = pos;
 	}
-	
+
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos,
 			IBlockState oldState, IBlockState newState) {
@@ -67,7 +67,14 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 	}
 
 	public TileEntity getFinalPointedTile() {
-		TileEntity pointedTile = this.worldObj.getTileEntity(masterBlockPos);
+		TileEntity pointedTile;
+
+		try  {
+			pointedTile = this.worldObj.getTileEntity(masterBlockPos);
+		} catch(NullPointerException e) {
+			return null;
+		}
+
 		if(pointedTile == null)
 			return null;
 		else if(pointedTile instanceof TilePointer)
@@ -75,12 +82,17 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 		else
 			return pointedTile;
 	}
-	
+
 	@Override
 	public NBTTagCompound getUpdateTag() {
 		return writeToNBT(new NBTTagCompound());
 	}
 
+	@Override
+	public void handleUpdateTag(NBTTagCompound tag) {
+		this.readFromNBT(tag);
+	}
+	
 	@Override
 	public boolean hasMaster() {
 		return isSet();

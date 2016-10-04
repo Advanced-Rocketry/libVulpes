@@ -1,6 +1,9 @@
 package zmaster587.libVulpes.common;
 
 import zmaster587.libVulpes.network.BasePacket;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class CommonProxy {
@@ -24,6 +27,13 @@ public class CommonProxy {
 
 	public void addScheduledTask(BasePacket packet) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	public void playSound(World world, BlockPos pos, SoundEvent event,
+			SoundCategory cat, float volume, float pitch) {
+		
+		
 		
 	}
 }

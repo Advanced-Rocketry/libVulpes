@@ -146,7 +146,7 @@ public class PacketEntity extends BasePacket {
 			entity.readDataFromNetwork(buffer, packetId, nbt);
 		}
 		else {
-			//Error
+			System.out.println("oh no...");
 		}
 	}
 

@@ -1,6 +1,7 @@
 package zmaster587.libVulpes.network;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
@@ -145,7 +146,7 @@ public class PacketHandler {
 
 	public static final void sendToServer(BasePacket packet) {
 		channels.get(Side.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
-		channels.get(Side.CLIENT).writeOutbound(packet);
+		channels.get(Side.CLIENT).writeAndFlush(packet).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
 	}
 
 
@@ -154,33 +155,34 @@ public class PacketHandler {
 
 			channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
 			channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
-			channels.get(Side.SERVER).writeOutbound(packet);
+			channels.get(Side.SERVER).writeAndFlush(packet).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
 		}
 	}
 
 	public static final void sendToAll(BasePacket packet) {
 		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
-		channels.get(Side.SERVER).writeOutbound(packet);
+		channels.get(Side.SERVER).writeAndFlush(packet).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
 	}
 
 	public static final void sendToPlayer(BasePacket packet, EntityPlayer player) {
 		//INSTANCE.sendTo(packet, (EntityPlayerMP)player);
 		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
 		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
-		channels.get(Side.SERVER).writeOutbound(packet);
+		channels.get(Side.SERVER).writeAndFlush(packet).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+
 	}
 
 	public static final void sendToDispatcher(BasePacket packet, NetworkManager netman) {
 		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DISPATCHER);
 		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(NetworkDispatcher.get(netman));
-		channels.get(Side.SERVER).writeOutbound(packet);
+		channels.get(Side.SERVER).writeAndFlush(packet).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
 	}
 
 	public static final void sendToNearby(BasePacket packet,int dimId, int x, int y, int z, double dist) {
 		//INSTANCE.sendToAllAround(packet, new TargetPoint(dimId, x, y, z, dist));
 		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
 		channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(new NetworkRegistry.TargetPoint(dimId, x, y, z,dist));
-		channels.get(Side.SERVER).writeOutbound(packet);
+		channels.get(Side.SERVER).writeAndFlush(packet).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
 	}
 
 	public static final void sendToNearby(BasePacket packet,int dimId, BlockPos pos, double dist) {
