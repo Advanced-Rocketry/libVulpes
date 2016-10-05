@@ -1,5 +1,7 @@
 package zmaster587.libVulpes.inventory;
 
+import zmaster587.libVulpes.client.util.ProgressBarImage;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
 public class TextureResources {
@@ -12,5 +14,9 @@ public class TextureResources {
 	public static final  ResourceLocation buttonLeft[] = {new ResourceLocation("libvulpes", "textures/gui/GuiArrowLeft.png"), new ResourceLocation("libvulpes", "textures/gui/GuiArrowLeft_hover.png"), new ResourceLocation("libvulpes", "textures/gui/GuiArrowLeft_pressed.png"), null};
 	public static final  ResourceLocation buttonRight[] = {new ResourceLocation("libvulpes", "textures/gui/GuiArrowRight.png"), new ResourceLocation("libvulpes", "textures/gui/GuiArrowRight_hover.png"), new ResourceLocation("libvulpes", "textures/gui/GuiArrowRight_pressed.png"), null};
 	public static final  ResourceLocation buttonToggleImage[] = new ResourceLocation[] {new ResourceLocation("libvulpes:textures/gui/buttons/switchOn.png"), new ResourceLocation("libvulpes:textures/gui/buttons/switchOff.png")};
+	
+	public static final ResourceLocation coalGeneratorBarImg = new ResourceLocation("libvulpes", "textures/gui/coalGenerator.png");
+	
+	public static final ProgressBarImage progressGenerator = new ProgressBarImage(16, 0, 16, 16, 0, 0, 16, 16, EnumFacing.UP, coalGeneratorBarImg);
 	
 }

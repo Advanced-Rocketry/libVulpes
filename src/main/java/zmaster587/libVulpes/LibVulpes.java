@@ -193,7 +193,7 @@ public class LibVulpes {
 		}
 
 		//Ore dict stuff
-		OreDictionary.registerOre("battery", new ItemStack(LibVulpesItems.itemBattery,1,0));
+		OreDictionary.registerOre("itemBattery", new ItemStack(LibVulpesItems.itemBattery,1,0));
 
 		/*DUST,
 		INGOT,

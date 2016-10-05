@@ -3,10 +3,13 @@ package zmaster587.libVulpes.tile;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.energy.IPower;
 import zmaster587.libVulpes.util.UniversalBattery;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public abstract class TileEntityRFConsumer extends TileEntity implements IEnergyStorage, IPower, IUniversalEnergy, ITickable {
@@ -29,6 +32,12 @@ public abstract class TileEntityRFConsumer extends TileEntity implements IEnergy
 	@Override
 	public NBTTagCompound getUpdateTag() {
 		return writeToNBT(new NBTTagCompound());
+	}
+	
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos,
+			IBlockState oldState, IBlockState newSate) {
+		return (oldState.getBlock() != newSate.getBlock());
 	}
 	
 	@Override

@@ -3,11 +3,14 @@ package zmaster587.libVulpes.tile;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.energy.IEnergyStorage;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.energy.IPower;
@@ -30,6 +33,12 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 		modules.add(new ModulePower(18, 20, energy));
 		
 		return modules;
+	}
+	
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos,
+			IBlockState oldState, IBlockState newSate) {
+		return (oldState.getBlock() != newSate.getBlock());
 	}
 	
 	@Override
