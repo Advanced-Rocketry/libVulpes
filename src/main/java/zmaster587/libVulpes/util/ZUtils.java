@@ -21,7 +21,29 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class ZUtils {
+	
+	public enum RedstoneState {
+		ON,
+		OFF,
+		INVERTED;
 
+		public RedstoneState getNext() {
+			int  i = ordinal()+1;
+			if(i >= RedstoneState.values().length)
+				return RedstoneState.values()[0];
+			else
+				return RedstoneState.values()[i];
+		}
+
+		public RedstoneState getPrev() {
+			int  i = ordinal()-1;
+			if(i < 0)
+				return RedstoneState.values()[RedstoneState.values().length-1];
+			else
+				return RedstoneState.values()[i];
+		}
+	}
+	
 	public static int getAverageColor(long r, long g, long b, int total) {
 		return (int)(( (r/total) ) | ( (g/total) << 8 ) | ( ( b/total ) << 16 ) );
 	}

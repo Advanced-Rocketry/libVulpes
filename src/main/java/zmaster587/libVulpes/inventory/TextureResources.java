@@ -18,5 +18,8 @@ public class TextureResources {
 	public static final ResourceLocation coalGeneratorBarImg = new ResourceLocation("libvulpes", "textures/gui/coalGenerator.png");
 	
 	public static final ProgressBarImage progressGenerator = new ProgressBarImage(16, 0, 16, 16, 0, 0, 16, 16, EnumFacing.UP, coalGeneratorBarImg);
+	public static final  ResourceLocation buttonRedstoneActive[] = new ResourceLocation[] {new ResourceLocation("libvulpes:textures/gui/buttons/buttonRedstoneAllowed.png"), new ResourceLocation("libvulpes:textures/gui/buttons/buttonRedstoneAllowed_hover.png")};
+	public static final  ResourceLocation buttonRedstoneInverted[] = new ResourceLocation[] {new ResourceLocation("libvulpes:textures/gui/buttons/buttonRedstoneInverted.png"), new ResourceLocation("libvulpes:textures/gui/buttons/buttonRedstoneInverted_hover.png")};
+	public static final  ResourceLocation buttonRedstoneDisabled[] = new ResourceLocation[] {new ResourceLocation("libvulpes:textures/gui/buttons/buttonRedstoneNotAllowed.png"), new ResourceLocation("libvulpes:textures/gui/buttons/buttonRedstoneNotAllowed_hover.png")};
 	
 }
