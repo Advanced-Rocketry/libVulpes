@@ -90,4 +90,16 @@ public class MultiBattery implements IUniversalEnergy {
 			}
 	}
 
+	@Override
+	public boolean canReceive() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean canExtract() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 }

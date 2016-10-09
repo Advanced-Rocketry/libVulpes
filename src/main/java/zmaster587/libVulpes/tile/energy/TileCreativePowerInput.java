@@ -70,5 +70,16 @@ public class TileCreativePowerInput extends TilePlugBase implements IPower {
 		return receiveEnergy(amt, simulate);
 	}
 
+	@Override
+	public boolean canReceive() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean canExtract() {
+		return true;
+	}
+
 
 }

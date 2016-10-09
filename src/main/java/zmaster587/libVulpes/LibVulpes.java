@@ -65,6 +65,7 @@ import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInputHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
+import zmaster587.libVulpes.util.CapabilityProvider;
 
 @Mod(modid="libVulpes",name="Vulpes library",version="@MAJOR@.@MINOR@.@REVIS@.@BUILD@",useMetadata=true, dependencies="before:gregtech;after:CoFHCore;after:BuildCraft|Core")
 public class LibVulpes {
@@ -107,6 +108,8 @@ public class LibVulpes {
 
 		config.save();
 
+		CapabilityProvider.registerCap();
+		
 		//
 		PacketHandler.INSTANCE.addDiscriminator(PacketMachine.class);
 		PacketHandler.INSTANCE.addDiscriminator(PacketEntity.class);

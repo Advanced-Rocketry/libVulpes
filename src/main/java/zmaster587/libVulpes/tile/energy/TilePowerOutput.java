@@ -71,4 +71,14 @@ public class TilePowerOutput extends TilePlugBase implements IPower, ITickable {
 	public String getName() {
 		return getModularInventoryName();
 	}
+
+	@Override
+	public boolean canReceive() {
+		return false;
+	}
+
+	@Override
+	public boolean canExtract() {
+		return true;
+	}
 }

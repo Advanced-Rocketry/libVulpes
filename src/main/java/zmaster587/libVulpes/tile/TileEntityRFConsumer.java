@@ -1,7 +1,9 @@
 package zmaster587.libVulpes.tile;
 
 import zmaster587.libVulpes.api.IUniversalEnergy;
+import zmaster587.libVulpes.cap.ForgePowerCapability;
 import zmaster587.libVulpes.energy.IPower;
+import zmaster587.libVulpes.util.CapabilityProvider;
 import zmaster587.libVulpes.util.UniversalBattery;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,15 +12,16 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
 
-public abstract class TileEntityRFConsumer extends TileEntity implements IEnergyStorage, IPower, IUniversalEnergy, ITickable {
+public abstract class TileEntityRFConsumer extends TileEntity implements IPower, IUniversalEnergy, ITickable {
 	protected UniversalBattery energy;
 
 	protected TileEntityRFConsumer(int energy) {
 		this.energy = new UniversalBattery(energy);
 	}
-	
+
 	@Override
 	public boolean canExtract() {
 		return false;
@@ -33,16 +36,41 @@ public abstract class TileEntityRFConsumer extends TileEntity implements IEnergy
 	public NBTTagCompound getUpdateTag() {
 		return writeToNBT(new NBTTagCompound());
 	}
-	
+
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos,
 			IBlockState oldState, IBlockState newSate) {
 		return (oldState.getBlock() != newSate.getBlock());
 	}
-	
+
 	@Override
 	public boolean canConnectEnergy(EnumFacing arg0) {
 		return true;
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+
+		if(capability == CapabilityEnergy.ENERGY )
+			return true;
+		return super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+
+		if(capability == CapabilityEnergy.ENERGY )
+			return (T)(new ForgePowerCapability(this));
+		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public NBTTagCompound serializeNBT() {
+		return new NBTTagCompound();
+	}
+	@Override
+	public void deserializeNBT(NBTTagCompound nbt) {
+		
 	}
 	
 	@Override
@@ -135,12 +163,12 @@ public abstract class TileEntityRFConsumer extends TileEntity implements IEnergy
 	public void setMaxEnergyStored(int max) {
 		energy.setEnergyStored(max);
 	}
-	
+
 	@Override
 	public int acceptEnergy(int amt, boolean simulate) {
 		return energy.acceptEnergy(amt, simulate);
 	}
-	
+
 	@Override
 	public int receiveEnergy(int amt, boolean simulate) {
 		return energy.acceptEnergy(amt, simulate);

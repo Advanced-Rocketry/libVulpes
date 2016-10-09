@@ -13,4 +13,8 @@ public interface IUniversalEnergy  {
 	int acceptEnergy(int amt, boolean simulate);
 	
 	void setMaxEnergyStored(int max);
+
+	public boolean canReceive();
+
+	public boolean canExtract();
 }

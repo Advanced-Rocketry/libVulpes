@@ -7,7 +7,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
 import zmaster587.libVulpes.api.IUniversalEnergy;
+import zmaster587.libVulpes.cap.ForgePowerCapability;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModulePower;
@@ -37,6 +41,31 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	@Override
 	public void setMaxEnergyStored(int max) {
 		storage.setMaxEnergyStored(max);
+		
+	}
+	
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+
+		if(capability == CapabilityEnergy.ENERGY )
+			return true;
+		return super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+
+		if(capability == CapabilityEnergy.ENERGY )
+			return (T)(new ForgePowerCapability(this));
+		return super.getCapability(capability, facing);
+	}
+	
+	@Override
+	public NBTTagCompound serializeNBT() {
+		return new NBTTagCompound();
+	}
+	@Override
+	public void deserializeNBT(NBTTagCompound nbt) {
 		
 	}
 	

@@ -79,4 +79,14 @@ public class UniversalBattery implements IUniversalEnergy {
 		this.energy = nbt.getInteger("energy");
 		this.maxEnergy = nbt.getInteger("maxEnergy");
 	}
+
+	@Override
+	public boolean canReceive() {
+		return true;
+	}
+
+	@Override
+	public boolean canExtract() {
+		return true;
+	}
 }
