@@ -72,9 +72,11 @@ public class BlockHatch extends BlockMultiblockStructure {
 	public void setRedstoneState(World world, int x, int y, int z, boolean state) {
 		if(state && (world.getBlockMetadata(x, y, z) & 8) == 0) {
 			world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z) | 8, 3);
+			world.markBlockForUpdate(x, y, z);
 		}
 		else if(!state && (world.getBlockMetadata(x, y, z) & 8) != 0) {
 			world.setBlockMetadataWithNotify(x, y, z, world.getBlockMetadata(x, y, z) & 7, 3);
+			world.markBlockForUpdate(x, y, z);
 		}
 	}
 	
