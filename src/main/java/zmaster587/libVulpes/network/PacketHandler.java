@@ -216,7 +216,7 @@ public class PacketHandler {
 				
 				NetHandlerPlayServer  net = (NetHandlerPlayServer)ctx.channel().attr(NetworkRegistry.NET_HANDLER).get();
 				((WorldServer)net.playerEntity.worldObj).addScheduledTask(new executorServer(packet, net.playerEntity, Side.SERVER));
-				packet.executeServer(((NetHandlerPlayServer) netHandler).playerEntity);
+				//packet.executeServer(((NetHandlerPlayServer) netHandler).playerEntity);
 				break;
 			}
 

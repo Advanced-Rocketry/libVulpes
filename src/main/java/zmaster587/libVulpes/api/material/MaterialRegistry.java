@@ -32,7 +32,7 @@ public class MaterialRegistry {
 	static HashMap<Object, MixedMaterial> mixedMaterialList = new HashMap<Object, MixedMaterial>();
 	static HashMap<AllowedProducts, List<Block>> productBlockListMapping;
 	static List<MaterialRegistry> registries = new LinkedList<MaterialRegistry>();
-	
+
 	@SideOnly(Side.CLIENT)
 	static Object oreProductColorizer;
 
@@ -57,25 +57,25 @@ public class MaterialRegistry {
 	public void init() {
 		if(oreProductColorizer == null)
 			oreProductColorizer = new OreProductColorizer();
-			//register color handles
-			for(Block block : getBlockListForProduct(AllowedProducts.getProductByName("BLOCK"))) {
-				Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)oreProductColorizer, new Block[] {block});
-				Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)oreProductColorizer,  Item.getItemFromBlock(block));
-			}
+		//register color handles
+		for(Block block : getBlockListForProduct(AllowedProducts.getProductByName("BLOCK"))) {
+			Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)oreProductColorizer, new Block[] {block});
+			Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)oreProductColorizer,  Item.getItemFromBlock(block));
+		}
 
-			
-			for(Block block : getBlockListForProduct(AllowedProducts.getProductByName("COIL"))) {
-				Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)oreProductColorizer, new Block[] { block});
-				Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)oreProductColorizer, Item.getItemFromBlock(block));
+
+		for(Block block : getBlockListForProduct(AllowedProducts.getProductByName("COIL"))) {
+			Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)oreProductColorizer, new Block[] { block});
+			Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)oreProductColorizer, Item.getItemFromBlock(block));
+		}
+
+		for(int i = 0; i < AllowedProducts.getAllAllowedProducts().size(); i++) {
+			if(!AllowedProducts.getAllAllowedProducts().get(i).isBlock()) {
+				Minecraft.getMinecraft().getItemColors().registerItemColorHandler((OreProductColorizer)oreProductColorizer, oreProducts[i]);
 			}
-			
-			for(int i = 0; i < AllowedProducts.getAllAllowedProducts().size(); i++) {
-				if(!AllowedProducts.getAllAllowedProducts().get(i).isBlock()) {
-					Minecraft.getMinecraft().getItemColors().registerItemColorHandler((OreProductColorizer)oreProductColorizer, oreProducts[i]);
-				}
-			}
-			
-			//getBlockListForProduct(AllowedProducts.getProductByName("ORE"))
+		}
+
+		//getBlockListForProduct(AllowedProducts.getProductByName("ORE"))
 	}
 
 	//TODO: allow more block types
@@ -99,6 +99,18 @@ public class MaterialRegistry {
 			}
 		}
 
+		boolean oreAllowed = false;
+		boolean blockAllowed = false;
+		boolean coilAllowed = false;
+
+		for(zmaster587.libVulpes.api.material.Material mat : materialList) {
+			if(!oreAllowed)
+				oreAllowed = AllowedProducts.getProductByName("ORE").isOfType(mat.getAllowedProducts());
+			if(!blockAllowed)
+				blockAllowed = AllowedProducts.getProductByName("BLOCK").isOfType(mat.getAllowedProducts());
+			if(!coilAllowed)
+				coilAllowed = AllowedProducts.getProductByName("COIL").isOfType(mat.getAllowedProducts());
+		}
 
 		for(int i = 0; i < numberOfOreBlocks; i++) {
 
@@ -125,9 +137,12 @@ public class MaterialRegistry {
 			metalBlocks.setRegistryName(metalBlockName + i);
 			coilBlocks.setRegistryName(coilName + i);
 
-			LibVulpesBlocks.registerBlock(ores, ItemOre.class, false);
-			LibVulpesBlocks.registerBlock(metalBlocks, ItemOre.class, false);
-			LibVulpesBlocks.registerBlock(coilBlocks, ItemOre.class, false);
+			if(oreAllowed)
+				LibVulpesBlocks.registerBlock(ores, ItemOre.class, false);
+			if(blockAllowed)
+				LibVulpesBlocks.registerBlock(metalBlocks, ItemOre.class, false);
+			if(coilAllowed)
+				LibVulpesBlocks.registerBlock(coilBlocks, ItemOre.class, false);
 
 			for(int j = 0; j < 16 && j < 16*i + (len % 16); j++) {
 				int index = i*16 + j;
@@ -192,11 +207,11 @@ public class MaterialRegistry {
 	public List<Block> getBlockListForProduct(AllowedProducts product) {
 		return productBlockListMapping.get(product);
 	}
-	
+
 	public Block getBlockForProduct(AllowedProducts product, zmaster587.libVulpes.api.material.Material material, int index) {
 		for(Block block : productBlockListMapping.get(product) ) {
 			if(((BlockOre)block).ores[index] == material)
-			return block;
+				return block;
 		}
 		return null;
 	}

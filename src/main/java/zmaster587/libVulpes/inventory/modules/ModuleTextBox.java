@@ -32,7 +32,7 @@ public class ModuleTextBox extends ModuleBase {
 
 	public ModuleTextBox(IGuiCallback tile, int offsetX, int offsetY, String initialString) {
 		super(offsetX, offsetY);
-		
+
 		this.tile = tile;
 		currentText = initialString;
 	}
@@ -41,13 +41,11 @@ public class ModuleTextBox extends ModuleBase {
 	public void keyTyped(char chr, int t) {
 		super.keyTyped(chr, t);
 
-		if(Character.isDigit(chr) || chr == '-' || t == Keyboard.KEY_BACK || t == Keyboard.KEY_DELETE || t == Keyboard.KEY_LEFT || t == Keyboard.KEY_RIGHT) {
-			if(textBox.isFocused() && (chr != '-' || (textBox.getCursorPosition() == 0 && !textBox.getText().startsWith("-")))) {
-				textBox.textboxKeyTyped(chr, t);
-				
-				//Make callback to calling tile
-				tile.onModuleUpdated(this);
-			}
+		if(textBox.isFocused()) {
+			textBox.textboxKeyTyped(chr, t);
+
+			//Make callback to calling tile
+			tile.onModuleUpdated(this);
 		}
 	}
 
@@ -77,7 +75,7 @@ public class ModuleTextBox extends ModuleBase {
 	public void setText(String str) {
 		textBox.setText(str);
 	}
-	
+
 	public String getText() {
 		return textBox.getText();
 	}
