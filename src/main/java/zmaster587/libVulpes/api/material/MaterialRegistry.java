@@ -63,6 +63,18 @@ public class MaterialRegistry {
 			}
 		}
 
+		boolean oreAllowed = false;
+		boolean blockAllowed = false;
+		boolean coilAllowed = false;
+
+		for(zmaster587.libVulpes.api.material.Material mat : materialList) {
+			if(!oreAllowed)
+				oreAllowed = AllowedProducts.getProductByName("ORE").isOfType(mat.getAllowedProducts());
+			if(!blockAllowed)
+				blockAllowed = AllowedProducts.getProductByName("BLOCK").isOfType(mat.getAllowedProducts());
+			if(!coilAllowed)
+				coilAllowed = AllowedProducts.getProductByName("COIL").isOfType(mat.getAllowedProducts());
+		}
 		for(int i = 0; i < numberOfOreBlocks; i++) {
 
 			String name = "ore";
@@ -84,9 +96,12 @@ public class MaterialRegistry {
 			coilBlocks.numBlocks = (byte)Math.min(len - (16*i), 16);
 			coilBlocks.product = AllowedProducts.getProductByName("COIL");
 
-			GameRegistry.registerBlock(ores, ItemOre.class, nameSpace + name + i);
-			GameRegistry.registerBlock(metalBlocks, ItemOre.class, nameSpace + metalBlockName + i);
-			GameRegistry.registerBlock(coilBlocks, ItemOre.class, nameSpace + coilName + i);
+			if(oreAllowed)
+				GameRegistry.registerBlock(ores, ItemOre.class, nameSpace + name + i);
+			if(blockAllowed)
+				GameRegistry.registerBlock(metalBlocks, ItemOre.class, nameSpace + metalBlockName + i);
+			if(coilAllowed)
+				GameRegistry.registerBlock(coilBlocks, ItemOre.class, nameSpace + coilName + i);
 
 			for(int j = 0; j < 16 && j < 16*i + (len % 16); j++) {
 				int index = i*16 + j;
@@ -175,7 +190,7 @@ public class MaterialRegistry {
 	public static ItemStack getItemStackFromMaterialAndType(String ore,AllowedProducts product, int amount) {
 		for(MaterialRegistry  registry : registries) {
 			zmaster587.libVulpes.api.material.Material ore2 = registry.strToMaterial.get(ore);
-			
+
 			if(ore2 != null && product != null)
 				return new ItemStack( registry.oreProducts[product.ordinal()], amount, ore2.index);
 		}
@@ -255,7 +270,7 @@ public class MaterialRegistry {
 			String string) {
 		for(MaterialRegistry registry : registries) {
 			zmaster587.libVulpes.api.material.Material  material = registry.strToMaterial.get(string);
-			
+
 			if(material != null)
 				return material;
 		}
@@ -267,7 +282,7 @@ public class MaterialRegistry {
 		for(MaterialRegistry registry : registries) {
 			list.addAll(registry.materialList);
 		}
-		
+
 		return list;
 	}
 

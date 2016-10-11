@@ -40,15 +40,12 @@ public class ModuleTextBox extends ModuleBase {
 	@Override
 	public void keyTyped(char chr, int t) {
 		super.keyTyped(chr, t);
-
-		if(Character.isDigit(chr) || chr == '-' || t == Keyboard.KEY_BACK || t == Keyboard.KEY_DELETE || t == Keyboard.KEY_LEFT || t == Keyboard.KEY_RIGHT) {
-			if(textBox.isFocused() && (chr != '-' || (textBox.getCursorPosition() == 0 && !textBox.getText().startsWith("-")))) {
+			if(textBox.isFocused()) {
 				textBox.textboxKeyTyped(chr, t);
 				
 				//Make callback to calling tile
 				tile.onModuleUpdated(this);
 			}
-		}
 	}
 
 
