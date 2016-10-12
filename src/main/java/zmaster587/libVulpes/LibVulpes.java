@@ -267,8 +267,8 @@ public class LibVulpes {
 		
 		//GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockRFBattery), new ItemStack(LibVulpesBlocks.blockRFOutput));
 		//GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockRFOutput), new ItemStack(LibVulpesBlocks.blockRFBattery));
-		GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockForgeInputPlug), new ItemStack(LibVulpesBlocks.blockRFOutput));
-		GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockForgeOutputPlug), new ItemStack(LibVulpesBlocks.blockRFBattery));
+		GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockForgeInputPlug), new ItemStack(LibVulpesBlocks.blockForgeOutputPlug));
+		GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockForgeOutputPlug), new ItemStack(LibVulpesBlocks.blockForgeInputPlug));
 	}
 
 	@EventHandler
