@@ -20,7 +20,7 @@ public class PacketEntity extends BasePacket {
 	INetworkEntity entity;
 
 	NBTTagCompound nbt;
-
+	int entityId;
 	byte packetId;
 
 	public PacketEntity() {
@@ -110,6 +110,9 @@ public class PacketEntity extends BasePacket {
 	@Override
 	public void executeClient(EntityPlayer player) {
 		execute((EntityPlayer)player, Side.CLIENT);
+		if(entity == null) {
+			
+		}
 	}
 
 	@Override
@@ -146,6 +149,7 @@ public class PacketEntity extends BasePacket {
 			entity.readDataFromNetwork(buffer, packetId, nbt);
 		}
 		else {
+			this.entityId = entityId;
 			System.out.println("oh no...");
 		}
 	}

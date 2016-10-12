@@ -1,6 +1,7 @@
 package zmaster587.libVulpes.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 
 public class BlockMeta {
 	Block block;
@@ -29,6 +30,13 @@ public class BlockMeta {
 
 	public Block getBlock() {
 		return block;
+	}
+	
+	public IBlockState getBlockState() {
+		if(meta != WILDCARD) {
+			return block.getStateFromMeta(meta);
+		}
+		return block.getDefaultState();
 	}
 
 	public byte getMeta() {

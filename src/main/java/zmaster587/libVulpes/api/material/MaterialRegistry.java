@@ -59,12 +59,16 @@ public class MaterialRegistry {
 			oreProductColorizer = new OreProductColorizer();
 		//register color handles
 		for(Block block : getBlockListForProduct(AllowedProducts.getProductByName("BLOCK"))) {
+			if(block == null ||  Item.getItemFromBlock(block) == null)
+				continue;
 			Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)oreProductColorizer, new Block[] {block});
 			Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)oreProductColorizer,  Item.getItemFromBlock(block));
 		}
 
 
 		for(Block block : getBlockListForProduct(AllowedProducts.getProductByName("COIL"))) {
+			if(block == null ||  Item.getItemFromBlock(block) == null)
+				continue;
 			Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)oreProductColorizer, new Block[] { block});
 			Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)oreProductColorizer, Item.getItemFromBlock(block));
 		}
