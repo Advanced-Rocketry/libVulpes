@@ -1,15 +1,15 @@
 package zmaster587.libVulpes.tile;
 
 import zmaster587.libVulpes.api.IUniversalEnergy;
+import zmaster587.libVulpes.util.UniversalBattery;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
-import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
 
 
 public abstract class TileEntityRFMachine extends TileEntityMachine implements IEnergyHandler, IUniversalEnergy {
 
-	protected EnergyStorage energy;
+	protected UniversalBattery energy;
 	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {

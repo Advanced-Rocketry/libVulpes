@@ -1,7 +1,7 @@
 package zmaster587.libVulpes.tile;
 
 
-import cofh.api.energy.EnergyStorage;
+import zmaster587.libVulpes.util.UniversalBattery;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 public abstract class TileEntityMachine extends TileEntity implements ISidedInventory  {
 	
 	
-	protected EnergyStorage energy;
+	protected UniversalBattery energy;
 	
 	protected ItemStack inv[];
 	
