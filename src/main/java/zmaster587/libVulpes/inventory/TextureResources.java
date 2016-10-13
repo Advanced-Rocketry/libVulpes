@@ -1,6 +1,9 @@
 package zmaster587.libVulpes.inventory;
 
+import zmaster587.libVulpes.client.util.ProgressBarImage;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TextureResources {
 	
@@ -16,4 +19,7 @@ public class TextureResources {
 	public static final  ResourceLocation buttonRedstoneInverted[] = new ResourceLocation[] {new ResourceLocation("libvulpes:textures/gui/buttons/buttonRedstoneInverted.png"), new ResourceLocation("libvulpes:textures/gui/buttons/buttonRedstoneInverted_hover.png")};
 	public static final  ResourceLocation buttonRedstoneDisabled[] = new ResourceLocation[] {new ResourceLocation("libvulpes:textures/gui/buttons/buttonRedstoneNotAllowed.png"), new ResourceLocation("libvulpes:textures/gui/buttons/buttonRedstoneNotAllowed_hover.png")};
 	
+	public static final ResourceLocation coalGeneratorBarImg = new ResourceLocation("libvulpes", "textures/gui/coalGenerator.png");
+	
+	public static final ProgressBarImage progressGenerator = new ProgressBarImage(16, 0, 16, 16, 0, 0, 16, 16, ForgeDirection.UP, coalGeneratorBarImg);
 }
