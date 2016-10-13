@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class CapabilityProvider {
 
 	public static void registerCap() {
-	    MinecraftForge.EVENT_BUS.register(CapabilityProvider.class);
+	    //MinecraftForge.EVENT_BUS.register(CapabilityProvider.class);
 	    //LibVulpes.logger.info("Forge Energy integration loaded");
 	}
 	private static final ResourceLocation KEY = new ResourceLocation("libvulpes:CapProviderPower");

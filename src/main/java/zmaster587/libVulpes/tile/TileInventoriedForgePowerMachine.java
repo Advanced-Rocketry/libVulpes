@@ -7,7 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public abstract class TileInventoriedForgePowerMachine extends TileInventoriedForgeProducer implements IProgressBar {
 
-	protected int timeRemaining, currentTime;
+	protected int timeRemaining, currentTime, lastRFAmount;
 
 	protected TileInventoriedForgePowerMachine(int energy, int invSize) {
 		super(energy, invSize);
@@ -23,6 +23,10 @@ public abstract class TileInventoriedForgePowerMachine extends TileInventoriedFo
 
 	}
 
+	public int getLastAmtGenerated() {
+		return lastRFAmount;
+	}
+	
 	protected void setState(boolean state) {
 		if(worldObj.getBlockState(getPos()).getValue(BlockTile.STATE) != state)
 			worldObj.setBlockState(getPos(), worldObj.getBlockState(getPos()).withProperty(BlockTile.STATE, state));
@@ -38,7 +42,8 @@ public abstract class TileInventoriedForgePowerMachine extends TileInventoriedFo
 	public void update() {
 		if(canGeneratePower()) {
 			if(hasEnoughEnergyBuffer(getPowerPerOperation())) {
-				if(!worldObj.isRemote) this.energy.acceptEnergy(getPowerPerOperation(), false);
+				lastRFAmount = getPowerPerOperation();
+				if(!worldObj.isRemote) this.energy.acceptEnergy(lastRFAmount, false);
 				onGeneratePower();
 				setState(true);
 				if(timeRemaining < currentTime++) {

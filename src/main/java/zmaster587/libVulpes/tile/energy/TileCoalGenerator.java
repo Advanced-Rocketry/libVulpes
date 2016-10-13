@@ -9,16 +9,19 @@ import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
 import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
+import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.tile.TileInventoriedForgePowerMachine;
 
 public class TileCoalGenerator extends TileInventoriedForgePowerMachine {
 
 	int powerPerTick;
 	private static final int INPUT_SLOT = 0;
+	ModuleText textModule;
 	
 	public TileCoalGenerator() {
 		super(10000, 1);
 		powerPerTick = 40;
+		textModule = new ModuleText(40, 20, "Generating 0 RF/t", 0x2b2b2b);
 	}
 	
 	@Override
@@ -27,6 +30,7 @@ public class TileCoalGenerator extends TileInventoriedForgePowerMachine {
 		
 		modules.add(new ModuleSlotArray(40, 40, this, 0, 1));
 		modules.add(new ModuleProgress(80, 40, 1, TextureResources.progressGenerator, this));
+		modules.add(textModule);
 		
 		return modules;
 	}
@@ -56,10 +60,11 @@ public class TileCoalGenerator extends TileInventoriedForgePowerMachine {
 	}
 
 	@Override
-	public void onGeneratePower() {
-
+	public void update() {
+		super.update();
+		if(worldObj.isRemote)
+			textModule.setText("Generating " + getLastAmtGenerated() + " RF/t");
 	}
-
 	@Override
 	public String getModularInventoryName() {
 		return "tile.coalGenerator.name";

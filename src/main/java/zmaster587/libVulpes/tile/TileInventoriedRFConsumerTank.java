@@ -1,10 +1,14 @@
 package zmaster587.libVulpes.tile;
 
+import zmaster587.libVulpes.cap.FluidCapability;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
@@ -43,6 +47,30 @@ public abstract class TileInventoriedRFConsumerTank extends TileInventoriedRFCon
 		return true;
 	}
 
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			return true;
+		return super.hasCapability(capability, facing);
+	}
+	
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return (T) new FluidCapability(this);
+		}
+		return super.getCapability(capability, facing);
+	}
+	
+	@Override
+	public NBTTagCompound serializeNBT() {
+		return new NBTTagCompound();
+	}
+	@Override
+	public void deserializeNBT(NBTTagCompound nbt) {
+		
+	}
+	
 	@Override
 	public FluidStack drain(FluidStack resource,
 			boolean doDrain) {

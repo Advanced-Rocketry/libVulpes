@@ -10,14 +10,17 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import zmaster587.libVulpes.cap.FluidCapability;
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -44,6 +47,30 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	public TileFluidHatch(int capacity) {
 		fluidTank = new FluidTank(capacity);
 		inventory = new EmbeddedInventory(2);
+	}
+	
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			return true;
+		return super.hasCapability(capability, facing);
+	}
+	
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return (T) new FluidCapability(this);
+		}
+		return super.getCapability(capability, facing);
+	}
+	
+	@Override
+	public NBTTagCompound serializeNBT() {
+		return new NBTTagCompound();
+	}
+	@Override
+	public void deserializeNBT(NBTTagCompound nbt) {
+		
 	}
 
 	public TileFluidHatch(boolean outputOnly) {
