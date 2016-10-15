@@ -170,7 +170,7 @@ public class BlockHatch extends BlockMultiblockStructure {
 		
 		int meta = world.getBlockMetadata(x, y, z);
 		//Handlue gui through modular system
-		if((meta & 7) < 6 )
+		if((meta & 7) < 6 && !world.isRemote)
 			player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULAR.ordinal(), world, x, y, z);
 		
 		return true;

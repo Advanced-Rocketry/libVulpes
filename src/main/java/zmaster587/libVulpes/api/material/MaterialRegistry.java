@@ -141,6 +141,15 @@ public class MaterialRegistry {
 		return productBlockListMapping.get(product);
 	}
 
+	public Block getBlockForProduct(AllowedProducts product, zmaster587.libVulpes.api.material.Material material, int index) {
+		for(Block block : productBlockListMapping.get(product) ) {
+			if(((BlockOre)block).ores[index] == material)
+				return block;
+		}
+		return null;
+	}
+
+	
 	/**
 	 * @param stack the item stack to get the material of
 	 * @return {@link Materials} of the itemstack if it exists, otherwise null
