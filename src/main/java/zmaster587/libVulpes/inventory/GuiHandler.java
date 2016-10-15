@@ -6,6 +6,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 
 public class GuiHandler implements IGuiHandler {

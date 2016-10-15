@@ -32,7 +32,8 @@ public class BlockMultiMachineBattery extends BlockMultiblockStructure {
 			IBlockState state, EntityPlayer playerIn, EnumHand hand,
 			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
 			float hitZ) {
-		playerIn.openGui(LibVulpes.instance, guiId, worldIn, pos.getX(), pos.getY(), pos.getZ());
+		if(!worldIn.isRemote)
+			playerIn.openGui(LibVulpes.instance, guiId, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}
 

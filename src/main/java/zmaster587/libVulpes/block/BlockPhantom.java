@@ -61,7 +61,6 @@ public class BlockPhantom extends Block {
 			ItemStack stack = ((TilePlaceholder)tile).getReplacedState().getBlock().getPickBlock(((TilePlaceholder)tile).getReplacedState(), target, world, pos, player);
 			
 			
-			stack.setItemDamage(block.damageDropped(block.getStateFromMeta(((TilePlaceholder)tile).getReplacedMeta())));
 			return stack;
 		}
 		return super.getPickBlock(state, target, world, pos, player);
