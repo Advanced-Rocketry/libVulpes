@@ -38,6 +38,14 @@ public class InventoryCompat {
 		return tile != null && tile instanceof IInventory && (ZUtils.numEmptySlots((IInventory)tile) > 0 || ZUtils.doesInvHaveRoom(item, (IInventory)tile));
 	}
 	
+	public static boolean canInjectItems(IInventory tile, ItemStack item) {
+		
+		if(buildCraft_injectable) {
+			return true;
+		}
+		return tile != null && (ZUtils.numEmptySlots((IInventory)tile) > 0 || ZUtils.doesInvHaveRoom(item, (IInventory)tile));
+	}
+	
 	public static void injectItem(Object tile, ItemStack item) {
 		if(buildCraft_injectable) {}
 			
