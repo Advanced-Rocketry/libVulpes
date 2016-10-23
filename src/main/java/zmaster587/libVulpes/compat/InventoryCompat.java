@@ -38,7 +38,12 @@ public class InventoryCompat {
 		return tile != null && tile instanceof IInventory && (ZUtils.numEmptySlots((IInventory)tile) > 0 || ZUtils.doesInvHaveRoom(item, (IInventory)tile));
 	}
 	
-	public static void injectItem(Object tile, ItemStack item) {
+	public static boolean canInjectItems(IInventory tile, ItemStack item) {
+		
+		return (ZUtils.numEmptySlots((IInventory)tile) > 0 || ZUtils.doesInvHaveRoom(item, (IInventory)tile));
+	}
+	
+	public static void injectItem(IInventory tile, ItemStack item) {
 		if(buildCraft_injectable) {}
 			
 		ZUtils.mergeInventory(item, (IInventory)tile);
