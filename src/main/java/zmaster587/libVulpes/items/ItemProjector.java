@@ -3,8 +3,12 @@ package zmaster587.libVulpes.items;
 import io.netty.buffer.ByteBuf;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
+
+import com.mojang.realmsclient.gui.ChatFormatting;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -47,16 +51,58 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 	ArrayList<TileMultiBlock> machineList;
 	ArrayList<BlockTile> blockList;
+	ArrayList<String> descriptionList;
 	private static final String IDNAME = "machineId";
 
 	public ItemProjector() {
 		machineList = new ArrayList<TileMultiBlock>();
 		blockList = new ArrayList<BlockTile>();
+		descriptionList = new ArrayList<String>();
 	}
 
 	public void registerMachine(TileMultiBlock multiblock, BlockTile mainBlock) {
 		machineList.add(multiblock);
 		blockList.add(mainBlock);
+		HashMap<Object, Integer> map = new HashMap<Object, Integer>();
+
+		Object structure[][][] = multiblock.getStructure();
+
+		for(int i = 0; i < structure.length; i++) {
+			for(int j = 0; j < structure[i].length; j++) {
+				for(int k = 0; k < structure[i][j].length; k++) {
+					Object o = structure[i][j][k];
+					if(!map.containsKey(o)) {
+						map.put(o, 1);
+					}
+					else
+						map.put(o, map.get(o) + 1);
+				}
+			}
+		}
+
+		String str = Item.getItemFromBlock(mainBlock).getItemStackDisplayName(new ItemStack(mainBlock)) + " x1\n";
+
+		for(Entry<Object, Integer> entry : map.entrySet()) {
+
+			List<BlockMeta> blockMeta = multiblock.getAllowableBlocks(entry.getKey());
+
+			if(blockMeta.isEmpty() || Item.getItemFromBlock(blockMeta.get(0).getBlock()) == null )
+				continue;
+			for(int i = 0; i < blockMeta.size(); i++) {
+				String itemStr  = Item.getItemFromBlock(blockMeta.get(i).getBlock()).getItemStackDisplayName(new ItemStack(blockMeta.get(i).getBlock(), 1, blockMeta.get(i).getMeta()));
+				if(!itemStr.contains("tile.")) {
+					str = str + itemStr;
+					str = str + " or ";
+				}
+			}
+
+			if(str.endsWith(" or ")) {
+				str = str.substring(0, str.length()-4);
+			}
+			str = str + " x" + entry.getValue() + "\n";
+		}
+
+		descriptionList.add(str);
 	}
 
 	@SubscribeEvent
@@ -200,14 +246,14 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 						BlockPosition controller = getControllerOffset(structure);
 						dir = BlockMultiblockMachine.getFront(tile2.getBlockMetadata()).getOpposite();
-						
+
 						controller.y = (short) (structure.length - controller.y);
-						
+
 						globalX = (-controller.x*dir.offsetZ + controller.z*dir.offsetX);
 						globalZ = ((controller.x* dir.offsetX)  + (controller.z*dir.offsetZ));
-						
+
 						setDirection(stack, dir.ordinal());
-						
+
 						setBasePosition(stack, pos.blockX - globalX, pos.blockY - controller.y  + 1, pos.blockZ - globalZ);
 						PacketHandler.sendToServer(new PacketItemModifcation(this, player, (byte)0));
 						PacketHandler.sendToServer(new PacketItemModifcation(this, player, (byte)2));
@@ -398,8 +444,16 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		list.add("Shift-scroll: moves cross-section");
 
 		int id = getMachineId(stack);
-		if(id != -1)
-			list.add(EnumChatFormatting.GREEN + LibVulpes.proxy.getLocalizedString(machineList.get(id).getMachineName()));
+		if(id != -1) {
+			list.add("");
+			list.add(ChatFormatting.GREEN + LibVulpes.proxy.getLocalizedString(machineList.get(id).getMachineName()));
+			String str = descriptionList.get(id);
+
+			String strList[] = str.split("\n");
+
+			for(String s : strList)
+				list.add(s);
+		}
 	}
 
 	@Override

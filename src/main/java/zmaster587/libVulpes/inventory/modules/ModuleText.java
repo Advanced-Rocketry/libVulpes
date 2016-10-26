@@ -37,6 +37,10 @@ public class ModuleText extends ModuleBase {
 			this.text.add(str);
 		}
 	}
+	
+	public void setColor(int color) {
+		this.color = color;
+	}
 
 	public String getText() {
 
