@@ -32,6 +32,11 @@ public class BlockMeta {
 		return block;
 	}
 	
+	@Override
+	public int hashCode() {
+		return block.hashCode() + meta;
+	}
+	
 	public IBlockState getBlockState() {
 		if(meta != WILDCARD) {
 			return block.getStateFromMeta(meta);
