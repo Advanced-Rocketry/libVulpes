@@ -3,11 +3,16 @@ package zmaster587.libVulpes;
 
 import ic2.api.item.IC2Items;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.apache.logging.log4j.Logger;
+import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -53,6 +58,7 @@ import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInputHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
+import zmaster587.libVulpes.util.XMLRecipeLoader;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -71,8 +77,9 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 @Mod(modid="libVulpes",name="Vulpes library",version="@MAJOR@.@MINOR@.@REVIS@.@BUILD@",useMetadata=true, dependencies="before:gregtech;after:CoFHCore;after:BuildCraft|Core")
 public class LibVulpes {
-	public static Logger logger;
+	public static Logger logger = Logger.getLogger("libVulpes");
 	public static int time = 0;
+	private static HashMap<Class, String> userModifiableRecipes = new HashMap<Class, String>();
 
 	@Instance(value = "libVulpes")
 	public static LibVulpes instance;
@@ -97,6 +104,10 @@ public class LibVulpes {
 
 	public static MaterialRegistry materialRegistry = new MaterialRegistry();
 
+	public static void registerRecipeHandler(Class clazz, String fileName) {
+		userModifiableRecipes.put(clazz, fileName);
+	}
+	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
@@ -276,6 +287,32 @@ public class LibVulpes {
 		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 3));
 		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 12));
 		TileMultiBlock.addMapping('l', list);
+		
+		//User Recipes
+
+		for(Entry<Class, String> entry : userModifiableRecipes.entrySet()) {
+			File file = new File(entry.getValue());
+			if(!file.exists()) {
+				try {
+					
+					file.createNewFile();
+					BufferedWriter stream;
+					stream = new BufferedWriter(new FileWriter(file));
+					stream.write("<Recipes>\n</Recipes>");
+					stream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				XMLRecipeLoader loader = new XMLRecipeLoader();
+				try {
+					loader.loadFile(file);
+					loader.registerRecipes(entry.getKey());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	@Mod.EventHandler

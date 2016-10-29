@@ -56,7 +56,7 @@ public class PacketHandler {
 			discriminatorNumber++;
 		}
 		else
-			LibVulpes.logger.warn("Trying to register " + clazz.getName() + " after preinit!!");
+			LibVulpes.logger.warning("Trying to register " + clazz.getName() + " after preinit!!");
 	}
 
 
