@@ -94,7 +94,6 @@ public class ZUtils {
 		}
 		catch (Throwable throwable1)
 		{
-			LibVulpes.logger.error("Failed to create block entity {}", new Object[] {s, throwable1});
 			net.minecraftforge.fml.common.FMLLog.log(org.apache.logging.log4j.Level.ERROR, throwable1,
 					"A TileEntity %s(%s) has thrown an exception during loading, its state cannot be restored. Report this to the mod author",
 					s, oclass.getName());
@@ -108,7 +107,6 @@ public class ZUtils {
 			}
 			catch (Throwable throwable)
 			{
-				LibVulpes.logger.error("Failed to load data for block entity {}", new Object[] {s, throwable});
 				net.minecraftforge.fml.common.FMLLog.log(org.apache.logging.log4j.Level.ERROR, throwable,
 						"A TileEntity %s(%s) has thrown an exception during loading, its state cannot be restored. Report this to the mod author",
 						s, oclass.getName());
@@ -117,7 +115,7 @@ public class ZUtils {
 		}
 		else
 		{
-			LibVulpes.logger.warn("Skipping BlockEntity with id {}", new Object[] {s});
+			net.minecraftforge.fml.common.FMLLog.warning("Skipping BlockEntity with id {}", new Object[] {s});
 		}
 
 		return tileentity;

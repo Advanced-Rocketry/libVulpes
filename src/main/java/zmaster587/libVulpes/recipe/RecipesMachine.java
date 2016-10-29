@@ -251,8 +251,8 @@ public class RecipesMachine {
 				message += "\n\t" + element.toString();
 			}
 
-			LibVulpes.logger.warn("Cannot add recipe!");
-			LibVulpes.logger.warn(message);
+			LibVulpes.logger.warning("Cannot add recipe!");
+			LibVulpes.logger.warning(message);
 
 		}
 	}
@@ -266,6 +266,17 @@ public class RecipesMachine {
 	 */
 	public void addRecipe(Class clazz , Object out, int timeRequired, int power, Object ... inputs) {
 		addRecipe(clazz, new Object[] {out}, timeRequired, power, inputs);
+	}
+	
+	public void addRecipe(Class clazz , List<Object> out, int timeRequired, int power, List<Object> inputs) {
+		
+		Object outputs[] = new Object[out.size()];
+		outputs = out.toArray(outputs);
+		
+		Object inputs2[] = new Object[inputs.size()];
+		inputs2 = inputs.toArray(inputs2);
+		
+		addRecipe(clazz, outputs, timeRequired, power, inputs2);
 	}
 
 	//Given the class return the list

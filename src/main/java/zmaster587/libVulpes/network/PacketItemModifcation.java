@@ -83,6 +83,14 @@ public class PacketItemModifcation extends BasePacket {
 		packetId = in.readByte();
 
 		Entity ent = world.getEntityByID(entityId);
+		if(ent == null) {
+			for(Entity e : world.playerEntities) {
+				if(e.getEntityId() == entityId) {
+					ent = e;
+					break;
+				}
+			}
+		}
 
 		if(in.readBoolean()) {
 			NBTTagCompound nbt = null;

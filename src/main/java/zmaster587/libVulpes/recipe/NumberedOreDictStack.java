@@ -17,4 +17,9 @@ public class NumberedOreDictStack {
 	public int getNumber() {
 		return number;
 	}
+	
+	@Override
+	public String toString() {
+		return ore + "x" + number;
+	}
 }

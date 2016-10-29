@@ -2,10 +2,17 @@ package zmaster587.libVulpes;
 
 
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.apache.logging.log4j.Logger;
+import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -66,11 +73,13 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInputHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
 import zmaster587.libVulpes.util.CapabilityProvider;
+import zmaster587.libVulpes.util.XMLRecipeLoader;
 
 @Mod(modid="libVulpes",name="Vulpes library",version="@MAJOR@.@MINOR@.@REVIS@.@BUILD@",useMetadata=true, dependencies="before:gregtech;after:CoFHCore;after:BuildCraft|Core")
 public class LibVulpes {
-	public static Logger logger;
+	public static Logger logger = Logger.getLogger("libVulpes");
 	public static int time = 0;
+	private static HashMap<Class, String> userModifiableRecipes = new HashMap<Class, String>();
 
 	@Instance(value = "libVulpes")
 	public static LibVulpes instance;
@@ -95,6 +104,10 @@ public class LibVulpes {
 
 	public static MaterialRegistry materialRegistry = new MaterialRegistry();
 
+	public static void registerRecipeHandler(Class clazz, String fileName) {
+		userModifiableRecipes.put(clazz, fileName);
+	}
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
@@ -109,7 +122,7 @@ public class LibVulpes {
 		config.save();
 
 		CapabilityProvider.registerCap();
-		
+
 		//
 		PacketHandler.INSTANCE.addDiscriminator(PacketMachine.class);
 		PacketHandler.INSTANCE.addDiscriminator(PacketEntity.class);
@@ -148,7 +161,7 @@ public class LibVulpes {
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockForgeInputPlug.setRegistryName(LibVulpesBlocks.blockForgeInputPlug.getUnlocalizedName().substring(5)));
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockForgeOutputPlug.setRegistryName(LibVulpesBlocks.blockForgeOutputPlug.getUnlocalizedName().substring(5)));
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockCoalGenerator.setRegistryName(LibVulpesBlocks.blockCoalGenerator.getUnlocalizedName().substring(5)));
-		
+
 		//LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockRFBattery.setRegistryName(LibVulpesBlocks.blockRFBattery.getUnlocalizedName()));
 		//LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockRFOutput.setRegistryName(LibVulpesBlocks.blockRFOutput.getUnlocalizedName()));
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockAdvStructureBlock.setRegistryName(LibVulpesBlocks.blockAdvStructureBlock.getUnlocalizedName().substring(5)));
@@ -241,7 +254,7 @@ public class LibVulpes {
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Aluminum", "pickaxe", 1, 0xb3e4dc, AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue()));
 
 		materialRegistry.registerOres(tabLibVulpesOres);
-		
+
 	}
 
 	@EventHandler
@@ -261,10 +274,10 @@ public class LibVulpes {
 		//Recipes
 		GameRegistry.addRecipe(new ShapedOreRecipe(LibVulpesBlocks.blockStructureBlock, "sps", "psp", "sps", 'p', "plateIron", 's', "stickIron"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(LibVulpesBlocks.blockAdvStructureBlock, "sps", "psp", "sps", 'p', "plateTitanium", 's', "stickTitanium"));
-		
+
 		//Plugs
 		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockForgeInputPlug), " x ", "xmx"," x ", 'x', LibVulpesItems.itemBattery, 'm', LibVulpesBlocks.blockStructureBlock);
-		
+
 		//GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockRFBattery), new ItemStack(LibVulpesBlocks.blockRFOutput));
 		//GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockRFOutput), new ItemStack(LibVulpesBlocks.blockRFBattery));
 		GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockForgeInputPlug), new ItemStack(LibVulpesBlocks.blockForgeOutputPlug));
@@ -314,6 +327,32 @@ public class LibVulpes {
 		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 3));
 		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 11));
 		TileMultiBlock.addMapping('l', list);
+
+		//User Recipes
+
+		for(Entry<Class, String> entry : userModifiableRecipes.entrySet()) {
+			File file = new File(entry.getValue());
+			if(!file.exists()) {
+				try {
+					
+					file.createNewFile();
+					BufferedWriter stream;
+					stream = new BufferedWriter(new FileWriter(file));
+					stream.write("<Recipes>\n</Recipes>");
+					stream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				XMLRecipeLoader loader = new XMLRecipeLoader();
+				try {
+					loader.loadFile(file);
+					loader.registerRecipes(entry.getKey());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 
