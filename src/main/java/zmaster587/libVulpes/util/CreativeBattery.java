@@ -13,6 +13,6 @@ public class CreativeBattery extends UniversalBattery {
 	}
 	@Override
 	public int getMaxEnergyStored() {
-		return Short.MAX_VALUE;
+		return Integer.MAX_VALUE >> 4;
 	}
 }

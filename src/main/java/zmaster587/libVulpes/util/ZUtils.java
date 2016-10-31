@@ -21,7 +21,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class ZUtils {
-	
+
 	public enum RedstoneState {
 		ON,
 		OFF,
@@ -43,7 +43,7 @@ public class ZUtils {
 				return RedstoneState.values()[i];
 		}
 	}
-	
+
 	public static int getAverageColor(long r, long g, long b, int total) {
 		return (int)(( (r/total) ) | ( (g/total) << 8 ) | ( ( b/total ) << 16 ) );
 	}
@@ -81,7 +81,7 @@ public class ZUtils {
 		TileEntity tileentity = null;
 		String s = nbt.getString("id");
 		Class <? extends TileEntity > oclass = null;
-		
+
 
 		try
 		{
@@ -341,7 +341,8 @@ public class ZUtils {
 			}
 
 			if(a != null && firstEmtpySlot != -1) {
-				b.setInventorySlotContents(firstEmtpySlot, a.copy());
+				if(a.stackSize != 0)
+					b.setInventorySlotContents(firstEmtpySlot, a.copy());
 				a = null;
 			}
 		}

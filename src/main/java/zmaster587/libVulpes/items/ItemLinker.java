@@ -100,7 +100,7 @@ public class ItemLinker extends Item {
 		else
 			nbt = itemStack.getTagCompound();
 		
-		return nbt.getInteger("dimId");
+		return nbt.hasKey("dimId") ? nbt.getInteger("dimId") : -1;
 		
 	}
 
