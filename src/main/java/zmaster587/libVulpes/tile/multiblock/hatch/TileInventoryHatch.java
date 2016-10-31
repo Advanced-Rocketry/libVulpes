@@ -13,6 +13,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileInventoryHatch extends TilePointer implements ISidedInventory, IModularInventory {
@@ -40,6 +43,18 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 		inventory.readFromNBT(nbt);
 	}
 
+	@Override
+	protected void writeToNBTHelper(NBTTagCompound nbtTagCompound) {
+		super.writeToNBTHelper(nbtTagCompound);
+		inventory.writeToNBT(nbtTagCompound);
+	}
+	
+	@Override
+	protected void readFromNBTHelper(NBTTagCompound nbtTagCompound) {
+		super.readFromNBTHelper(nbtTagCompound);
+		inventory.readFromNBT(nbtTagCompound);
+	}
+	
 	@Override
 	public int getSizeInventory() {
 		return inventory.getSizeInventory();

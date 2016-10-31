@@ -99,6 +99,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 			if(isComplete())
 				canRender = completeStructure = completeStructure();
 			timeAlive = 0x1;
+			onCreated();
 		}
 		
 		if(!worldObj.isRemote && worldObj.getTotalWorldTime() % 1000L == 0 && !isComplete()) {
@@ -108,7 +109,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		}
 		
 		if(isRunning()) {
-			if(hasEnergy(powerPerTick) || (worldObj.isRemote && hadPowerLastTick)) {
+			if(hasEnergy(requiredPowerPerTick()) || (worldObj.isRemote && hadPowerLastTick)) {
 
 				onRunningPoweredTick();
 
@@ -121,7 +122,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 						worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 					}
 
-					useEnergy(powerPerTick);
+					useEnergy(usedPowerPerTick());
 				}
 			}
 			else if(!worldObj.isRemote && hadPowerLastTick) { //If server and out of power check to see if client needs update
@@ -130,6 +131,22 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			}
 		}
+	}
+	
+	protected void onCreated() {};
+	
+	/**
+	 * @return amount of power to allow the machine to run this tick
+	 */
+	protected int requiredPowerPerTick() {
+		return powerPerTick;
+	}
+	
+	/**
+	 * @return the amount of power actually used by the machine this tick
+	 */
+	protected int usedPowerPerTick() {
+		return requiredPowerPerTick();
 	}
 
 	protected void onRunningPoweredTick() {

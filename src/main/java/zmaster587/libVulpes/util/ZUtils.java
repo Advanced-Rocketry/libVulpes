@@ -37,14 +37,14 @@ public class ZUtils {
 				return RedstoneState.values()[i];
 		}
 	}
-	
+
 	public static int getAverageColor(long r, long g, long b, int total) {
 		return (int)(( (r/total) ) | ( (g/total) << 8 ) | ( ( b/total ) << 16 ) );
 	}
-	
+
 	public static int getDirectionFacing(float rotationYaw) {
 		int l = MathHelper.floor_double((double)(MathHelper.wrapAngleTo180_float(rotationYaw) * 4.0F / 360.0F) + 0.5D) & 3;
-		
+
 		if(l == 0)
 			l = 2;
 		else if(l == 1)
@@ -53,22 +53,22 @@ public class ZUtils {
 			l = 3;
 		else
 			l = 4;
-		
+
 		return l;
 	}
-	
+
 	public static List copyRandomElements(List fromList, int maxElements) {
-		
+
 		List returnList = new LinkedList();
 		List moveList = new LinkedList(fromList);
 		Random rand = new Random(System.nanoTime());
-		
+
 		for(int i = 0; i < maxElements && !moveList.isEmpty(); i++) {
 			returnList.add(moveList.remove(rand.nextInt(moveList.size())));
 		}
 		return returnList;
 	}
-	
+
 	/**
 	 * @param axis Axis Aligned Bounding box to rotate
 	 * @param angleDeg amount to rotate the bounding box in radians
@@ -119,7 +119,7 @@ public class ZUtils {
 
 		return AxisAlignedBB.getBoundingBox(e.posX + rotatedLocal.minX, e.posY + rotatedLocal.minY, e.posZ + rotatedLocal.minZ, rotatedLocal.maxX + e.posX, rotatedLocal.maxY + e.posY, rotatedLocal.maxZ + e.posZ);
 	}
-	
+
 	public static String formatNumber(int number) {
 		if(number > 999999999) 
 			return ((number/1000000)/10f) + "T";
@@ -127,9 +127,9 @@ public class ZUtils {
 			return ((number/1000000)/10f) + "M";
 		if(number > 999) 
 			return ((number/100)/10f) + "K";
-		
+
 		return String.valueOf(number);
-		
+
 	}
 
 	public static boolean isInvEmpty(ItemStack[] stack) {
@@ -144,7 +144,7 @@ public class ZUtils {
 
 		return true;
 	}
-	
+
 	/***
 	 * Returns true if the array of object contains object2
 	 */
@@ -153,7 +153,7 @@ public class ZUtils {
 			if(obj.equals(object2))
 				return true;
 		}
-		
+
 		return false;
 	}
 
@@ -164,7 +164,7 @@ public class ZUtils {
 		}
 		return false;
 	}
-	
+
 	public static boolean isInvEmpty(IInventory stack) {
 		boolean empty = true;
 		if(stack == null)
@@ -289,7 +289,8 @@ public class ZUtils {
 			}
 
 			if(a != null && firstEmtpySlot != -1) {
-				b.setInventorySlotContents(firstEmtpySlot, a.copy());
+				if(a.stackSize != 0)
+					b.setInventorySlotContents(firstEmtpySlot, a.copy());
 				a = null;
 			}
 		}
@@ -300,13 +301,13 @@ public class ZUtils {
 			if(stack != null) return stack;
 		return null;
 	}
-	
+
 	public static int getFirstFilledSlotIndex(IInventory inv) {
 		for(int i = 0; i < inv.getSizeInventory(); i++)
 			if(inv.getStackInSlot(i) != null) return i;
 		return inv.getSizeInventory();
 	}
-	
+
 	public static int getContinuousBlockLength(World world, ForgeDirection direction, int startx, int starty, int startz, int maxDist, Block block) {
 		int dist = 0;
 		for(int i = 0; i < maxDist; i++) {
@@ -315,21 +316,21 @@ public class ZUtils {
 
 			dist = i+1;
 		}
-		
+
 		return dist;
 	}
-	
+
 	public static boolean areOresSameTypeOreDict(ItemStack stack1, ItemStack stack2) {
 		int[] stack1Id = OreDictionary.getOreIDs(stack1);
 		int[] stack2Id = OreDictionary.getOreIDs(stack2);
-		
+
 		for(int i : stack1Id) {
 			for(int j : stack2Id) {
 				if(i == j)
-					 return true;
+					return true;
 			}
 		}
-		
+
 		return false;
 	}
 }
