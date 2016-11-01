@@ -57,6 +57,7 @@ public class TileCoalGenerator extends TileInventoriedForgePowerMachine {
 
 	private void setTimeAndAmounts() {
 		timeRemaining = TileEntityFurnace.getItemBurnTime(inventory.getStackInSlot(INPUT_SLOT));
+		if(timeRemaining > 0)
 		inventory.decrStackSize(INPUT_SLOT, 1);
 	}
 
