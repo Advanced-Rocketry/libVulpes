@@ -93,11 +93,11 @@ public class PacketHandler {
 			String type = channel.findChannelHandlerNameForType(Codec.class);
 			addClientHandlerAfter(channel, type, new BasePacketHandlerClient(), clazz);
 		}
-		else {
+		//else {
 			FMLEmbeddedChannel channel = channels.get(Side.SERVER);
 			String type = channel.findChannelHandlerNameForType(Codec.class);
 			addServerHandlerAfter(channels.get(Side.SERVER), type, new BasePacketHandlerServer(), clazz);
-		}
+		//}
 
 
 		//if(FMLCommonHandler.instance().getSide().isClient())

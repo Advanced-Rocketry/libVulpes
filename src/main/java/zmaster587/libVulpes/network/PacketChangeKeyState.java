@@ -25,7 +25,8 @@ public class PacketChangeKeyState extends BasePacket {
 
 	@Override
 	public void readClient(ByteBuf in) {
-		
+		in.readInt();
+		in.readBoolean();
 	}
 
 	@Override
