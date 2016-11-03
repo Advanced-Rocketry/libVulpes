@@ -93,9 +93,15 @@ public abstract class ModuleBase {
 		
 	}
 	
+	
+	/**
+	 * @param chr char typed
+	 * @param t
+	 * @return true to allow allow keybinds to be passed on, false to suppress keybinds
+	 */
 	@SideOnly(Side.CLIENT)
-	public void keyTyped(char chr, int t) {
-		
+	public boolean keyTyped(char chr, int t) {
+		return true;
 	}
 	
 	/**

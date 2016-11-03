@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.inventory;
 
+import java.io.IOException;
 import java.util.List;
 
 import zmaster587.libVulpes.gui.CommonResources;
@@ -50,9 +51,19 @@ public class GuiModular extends GuiContainer {
 
 	@Override
 	protected void keyTyped(char key, int something) {
-		super.keyTyped(key, something);
-		for(ModuleBase module : modules)
-			module.keyTyped(key, something);
+
+		boolean superKeypress = true;
+
+		for(ModuleBase module : modules) {
+			if(superKeypress)
+				superKeypress = module.keyTyped(key, something);
+			else
+				module.keyTyped(key, something);
+		}
+
+
+		if(superKeypress)
+			super.keyTyped(key, something);
 	}
 
 	@Override
