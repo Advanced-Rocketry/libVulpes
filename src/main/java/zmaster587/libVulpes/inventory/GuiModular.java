@@ -51,9 +51,19 @@ public class GuiModular extends GuiContainer {
 
 	@Override
 	protected void keyTyped(char key, int something) throws IOException {
-		super.keyTyped(key, something);
-		for(ModuleBase module : modules)
-			module.keyTyped(key, something);
+
+		boolean superKeypress = true;
+
+		for(ModuleBase module : modules) {
+			if(superKeypress)
+				superKeypress = module.keyTyped(key, something);
+			else
+				module.keyTyped(key, something);
+		}
+
+
+		if(superKeypress)
+			super.keyTyped(key, something);
 	}
 
 	@Override

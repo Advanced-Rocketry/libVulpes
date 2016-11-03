@@ -106,7 +106,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		}
 
 		if(isRunning()) {
-			if(hasEnergy(powerPerTick) || (worldObj.isRemote && hadPowerLastTick)) {
+			if(hasEnergy(requiredPowerPerTick()) || (worldObj.isRemote && hadPowerLastTick)) {
 
 				onRunningPoweredTick();
 
@@ -119,7 +119,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 						worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 					}
 
-					useEnergy(powerPerTick);
+					useEnergy(usedPowerPerTick());
 				}
 			}
 			else if(!worldObj.isRemote && hadPowerLastTick) { //If server and out of power check to see if client needs update
@@ -130,6 +130,20 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		}
 	}
 
+	/**
+	 * @return amount of power to allow the machine to run this tick
+	 */
+	protected int requiredPowerPerTick() {
+		return powerPerTick;
+	}
+	
+	/**
+	 * @return the amount of power actually used by the machine this tick
+	 */
+	protected int usedPowerPerTick() {
+		return requiredPowerPerTick();
+	}
+	
 	protected void onRunningPoweredTick() {
 		//Increment for both client and server
 		currentTime++;

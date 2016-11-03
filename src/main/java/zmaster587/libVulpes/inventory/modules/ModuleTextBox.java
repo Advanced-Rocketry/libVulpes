@@ -38,15 +38,24 @@ public class ModuleTextBox extends ModuleBase {
 	}
 
 	@Override
-	public void keyTyped(char chr, int t) {
-		super.keyTyped(chr, t);
+	public boolean keyTyped(char chr, int t) {
+
 
 		if(textBox.isFocused()) {
-			textBox.textboxKeyTyped(chr, t);
 
-			//Make callback to calling tile
-			tile.onModuleUpdated(this);
+			if(Keyboard.KEY_ESCAPE == t) {
+				textBox.setFocused(false);
+			}
+			else {
+				textBox.textboxKeyTyped(chr, t);
+
+				//Make callback to calling tile
+				tile.onModuleUpdated(this);
+				return false;
+			}
 		}
+			
+		return true;
 	}
 
 
