@@ -211,11 +211,11 @@ public class PacketHandler {
 				LibVulpes.proxy.addScheduledTask(packet);
 				break;
 			case SERVER:
-				INetHandler netHandler = ctx.channel().attr(NetworkRegistry.NET_HANDLER).get();
+				//INetHandler netHandler = ctx.channel().attr(NetworkRegistry.NET_HANDLER).get();
 				packet.read(data);
 				
-				NetHandlerPlayServer  net = (NetHandlerPlayServer)ctx.channel().attr(NetworkRegistry.NET_HANDLER).get();
-				((WorldServer)net.playerEntity.worldObj).addScheduledTask(new executorServer(packet, net.playerEntity, Side.SERVER));
+				//NetHandlerPlayServer  net = (NetHandlerPlayServer)ctx.channel().attr(NetworkRegistry.NET_HANDLER).get();
+				//((WorldServer)net.playerEntity.worldObj).addScheduledTask(new executorServer(packet, net.playerEntity, Side.SERVER));
 				//packet.executeServer(((NetHandlerPlayServer) netHandler).playerEntity);
 				break;
 			}
