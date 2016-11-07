@@ -30,14 +30,14 @@ public class BlockPhantom extends Block {
 	protected boolean canSilkHarvest() {
 		return false;
 	}
-	
+
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z,
 			int metadata, int fortune) {
 		return new ArrayList<ItemStack>();
 	}
-	
-	
+
+
 	@Override
 	public TileEntity createTileEntity(World world, int metadata) {
 		return new TileSchematic();
@@ -60,25 +60,27 @@ public class BlockPhantom extends Block {
 				side);
 	}
 
-	
+
 	@Override
 	public ItemStack getPickBlock(MovingObjectPosition target, World world,
 			int x, int y, int z, EntityPlayer player) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		
+
 		if(tile != null && tile instanceof TilePlaceholder && ((TilePlaceholder)tile).getReplacedBlock() != null) {
 			Block block = ((TilePlaceholder)tile).getReplacedBlock();
 			ItemStack stack = ((TilePlaceholder)tile).getReplacedBlock().getPickBlock(target, world, x, y, z, player);
-			stack.setItemDamage(block.damageDropped(((TilePlaceholder)tile).getReplacedBlockMeta()));
-			return stack;
+			if(stack != null) {
+				stack.setItemDamage(block.damageDropped(((TilePlaceholder)tile).getReplacedBlockMeta()));
+				return stack;
+			}
 		}
 		return super.getPickBlock(target, world, x, y, z, player);
 	}
-	
+
 	@Override
 	public int getDamageValue(World world, int x,
 			int y, int z) {
-		
+
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if(tile instanceof TilePlaceholder)
 			return ((TilePlaceholder)tile).getReplacedBlockMeta();
@@ -90,7 +92,7 @@ public class BlockPhantom extends Block {
 			int p_149646_2_, int p_149646_3_, int p_149646_4_, int p_149646_5_) {
 		return false;
 	}
-	
+
 	@Override
 	public boolean isOpaqueCube() {
 		return false;
@@ -100,7 +102,7 @@ public class BlockPhantom extends Block {
 	public boolean isReplaceable(IBlockAccess world, int x, int y, int z) {
 		return true;
 	}
-	
+
 	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_,
 			int p_149668_2_, int p_149668_3_, int p_149668_4_) {

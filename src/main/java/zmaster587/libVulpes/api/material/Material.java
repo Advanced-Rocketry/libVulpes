@@ -8,6 +8,8 @@ import java.util.List;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.LibVulpesItems;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -64,6 +66,29 @@ public class Material {
 			stack.stackSize = amount;
 			return stack;*/
 
+		if(isVanilla()) {
+			if(this.unlocalizedName.equals("Iron")) {
+				if(product.getName().equals("INGOT"))
+					return new ItemStack(Items.iron_ingot, amount);
+				else if(product.getName().equals("ORE")) {
+					return new ItemStack(Blocks.iron_ore, amount);
+				}
+				else if(product.getName().equals("BLOCK")) {
+					return new ItemStack(Blocks.iron_block, amount);
+				}
+			}
+			if(this.unlocalizedName.equals("Gold")) {
+				if(product.getName().equals("INGOT"))
+					return new ItemStack(Items.gold_ingot, amount);
+				else if(product.getName().equals("ORE")) {
+					return new ItemStack(Blocks.gold_ore, amount);
+				}
+				else if(product.getName().equals("BLOCK")) {
+					return new ItemStack(Blocks.gold_block, amount);
+				}
+			}
+		}
+		
 		if(product.isBlock()) {
 			return new ItemStack(registry.getBlockForProduct(product, this, index), amount, getMeta());
 		}
