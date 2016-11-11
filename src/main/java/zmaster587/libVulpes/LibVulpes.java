@@ -299,17 +299,26 @@ public class LibVulpes {
 			if(!file.exists()) {
 				try {
 					file.createNewFile();
-					InputStream inputStream = getClass().getResourceAsStream("/assets/defaultrecipe.xml");
+					InputStream inputStream = getClass().getResourceAsStream("/assets/libvulpes/defaultrecipe.xml");
 					byte fileIO[] = new byte[4096];
 					int numRead;
 					OutputStream stream;
-					stream = new FileOutputStream(file);
-					
-					while((numRead = inputStream.read(fileIO)) > 0) {
-						stream.write(fileIO, 0, numRead);
+					if(inputStream != null) {
+						stream = new FileOutputStream(file);
+
+						while((numRead = inputStream.read(fileIO)) > 0) {
+							stream.write(fileIO, 0, numRead);
+						}
+						stream.close();
+						inputStream.close();
 					}
-					inputStream.close();
-					stream.close();
+					else {
+						BufferedWriter stream2 = new BufferedWriter(new FileWriter(file));
+						stream2.write("<Recipes>\n</Recipes>");
+						stream2.close();
+					}
+
+
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
