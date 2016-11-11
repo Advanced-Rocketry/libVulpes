@@ -5,8 +5,11 @@ import ic2.api.item.IC2Items;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -295,11 +298,17 @@ public class LibVulpes {
 			File file = new File(entry.getValue());
 			if(!file.exists()) {
 				try {
-					
 					file.createNewFile();
-					BufferedWriter stream;
-					stream = new BufferedWriter(new FileWriter(file));
-					stream.write("<Recipes>\n</Recipes>");
+					InputStream inputStream = getClass().getResourceAsStream("/assets/defaultrecipe.xml");
+					byte fileIO[] = new byte[4096];
+					int numRead;
+					OutputStream stream;
+					stream = new FileOutputStream(file);
+					
+					while((numRead = inputStream.read(fileIO)) > 0) {
+						stream.write(fileIO, 0, numRead);
+					}
+					inputStream.close();
 					stream.close();
 				} catch (IOException e) {
 					e.printStackTrace();
