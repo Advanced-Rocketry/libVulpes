@@ -180,6 +180,10 @@ public class RecipesMachine {
 
 	public static RecipesMachine getInstance() { return instance; }
 
+	public void clearRecipes(Class clazz) {
+		recipeList.get(clazz).clear();
+	}
+	
 	public void addRecipe(Class clazz , Object[] out, int timeRequired, int power, Object ... inputs) {
 		List<IRecipe> recipes = getRecipes(clazz);
 		if(recipes == null) {

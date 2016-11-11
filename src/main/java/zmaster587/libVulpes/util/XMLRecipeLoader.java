@@ -58,8 +58,16 @@ public class XMLRecipeLoader {
 	}
 
 	public void registerRecipes(Class<? extends TileEntityMachine> clazz) {
-		Node masterNode = doc.getElementsByTagName("Recipes").item(0).getChildNodes().item(1);
+		Node masterNode = doc.getElementsByTagName("Recipes").item(0);
 		int recipeNum = 1;
+		
+		if(masterNode.hasAttributes()) {
+			Node defaultNode = masterNode.getAttributes().getNamedItem("useDefault");
+			if(defaultNode != null && defaultNode.getNodeValue().equals("false"))
+				RecipesMachine.getInstance().clearRecipes(clazz);
+		}
+		
+		masterNode = masterNode.getChildNodes().item(1);
 
 		while(masterNode != null) {
 			int time = 200, energy = 0;

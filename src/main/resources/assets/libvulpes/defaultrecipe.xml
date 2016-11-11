@@ -1,22 +1,22 @@
 <!-->
 	<Recipe timeRequired="NUMBER" power="NUMBER">
-        <input>
-            <fluidStack>FLUID NAME</fluidStack>
+		<input>
+			<fluidStack>FLUID NAME</fluidStack>
 			<itemStack>ITEM NAME</itemStack>
 			<oreDict>OREDICT NAME</oreDict>
         </input>
-        <output>
-            <fluidStack>FLUID NAME</fluidStack>
+		<output>
+			<fluidStack>FLUID NAME</fluidStack>
 			<itemStack>ITEM NAME</itemStack>
 			<oreDict>OREDICT NAME</oreDict>
-        </output>
-    </Recipe>
+		</output>
+	</Recipe>
 	
 	Can have Multiple In/Outputs
 	Some Machines can only Accept either Fluids or Items
 	
 	timeRequired="NUMBER"	how long a Recipe takes, Unit is in Ticks.
-	power="NUMBER"			how much Power the Recipes takes per Tick. Unit is in RF.
+	power="NUMBER" how much Power the Recipes takes per Tick. Unit is in RF.
 <!-->
-<Recipes>
+<Recipes defaultRecipes="true">
 </Recipes>
