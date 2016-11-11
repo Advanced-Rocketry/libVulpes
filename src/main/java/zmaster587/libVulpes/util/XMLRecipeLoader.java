@@ -27,15 +27,15 @@ import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.TileEntityMachine;
 
 public class XMLRecipeLoader {
-	
+
 	Document doc;
 	String fileName;
-	
+
 	public XMLRecipeLoader() {
 		doc = null;
 		fileName = "";
 	}
-	
+
 	public boolean loadFile(File xmlFile) throws IOException {
 		DocumentBuilder docBuilder;
 		doc = null;
@@ -51,16 +51,24 @@ public class XMLRecipeLoader {
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		fileName = xmlFile.getAbsolutePath();
-		
+
 		return true;
 	}
-	
+
 	public void registerRecipes(Class<? extends TileEntityMachine> clazz) {
-		Node masterNode = doc.getElementsByTagName("Recipes").item(0).getChildNodes().item(1);
+		Node masterNode = doc.getElementsByTagName("Recipes").item(0);//.getChildNodes().item(1);
 		int recipeNum = 1;
 		
+		if(masterNode.hasAttributes()) {
+			Node defaultNode = masterNode.getAttributes().getNamedItem("useDefault");
+			if(defaultNode != null && defaultNode.getNodeValue().equals("false"))
+				RecipesMachine.getInstance().clearRecipes(clazz);
+		}
+		
+		masterNode = masterNode.getChildNodes().item(1);
+
 		while(masterNode != null) {
 			int time = 200, energy = 0;
 			if(masterNode.getNodeType() != doc.ELEMENT_NODE) {
@@ -72,7 +80,7 @@ public class XMLRecipeLoader {
 				masterNode = masterNode.getNextSibling();
 				continue;
 			}
-			
+
 			Node inputNode = null, outputNode = null;
 			for(int i = 0; i < masterNode.getChildNodes().getLength(); i++) {
 				Node node = masterNode.getChildNodes().item(i);
@@ -83,7 +91,7 @@ public class XMLRecipeLoader {
 					outputNode = node;
 				}
 			}
-			
+
 			if(outputNode == null) {
 				masterNode = masterNode.getNextSibling();
 				LibVulpes.logger.warning("Missing \"output\" Node in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
@@ -96,13 +104,13 @@ public class XMLRecipeLoader {
 				recipeNum++;
 				continue;
 			}
-			
+
 			List<Object> inputList = new LinkedList<Object>();
-			
+
 			for(int i = 1; i < inputNode.getChildNodes().getLength(); i++) {
 				Node node = inputNode.getChildNodes().item(i);
 				if(node.getNodeType() != doc.ELEMENT_NODE) continue;
-				
+
 				Object obj = parseItemType(node);
 				if(obj == null) {
 					LibVulpes.logger.warning("Invalid item \"input\" (" + node.getNodeName() + " " + node.getTextContent() + ") in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
@@ -110,14 +118,14 @@ public class XMLRecipeLoader {
 				else
 					inputList.add(obj);
 			}
-			
+
 			List<Object> outputList = new LinkedList<Object>();
-			
+
 			for(int i = 1; i < outputNode.getChildNodes().getLength(); i++) {
 				Node node = outputNode.getChildNodes().item(i);
-				
+
 				if(node.getNodeType() != doc.ELEMENT_NODE) continue;
-				
+
 				Object obj = parseItemType(node);
 				if(obj == null) {
 					LibVulpes.logger.warning("Invalid item \"output\" (" + node.getNodeName() + " " + node.getTextContent() + ") in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
@@ -125,7 +133,7 @@ public class XMLRecipeLoader {
 				else
 					outputList.add(obj);
 			}
-			
+
 			if(masterNode.hasAttributes()) {
 				Node node = masterNode.getAttributes().getNamedItem("timeRequired");
 				if(node != null && !node.getNodeValue().isEmpty()) {
@@ -135,7 +143,7 @@ public class XMLRecipeLoader {
 						LibVulpes.logger.warning("Recipe " + recipeNum + " has no time value");
 					}
 				}
-				
+
 				node = masterNode.getAttributes().getNamedItem("power");
 				if(node != null && !node.getNodeValue().isEmpty()) {
 					try {
@@ -148,13 +156,13 @@ public class XMLRecipeLoader {
 			else {
 				LibVulpes.logger.info("Recipe " + recipeNum + " has no time or power consumption");
 			}
-			
+
 			RecipesMachine.getInstance().addRecipe(clazz, outputList, time, energy, inputList);
 			LibVulpes.logger.info("Sucessfully added recipe to " + clazz.getName() + " for " + inputList.toString() + " -> " + outputList.toString());
 			masterNode = masterNode.getNextSibling();
 		}
 	}
-	
+
 	public Object parseItemType(Node node) {
 		if(node.getNodeName().equals("itemStack")) {
 			String text = node.getTextContent();
@@ -172,39 +180,42 @@ public class XMLRecipeLoader {
 					meta= Integer.parseInt(splitStr[2]);
 				} catch (NumberFormatException e) {}
 			}
-			
+
 			ItemStack stack = null;
 			Block block = Block.getBlockFromName(splitStr[0]);
 			if(block == null) {
-				Item item = Item.getByNameOrId(splitStr[0]);
-				if(item != null)
-					stack = new ItemStack(item, size, meta);
+				try {
+					Item item = Item.getItemById(Integer.parseInt(splitStr[0]));
+					if(item != null)
+						stack = new ItemStack(item, size, meta);
+				} catch (NumberFormatException e) { return null;}
+
 			}
 			else
 				stack = new ItemStack(block, size, meta);
-			
+
 			return stack;
 		}
 		else if(node.getNodeName().equals("oreDict")) {
-			
+
 			String splitStr[] = node.getTextContent().split(" ");
 			if(OreDictionary.doesOreNameExist(splitStr[0])) {
-				
+
 				Object ret = splitStr[0];
 				if(splitStr.length > 1) {
 					int number = 1;
 					try {
 						number = Integer.parseInt(splitStr[1]);
 					} catch (NumberFormatException e) {}
-					
+
 					ret = new NumberedOreDictStack(splitStr[0], number);
 				}
-				
+
 				return ret;
 			}
 		}
 		else if(node.getNodeName().equals("fluidStack")) {
-			
+
 			String splitStr[] = node.getTextContent().split(" ");
 			Fluid fluid;
 			if((fluid = FluidRegistry.getFluid(splitStr[0])) != null) {
@@ -214,11 +225,11 @@ public class XMLRecipeLoader {
 						amount = Integer.parseInt(splitStr[1]);
 					} catch (NumberFormatException e) {}
 				}
-				
+
 				return new FluidStack(fluid, amount);
 			}
 		}
-			
+
 		return null;
 	}
 }

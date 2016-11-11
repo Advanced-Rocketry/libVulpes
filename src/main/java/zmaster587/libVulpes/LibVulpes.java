@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -253,7 +255,7 @@ public class LibVulpes {
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Rutile", "pickaxe", 1, 0xbf936a, AllowedProducts.getProductByName("ORE").getFlagValue(), new String[] {"Rutile", "Titanium"}));
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Aluminum", "pickaxe", 1, 0xb3e4dc, AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue()));
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Iridium", "pickaxe", 2, 0xdedcce, AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue()));
-		
+
 		materialRegistry.registerOres(tabLibVulpesOres);
 
 	}
@@ -331,29 +333,47 @@ public class LibVulpes {
 
 		//User Recipes
 
-		for(Entry<Class, String> entry : userModifiableRecipes.entrySet()) {
-			File file = new File(entry.getValue());
-			if(!file.exists()) {
-				try {
-					
-					file.createNewFile();
-					BufferedWriter stream;
-					stream = new BufferedWriter(new FileWriter(file));
-					stream.write("<Recipes>\n</Recipes>");
+
+	}
+
+	public void loadXMLRecipe(Class clazz) {
+		File file = new File(userModifiableRecipes.get(clazz));
+		if(!file.exists()) {
+			try {
+				file.createNewFile();
+				InputStream inputStream = getClass().getResourceAsStream("/assets/libvulpes/defaultrecipe.xml");
+				byte fileIO[] = new byte[4096];
+				int numRead;
+				OutputStream stream;
+				if(inputStream != null) {
+					stream = new FileOutputStream(file);
+
+					while((numRead = inputStream.read(fileIO)) > 0) {
+						stream.write(fileIO, 0, numRead);
+					}
 					stream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
+					inputStream.close();
 				}
-			} else {
-				XMLRecipeLoader loader = new XMLRecipeLoader();
-				try {
-					loader.loadFile(file);
-					loader.registerRecipes(entry.getKey());
-				} catch (IOException e) {
-					e.printStackTrace();
+				else {
+					BufferedWriter stream2 = new BufferedWriter(new FileWriter(file));
+					stream2.write("<Recipes>\n</Recipes>");
+					stream2.close();
 				}
+
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			XMLRecipeLoader loader = new XMLRecipeLoader();
+			try {
+				loader.loadFile(file);
+				loader.registerRecipes(clazz);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
+		
 	}
 
 

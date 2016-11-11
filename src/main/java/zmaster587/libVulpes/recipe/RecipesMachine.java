@@ -7,6 +7,7 @@ import java.util.List;
 
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.interfaces.IRecipe;
+import zmaster587.libVulpes.tile.TileEntityMachine;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -180,6 +181,10 @@ public class RecipesMachine {
 
 	public static RecipesMachine getInstance() { return instance; }
 
+	public void clearRecipes(Class<? extends TileEntityMachine> clazz) {
+		recipeList.get(clazz).clear();
+	}
+	
 	public void addRecipe(Class clazz , Object[] out, int timeRequired, int power, Object ... inputs) {
 		List<IRecipe> recipes = getRecipes(clazz);
 		if(recipes == null) {

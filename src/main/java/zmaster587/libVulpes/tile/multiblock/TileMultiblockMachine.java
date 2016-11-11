@@ -428,7 +428,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	//Must be overridden or an NPE will occur
 	public List<IRecipe> getMachineRecipeList() {
 		List<IRecipe> list = RecipesMachine.getInstance().getRecipes(this.getClass());
-		return list != null ? list : new LinkedList<IRecipe>();
+		return (list != null) ? list : new LinkedList<IRecipe>();
 	}
 
 	//Called by inventory blocks that are part of the structure
