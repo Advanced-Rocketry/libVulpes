@@ -60,7 +60,7 @@ public class TileMultiBlock extends TileEntity {
 			LibVulpes.logger.warning("Overwritting Multiblock mapping of \"" + character + "\"");
 		charMapping.put(character, listToAdd);
 	}
-	
+
 	public static List<BlockMeta> getMapping(char character) {
 		return charMapping.get(character);
 	}
@@ -272,10 +272,10 @@ public class TileMultiBlock extends TileEntity {
 		for(int y = 0; y < structure.length; y++) {
 			for(int z = 0; z < structure[0].length; z++) {
 				for(int x = 0; x< structure[0][0].length; x++) {
-					
+
 					if(structure[y][z][x] == null)
 						continue;
-					
+
 					int globalX = xCoord + (x - offset.x)*front.offsetZ - (z-offset.z)*front.offsetX;
 					int globalY = yCoord - y + offset.y;
 					int globalZ = zCoord - (x - offset.x)*front.offsetX  - (z-offset.z)*front.offsetZ;
@@ -368,7 +368,8 @@ public class TileMultiBlock extends TileEntity {
 			for(ItemStack stack : stacks) {
 				//stack.get
 				Block block = Block.getBlockFromItem(stack.getItem());
-				list.add(new BlockMeta(block, stack.getItem().getMetadata(stack.getItemDamage())));
+				if(block != null)
+					list.add(new BlockMeta(block, stack.getItem().getMetadata(stack.getItemDamage())));
 			}
 			return list;
 		}
