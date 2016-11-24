@@ -1,14 +1,14 @@
 <!-->
 	<Recipe timeRequired="NUMBER" power="NUMBER">
 		<input>
-			<fluidStack>FLUID NAME</fluidStack>
-			<itemStack>ITEM NAME</itemStack>
-			<oreDict>OREDICT NAME</oreDict>
+			<fluidStack>FLUID NAME SIZE</fluidStack>
+			<itemStack>ITEM_NAME SIZE META</itemStack>
+			<oreDict>OREDICT_NAME SIZE</oreDict>
         </input>
 		<output>
-			<fluidStack>FLUID NAME</fluidStack>
-			<itemStack>ITEM NAME</itemStack>
-			<oreDict>OREDICT NAME</oreDict>
+			<fluidStack>FLUID_NAME SIZE</fluidStack>
+			<itemStack>ITEM_NAME SIZE META</itemStack>
+			<oreDict>OREDICT_NAME SIZE</oreDict>
 		</output>
 	</Recipe>
 	
