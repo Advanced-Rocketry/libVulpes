@@ -291,47 +291,47 @@ public class LibVulpes {
 		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 3));
 		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 12));
 		TileMultiBlock.addMapping('l', list);
-		
-		//User Recipes
+	}
+	
+	//User Recipes
+	public void loadXMLRecipe(Class clazz) {
+		File file = new File(userModifiableRecipes.get(clazz));
+		if(!file.exists()) {
+			try {
+				file.createNewFile();
+				InputStream inputStream = getClass().getResourceAsStream("/assets/libvulpes/defaultrecipe.xml");
+				byte fileIO[] = new byte[4096];
+				int numRead;
+				OutputStream stream;
+				if(inputStream != null) {
+					stream = new FileOutputStream(file);
 
-		for(Entry<Class, String> entry : userModifiableRecipes.entrySet()) {
-			File file = new File(entry.getValue());
-			if(!file.exists()) {
-				try {
-					file.createNewFile();
-					InputStream inputStream = getClass().getResourceAsStream("/assets/libvulpes/defaultrecipe.xml");
-					byte fileIO[] = new byte[4096];
-					int numRead;
-					OutputStream stream;
-					if(inputStream != null) {
-						stream = new FileOutputStream(file);
-
-						while((numRead = inputStream.read(fileIO)) > 0) {
-							stream.write(fileIO, 0, numRead);
-						}
-						stream.close();
-						inputStream.close();
+					while((numRead = inputStream.read(fileIO)) > 0) {
+						stream.write(fileIO, 0, numRead);
 					}
-					else {
-						BufferedWriter stream2 = new BufferedWriter(new FileWriter(file));
-						stream2.write("<Recipes>\n</Recipes>");
-						stream2.close();
-					}
+					stream.close();
+					inputStream.close();
+				}
+				else {
+					BufferedWriter stream2 = new BufferedWriter(new FileWriter(file));
+					stream2.write("<Recipes>\n</Recipes>");
+					stream2.close();
+				}
 
 
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			} else {
-				XMLRecipeLoader loader = new XMLRecipeLoader();
-				try {
-					loader.loadFile(file);
-					loader.registerRecipes(entry.getKey());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			XMLRecipeLoader loader = new XMLRecipeLoader();
+			try {
+				loader.loadFile(file);
+				loader.registerRecipes(clazz);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
+		
 	}
 
 	@Mod.EventHandler
