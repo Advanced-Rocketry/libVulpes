@@ -188,11 +188,12 @@ public class ItemLinker extends Item {
 		if(entity != null) {
 			if(entity instanceof ILinkableTile) {
 				applySettings(stack, (ILinkableTile)entity, playerIn, worldIn);
-				return EnumActionResult.FAIL;
+				return EnumActionResult.SUCCESS;
 			}
 		}
 		else if(playerIn.isSneaking()) {
 			resetPosition(stack);
+			return EnumActionResult.SUCCESS;
 		}
 
 		return EnumActionResult.FAIL;
