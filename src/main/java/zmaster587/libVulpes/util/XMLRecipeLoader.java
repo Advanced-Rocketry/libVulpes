@@ -157,8 +157,13 @@ public class XMLRecipeLoader {
 				LibVulpes.logger.info("Recipe " + recipeNum + " has no time or power consumption");
 			}
 
-			RecipesMachine.getInstance().addRecipe(clazz, outputList, time, energy, inputList);
-			LibVulpes.logger.info("Sucessfully added recipe to " + clazz.getName() + " for " + inputList.toString() + " -> " + outputList.toString());
+			if(outputList.isEmpty()) 
+				LibVulpes.logger.info("Output List emtpy in recipe " + recipeNum);
+			else {
+				RecipesMachine.getInstance().addRecipe(clazz, outputList, time, energy, inputList);
+				LibVulpes.logger.info("Sucessfully added recipe to " + clazz.getName() + " for " + inputList.toString() + " -> " + outputList.toString());
+			}
+			
 			masterNode = masterNode.getNextSibling();
 		}
 	}
