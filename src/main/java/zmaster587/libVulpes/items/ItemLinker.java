@@ -163,6 +163,7 @@ public class ItemLinker extends Item {
 		}
 		else if(player.isSneaking()) {
 			resetPosition(itemStack);
+			return true;
 		}
 
 		return false;
