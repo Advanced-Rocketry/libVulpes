@@ -10,13 +10,13 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class CapabilityProvider {
+public class TeslaCapabilityProvider {
 
 	public static void registerCap() {
-	    //MinecraftForge.EVENT_BUS.register(CapabilityProvider.class);
-	    //LibVulpes.logger.info("Forge Energy integration loaded");
+	    //MinecraftForge.EVENT_BUS.register(TeslaCapabilityProvider.class);
+	    LibVulpes.logger.info("Tesla integration loaded");
 	}
-	private static final ResourceLocation KEY = new ResourceLocation("libvulpes:CapProviderPower");
+	private static final ResourceLocation KEY = new ResourceLocation("libvulpes:ProviderTesla");
 
 	@SubscribeEvent
 	public static void attachCapabilities(AttachCapabilitiesEvent.TileEntity evt)
@@ -25,7 +25,7 @@ public class CapabilityProvider {
 			return;
 		}
 		TileEntity te = evt.getTileEntity();
-		if ((te instanceof TileEntityRFConsumer) || te instanceof TilePlugBase) {
+		if (te instanceof TileEntityRFConsumer || te instanceof TilePlugBase) {
 			evt.addCapability(KEY, te);
 		}
 	}

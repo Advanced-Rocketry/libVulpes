@@ -2,6 +2,7 @@ package zmaster587.libVulpes.tile;
 
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.cap.ForgePowerCapability;
+import zmaster587.libVulpes.cap.TeslaHandler;
 import zmaster587.libVulpes.energy.IPower;
 import zmaster587.libVulpes.util.UniversalBattery;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,9 +24,9 @@ public abstract class TileEntityPowerMachine extends TileEntityMachine implement
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 
-		if(capability == CapabilityEnergy.ENERGY )
+		if(capability == CapabilityEnergy.ENERGY || TeslaHandler.hasTeslaCapability(this, capability))
 			return true;
-		return super.hasCapability(capability, facing);
+		return false;
 	}
 
 	@Override
@@ -33,6 +34,9 @@ public abstract class TileEntityPowerMachine extends TileEntityMachine implement
 
 		if(capability == CapabilityEnergy.ENERGY )
 			return (T)(new ForgePowerCapability(this));
+		else if(TeslaHandler.hasTeslaCapability(this, capability))
+			return (T)(TeslaHandler.getHandler(this));
+		
 		return super.getCapability(capability, facing);
 	}
 	

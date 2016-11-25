@@ -16,6 +16,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.cap.ForgePowerCapability;
+import zmaster587.libVulpes.cap.TeslaHandler;
 import zmaster587.libVulpes.energy.IPower;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -52,9 +53,9 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 
-		if(capability == CapabilityEnergy.ENERGY )
+		if(capability == CapabilityEnergy.ENERGY || TeslaHandler.hasTeslaCapability(this, capability))
 			return true;
-		return super.hasCapability(capability, facing);
+		return false;
 	}
 
 	@Override
@@ -62,6 +63,9 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 
 		if(capability == CapabilityEnergy.ENERGY )
 			return (T)(new ForgePowerCapability(this));
+		else if(TeslaHandler.hasTeslaCapability(this, capability))
+			return (T)(TeslaHandler.getHandler(this));
+		
 		return super.getCapability(capability, facing);
 	}
 	

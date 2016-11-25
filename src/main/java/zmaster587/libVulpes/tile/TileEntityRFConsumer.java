@@ -2,9 +2,12 @@ package zmaster587.libVulpes.tile;
 
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.cap.ForgePowerCapability;
+import zmaster587.libVulpes.cap.TeslaHandler;
+import zmaster587.libVulpes.cap.TeslaPowerCapability;
 import zmaster587.libVulpes.energy.IPower;
-import zmaster587.libVulpes.util.CapabilityProvider;
+import zmaster587.libVulpes.util.TeslaCapabilityProvider;
 import zmaster587.libVulpes.util.UniversalBattery;
+import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -51,9 +54,9 @@ public abstract class TileEntityRFConsumer extends TileEntity implements IPower,
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 
-		if(capability == CapabilityEnergy.ENERGY )
+		if(capability == CapabilityEnergy.ENERGY || TeslaHandler.hasTeslaCapability(this, capability))
 			return true;
-		return super.hasCapability(capability, facing);
+		return false;
 	}
 
 	@Override
@@ -61,6 +64,9 @@ public abstract class TileEntityRFConsumer extends TileEntity implements IPower,
 
 		if(capability == CapabilityEnergy.ENERGY )
 			return (T)(new ForgePowerCapability(this));
+		else if(TeslaHandler.hasTeslaCapability(this, capability))
+			return (T)(TeslaHandler.getHandler(this));
+		
 		return super.getCapability(capability, facing);
 	}
 

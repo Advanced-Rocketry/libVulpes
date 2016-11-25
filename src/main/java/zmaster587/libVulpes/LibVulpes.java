@@ -40,6 +40,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import zmaster587.libVulpes.cap.TeslaHandler;
 import zmaster587.libVulpes.common.CommonProxy;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.LibVulpesItems;
@@ -74,7 +75,7 @@ import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInputHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
-import zmaster587.libVulpes.util.CapabilityProvider;
+import zmaster587.libVulpes.util.TeslaCapabilityProvider;
 import zmaster587.libVulpes.util.XMLRecipeLoader;
 
 @Mod(modid="libVulpes",name="Vulpes library",version="@MAJOR@.@MINOR@.@REVIS@.@BUILD@",useMetadata=true, dependencies="before:gregtech;after:CoFHCore;after:BuildCraft|Core")
@@ -85,6 +86,8 @@ public class LibVulpes {
 
 	@Instance(value = "libVulpes")
 	public static LibVulpes instance;
+	//Classload
+	public static Object teslaHandler = new TeslaHandler();
 
 	@SidedProxy(clientSide="zmaster587.libVulpes.client.ClientProxy", serverSide="zmaster587.libVulpes.common.CommonProxy")
 	public static CommonProxy proxy;
@@ -113,7 +116,7 @@ public class LibVulpes {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-
+		teslaHandler = null;
 		//Configuration
 
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
@@ -123,7 +126,7 @@ public class LibVulpes {
 
 		config.save();
 
-		CapabilityProvider.registerCap();
+		TeslaCapabilityProvider.registerCap();
 
 		//
 		PacketHandler.INSTANCE.addDiscriminator(PacketMachine.class);
