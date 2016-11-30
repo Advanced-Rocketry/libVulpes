@@ -78,11 +78,11 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 		if(!world.isRemote && !player.capabilities.isCreativeMode) {
 			TilePlaceholder tile = (TilePlaceholder)world.getTileEntity(pos);
 
-			Block newBlock = tile.getReplacedState().getBlock();
-			int meta = tile.getReplacedMeta();
+			IBlockState newBlockState = tile.getReplacedState();
+			Block newBlock = newBlockState.getBlock();
 
-			if(newBlock != null && newBlock != Blocks.AIR && player.canHarvestBlock(newBlock.getStateFromMeta(meta))) {
-				List<ItemStack> stackList = newBlock.getDrops(world, pos, state, 0);
+			if(newBlock != null && newBlock != Blocks.AIR && player.canHarvestBlock(newBlockState)) {
+				List<ItemStack> stackList = newBlock.getDrops(world, pos, newBlockState, 0);
 
 				for(ItemStack stack : stackList) {
 					EntityItem entityItem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack);

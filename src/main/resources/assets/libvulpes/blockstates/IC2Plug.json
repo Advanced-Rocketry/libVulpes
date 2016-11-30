@@ -1,0 +1,20 @@
+{
+    "variants": {
+        "varient=0": { "model": "libvulpes:IC2Plug" },
+        "varient=1": { "model": "libvulpes:IC2Plug" },
+        "varient=2": { "model": "libvulpes:IC2Plug" },
+        "varient=3": { "model": "libvulpes:IC2Plug" },
+        "varient=4": { "model": "libvulpes:IC2Plug" },
+        "varient=5": { "model": "libvulpes:IC2Plug" },
+        "varient=6": { "model": "libvulpes:IC2Plug" },
+        "varient=7": { "model": "libvulpes:IC2Plug" },
+        "varient=8": { "model": "libvulpes:IC2Plug" },
+        "varient=9": { "model": "libvulpes:IC2Plug" },
+        "varient=10": { "model": "libvulpes:IC2Plug" },
+        "varient=11": { "model": "libvulpes:IC2Plug" },
+        "varient=12": { "model": "libvulpes:IC2Plug" },
+        "varient=13": { "model": "libvulpes:IC2Plug" },
+        "varient=14": { "model": "libvulpes:IC2Plug" },
+        "varient=15": { "model": "libvulpes:IC2Plug" }
+    }
+}

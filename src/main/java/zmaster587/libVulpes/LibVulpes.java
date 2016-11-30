@@ -2,6 +2,8 @@ package zmaster587.libVulpes;
 
 
 
+import ic2.api.item.IC2Items;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -70,6 +72,7 @@ import zmaster587.libVulpes.tile.energy.TileCoalGenerator;
 import zmaster587.libVulpes.tile.energy.TileCreativePowerInput;
 import zmaster587.libVulpes.tile.energy.TileForgePowerInput;
 import zmaster587.libVulpes.tile.energy.TileForgePowerOutput;
+import zmaster587.libVulpes.tile.energy.TilePlugInputIC2;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
@@ -190,12 +193,10 @@ public class LibVulpes {
 		//MOD-SPECIFIC ENTRIES --------------------------------------------------------------------------------------------------------------------------
 		//Items dependant on IC2
 		if(Loader.isModLoaded("IC2")) {
-			//LibVulpesBlocks.blockIC2Plug = new BlockMultiMachineBattery(Material.rock ,TilePlugInputIC2.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("IC2Plug").setBlockTextureName("libvulpes:IC2Plug").setCreativeTab(tabMultiblock).setHardness(3f);
-			//GameRegistry.registerBlock(LibVulpesBlocks.blockIC2Plug, LibVulpesBlocks.blockIC2Plug.getUnlocalizedName());
-			//GameRegistry.registerTileEntity(TilePlugInputIC2.class, "ARIC2Plug");
+			LibVulpesBlocks.blockIC2Plug = new BlockMultiMachineBattery(Material.ROCK ,TilePlugInputIC2.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("IC2Plug").setCreativeTab(tabMultiblock).setHardness(3f);
+			LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockIC2Plug.setRegistryName( LibVulpesBlocks.blockIC2Plug.getUnlocalizedName().substring(5)));
+			GameRegistry.registerTileEntity(TilePlugInputIC2.class, "ARIC2Plug");
 		}
-
-
 
 
 		if(FMLCommonHandler.instance().getSide().isClient()) {
@@ -274,7 +275,7 @@ public class LibVulpes {
 		proxy.registerEventHandlers();
 
 		if(Loader.isModLoaded("IC2")) {
-			//GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockIC2Plug), LibVulpesBlocks.blockStructureBlock, IC2Items.getItem("mvTransformer"), LibVulpesItems.itemBattery);
+			GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockIC2Plug), LibVulpesBlocks.blockStructureBlock, IC2Items.getItem("te","mv_transformer"), LibVulpesItems.itemBattery);
 		}
 
 		//Recipes

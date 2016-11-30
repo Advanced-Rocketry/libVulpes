@@ -45,6 +45,7 @@ public class BlockOre extends Block implements INamedMetaBlock {
     	return state.getValue(VARIANT);
     }
     
+    @Override
     protected BlockStateContainer createBlockState()
     {
         return new BlockStateContainer(this, new IProperty[] {VARIANT});

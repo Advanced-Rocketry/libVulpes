@@ -1,14 +1,16 @@
 package zmaster587.libVulpes.tile.energy;
 
-/*import zmaster587.libVulpes.Configuration;
+import zmaster587.libVulpes.Configuration;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.ForgeDirection;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
+import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.energy.tile.IEnergySink;
 
-public class TilePlugInputIC2 extends TilePlugBase implements IEnergySink {
+public class TilePlugInputIC2 extends TilePlugBase implements IEnergySink, ITickable {
 
 	public TilePlugInputIC2() {
 		super(1);
@@ -18,19 +20,17 @@ public class TilePlugInputIC2 extends TilePlugBase implements IEnergySink {
 	public String getModularInventoryName() {
 		return "tile.IC2Plug.name";
 	}
-
+	
+	//I would use onLoad, however this causes an infinite loop with IC2, F*** you too IC2
+	//One day I'll get around to shoving a patch on them for the new capability system...
+	//One of the very few things I like about 1.7.10 -> 1.10.2
 	
 	@Override
-	public boolean canUpdate() {
-		return true;
-	}
-
-	//TODO: find a way of doing this that doesn't tick all the time
-	@Override
-	public void updateEntity() {
-		if(!worldObj.isRemote && !tickedOnce) {
+	public void update() {
+		if(!tickedOnce) {
 			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
 			tickedOnce = true;
+			
 		}
 	}
 	
@@ -47,16 +47,15 @@ public class TilePlugInputIC2 extends TilePlugBase implements IEnergySink {
 	}
 	
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 		return null;
 	}
 
 	@Override
-	public boolean acceptsEnergyFrom(TileEntity emitter,
-			ForgeDirection direction) {
+	public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing side) {
 		return true;
 	}
-
+	
 	@Override
 	public double getDemandedEnergy() {
 		return getMaxEnergyStored() - getEnergyStored();
@@ -68,10 +67,19 @@ public class TilePlugInputIC2 extends TilePlugBase implements IEnergySink {
 	}
 
 	@Override
-	public double injectEnergy(ForgeDirection directionFrom, double amount,
+	public double injectEnergy(EnumFacing directionFrom, double amount,
 			double voltage) {
-		storage.acceptEnergy((int)(amount*Configuration.EUMult), false);
-		return 0;
+		return storage.acceptEnergy((int)(amount*Configuration.EUMult), false);
 	}
 
-}*/
+	@Override
+	public boolean canReceive() {
+		return true;
+	}
+
+	@Override
+	public boolean canExtract() {
+		return false;
+	}
+
+}
