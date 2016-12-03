@@ -60,13 +60,13 @@ public class XMLRecipeLoader {
 	public void registerRecipes(Class<? extends TileEntityMachine> clazz) {
 		Node masterNode = doc.getElementsByTagName("Recipes").item(0);//.getChildNodes().item(1);
 		int recipeNum = 1;
-		
+
 		if(masterNode.hasAttributes()) {
 			Node defaultNode = masterNode.getAttributes().getNamedItem("useDefault");
 			if(defaultNode != null && defaultNode.getNodeValue().equals("false"))
 				RecipesMachine.getInstance().clearRecipes(clazz);
 		}
-		
+
 		masterNode = masterNode.getChildNodes().item(1);
 
 		while(masterNode != null) {
@@ -158,12 +158,12 @@ public class XMLRecipeLoader {
 			}
 
 			if(outputList.isEmpty()) 
-				LibVulpes.logger.info("Output List emtpy in recipe " + recipeNum);
+				LibVulpes.logger.info("Output List empty in recipe " + recipeNum);
 			else {
 				RecipesMachine.getInstance().addRecipe(clazz, outputList, time, energy, inputList);
 				LibVulpes.logger.info("Sucessfully added recipe to " + clazz.getName() + " for " + inputList.toString() + " -> " + outputList.toString());
 			}
-			
+
 			masterNode = masterNode.getNextSibling();
 		}
 	}
@@ -189,12 +189,9 @@ public class XMLRecipeLoader {
 			ItemStack stack = null;
 			Block block = Block.getBlockFromName(splitStr[0]);
 			if(block == null) {
-				try {
-					Item item = Item.getItemById(Integer.parseInt(splitStr[0]));
-					if(item != null)
-						stack = new ItemStack(item, size, meta);
-				} catch (NumberFormatException e) { return null;}
-
+				Item item = Item.getByNameOrId(splitStr[0]);
+				if(item != null)
+					stack = new ItemStack(item, size, meta);
 			}
 			else
 				stack = new ItemStack(block, size, meta);
