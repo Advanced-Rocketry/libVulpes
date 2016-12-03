@@ -1,7 +1,6 @@
 package zmaster587.libVulpes.tile.energy;
 
 import zmaster587.libVulpes.Configuration;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.MinecraftForge;
