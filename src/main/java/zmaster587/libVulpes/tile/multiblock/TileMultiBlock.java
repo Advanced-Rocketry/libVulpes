@@ -368,7 +368,7 @@ public class TileMultiBlock extends TileEntity {
 			for(ItemStack stack : stacks) {
 				//stack.get
 				Block block = Block.getBlockFromItem(stack.getItem());
-				if(block != null)
+				if(block != null && block != Blocks.air)
 					list.add(new BlockMeta(block, stack.getItem().getMetadata(stack.getItemDamage())));
 			}
 			return list;
