@@ -252,7 +252,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 			stack.stackSize = 1;
 			
 			//Drain the tank into the item
-			if(fluidItem.getFluid(stack) == null || outputOnly) {
+			if(fluidTank.getFluid() != null && (fluidItem.getFluid(stack) == null || outputOnly)) {
 				int amt = fluidItem.fill(stack, fluidTank.getFluid(), true);
 				
 				
