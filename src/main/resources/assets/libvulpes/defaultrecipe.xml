@@ -17,6 +17,8 @@
 	
 	timeRequired="NUMBER"	how long a Recipe takes, Unit is in Ticks.
 	power="NUMBER" how much Power the Recipes takes per Tick. Unit is in RF.
+	
+	The "useDefault" attribute will prevent loading of recipes if set to "false"
 <!-->
-<Recipes defaultRecipes="true">
+<Recipes useDefault="true">
 </Recipes>
