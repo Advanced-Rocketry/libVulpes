@@ -55,6 +55,8 @@ public class RotatableBlock extends Block {
 	}
 
 	public static EnumFacing getFront(IBlockState state) {
-		return state.getValue(FACING);
+		if(state.getBlock() instanceof RotatableBlock)
+			return state.getValue(FACING);
+		return EnumFacing.UP;
 	}
 }
