@@ -4,7 +4,9 @@ import net.minecraftforge.energy.IEnergyStorage;
 
 public class TileForgePowerOutput extends TilePlugBase implements IEnergyStorage {
 
-	
+	public TileForgePowerOutput() {
+		super(1);
+	}
 	
 	@Override
 	public String getModularInventoryName() {

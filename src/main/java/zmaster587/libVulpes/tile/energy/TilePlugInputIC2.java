@@ -9,10 +9,10 @@ import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.energy.tile.IEnergySink;
 
-public class TilePlugInputIC2 extends TilePlugBase implements IEnergySink, ITickable {
+public class TilePlugInputIC2 extends TileForgePowerOutput implements IEnergySink, ITickable {
 
 	public TilePlugInputIC2() {
-		super(1);
+		super();
 	}
 	boolean tickedOnce = false;
 	@Override
@@ -57,7 +57,7 @@ public class TilePlugInputIC2 extends TilePlugBase implements IEnergySink, ITick
 	
 	@Override
 	public double getDemandedEnergy() {
-		return getMaxEnergyStored() - getEnergyStored();
+		return Math.min(getMaxEnergyStored() - getEnergyStored(), 128.0);
 	}
 
 	@Override
@@ -68,17 +68,23 @@ public class TilePlugInputIC2 extends TilePlugBase implements IEnergySink, ITick
 	@Override
 	public double injectEnergy(EnumFacing directionFrom, double amount,
 			double voltage) {
-		return storage.acceptEnergy((int)(amount*Configuration.EUMult), false);
+		storage.acceptEnergy((int)(amount*Configuration.EUMult), false);
+		return 0;
 	}
 
 	@Override
+	public int acceptEnergy(int amt, boolean simulate) {
+		return 0;
+	}
+	
+	@Override
 	public boolean canReceive() {
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean canExtract() {
-		return false;
+		return true;
 	}
 
 }
