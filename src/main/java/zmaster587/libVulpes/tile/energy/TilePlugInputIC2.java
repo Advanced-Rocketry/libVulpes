@@ -8,10 +8,9 @@ import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
 
-public class TilePlugInputIC2 extends TilePlugBase implements IEnergySink {
+public class TilePlugInputIC2 extends TilePlugOutputRF implements IEnergySink {
 
 	public TilePlugInputIC2() {
-		super(1);
 	}
 	boolean tickedOnce = false;
 	@Override
@@ -59,7 +58,7 @@ public class TilePlugInputIC2 extends TilePlugBase implements IEnergySink {
 
 	@Override
 	public double getDemandedEnergy() {
-		return getMaxEnergyStored() - getEnergyStored();
+		return Math.min(getMaxEnergyStored() - getEnergyStored(), 128.0);
 	}
 
 	@Override
@@ -73,5 +72,10 @@ public class TilePlugInputIC2 extends TilePlugBase implements IEnergySink {
 		storage.acceptEnergy((int)(amount*Configuration.EUMult), false);
 		return 0;
 	}
-
+	
+	@Override
+	public int acceptEnergy(int amt, boolean simulate) {
+		return 0;
+	}
+	
 }
