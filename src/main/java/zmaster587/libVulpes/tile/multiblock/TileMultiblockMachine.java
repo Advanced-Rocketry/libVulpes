@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.util.IFluidHandlerInternal;
@@ -302,7 +303,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 							ItemStack stackInSlot = hatch.getStackInSlot(i);
 
 							for(ItemStack stack : ingredient) {
-								if(stackInSlot != null && stackInSlot.stackSize >= stack.stackSize && stackInSlot.isItemEqual(stack)) {
+								if(stackInSlot != null && stackInSlot.stackSize >= stack.stackSize && (stackInSlot.isItemEqual(stack) || (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE && stack.getItem() == stackInSlot.getItem()))) {
 									mask |= (1 << ingredientNum);
 									break ingredientCheck;
 								}
