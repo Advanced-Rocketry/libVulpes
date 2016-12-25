@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.oredict.OreDictionary;
 
 public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
@@ -289,7 +290,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 							ItemStack stackInSlot = hatch.getStackInSlot(i);
 
 							for(ItemStack stack : ingredient) {
-								if(stackInSlot != null && stackInSlot.stackSize >= stack.stackSize && stackInSlot.isItemEqual(stack)) {
+								if(stackInSlot != null && stackInSlot.stackSize >= stack.stackSize && (stackInSlot.isItemEqual(stack) || (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE && stack.getItem() == stackInSlot.getItem()))) {
 									mask |= (1 << ingredientNum);
 									break ingredientCheck;
 								}
