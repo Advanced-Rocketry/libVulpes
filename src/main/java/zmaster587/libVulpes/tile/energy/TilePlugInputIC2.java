@@ -19,20 +19,21 @@ public class TilePlugInputIC2 extends TileForgePowerOutput implements IEnergySin
 	public String getModularInventoryName() {
 		return "tile.IC2Plug.name";
 	}
-	
+
 	//I would use onLoad, however this causes an infinite loop with IC2, F*** you too IC2
 	//One day I'll get around to shoving a patch on them for the new capability system...
 	//One of the very few things I like about 1.7.10 -> 1.10.2
-	
+
 	@Override
 	public void update() {
+		super.update();
 		if(!tickedOnce) {
-			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+			if(!worldObj.isRemote)
+				MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
 			tickedOnce = true;
-			
 		}
 	}
-	
+
 	@Override
 	public void invalidate() {
 		super.invalidate();
@@ -44,7 +45,7 @@ public class TilePlugInputIC2 extends TileForgePowerOutput implements IEnergySin
 		super.onChunkUnload();
 		MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 	}
-	
+
 	@Override
 	public String getName() {
 		return null;
@@ -54,7 +55,7 @@ public class TilePlugInputIC2 extends TileForgePowerOutput implements IEnergySin
 	public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing side) {
 		return true;
 	}
-	
+
 	@Override
 	public double getDemandedEnergy() {
 		return Math.min(getMaxEnergyStored() - getEnergyStored(), 128.0);
@@ -76,7 +77,7 @@ public class TilePlugInputIC2 extends TileForgePowerOutput implements IEnergySin
 	public int acceptEnergy(int amt, boolean simulate) {
 		return 0;
 	}
-	
+
 	@Override
 	public boolean canReceive() {
 		return false;

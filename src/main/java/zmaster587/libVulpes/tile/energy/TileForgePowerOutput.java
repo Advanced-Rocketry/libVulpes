@@ -1,8 +1,15 @@
 package zmaster587.libVulpes.tile.energy;
 
+import cofh.api.energy.IEnergyHandler;
+import cofh.api.energy.IEnergyProvider;
+import cofh.api.energy.IEnergyReceiver;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
-public class TileForgePowerOutput extends TilePlugBase implements IEnergyStorage {
+public class TileForgePowerOutput extends TilePlugBase implements IEnergyStorage, ITickable {
 
 	public TileForgePowerOutput() {
 		super(1);
@@ -31,6 +38,18 @@ public class TileForgePowerOutput extends TilePlugBase implements IEnergyStorage
 	@Override
 	public boolean canReceive() {
 		return false;
+	}
+
+	@Override
+	public void update() {
+		for(EnumFacing facing : EnumFacing.VALUES) {
+			TileEntity tile = worldObj.getTileEntity(this.getPos().offset(facing));
+			
+			if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
+				IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY,  facing.getOpposite());
+				this.extractEnergy(storage.receiveEnergy(getEnergyStored(), false),false);
+			}
+		}
 	}
 
 }

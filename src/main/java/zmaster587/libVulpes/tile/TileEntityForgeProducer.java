@@ -35,21 +35,21 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModulePower(18, 20, energy));
-		
+
 		return modules;
 	}
-	
+
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos,
 			IBlockState oldState, IBlockState newSate) {
 		return (oldState.getBlock() != newSate.getBlock());
 	}
-	
+
 	@Override
 	public NBTTagCompound getUpdateTag() {
 		return writeToNBT(new NBTTagCompound());
 	}
-	
+
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 
@@ -65,25 +65,25 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 			return (T)(new ForgePowerCapability(this));
 		else if(TeslaHandler.hasTeslaCapability(this, capability))
 			return (T)(TeslaHandler.getHandler(this));
-		
+
 		return super.getCapability(capability, facing);
 	}
-	
+
 	@Override
 	public NBTTagCompound serializeNBT() {
 		return new NBTTagCompound();
 	}
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
-		
+
 	}
-	
+
 	@Override
 	public void handleUpdateTag(NBTTagCompound tag) {
 		// TODO Auto-generated method stub
 		super.handleUpdateTag(tag);
 	}
-	
+
 	@Override
 	public boolean canExtract() {
 		return true;
@@ -93,7 +93,7 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 	public boolean canReceive() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean canConnectEnergy(EnumFacing arg0) {
 		return true;
@@ -147,8 +147,21 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 			else
 				notEnoughBufferForFunction();
 		}
+		transmitPower();
+		
 	}
 
+	protected void transmitPower() {
+		for(EnumFacing facing : EnumFacing.VALUES) {
+			TileEntity tile = worldObj.getTileEntity(this.getPos().offset(facing));
+			
+			if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
+				IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY,  facing.getOpposite());
+				this.extractEnergy(storage.receiveEnergy(getEnergyStored(), false),false);
+			}
+		}
+	}
+	
 	public abstract void onGeneratePower();
 
 	public void notEnoughBufferForFunction() {
