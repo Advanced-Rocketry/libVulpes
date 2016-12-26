@@ -31,6 +31,7 @@ public class TilePlugInputIC2 extends TilePlugOutputRF implements IEnergySink {
 			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
 			tickedOnce = true;
 		}
+		super.updateEntity();
 	}
 	
 	@Override

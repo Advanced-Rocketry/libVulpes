@@ -4,9 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cofh.api.energy.IEnergyHandler;
+import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.util.ForgeDirection;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
@@ -80,6 +82,20 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 			}
 			else
 				notEnoughBufferForFunction();
+		}
+		
+		transmitPower();
+	}
+	
+	protected void transmitPower() {
+		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+			TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+
+			if(tile instanceof IEnergyReceiver) {
+				IEnergyReceiver handle = (IEnergyReceiver)tile;
+				energy.getEnergyStored();
+				energy.extractEnergy(handle.receiveEnergy(dir.getOpposite(), energy.getEnergyStored(), false), false);
+			}
 		}
 	}
 
