@@ -21,17 +21,19 @@ public class ModuleButton extends ModuleBase {
 	boolean prevState;
 	public int buttonId;
 
-	int sizeX;
+	protected int sizeX;
 
-	int sizeY;
+	protected int sizeY;
 
-	int color;
+	protected int color;
 
-	int bgColor;
-	String text, tooltipText;
+	protected int bgColor;
+	protected String text, tooltipText;
 	ResourceLocation buttonImages[];
-	boolean visible = true, enabled = true;
-	String sound;
+	protected boolean visible = true;
+
+	boolean enabled = true;
+	protected String sound;
 
 	public ModuleButton(int offsetX, int offsetY, int buttonId, String text, IButtonInventory tile, ResourceLocation buttonImages[]) {
 		super(offsetX, offsetY);
