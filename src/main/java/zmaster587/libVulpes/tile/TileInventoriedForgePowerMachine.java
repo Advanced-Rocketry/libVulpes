@@ -57,6 +57,7 @@ public abstract class TileInventoriedForgePowerMachine extends TileInventoriedFo
 			else
 				notEnoughBufferForFunction();
 		}
+		transmitPower();
 	}
 
 	@Override
