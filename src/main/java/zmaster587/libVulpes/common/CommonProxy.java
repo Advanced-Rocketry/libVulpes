@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.common;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class CommonProxy {
@@ -14,6 +15,10 @@ public class CommonProxy {
 	public void spawnParticle(String particle, World world, double x, double y,
 			double z, double motionX, double motionY, double motionZ) {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	public void playSound(Object resource) {
 		
 	}
 }

@@ -10,9 +10,13 @@ import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.IToggleableMachine;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.client.RepeatingSound;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.IProgressBar;
 import zmaster587.libVulpes.inventory.modules.IToggleButton;
@@ -25,7 +29,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine.NetworkPackets
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.MultiBattery;
 
-public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMachine, IModularInventory, IProgressBar, IToggleButton {
+public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMachine, IModularInventory, IProgressBar, IToggleButton, IToggleableMachine {
 
 	protected MultiBattery batteries = new MultiBattery();
 
@@ -35,6 +39,8 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	private ModuleToggleSwitch toggleSwitch;
 	//On server determines change in power state, on client determines last power state on server
 	boolean hadPowerLastTick = true;
+	
+	Object sound;
 
 	public TileMultiPowerConsumer() {
 		super();
@@ -81,33 +87,41 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		return true;
 	}
 
-	
-	public String getSound() {
+
+	public ResourceLocation getSound() {
 		return null;
 	}
-	
+
 	public int getSoundDuration() {
 		return 1;
 	}
-	
+
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
-		if(timeAlive == 0 && !worldObj.isRemote) {
-			if(isComplete())
-				canRender = completeStructure = completeStructure();
+		if(timeAlive == 0) {
+			if(!worldObj.isRemote) {
+				if(isComplete())
+					canRender = completeStructure = completeStructure();
+				onCreated();
+			}
+			else {
+				ResourceLocation str = getSound();
+				if(str != null)
+					playMachineSound(getSound());
+			}
+
 			timeAlive = 0x1;
-			onCreated();
 		}
-		
+
 		if(!worldObj.isRemote && worldObj.getTotalWorldTime() % 1000L == 0 && !isComplete()) {
 			attemptCompleteStructure();
 			markDirty();
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
-		
+
 		if(isRunning()) {
 			if(hasEnergy(requiredPowerPerTick()) || (worldObj.isRemote && hadPowerLastTick)) {
 
@@ -132,16 +146,16 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 			}
 		}
 	}
-	
+
 	protected void onCreated() {};
-	
+
 	/**
 	 * @return amount of power to allow the machine to run this tick
 	 */
 	protected int requiredPowerPerTick() {
 		return powerPerTick;
 	}
-	
+
 	/**
 	 * @return the amount of power actually used by the machine this tick
 	 */
@@ -153,17 +167,12 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		//Increment for both client and server
 		currentTime++;
 
-		String str;
-		if(worldObj.isRemote && (str = getSound()) != null && worldObj.getTotalWorldTime() % getSoundDuration() == 0) {
-			playMachineSound(str);
-		}
-		
 		if(currentTime == completionTime)
 			processComplete();
 	}
-	
-	protected void playMachineSound(String str) {
-		worldObj.playSound(xCoord, yCoord, zCoord, str, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.BLOCKS),  0.975f + worldObj.rand.nextFloat()*0.05f, false);
+
+	protected void playMachineSound(ResourceLocation str) {
+		LibVulpes.proxy.playSound(new RepeatingSound(str, this));
 	}
 
 	public void setMachineEnabled(boolean enabled) {
@@ -248,7 +257,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		nbt.setInteger("powerPerTick", this.powerPerTick);
 		nbt.setBoolean("enabled", enabled);
 	}
-	
+
 	@Override
 	protected void readNetworkData(NBTTagCompound nbt) {
 		super.readNetworkData(nbt);
