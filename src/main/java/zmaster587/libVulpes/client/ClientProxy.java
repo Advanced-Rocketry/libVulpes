@@ -7,6 +7,7 @@ import zmaster587.libVulpes.entity.fx.FxErrorBlock;
 import zmaster587.libVulpes.network.BasePacket;
 import zmaster587.libVulpes.network.ExecutorClient;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ITickableSound;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -41,6 +42,15 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void addScheduledTask(BasePacket packet) {
 		Minecraft.getMinecraft().addScheduledTask(new ExecutorClient(packet, Minecraft.getMinecraft().thePlayer, Side.CLIENT));
+	}
+	
+	@Override
+	public void playSound(Object sound) {
+		if(sound instanceof ITickableSound) {
+			ITickableSound sound2 = (ITickableSound)sound;
+			//if(sound2.isDonePlaying())
+				Minecraft.getMinecraft().getSoundHandler().playSound(sound2);
+		}
 	}
 	
 	@Override

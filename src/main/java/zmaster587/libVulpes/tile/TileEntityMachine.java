@@ -1,6 +1,7 @@
 package zmaster587.libVulpes.tile;
 
 
+import zmaster587.libVulpes.api.IToggleableMachine;
 import zmaster587.libVulpes.util.UniversalBattery;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -13,7 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
 
-public abstract class TileEntityMachine extends TileEntity implements ISidedInventory, ITickable  {
+public abstract class TileEntityMachine extends TileEntity implements ISidedInventory, ITickable,  IToggleableMachine {
 	
 	
 	protected UniversalBattery energy;

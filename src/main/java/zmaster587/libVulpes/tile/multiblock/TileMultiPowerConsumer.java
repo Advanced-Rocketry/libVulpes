@@ -16,8 +16,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.IToggleableMachine;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.client.RepeatingSound;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.IProgressBar;
 import zmaster587.libVulpes.inventory.modules.IToggleButton;
@@ -30,7 +32,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine.NetworkPackets
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.MultiBattery;
 
-public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMachine, IModularInventory, IProgressBar, IToggleButton, ITickable {
+public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMachine, IModularInventory, IProgressBar, IToggleButton, ITickable, IToggleableMachine {
 
 	protected MultiBattery batteries = new MultiBattery();
 
@@ -40,6 +42,8 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	private ModuleToggleSwitch toggleSwitch;
 	//On server determines change in power state, on client determines last power state on server
 	boolean hadPowerLastTick = true;
+
+	Object soundToPlay;
 
 	public TileMultiPowerConsumer() {
 		super();
@@ -93,9 +97,18 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	public void update() {
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
-		if(timeAlive == 0 && !worldObj.isRemote) {
-			if(isComplete())
-				canRender = completeStructure = completeStructure(worldObj.getBlockState(pos));
+		if(timeAlive == 0) {
+			if(!worldObj.isRemote) {
+				if(isComplete())
+					canRender = completeStructure = completeStructure(worldObj.getBlockState(pos));
+			}
+			else {
+				SoundEvent str;
+				if(worldObj.isRemote && (str = getSound()) != null) {
+					playMachineSound(str);
+				}
+			}
+
 			timeAlive = 0x1;
 		}
 
@@ -136,21 +149,21 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	protected int requiredPowerPerTick() {
 		return powerPerTick;
 	}
-	
+
 	/**
 	 * @return the amount of power actually used by the machine this tick
 	 */
 	protected int usedPowerPerTick() {
 		return requiredPowerPerTick();
 	}
-	
+
 	protected void onRunningPoweredTick() {
 		//Increment for both client and server
 		currentTime++;
 
 		SoundEvent str;
 		if(worldObj.isRemote && (str = getSound()) != null && worldObj.getTotalWorldTime() % getSoundDuration() == 0) {
-			playMachineSound(str);
+			//playMachineSound(str);
 		}
 
 		if(currentTime == completionTime)
@@ -159,7 +172,12 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 	protected void playMachineSound(SoundEvent str) {
 		//Screw you too
-		LibVulpes.proxy.playSound(worldObj, pos, str, SoundCategory.BLOCKS, Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.BLOCKS), 0.975f + worldObj.rand.nextFloat()*0.05f);
+
+		if(soundToPlay == null && worldObj.isRemote) {
+			soundToPlay = new RepeatingSound(str, SoundCategory.BLOCKS, this);
+		}
+
+		LibVulpes.proxy.playSound(soundToPlay);
 	}
 
 	public void setMachineEnabled(boolean enabled) {
