@@ -247,7 +247,7 @@ public class LibVulpes {
 		}
 		
 		//Recipes
-		GameRegistry.addRecipe(new ShapedOreRecipe(LibVulpesBlocks.blockStructureBlock, "sps", "psp", "sps", 'p', "plateIron", 's', "stickIron"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesBlocks.blockStructureBlock, 4), "sps", "p p", "sps", 'p', "plateIron", 's', "stickIron"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(LibVulpesBlocks.blockAdvStructureBlock, "sps", "psp", "sps", 'p', "plateTitanium", 's', "stickTitanium"));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(LibVulpesBlocks.blockCoalGenerator, "itemBattery", Blocks.furnace));
 	}
