@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
@@ -28,7 +29,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.IconResource;
 
-public class TileFluidHatch extends TilePointer implements IFluidHandler, IModularInventory, IInventory {
+public class TileFluidHatch extends TilePointer implements IFluidHandler, IModularInventory, ISidedInventory {
 
 	protected FluidTank fluidTank;
 	private EmbeddedInventory inventory;
@@ -301,5 +302,22 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(int p_94128_1_) {
+		return new int[] {0,1};
+	}
+
+	@Override
+	public boolean canInsertItem(int index, ItemStack itemStackIn,
+			int dir) {
+		return index == 0 && isItemValidForSlot(index, itemStackIn);
+	}
+
+	@Override
+	public boolean canExtractItem(int index, ItemStack itemStackIn,
+			int dir) {
+		return index == 1;
 	}
 }
