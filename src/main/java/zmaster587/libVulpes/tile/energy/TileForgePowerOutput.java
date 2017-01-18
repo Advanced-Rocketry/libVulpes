@@ -14,7 +14,7 @@ public class TileForgePowerOutput extends TilePlugBase implements IEnergyStorage
 	public TileForgePowerOutput() {
 		super(1);
 	}
-	
+
 	@Override
 	public String getModularInventoryName() {
 		return "tile.forgePowerOutput.name";
@@ -42,12 +42,14 @@ public class TileForgePowerOutput extends TilePlugBase implements IEnergyStorage
 
 	@Override
 	public void update() {
-		for(EnumFacing facing : EnumFacing.VALUES) {
-			TileEntity tile = worldObj.getTileEntity(this.getPos().offset(facing));
-			
-			if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
-				IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY,  facing.getOpposite());
-				this.extractEnergy(storage.receiveEnergy(getEnergyStored(), false),false);
+		if(!worldObj.isRemote) {
+			for(EnumFacing facing : EnumFacing.VALUES) {
+				TileEntity tile = worldObj.getTileEntity(this.getPos().offset(facing));
+
+				if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
+					IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY,  facing.getOpposite());
+					this.extractEnergy(storage.receiveEnergy(getEnergyStored(), false),false);
+				}
 			}
 		}
 	}
