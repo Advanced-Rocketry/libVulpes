@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
@@ -33,7 +34,7 @@ import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.IFluidHandlerInternal;
 import zmaster587.libVulpes.util.IconResource;
 
-public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal, IModularInventory, IInventory {
+public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal, IModularInventory, ISidedInventory {
 
 	protected FluidTank fluidTank;
 	private EmbeddedInventory inventory;
@@ -358,5 +359,22 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	@Override
 	public void clear() {
 		
+	}
+
+	@Override
+	public int[] getSlotsForFace(EnumFacing side) {
+		return new int[] {0,1};
+	}
+
+	@Override
+	public boolean canInsertItem(int index, ItemStack itemStackIn,
+			EnumFacing direction) {
+		return index == 0 && isItemValidForSlot(index, itemStackIn);
+	}
+
+	@Override
+	public boolean canExtractItem(int index, ItemStack stack,
+			EnumFacing direction) {
+		return index == 1;
 	}
 }
