@@ -26,13 +26,15 @@ public class TilePlugOutputRF extends TilePlugBase implements IEnergyHandler {
 	public void updateEntity() {
 		super.updateEntity();
 
-		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-			TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+		if(!worldObj.isRemote) {
+			for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+				TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
 
-			if(tile instanceof IEnergyReceiver) {
-				IEnergyReceiver handle = (IEnergyReceiver)tile;
-				storage.getEnergyStored();
-				storage.extractEnergy(handle.receiveEnergy(dir.getOpposite(), storage.getEnergyStored(), false), false);
+				if(tile instanceof IEnergyReceiver) {
+					IEnergyReceiver handle = (IEnergyReceiver)tile;
+					storage.getEnergyStored();
+					storage.extractEnergy(handle.receiveEnergy(dir.getOpposite(), storage.getEnergyStored(), false), false);
+				}
 			}
 		}
 	}

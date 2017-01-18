@@ -84,7 +84,8 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 				notEnoughBufferForFunction();
 		}
 		
-		transmitPower();
+		if(!worldObj.isRemote)
+			transmitPower();
 	}
 	
 	protected void transmitPower() {
