@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockOre;
@@ -97,9 +98,9 @@ public class MaterialRegistry {
 		for(int i = 0; i < allAllowedProducts.size(); i++) {
 
 			if(!allAllowedProducts.get(i).isBlock()) {
-				oreProducts[i] = new ItemOreProduct(allAllowedProducts.get(i).name().toLowerCase()).setCreativeTab(tab);
-				LibVulpesBlocks.registerItem(oreProducts[i].setRegistryName("product" + allAllowedProducts.get(i).getName().toLowerCase()));
-				//GameRegistry.registerItem(oreProducts[i], "product" + allAllowedProducts.get(i).getName().toLowerCase());
+				oreProducts[i] = new ItemOreProduct(allAllowedProducts.get(i).name().toLowerCase(Locale.ENGLISH)).setCreativeTab(tab);
+				LibVulpesBlocks.registerItem(oreProducts[i].setRegistryName("product" + allAllowedProducts.get(i).getName().toLowerCase(Locale.ENGLISH)));
+				//GameRegistry.registerItem(oreProducts[i], "product" + allAllowedProducts.get(i).getName().toLowerCase(Locale.ENGLISH));
 			}
 		}
 
