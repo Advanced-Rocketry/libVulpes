@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import zmaster587.libVulpes.api.LibVulpesItems;
@@ -58,8 +59,8 @@ public class MaterialRegistry {
 		for(int i = 0; i < allAllowedProducts.size(); i++) {
 
 			if(!allAllowedProducts.get(i).isBlock()) {
-				oreProducts[i] = new ItemOreProduct(allAllowedProducts.get(i).name().toLowerCase()).setCreativeTab(tab);
-				GameRegistry.registerItem(oreProducts[i], nameSpace + "product" + allAllowedProducts.get(i).getName().toLowerCase());
+				oreProducts[i] = new ItemOreProduct(allAllowedProducts.get(i).name().toLowerCase(Locale.ENGLISH)).setCreativeTab(tab);
+				GameRegistry.registerItem(oreProducts[i], nameSpace + "product" + allAllowedProducts.get(i).getName().toLowerCase(Locale.ENGLISH));
 			}
 		}
 

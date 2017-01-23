@@ -1,5 +1,7 @@
 package zmaster587.libVulpes.items;
 
+import java.util.Locale;
+
 import zmaster587.libVulpes.block.BlockOre;
 import zmaster587.libVulpes.block.INamedMetaBlock;
 import net.minecraft.block.Block;
@@ -21,6 +23,6 @@ public class ItemOre extends ItemBlockWithMetadata {
 	@Override
     public String getItemStackDisplayName(ItemStack stack)
     {
-        return ("" + StatCollector.translateToLocal(this.getUnlocalizedNameInefficiently(stack) + ".name") + " " + StatCollector.translateToLocal("type." + ((BlockOre)this.field_150939_a).getProduct().name().toLowerCase() + ".name")).trim();
+        return ("" + StatCollector.translateToLocal(this.getUnlocalizedNameInefficiently(stack) + ".name") + " " + StatCollector.translateToLocal("type." + ((BlockOre)this.field_150939_a).getProduct().name().toLowerCase(Locale.ENGLISH) + ".name")).trim();
     }
 }
