@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -72,16 +73,21 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 	@Override
 	public void updateEntity() {
-		super.updateEntity();
+		//super.updateEntity();
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
-		if(timeAlive == 0  && !worldObj.isRemote) {
+		if(timeAlive == 0) {
+			if(!worldObj.isRemote) {
+				if(isComplete())
+					canRender = completeStructure = completeStructure();
+				onCreated();
+			}
+			else {
+				ResourceLocation str = getSound();
+				if(str != null)
+					playMachineSound(getSound());
+			}
 
-			if(isComplete())
-				setComplete(completeStructure());
-
-			if(isComplete() && !worldObj.isRemote)
-				onInventoryUpdated();
 			timeAlive = 0x1;
 		}
 
@@ -93,7 +99,8 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 			if( hasEnergy(powerPerTick) || (worldObj.isRemote && hadPowerLastTick)) {
 
 				//Increment for both client and server
-				currentTime++;
+				onRunningPoweredTick();
+				
 				//If server then check to see if we need to update the client, use power and process output if applicable
 				if(!worldObj.isRemote) {
 
@@ -105,8 +112,6 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 					useEnergy(powerPerTick);
 				}
-				if(currentTime == completionTime)
-					processComplete();
 			}
 			else if(!worldObj.isRemote && hadPowerLastTick) { //If server and out of power check to see if client needs update
 				hadPowerLastTick = false;
