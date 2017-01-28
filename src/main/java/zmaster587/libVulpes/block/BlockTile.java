@@ -82,7 +82,7 @@ public class BlockTile extends RotatableBlock {
 
 	}
 
-	@Override
+	/*@Override
 	public boolean isBlockNormalCube(IBlockState state) {
 		return false;
 	}
@@ -90,7 +90,7 @@ public class BlockTile extends RotatableBlock {
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
-	}
+	}*/
 	
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state)
