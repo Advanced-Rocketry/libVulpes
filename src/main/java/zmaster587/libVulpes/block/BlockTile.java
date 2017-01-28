@@ -126,7 +126,7 @@ public class BlockTile extends RotatableBlock {
 
 	}
 
-	@Override
+	/*@Override
 	public boolean isBlockNormalCube() {
 		return false;
 	}
@@ -134,7 +134,7 @@ public class BlockTile extends RotatableBlock {
 	@Override
 	public boolean isOpaqueCube() {
 		return false;
-	}
+	}*/
 	
 	@SideOnly(Side.CLIENT)
 	@Override
