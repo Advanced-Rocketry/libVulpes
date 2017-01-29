@@ -94,7 +94,6 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 
 			if(tile instanceof IEnergyReceiver) {
 				IEnergyReceiver handle = (IEnergyReceiver)tile;
-				energy.getEnergyStored();
 				energy.extractEnergy(handle.receiveEnergy(dir.getOpposite(), energy.getEnergyStored(), false), false);
 			}
 		}
