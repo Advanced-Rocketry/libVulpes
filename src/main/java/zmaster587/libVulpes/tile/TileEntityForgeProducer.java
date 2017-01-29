@@ -149,20 +149,21 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 		}
 		if(!worldObj.isRemote)
 			transmitPower();
-		
+
 	}
 
 	protected void transmitPower() {
 		for(EnumFacing facing : EnumFacing.VALUES) {
 			TileEntity tile = worldObj.getTileEntity(this.getPos().offset(facing));
-			
+
 			if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
 				IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY,  facing.getOpposite());
-				this.extractEnergy(storage.receiveEnergy(getEnergyStored(), false),false);
+				if(storage.canReceive())
+					this.extractEnergy(storage.receiveEnergy(getEnergyStored(), false),false);
 			}
 		}
 	}
-	
+
 	public abstract void onGeneratePower();
 
 	public void notEnoughBufferForFunction() {

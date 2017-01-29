@@ -225,13 +225,18 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	//TODO: make better
 	protected boolean useBucket( int slot, ItemStack stack) {
 
+		//Fill tank from bucket
 		if(FluidContainerRegistry.isFilledContainer(stack)) {
 			if(!outputOnly && slot == 0 && fluidTank.getFluidAmount() + FluidContainerRegistry.getContainerCapacity(stack) <= fluidTank.getCapacity()) {
 				ItemStack emptyContainer = FluidContainerRegistry.drainFluidContainer(stack);
 
 				if(emptyContainer != null && getStackInSlot(1) == null || (emptyContainer.isItemEqual(getStackInSlot(1)) && getStackInSlot(1).stackSize < getStackInSlot(1).getMaxStackSize())) {
-					fluidTank.fill(FluidContainerRegistry.getFluidForFilledItem(stack), true);
+					int amtFilled = fluidTank.fill(FluidContainerRegistry.getFluidForFilledItem(stack), true);
 
+					//Handle fluids not being equal
+					if(amtFilled == 0)
+						return false;
+					
 					if(getStackInSlot(1) == null)
 						inventory.setInventorySlotContents(1, emptyContainer);
 					else
@@ -241,6 +246,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 				}
 			}
 		}
+		//Empty tank into bucket
 		else if(FluidContainerRegistry.isContainer(stack)) {
 			if(slot == 0 && fluidTank.getFluidAmount() >= FluidContainerRegistry.BUCKET_VOLUME) {
 				ItemStack fullContainer = FluidContainerRegistry.fillFluidContainer(fluidTank.drain(FluidContainerRegistry.BUCKET_VOLUME, false), stack);
@@ -258,6 +264,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 				}
 			}
 		}
+		//Drain tank to bucket
 		else if(stack != null && stack.getItem() instanceof IFluidContainerItem) {
 			IFluidContainerItem fluidItem = ((IFluidContainerItem)stack.getItem());
 			FluidStack fluidStack;
@@ -293,6 +300,11 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 				fluidStack = fluidItem.drain(stack, fluidTank.getCapacity() - fluidTank.getFluidAmount(), false);
 
 				int amountDrained = fluidTank.fill(fluidStack, false);
+				
+				//prevent bucket eating
+				if(amountDrained == 0)
+					return false;
+				
 				fluidItem.drain(stack, amountDrained, true);
 				if (fluidItem.getFluid(stack) == null || fluidItem.getFluid(stack).amount == 0) {
 					if(getStackInSlot(1) == null) {
