@@ -40,6 +40,13 @@ public class BlockTile extends RotatableBlock {
         return new BlockStateContainer(this, new IProperty[] {FACING, STATE});
     }
 	
+    @Override
+    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn,
+    		BlockPos pos) {
+    	// TODO Auto-generated method stub
+    	return super.getActualState(state, worldIn, pos);
+    }
+    
     /**
      * Convert the BlockState into the correct metadata value
      */
@@ -48,7 +55,8 @@ public class BlockTile extends RotatableBlock {
     }
     
 	public void setBlockState(World world, IBlockState state, BlockPos pos, boolean newState) {
-		world.setBlockState(pos, state.withProperty(STATE, newState), 3);
+		world.setBlockState(pos, state.withProperty(STATE, newState), 2);
+		world.markBlockRangeForRenderUpdate(pos, pos);
 	}
     
 	@Override
@@ -82,7 +90,7 @@ public class BlockTile extends RotatableBlock {
 
 	}
 
-	/*@Override
+	@Override
 	public boolean isBlockNormalCube(IBlockState state) {
 		return false;
 	}
@@ -90,7 +98,7 @@ public class BlockTile extends RotatableBlock {
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
-	}*/
+	}
 	
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state)

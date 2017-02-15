@@ -19,6 +19,7 @@ import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.IToggleableMachine;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.client.RepeatingSound;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.IProgressBar;
@@ -186,6 +187,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 			this.markDirty();
 			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 		}
+		
 	}
 
 	public boolean getMachineEnabled() {
@@ -264,6 +266,10 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		currentTime = nbt.getInteger("currentTime");
 		powerPerTick = nbt.getInteger("powerPerTick");
 		enabled = nbt.getBoolean("enabled");
+		
+		if(worldObj != null && worldObj.isRemote && isRunning()) {
+			((BlockTile)getBlockType()).setBlockState(worldObj,worldObj.getBlockState(getPos()), getPos(),true);
+		}
 	}
 
 	@Override
