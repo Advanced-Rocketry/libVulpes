@@ -42,6 +42,14 @@ public class ZUtils {
 			else
 				return RedstoneState.values()[i];
 		}
+		
+		public void writeToNBT(NBTTagCompound tag) {
+			tag.setByte("redstoneState", (byte)this.ordinal());
+		}
+		
+		public static RedstoneState createFromNBT(NBTTagCompound tag) {
+			return RedstoneState.values()[tag.getByte("redstoneState")];
+		}
 	}
 
 	public static int getAverageColor(long r, long g, long b, int total) {
