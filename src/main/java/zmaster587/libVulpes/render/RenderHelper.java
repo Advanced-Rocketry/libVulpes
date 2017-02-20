@@ -226,6 +226,22 @@ public class RenderHelper {
         }
 	}
 	
+	public static void setupPlayerFacingMatrix(double distanceSq, double x, double y, double z) {
+		RenderManager renderManager = RenderManager.instance;
+		float f = 1.6F;
+		float f1 = 0.016666668F * f;
+		GL11.glPushMatrix();
+		GL11.glTranslatef((float)x + 0.0F, (float)y + 0.5F, (float)z);
+		GL11.glRotatef(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+		GL11.glScalef(-f1, -f1, f1);
+	}
+	
+	public static void cleanupPlayerFacingMatrix() {
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glPopMatrix();
+	}
+	
 	public static void renderBlockWithEndPointers(Tessellator tess, double radius, double x1, double y1, double z1, double x2, double y2, double z2) {
 		double buffer;
 		

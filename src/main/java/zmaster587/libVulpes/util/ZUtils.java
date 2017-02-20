@@ -4,10 +4,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -35,6 +37,14 @@ public class ZUtils {
 				return RedstoneState.values()[RedstoneState.values().length-1];
 			else
 				return RedstoneState.values()[i];
+		}
+
+		public void writeToNBT(NBTTagCompound tag) {
+			tag.setByte("redstoneState", (byte)this.ordinal());
+		}
+		
+		public static RedstoneState createFromNBT(NBTTagCompound tag) {
+			return RedstoneState.values()[tag.getByte("redstoneState")];
 		}
 	}
 
