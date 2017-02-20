@@ -167,7 +167,7 @@ public class RecipesMachine {
 				}
 			}
 
-			return super.equals(obj);
+			return true;
 		}
 	}
 
@@ -245,8 +245,9 @@ public class RecipesMachine {
 			else
 				recipe = new Recipe(outputItem, stack, outputFluidStacks, inputFluidStacks, timeRequired, power);
 
-			if(!recipes.contains(recipe))
-				recipes.add(recipe);
+			if(recipes.contains(recipe)) 
+				LibVulpes.logger.info("Overwriting recipe " + recipes.remove(recipe));
+			recipes.add(recipe);
 
 		} catch(ClassCastException e) {
 			//Custom handling to make sure it logs and can be suppressed by user
