@@ -14,6 +14,7 @@ import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisible;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockStructure;
 import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.TilePointer;
+import zmaster587.libVulpes.tile.TileSchematic;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInputHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
@@ -214,7 +215,7 @@ public class TileMultiBlock extends TileEntity {
 		}
 
 		//If the the tile is a placeholder then make sure to replace it with its original block and tile
-		if(tile instanceof TilePlaceholder) {
+		if(tile instanceof TilePlaceholder && !(tile instanceof TileSchematic)) {
 			TilePlaceholder placeholder = (TilePlaceholder)tile;
 
 			//Must set incomplete BEFORE changing the block to prevent stack overflow!
