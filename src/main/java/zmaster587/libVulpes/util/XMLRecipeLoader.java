@@ -111,7 +111,7 @@ public class XMLRecipeLoader {
 				Node node = inputNode.getChildNodes().item(i);
 				if(node.getNodeType() != doc.ELEMENT_NODE) continue;
 
-				Object obj = parseItemType(node);
+				Object obj = parseItemType(node, false);
 				if(obj == null) {
 					LibVulpes.logger.warning("Invalid item \"input\" (" + node.getNodeName() + " " + node.getTextContent() + ") in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
 				}
@@ -126,7 +126,7 @@ public class XMLRecipeLoader {
 
 				if(node.getNodeType() != doc.ELEMENT_NODE) continue;
 
-				Object obj = parseItemType(node);
+				Object obj = parseItemType(node, true);
 				if(obj == null) {
 					LibVulpes.logger.warning("Invalid item \"output\" (" + node.getNodeName() + " " + node.getTextContent() + ") in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
 				}
@@ -168,7 +168,7 @@ public class XMLRecipeLoader {
 		}
 	}
 
-	public Object parseItemType(Node node) {
+	public Object parseItemType(Node node, boolean output) {
 		if(node.getNodeName().equals("itemStack")) {
 			String text = node.getTextContent();
 			String splitStr[] = text.split(" ");
@@ -211,18 +211,28 @@ public class XMLRecipeLoader {
 			return stack;
 		}
 		else if(node.getNodeName().equals("oreDict")) {
-
 			String splitStr[] = node.getTextContent().split(" ");
 			if(OreDictionary.doesOreNameExist(splitStr[0])) {
 
 				Object ret = splitStr[0];
+				int number = 1;
 				if(splitStr.length > 1) {
-					int number = 1;
+
 					try {
 						number = Integer.parseInt(splitStr[1]);
 					} catch (NumberFormatException e) {}
+				}
 
-					ret = new NumberedOreDictStack(splitStr[0], number);
+				if(splitStr.length >= 1) {
+					if(output) {
+						List<ItemStack> list = OreDictionary.getOres(splitStr[0]);
+						if(!list.isEmpty()) {
+							ItemStack oreDict = OreDictionary.getOres(splitStr[0]).get(0);
+							ret = new ItemStack(oreDict.getItem(), number, oreDict.getItemDamage());
+						}
+					}
+					else
+						ret = new NumberedOreDictStack(splitStr[0], number);
 				}
 
 				return ret;
