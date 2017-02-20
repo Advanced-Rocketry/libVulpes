@@ -33,6 +33,13 @@ public class ModuleSlotButton extends ModuleButton {
 		this.worldObj = world;
 	}
 
+	public ModuleSlotButton(int offsetX, int offsetY, int buttonId, IButtonInventory tile, ItemStack slotDisplay, String extraDisplay,  World world ) {
+
+		super(offsetX, offsetY, buttonId , "", tile, TextureResources.buttonNull, slotDisplay.getDisplayName() + " \n" + extraDisplay,16,16);
+		stack = slotDisplay;
+		this.worldObj = world;
+	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY,
@@ -69,26 +76,25 @@ public class ModuleSlotButton extends ModuleButton {
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float)(p_77015_4_ + 8), (float)(p_77015_5_ + 12), -3.0F + zLevel);
 		GL11.glScalef(10.0F, 10.0F, 10.0F);
-		
+
 		GL11.glScalef(1.0F, 1.0F, -1.0F);
 		GL11.glRotatef(210.0F, 1.0F, 0.0F, 0.0F);
 		GL11.glRotated(45.0F + ((System.currentTimeMillis() % 200000)/50F) * 2, 0.0F, 1.0F, 0.0F);
 		GL11.glTranslatef(-.5f,-255,-.5f);
 		//GL11.glDisable(GL11.GL_CULL_FACE);
-		//GL11.glDepthMask(false);
+		GL11.glDepthMask(false);
 		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
-		IBlockState block =  Block.getBlockFromItem(stack.getItem()).getStateFromMeta(stack.getItemDamage());
-
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		
-		//Requires world OBJ for some stupid reason involving DEBUG WORLD check... why not idk... have a var for that?
-		Minecraft.getMinecraft().getBlockRendererDispatcher().renderBlock(block, new BlockPos(0, 255, 0), worldObj, buffer);
-		Tessellator.getInstance().draw();
+		Block itemBlock = Block.getBlockFromItem(stack.getItem());
+		if(itemBlock != null) {
+			IBlockState block =  itemBlock.getStateFromMeta(stack.getItemDamage());
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+			//Requires world OBJ for some stupid reason involving DEBUG WORLD check... why not idk... have a var for that?
+			Minecraft.getMinecraft().getBlockRendererDispatcher().renderBlock(block, new BlockPos(0, 255, 0), worldObj, buffer);
+			Tessellator.getInstance().draw();
+		}
 
 		GL11.glPopMatrix();
 
-
-		GL11.glEnable(GL11.GL_CULL_FACE);
 	}
 
 }

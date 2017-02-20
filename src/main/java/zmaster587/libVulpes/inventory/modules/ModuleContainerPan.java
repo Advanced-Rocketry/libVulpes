@@ -176,12 +176,12 @@ public class ModuleContainerPan extends ModuleBase {
 
 		//Handle scrolling
 		int d;
-		if((d = Mouse.getDWheel()) != 0)
+		if(isMouseInBounds(0, 0, mouseX, mouseY) && (d = Mouse.getDWheel()) != 0 )
 			onScroll(d);
 
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
-		setUpScissor(gui, offsetX + guiOffsetX, guiOffsetY + offsetY, screenSizeX, screenSizeY);
+		setUpScissor(gui, offsetX + guiOffsetX, guiOffsetY + offsetY, offsetX + screenSizeX, offsetY + screenSizeY);
 
 		for(ModuleBase module : moduleList)
 			module.renderForeground(guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
@@ -216,7 +216,7 @@ public class ModuleContainerPan extends ModuleBase {
 		mouseLastY = scaledY;
 
 		//Handles buttons (mostly vanilla copy)
-		if(button == 0) {
+		if(button == 0 && isMouseInBounds(0, 0, x, y)) {
 
 			List<GuiButton> fullButtonList = new LinkedList<GuiButton>();
 			fullButtonList.addAll(buttonList);
@@ -248,7 +248,7 @@ public class ModuleContainerPan extends ModuleBase {
 		int transformedMouseX = mouseX - x - offsetX;
 		int transformedMouseY = mouseY - y - offsetY;
 		//return true;
-		return transformedMouseX > 0 && transformedMouseX < screenSizeX && transformedMouseY > 0 && transformedMouseY < screenSizeY;
+		return transformedMouseX > 0 && transformedMouseX < screenSizeX + offsetX && transformedMouseY > 0 && transformedMouseY < screenSizeY + offsetY;
 	}
 
 	protected void moveContainerInterior(int deltaX , int deltaY) {
@@ -327,7 +327,7 @@ public class ModuleContainerPan extends ModuleBase {
 			FontRenderer font) {
 
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
-		setUpScissor(gui, x + offsetX, y + offsetY, screenSizeX, screenSizeY);
+		setUpScissor(gui, x + offsetX, y + offsetY, screenSizeX + offsetX, screenSizeY + offsetY);
 
 		if(backdrop != null) {
 			gui.mc.getTextureManager().bindTexture(backdrop);
@@ -341,11 +341,11 @@ public class ModuleContainerPan extends ModuleBase {
 			button.drawButton(gui.mc, mouseX, mouseY);
 
 		for(ModuleBase module : moduleList) {
-			module.renderBackground(gui, x + offsetX, y + offsetY, mouseX, mouseY, font);
+			module.renderBackground(gui, x, y, mouseX, mouseY, font);
 		}
 
 		for(ModuleBase module : staticModuleList) {
-			module.renderBackground(gui, x + offsetX, y + offsetY, mouseX, mouseY, font);
+			module.renderBackground(gui, x, y, mouseX, mouseY, font);
 		}
 
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
