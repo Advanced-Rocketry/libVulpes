@@ -232,7 +232,7 @@ public class MaterialRegistry {
 
 		for(MaterialRegistry  registry : registries) {
 			for(Item i : registry.oreProducts) {
-				if(item == i) {
+				if(item == i && i != null) {
 					return registry.materialList.get(stack.getItemDamage());
 				}
 			}
