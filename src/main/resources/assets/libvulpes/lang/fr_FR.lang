@@ -1,38 +1,53 @@
-tile.hatch.0.name=Écoutille d'entrée
-tile.hatch.1.name=Écoutille de sortie
-tile.hatch.4.name=Écoutille d'entrée de fluide
-tile.hatch.5.name=Écoutille de sortie de fluide
+itemGroup.multiBlock=Éléments de machine multibloc
+item.Linker.name=Linker
+
+tile.hatch.0.name=Sas d'entrée
+tile.hatch.1.name=Sas de sortie
+tile.hatch.2.name=Orifice de remplissage
+tile.hatch.3.name=Orifice de vidange
+
+tile.forgePowerInput.name=Power Input Plug
+tile.forgePowerOutput.name=Power Output Plug
+tile.creativePowerBattery.name=Creative Power Input Plug
 tile.rfBattery.name=Interface Redstone Flux(RF)
 tile.IC2Plug.name=Interface IC2(EU)
-tile.structureMachine.name=Structure de machine
-tile.coil.silicon.name=Bobine en silicone
-tile.coil.copper.name=Bobine en cuivre
-tile.coil.tin.name=Bobine en étain
-tile.coil.steel.name=Bobine en en acier
+tile.structureMachine.name=Bâti de machine
+tile.advStructureMachine.name=Bâti de machine renforcé
+tile.blockGenericMachine.name=Contrôleur de machine
+tile.coil.silicon.name=Bobine en silicium
+tile.coil.copper.name=Bobine de cuivre
+tile.coil.tin.name=Bobine d'étain
+tile.coil.steel.name=Bobine en acier
 tile.coil=Bobine
 tile.Copper.name=Minerai de cuivre
 tile.Tin.name=Minerai d'étain
 tile.Rutile.name=Minerai de rutile
+tile.Aluminum.name=Minerai d'aluminium
+tile.coalGenerator.name=Générateur de charbon de bois
 
-item.holoProjector.name=Holo-projecteur
+item.holoProjector.name=Holoprojecteur
+
+type.crystal.name=Cristal
+type.dust.name=Poudre
+type.boule.name=Barreau
+type.ingot.name=Lingot
+type.nugget.name=Pépite
+type.stick.name=Barre
+type.plate.name=Plaque
+type.ore.name=Minerai
+type.block.name=Bloc
+type.coil.name=Bobine
+type.fan.name=Hélice
+type.sheet.name=Feuille
+type.gear.name=Engrenage
 
 material.Gold.name=Or
 material.Iron.name=Fer
-material.Silicon.name=Silicone
+material.Silicon.name=Silicium
 material.Copper.name=Cuivre
 material.Tin.name=Étain
 material.Steel.name=Acier
 material.Titanium.name=Titane
 material.Rutile.name=Rutile
-
-type.crystal.name=Cristal
-type.dust.name=Poussière
-type.boule.name=Barreau
-type.ingot.name=Lingot
-type.nugget.name=Pépite
-type.stick.name=Baton
-type.plate.name=Plaque
-type.ore.name=Minerai
-type.block.name=Bloc
-type.coil.name=Bobine
-type.fan.name=Ventilateur
+material.Aluminum.name=Aluminium
+material.Iridium.name=Iridium
