@@ -35,6 +35,7 @@ public class ModuleText extends ModuleBase {
 	public ModuleText(int offsetX, int offsetY, String text, int color, boolean centered) {
 		this(offsetX, offsetY, text, color);
 		this.centered = centered;
+		scale = 1f;
 	}
 
 	public void setText(String text) {
