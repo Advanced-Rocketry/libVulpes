@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 public class ModuleSlotButton extends ModuleButton {
 
@@ -23,6 +24,12 @@ public class ModuleSlotButton extends ModuleButton {
 	public ModuleSlotButton(int offsetX, int offsetY, int buttonId, IButtonInventory tile, ItemStack slotDisplay) {
 		
 		super(offsetX, offsetY, buttonId , "", tile, TextureResources.buttonNull, slotDisplay.getDisplayName() ,16,16);
+		stack = slotDisplay;
+	}
+	
+	public ModuleSlotButton(int offsetX, int offsetY, int buttonId, IButtonInventory tile, ItemStack slotDisplay, String extraDisplay ) {
+
+		super(offsetX, offsetY, buttonId , "", tile, TextureResources.buttonNull, slotDisplay.getDisplayName() + " \n" + extraDisplay,16,16);
 		stack = slotDisplay;
 	}
 
@@ -68,7 +75,7 @@ public class ModuleSlotButton extends ModuleButton {
 				GL11.glAlphaFunc(GL11.GL_GREATER, 0.5F);
 				GL11.glDisable(GL11.GL_BLEND);
 			}
-
+			GL11.glDepthMask(false);
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float)(p_77015_4_ - 2), (float)(p_77015_5_ + 3), -3.0F + zLevel);
 			GL11.glScalef(10.0F, 10.0F, 10.0F);
@@ -186,6 +193,7 @@ public class ModuleSlotButton extends ModuleButton {
 	            GL11.glEnable(GL11.GL_LIGHTING);
 	        }*/
 
+		//GL11.glDepthMask(true);
 		GL11.glEnable(GL11.GL_CULL_FACE);
 	}
 

@@ -14,12 +14,13 @@ public class ModuleText extends ModuleBase {
 	List<String> text;
 	int color;
 	boolean centered;
-
+	float scale;
+	
 	public ModuleText(int offsetX, int offsetY, String text, int color) {
 		super(offsetX, offsetY);
 
 		this.text = new ArrayList<String>();
-
+		scale = 1f;
 		setText(text);
 		this.color = color;
 		centered = false;
@@ -28,6 +29,12 @@ public class ModuleText extends ModuleBase {
 	public ModuleText(int offsetX, int offsetY, String text, int color, boolean centered) {
 		this(offsetX, offsetY, text, color);
 		this.centered = centered;
+		scale = 1f;
+	}
+
+	public ModuleText(int offsetX, int offsetY, String text, int color, float scale) {
+		this(offsetX, offsetY, text, color);
+		this.scale = scale;
 	}
 
 	public void setText(String text) {
@@ -56,13 +63,16 @@ public class ModuleText extends ModuleBase {
 	@Override
 	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY, FontRenderer font) {
 
+		GL11.glPushMatrix();
+		GL11.glScalef(scale, scale, scale);
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 		for(int i = 0; i < text.size(); i++) {
 			if(centered)
-				font.drawString(text.get(i), x + offsetX - (font.getStringWidth(text.get(i))/2), y + offsetY + i*font.FONT_HEIGHT, color);
+				font.drawString(text.get(i), (x + offsetX - (font.getStringWidth(text.get(i))/2)), y + offsetY + i*font.FONT_HEIGHT, color);
 			else
-				font.drawString(text.get(i), x + offsetX, y + offsetY + i*font.FONT_HEIGHT, color);
+				font.drawString(text.get(i),(int)((x + offsetX)/scale), (int)((y + offsetY + i*font.FONT_HEIGHT)/scale), color);
 		}
 		GL11.glPopAttrib();
+		GL11.glPopMatrix();
 	}
 }
