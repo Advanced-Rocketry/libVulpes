@@ -1,0 +1,23 @@
+{
+    "defaults": {
+        "textures": {
+            "#None": "libvulpes:/models/motor"
+        },
+        "model": "libvulpes:models/motor.obj"
+    },
+    "variants": {
+        "facing=north": { "model": "libvulpes:models/motor.obj" },
+        "facing=south": { "model": "libvulpes:models/motor.obj", "y": 180 },
+        "facing=west":  { "model": "libvulpes:models/motor.obj", "y": 270 },
+        "facing=east":  { "model": "libvulpes:models/motor.obj", "y": 90 },
+        "facing=up":  { "model": "libvulpes:models/motor.obj", "x": 90 },
+        "facing=down":  { "model": "libvulpes:models/motor.obj", "x": -90 },
+        "inventory": {
+            "model": "libvulpes:models/motor.obj", "y": 90,
+            "transform": {
+                    "translation": [ 0, 0, 0],
+                    "scale": 1.0
+                }
+        }
+    }
+}

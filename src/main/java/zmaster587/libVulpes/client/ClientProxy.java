@@ -13,6 +13,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -25,6 +26,11 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void init() {
 		LibVulpes.materialRegistry.init();
+	}
+	
+	@Override
+	public void preinit() {
+		OBJLoader.INSTANCE.addDomain("libvulpes");
 	}
 	
 	@Override

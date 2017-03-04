@@ -40,4 +40,9 @@ public class CommonProxy {
 	public void playSound(Object sound) {
 		
 	}
+
+	public void preinit() {
+		// TODO Auto-generated method stub
+		
+	}
 }

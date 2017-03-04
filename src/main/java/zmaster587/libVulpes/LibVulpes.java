@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -52,6 +53,7 @@ import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.BlockAlphaTexture;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.BlockPhantom;
+import zmaster587.libVulpes.block.BlockRotatableModel;
 import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.block.multiblock.BlockMultiMachineBattery;
@@ -120,9 +122,9 @@ public class LibVulpes {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		proxy.preinit();
 		teslaHandler = null;
 		//Configuration
-
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 
@@ -159,7 +161,12 @@ public class LibVulpes {
 		LibVulpesBlocks.blockCoalGenerator = new BlockTile(TileCoalGenerator.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("coalGenerator").setCreativeTab(tabMultiblock).setHardness(3f);
 		//LibVulpesBlocks.blockRFBattery = new BlockMultiMachineBattery(Material.ROCK, TilePlugInputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("rfBattery").setCreativeTab(tabMultiblock).setHardness(3f);
 		//LibVulpesBlocks.blockRFOutput = new BlockMultiMachineBattery(Material.ROCK, TilePlugOutputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("rfOutput").setCreativeTab(tabMultiblock).setHardness(3f);
-
+		
+		LibVulpesBlocks.blockMotor = new BlockRotatableModel(Material.ROCK).setCreativeTab(tabMultiblock).setUnlocalizedName("motor").setHardness(2f);
+		LibVulpesBlocks.blockAdvancedMotor = new BlockRotatableModel(Material.ROCK).setCreativeTab(tabMultiblock).setUnlocalizedName("advancedMotor").setHardness(2f);
+		LibVulpesBlocks.blockEnhancedMotor = new BlockRotatableModel(Material.ROCK).setCreativeTab(tabMultiblock).setUnlocalizedName("enhancedMotor").setHardness(2f);
+		LibVulpesBlocks.blockEliteMotor = new BlockRotatableModel(Material.ROCK).setCreativeTab(tabMultiblock).setUnlocalizedName("eliteMotor").setHardness(2f);
+		
 
 		//Register Blocks
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockPhantom.setRegistryName(LibVulpesBlocks.blockPhantom.getUnlocalizedName().substring(5)));
@@ -170,11 +177,19 @@ public class LibVulpes {
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockForgeInputPlug.setRegistryName(LibVulpesBlocks.blockForgeInputPlug.getUnlocalizedName().substring(5)));
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockForgeOutputPlug.setRegistryName(LibVulpesBlocks.blockForgeOutputPlug.getUnlocalizedName().substring(5)));
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockCoalGenerator.setRegistryName(LibVulpesBlocks.blockCoalGenerator.getUnlocalizedName().substring(5)));
-
+		
+		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockMotor.setRegistryName("motor"));
+		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockAdvancedMotor.setRegistryName("advancedMotor"));
+		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockEnhancedMotor.setRegistryName("enhancedMotor"));
+		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockEliteMotor.setRegistryName("eliteMotor"));
 		//LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockRFBattery.setRegistryName(LibVulpesBlocks.blockRFBattery.getUnlocalizedName()));
 		//LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockRFOutput.setRegistryName(LibVulpesBlocks.blockRFOutput.getUnlocalizedName()));
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockAdvStructureBlock.setRegistryName(LibVulpesBlocks.blockAdvStructureBlock.getUnlocalizedName().substring(5)));
 
+		//populate lists
+		Block motors[] = { LibVulpesBlocks.blockMotor, LibVulpesBlocks.blockAdvancedMotor, LibVulpesBlocks.blockEnhancedMotor, LibVulpesBlocks.blockEliteMotor };
+		LibVulpesBlocks.motors = motors;
+		
 		//Register Tile
 		GameRegistry.registerTileEntity(TileOutputHatch.class, "vulpesoutputHatch");
 		GameRegistry.registerTileEntity(TileInputHatch.class, "vulpesinputHatch");
@@ -217,6 +232,10 @@ public class LibVulpes {
 
 		//Ore dict stuff
 		OreDictionary.registerOre("itemBattery", new ItemStack(LibVulpesItems.itemBattery,1,0));
+		OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockMotor);
+		OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockAdvancedMotor);
+		OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockEnhancedMotor);
+		OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockEliteMotor);
 
 		/*DUST,
 		INGOT,
@@ -262,6 +281,8 @@ public class LibVulpes {
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Iridium", "pickaxe", 2, 0xdedcce, AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue()));
 
 		materialRegistry.registerOres(tabLibVulpesOres);
+		
+		
 
 	}
 
@@ -283,6 +304,10 @@ public class LibVulpes {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesBlocks.blockStructureBlock, 4), "sps", "p p", "sps", 'p', "plateIron", 's', "stickIron"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(LibVulpesBlocks.blockAdvStructureBlock, "sps", "psp", "sps", 'p', "plateTitanium", 's', "stickTitanium"));
 		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockCoalGenerator), "a", "b", 'a', LibVulpesItems.itemBattery, 'b', Blocks.FURNACE);
+		
+		//Motors
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesBlocks.blockMotor), " cp", "rrp"," cp", 'c', "coilCopper", 'p', "plateSteel", 'r', "stickSteel"));
+		
 		
 		//Plugs
 		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockForgeInputPlug), " x ", "xmx"," x ", 'x', LibVulpesItems.itemBattery, 'm', LibVulpesBlocks.blockStructureBlock);

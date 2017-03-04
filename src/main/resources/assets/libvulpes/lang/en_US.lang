@@ -24,6 +24,10 @@ tile.Tin.name=Tin Ore
 tile.Rutile.name=Rutile Ore
 tile.Aluminum.name=Aluminum Ore
 tile.coalGenerator.name=Coal Generator
+tile.motor.name=Motor
+tile.advancedMotor.name=Advanced Motor
+tile.enhancedMotor.name=Enhanced Motor
+tile.eliteMotor.name=Elite Motor
 
 item.holoProjector.name=Holo-Projector
 
