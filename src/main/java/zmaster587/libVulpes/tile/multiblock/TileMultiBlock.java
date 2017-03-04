@@ -418,6 +418,14 @@ public class TileMultiBlock extends TileEntity {
 			list.add((BlockMeta) input);
 			return list;
 		}
+		else if(input instanceof Block[]) {
+			List<BlockMeta> list = new ArrayList<BlockMeta>();
+			for(Block b : (Block[])input) list.add(new BlockMeta(b));
+			return list;
+		}
+		else if(input instanceof List) {
+			return (List<BlockMeta>)input;
+		}
 		List<BlockMeta> list = new ArrayList<BlockMeta>();
 		return list;
 	}

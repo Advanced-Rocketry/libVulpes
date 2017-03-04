@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,6 +38,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 	protected MultiBattery batteries = new MultiBattery();
 
+	private float timeMultiplier;
 	protected int completionTime, currentTime;
 	protected int powerPerTick;
 	protected boolean enabled;
@@ -52,6 +54,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		completionTime = -1;
 		currentTime = -1;
 		hadPowerLastTick = true;
+		timeMultiplier = 1;
 		toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled());
 	}
 
@@ -94,6 +97,27 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		return 1;
 	}
 
+	/**
+	 * 
+	 * @param block
+	 * @param tile can be null
+	 * @return
+	 */
+	public float getTimeMultiplierForBlock(Block block, TileEntity tile) {
+		return 1f;
+	}
+
+	public float getTimeMultiplier() {
+		return timeMultiplier;
+	}
+
+	@Override
+	protected void replaceStandardBlock(BlockPos newPos, IBlockState state,
+			TileEntity tile) {
+		super.replaceStandardBlock(newPos, state, tile);
+		getTimeMultiplierForBlock(state.getBlock(), tile);
+	}
+	
 	@Override
 	public void update() {
 
@@ -187,7 +211,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 			this.markDirty();
 			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
 		}
-		
+
 	}
 
 	public boolean getMachineEnabled() {
@@ -212,6 +236,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		completionTime = 0;
 		currentTime = 0;
 		enabled = false;
+		timeMultiplier = 1f;
 
 		super.deconstructMultiBlock(world, destroyedPos, blockBroken, state);
 	}
@@ -257,6 +282,9 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		nbt.setInteger("currentTime", this.currentTime);
 		nbt.setInteger("powerPerTick", this.powerPerTick);
 		nbt.setBoolean("enabled", enabled);
+
+		if(timeMultiplier != 1)
+			nbt.setFloat("timeMult", timeMultiplier);
 	}
 
 	@Override
@@ -266,7 +294,10 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		currentTime = nbt.getInteger("currentTime");
 		powerPerTick = nbt.getInteger("powerPerTick");
 		enabled = nbt.getBoolean("enabled");
-		
+
+		if(nbt.hasKey("timeMult"))
+			timeMultiplier = nbt.getFloat("timeMult");
+
 		if(worldObj != null && worldObj.isRemote && isRunning()) {
 			((BlockTile)getBlockType()).setBlockState(worldObj,worldObj.getBlockState(getPos()), getPos(),true);
 		}

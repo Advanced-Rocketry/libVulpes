@@ -465,7 +465,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	}
 
 	protected float getTimeMultiplierForRecipe(IRecipe recipe) {
-		return 1f;
+		return getTimeMultiplier();
 	}
 
 	protected float getPowerMultiplierForRecipe(IRecipe recipe) {
