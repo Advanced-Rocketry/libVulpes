@@ -17,8 +17,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.ITimeModifier;
 import zmaster587.libVulpes.api.IToggleableMachine;
 import zmaster587.libVulpes.api.IUniversalEnergy;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.client.RepeatingSound;
@@ -27,6 +29,7 @@ import zmaster587.libVulpes.inventory.modules.IProgressBar;
 import zmaster587.libVulpes.inventory.modules.IToggleButton;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModulePower;
+import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.inventory.modules.ModuleToggleSwitch;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
@@ -42,7 +45,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	protected int completionTime, currentTime;
 	protected int powerPerTick;
 	protected boolean enabled;
-	private ModuleToggleSwitch toggleSwitch;
+	protected ModuleToggleSwitch toggleSwitch;
 	//On server determines change in power state, on client determines last power state on server
 	boolean hadPowerLastTick = true;
 
@@ -103,7 +106,11 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	 * @param tile can be null
 	 * @return
 	 */
-	public float getTimeMultiplierForBlock(Block block, TileEntity tile) {
+	public float getTimeMultiplierForBlock(IBlockState state, TileEntity tile) {
+		
+		if(state.getBlock() instanceof ITimeModifier)
+			return ((ITimeModifier)state.getBlock()).getTimeMult();
+		
 		return 1f;
 	}
 
@@ -115,7 +122,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	protected void replaceStandardBlock(BlockPos newPos, IBlockState state,
 			TileEntity tile) {
 		super.replaceStandardBlock(newPos, state, tile);
-		getTimeMultiplierForBlock(state.getBlock(), tile);
+		timeMultiplier *= getTimeMultiplierForBlock(state, tile);
 	}
 	
 	@Override
@@ -346,7 +353,9 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
-
+		modules.add(new ModuleText(140, 40, String.format("Speed:\n%.2fx", 1/getTimeMultiplier()), 0x2d2d2d));
+		modules.add(new ModuleText(140, 60, String.format("Power:\n%.2fx", 1f), 0x2d2d2d));
+		
 		return modules;
 	}
 

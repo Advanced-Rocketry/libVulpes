@@ -193,7 +193,8 @@ public class MaterialRegistry {
 					if(AllowedProducts.getProductByName("COIL").isOfType(ore.getAllowedProducts())) {
 						String oreName = "coil" + str;
 						OreDictionary.registerOre(oreName, new ItemStack(coilBlocks, 1 , j));
-
+						OreDictionary.registerOre("blockCoil", new ItemStack(coilBlocks, 1 , j));
+						
 						if(FMLCommonHandler.instance().getSide().isClient() && g == 0) {
 							oreName = Loader.instance().activeModContainer().getModId() + ":" + oreName;
 							Item itemBlock = Item.getItemFromBlock(coilBlocks);
