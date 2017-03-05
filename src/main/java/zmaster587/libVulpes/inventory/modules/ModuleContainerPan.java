@@ -325,7 +325,7 @@ public class ModuleContainerPan extends ModuleBase {
 
 		if(backdrop != null) {
 			gui.mc.getTextureManager().bindTexture(backdrop);
-			gui.drawTexturedModalRect(x + offsetX, y + offsetY, (int)(-0.1*currentPosX), (int)(-0.1*currentPosY), screenSizeX, screenSizeY);
+			gui.drawTexturedModalRect(x + offsetX, y + offsetY, (int)(-0.1*currentPosX), (int)(-0.1*currentPosY), screenSizeX +  screenSizeX, screenSizeY + screenSizeY);
 		}
 		
 		for(GuiButton button : buttonList)
