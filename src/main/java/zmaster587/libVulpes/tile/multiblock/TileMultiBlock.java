@@ -339,7 +339,7 @@ public class TileMultiBlock extends TileEntity {
 					}
 
 					if(structure[y][z][x] != null && !block.isAir(worldObj, globalX, globalY, globalZ) && !(tile instanceof IMultiblock) && !(tile instanceof TileMultiBlock)) {
-						replaceStandardBlock(globalX,globalY, globalZ, block, tile);
+						replaceStandardBlock(globalX,globalY, globalZ, block, worldObj.getBlockMetadata(globalX, globalY, globalZ), tile);
 					}
 				}
 			}
@@ -384,6 +384,14 @@ public class TileMultiBlock extends TileEntity {
 			list.add((BlockMeta) input);
 			return list;
 		}
+		else if(input instanceof Block[]) {
+			List<BlockMeta> list = new ArrayList<BlockMeta>();
+			for(Block b : (Block[])input) list.add(new BlockMeta(b));
+			return list;
+		}
+		else if(input instanceof List) {
+			return (List<BlockMeta>)input;
+		}
 		List<BlockMeta> list = new ArrayList<BlockMeta>();
 		return list;
 	}
@@ -397,15 +405,13 @@ public class TileMultiBlock extends TileEntity {
 	 * Most multiblocks have a renderer and so these blocks are converted to an invisible pointer
 	 * @return
 	 */
-	protected void replaceStandardBlock(int xCoord, int yCoord, int zCoord, Block block, TileEntity tile) {
-
-		byte meta = (byte)worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+	protected void replaceStandardBlock(int xCoord, int yCoord, int zCoord, Block block, int meta, TileEntity tile) {
 
 		worldObj.setBlock(xCoord, yCoord, zCoord, LibVulpesBlocks.blockPlaceHolder);
 		TilePlaceholder newTile = (TilePlaceholder)worldObj.getTileEntity(xCoord, yCoord, zCoord);
 
 		newTile.setReplacedBlock(block);
-		newTile.setReplacedBlockMeta(meta);
+		newTile.setReplacedBlockMeta((byte)meta);
 		newTile.setReplacedTileEntity(tile);
 		newTile.setMasterBlock(this.xCoord, this.yCoord, this.zCoord);
 	}

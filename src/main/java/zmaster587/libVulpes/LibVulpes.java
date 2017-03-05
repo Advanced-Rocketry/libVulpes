@@ -35,7 +35,9 @@ import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.BlockAlphaTexture;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.block.BlockMotor;
 import zmaster587.libVulpes.block.BlockPhantom;
+import zmaster587.libVulpes.block.BlockRotatableModel;
 import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.block.multiblock.BlockMultiMachineBattery;
@@ -49,6 +51,7 @@ import zmaster587.libVulpes.network.PacketChangeKeyState;
 import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.tile.TileModelRender;
 import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.tile.TileInventoriedPointer;
 import zmaster587.libVulpes.tile.TileSchematic;
@@ -110,11 +113,10 @@ public class LibVulpes {
 	public static void registerRecipeHandler(Class clazz, String fileName) {
 		userModifiableRecipes.put(clazz, fileName);
 	}
-	
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-
 		//Configuration
 
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
@@ -147,12 +149,17 @@ public class LibVulpes {
 		LibVulpesBlocks.blockStructureBlock = new BlockAlphaTexture(Material.rock).setBlockName("structureMachine").setBlockTextureName("libvulpes:structureBlock").setCreativeTab(tabMultiblock).setHardness(3f);
 		LibVulpesBlocks.blockRFBattery = new BlockMultiMachineBattery(Material.rock, TilePlugInputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("rfBattery").setBlockTextureName("libvulpes:batteryRF").setCreativeTab(tabMultiblock).setHardness(3f);
 		LibVulpesBlocks.blockRFOutput = new BlockMultiMachineBattery(Material.rock, TilePlugOutputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("rfOutput").setBlockTextureName("libvulpes:batteryRF").setCreativeTab(tabMultiblock).setHardness(3f);
-		
+
+		LibVulpesBlocks.blockMotor = new BlockMotor(Material.rock, TileModelRender.models.MOTOR.ordinal(), 1f).setCreativeTab(tabMultiblock).setBlockName("motor").setHardness(2f);
+		LibVulpesBlocks.blockAdvancedMotor = new BlockMotor(Material.rock, TileModelRender.models.ADVMOTOR.ordinal(), 1/1.5f).setCreativeTab(tabMultiblock).setBlockName("advancedMotor").setHardness(2f);
+		LibVulpesBlocks.blockEnhancedMotor = new BlockMotor(Material.rock, TileModelRender.models.ENHANCEDMOTOR.ordinal(), 1/2f).setCreativeTab(tabMultiblock).setBlockName("enhancedMotor").setHardness(2f);
+		LibVulpesBlocks.blockEliteMotor = new BlockMotor(Material.rock, TileModelRender.models.ELITEMOTOR.ordinal(), 1/4f).setCreativeTab(tabMultiblock).setBlockName("eliteMotor").setHardness(2f);
+
 		LibVulpesBlocks.blockCoalGenerator = new BlockTile(TileCoalGenerator.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("coalGenerator").setCreativeTab(tabMultiblock).setHardness(3f);
 		((BlockTile)LibVulpesBlocks.blockCoalGenerator).setFrontTexture("furnace_front_off", "furnace_front_on");
 		((BlockTile)LibVulpesBlocks.blockCoalGenerator).setSideTexture("furnace_side");
 		((BlockTile)LibVulpesBlocks.blockCoalGenerator).setTopTexture("furnace_top");
-		
+
 		//Register Blocks
 		GameRegistry.registerBlock(LibVulpesBlocks.blockPhantom, LibVulpesBlocks.blockPhantom.getUnlocalizedName());
 		GameRegistry.registerBlock(LibVulpesBlocks.blockHatch, ItemBlockMeta.class, "blockHatch");
@@ -162,7 +169,15 @@ public class LibVulpes {
 		GameRegistry.registerBlock(LibVulpesBlocks.blockRFOutput, "batteryOutputRF");
 		GameRegistry.registerBlock(LibVulpesBlocks.blockAdvStructureBlock, LibVulpesBlocks.blockAdvStructureBlock.getUnlocalizedName());
 		GameRegistry.registerBlock(LibVulpesBlocks.blockCoalGenerator, LibVulpesBlocks.blockCoalGenerator.getUnlocalizedName());
+		GameRegistry.registerBlock(LibVulpesBlocks.blockMotor, LibVulpesBlocks.blockMotor.getUnlocalizedName());
+		GameRegistry.registerBlock(LibVulpesBlocks.blockAdvancedMotor, LibVulpesBlocks.blockAdvancedMotor.getUnlocalizedName());
+		GameRegistry.registerBlock(LibVulpesBlocks.blockEnhancedMotor, LibVulpesBlocks.blockEnhancedMotor.getUnlocalizedName());
+		GameRegistry.registerBlock(LibVulpesBlocks.blockEliteMotor, LibVulpesBlocks.blockEliteMotor.getUnlocalizedName());
 		
+		//populate lists
+		Block motors[] = { LibVulpesBlocks.blockMotor, LibVulpesBlocks.blockAdvancedMotor, LibVulpesBlocks.blockEnhancedMotor, LibVulpesBlocks.blockEliteMotor };
+		LibVulpesBlocks.motors = motors;
+
 		//Register Tile
 		GameRegistry.registerTileEntity(TileOutputHatch.class, "ARoutputHatch");
 		GameRegistry.registerTileEntity(TileInputHatch.class, "ARinputHatch");
@@ -186,6 +201,10 @@ public class LibVulpes {
 
 		//Ore dict stuff
 		OreDictionary.registerOre("itemBattery", new ItemStack(LibVulpesItems.itemBattery,1,0));
+		OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockMotor);
+		OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockAdvancedMotor);
+		OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockEnhancedMotor);
+		OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockEliteMotor);
 
 		/*DUST,
 		INGOT,
@@ -215,21 +234,21 @@ public class LibVulpes {
 		AllowedProducts.registerProduct("FAN");
 		AllowedProducts.registerProduct("SHEET");
 		AllowedProducts.registerProduct("GEAR");
-		
+
 		//Register Ores
-		
+
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Dilithium", "pickaxe", 3, 0xddcecb, AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("CRYSTAL").getFlagValue()));
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Iron", "pickaxe", 1, 0xafafaf, AllowedProducts.getProductByName("SHEET").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue(), false));
-		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Gold", "pickaxe", 1, 0xffff5d, AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue(), false));
+		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Gold", "pickaxe", 1, 0xffff5d, AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("COIL").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue(), false));
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Silicon", "pickaxe", 1, 0x2c2c2b, AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("BOULE").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue(), false));
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Copper", "pickaxe", 1, 0xd55e28, AllowedProducts.getProductByName("COIL").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue()));
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Tin", "pickaxe", 1, 0xcdd5d8, AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue()));
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Steel", "pickaxe", 1, 0x55555d, AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("FAN").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("GEAR").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue(), false));
-		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Titanium", "pickaxe", 1, 0xb2669e, AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("GEAR").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue(), false));
+		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Titanium", "pickaxe", 1, 0xb2669e, AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("COIL").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("GEAR").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue(), false));
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Rutile", "pickaxe", 1, 0xbf936a, AllowedProducts.getProductByName("ORE").getFlagValue(), new String[] {"Rutile", "Titanium"}));
-		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Aluminum", "pickaxe", 1, 0xb3e4dc, AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue()));
-		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Iridium", "pickaxe", 2, 0xdedcce, AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue()));
-		
+		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Aluminum", "pickaxe", 1, 0xb3e4dc, AllowedProducts.getProductByName("COIL").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue()));
+		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Iridium", "pickaxe", 2, 0xdedcce, AllowedProducts.getProductByName("COIL").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue()));
+
 		materialRegistry.registerOres(tabLibVulpesOres, "libVulpes");
 	}
 
@@ -241,15 +260,22 @@ public class LibVulpes {
 		PacketHandler.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 		proxy.registerEventHandlers();
+		proxy.registerRenderers();
 
 		if(Loader.isModLoaded("IC2")) {
 			GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockIC2Plug), LibVulpesBlocks.blockStructureBlock, IC2Items.getItem("mvTransformer"), LibVulpesItems.itemBattery);
 		}
-		
+
 		//Recipes
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesBlocks.blockStructureBlock, 4), "sps", "p p", "sps", 'p', "plateIron", 's', "stickIron"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(LibVulpesBlocks.blockAdvStructureBlock, "sps", "psp", "sps", 'p', "plateTitanium", 's', "stickTitanium"));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(LibVulpesBlocks.blockCoalGenerator, "itemBattery", Blocks.furnace));
+
+		//Motors
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesBlocks.blockMotor), " cp", "rrp"," cp", 'c', "coilCopper", 'p', "plateSteel", 'r', "stickSteel"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesBlocks.blockAdvancedMotor), " cp", "rrp"," cp", 'c', "coilGold", 'p', "plateSteel", 'r', "stickSteel"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesBlocks.blockEnhancedMotor), " cp", "rrp"," cp", 'c', "coilAluminum", 'p', "plateTitanium", 'r', "stickTitanium"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesBlocks.blockEliteMotor), " cp", "rrp"," cp", 'c', "coilTitanium", 'p', "plateIridium", 'r', "stickIridium"));
 	}
 
 	@EventHandler
@@ -292,7 +318,7 @@ public class LibVulpes {
 		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 12));
 		TileMultiBlock.addMapping('l', list);
 	}
-	
+
 	//User Recipes
 	public void loadXMLRecipe(Class clazz) {
 		File file = new File(userModifiableRecipes.get(clazz));
@@ -331,7 +357,7 @@ public class LibVulpes {
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
 
 	@Mod.EventHandler
@@ -420,50 +446,50 @@ public class LibVulpes {
 				} else
 					mapping.remap(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("ORE")).getItem());
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:productingot")) {
 				mapping.remap(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("INGOT")).getItem());
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:productboule")) {
 				mapping.remap(MaterialRegistry.getMaterialFromName("Silicon").getProduct(AllowedProducts.getProductByName("BOULE")).getItem());
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:productgear")) {
 				mapping.remap(MaterialRegistry.getMaterialFromName("Titanium").getProduct(AllowedProducts.getProductByName("GEAR")).getItem());
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:productplate")) {
 				mapping.remap(MaterialRegistry.getMaterialFromName("Titanium").getProduct(AllowedProducts.getProductByName("PLATE")).getItem());
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:productdust")) {
 				mapping.remap(MaterialRegistry.getMaterialFromName("Titanium").getProduct(AllowedProducts.getProductByName("DUST")).getItem());
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:productrod")) {
 				mapping.remap(MaterialRegistry.getMaterialFromName("Titanium").getProduct(AllowedProducts.getProductByName("STICK")).getItem());
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:productfan")) {
 				mapping.remap(MaterialRegistry.getMaterialFromName("Steel").getProduct(AllowedProducts.getProductByName("FAN")).getItem());
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:productcrystal")) {
 				mapping.remap(MaterialRegistry.getMaterialFromName("Dilithium").getProduct(AllowedProducts.getProductByName("CRYSTAL")).getItem());
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:productnugget")) {
 				mapping.remap(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("NUGGET")).getItem());
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("advancedrocketry:productsheet")) {
 				mapping.remap(MaterialRegistry.getMaterialFromName("Titanium").getProduct(AllowedProducts.getProductByName("SHEET")).getItem());
 			}
-			
-			
-			
-			
+
+
+
+
 			if(mapping.name.equalsIgnoreCase("libVulpes:metal0")) {
 				if(mapping.type == mapping.type.BLOCK) {
 					mapping.remap(Block.getBlockFromItem(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("BLOCK")).getItem()));
@@ -485,43 +511,43 @@ public class LibVulpes {
 				} else
 					mapping.remap(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("ORE")).getItem());
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("libVulpes:productingot")) {
 				mapping.remap(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("INGOT")).getItem());
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("libVulpes:productboule")) {
 				mapping.remap(MaterialRegistry.getMaterialFromName("Silicon").getProduct(AllowedProducts.getProductByName("BOULE")).getItem());
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("libVulpes:productgear")) {
 				mapping.remap(MaterialRegistry.getMaterialFromName("Titanium").getProduct(AllowedProducts.getProductByName("GEAR")).getItem());
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("libVulpes:productplate")) {
 				mapping.remap(MaterialRegistry.getMaterialFromName("Titanium").getProduct(AllowedProducts.getProductByName("PLATE")).getItem());
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("libVulpes:productdust")) {
 				mapping.remap(MaterialRegistry.getMaterialFromName("Titanium").getProduct(AllowedProducts.getProductByName("DUST")).getItem());
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("libVulpes:productrod")) {
 				mapping.remap(MaterialRegistry.getMaterialFromName("Titanium").getProduct(AllowedProducts.getProductByName("STICK")).getItem());
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("libVulpes:productfan")) {
 				mapping.remap(MaterialRegistry.getMaterialFromName("Steel").getProduct(AllowedProducts.getProductByName("FAN")).getItem());
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("libVulpes:productcrystal")) {
 				mapping.remap(MaterialRegistry.getMaterialFromName("Dilithium").getProduct(AllowedProducts.getProductByName("CRYSTAL")).getItem());
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("libVulpes:productnugget")) {
 				mapping.remap(MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("NUGGET")).getItem());
 			}
-			
+
 			if(mapping.name.equalsIgnoreCase("libVulpes:productsheet")) {
 				mapping.remap(MaterialRegistry.getMaterialFromName("Titanium").getProduct(AllowedProducts.getProductByName("SHEET")).getItem());
 			}

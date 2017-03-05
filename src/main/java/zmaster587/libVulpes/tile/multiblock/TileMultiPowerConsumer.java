@@ -5,6 +5,7 @@ import java.util.List;
 
 import io.netty.buffer.ByteBuf;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.ITimeModifier;
 import zmaster587.libVulpes.api.IToggleableMachine;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.block.BlockMeta;
@@ -22,6 +24,7 @@ import zmaster587.libVulpes.inventory.modules.IProgressBar;
 import zmaster587.libVulpes.inventory.modules.IToggleButton;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModulePower;
+import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.inventory.modules.ModuleToggleSwitch;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
@@ -33,13 +36,14 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 	protected MultiBattery batteries = new MultiBattery();
 
+	private float timeMultiplier;
 	protected int completionTime, currentTime;
 	protected int powerPerTick;
 	protected boolean enabled;
-	private ModuleToggleSwitch toggleSwitch;
+	protected ModuleToggleSwitch toggleSwitch;
 	//On server determines change in power state, on client determines last power state on server
 	boolean hadPowerLastTick = true;
-	
+
 	Object sound;
 
 	public TileMultiPowerConsumer() {
@@ -48,6 +52,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		completionTime = -1;
 		currentTime = -1;
 		hadPowerLastTick = true;
+		timeMultiplier = 1;
 		toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled());
 	}
 
@@ -95,6 +100,30 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	public int getSoundDuration() {
 		return 1;
 	}
+
+	/**
+	 * 
+	 * @param block
+	 * @param tile can be null
+	 * @return
+	 */
+	public float getTimeMultiplierForBlock(Block block, int meta, TileEntity tile) {
+		if(block instanceof ITimeModifier)
+			return ((ITimeModifier)block).getTimeMult();
+		return 1f;
+	}
+
+	public float getTimeMultiplier() {
+		return timeMultiplier;
+	}
+
+	@Override
+	protected void replaceStandardBlock(int x, int y, int z, Block block, int meta,
+			TileEntity tile) {
+		super.replaceStandardBlock(x, y, z, block, meta, tile);
+		timeMultiplier *= getTimeMultiplierForBlock(block, meta, tile);
+	}
+
 
 	@Override
 	public void updateEntity() {
@@ -200,6 +229,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		completionTime = 0;
 		currentTime = 0;
 		enabled = false;
+		timeMultiplier = 1f;
 
 		super.deconstructMultiBlock(world, destroyedX, destroyedY, destroyedZ, blockBroken);
 	}
@@ -256,6 +286,8 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		nbt.setInteger("currentTime", this.currentTime);
 		nbt.setInteger("powerPerTick", this.powerPerTick);
 		nbt.setBoolean("enabled", enabled);
+		if(timeMultiplier != 1)
+			nbt.setFloat("timeMult", timeMultiplier);
 	}
 
 	@Override
@@ -265,6 +297,9 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		currentTime = nbt.getInteger("currentTime");
 		powerPerTick = nbt.getInteger("powerPerTick");
 		enabled = nbt.getBoolean("enabled");
+
+		if(nbt.hasKey("timeMult"))
+			timeMultiplier = nbt.getFloat("timeMult");
 	}
 
 	@Override
@@ -310,6 +345,9 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
+
+		modules.add(new ModuleText(140, 40, String.format("Speed:\n%.2fx", 1/getTimeMultiplier()), 0x2d2d2d));
+		modules.add(new ModuleText(140, 60, String.format("Power:\n%.2fx", 1f), 0x2d2d2d));
 
 		return modules;
 	}

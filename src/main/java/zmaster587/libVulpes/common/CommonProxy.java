@@ -21,4 +21,9 @@ public class CommonProxy {
 	public void playSound(Object resource) {
 		
 	}
+
+	public void registerRenderers() {
+		// TODO Auto-generated method stub
+		
+	}
 }

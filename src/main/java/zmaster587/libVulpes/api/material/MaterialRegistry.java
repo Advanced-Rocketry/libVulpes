@@ -101,8 +101,9 @@ public class MaterialRegistry {
 				GameRegistry.registerBlock(ores, ItemOre.class, nameSpace + name + i);
 			if(blockAllowed)
 				GameRegistry.registerBlock(metalBlocks, ItemOre.class, nameSpace + metalBlockName + i);
-			if(coilAllowed)
+			if(coilAllowed) {
 				GameRegistry.registerBlock(coilBlocks, ItemOre.class, nameSpace + coilName + i);
+			}
 
 			for(int j = 0; j < 16 && j < 16*i + (len % 16); j++) {
 				int index = i*16 + j;
@@ -127,8 +128,10 @@ public class MaterialRegistry {
 						OreDictionary.registerOre("ore" + str, new ItemStack(ores, 1 , j));
 					if(AllowedProducts.getProductByName("BLOCK").isOfType(ore.getAllowedProducts()))
 						OreDictionary.registerOre("block" + str, new ItemStack(metalBlocks, 1 , j));
-					if(AllowedProducts.getProductByName("COIL").isOfType(ore.getAllowedProducts()))
+					if(AllowedProducts.getProductByName("COIL").isOfType(ore.getAllowedProducts())) {
 						OreDictionary.registerOre("coil" + str, new ItemStack(coilBlocks, 1 , j));
+						OreDictionary.registerOre("blockCoil", new ItemStack(coilBlocks, 1 , j));
+					}
 				}
 			}
 
