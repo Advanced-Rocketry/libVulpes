@@ -296,7 +296,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			btns.add(new ModuleButton(60, 4 + i*24, i, LibVulpes.proxy.getLocalizedString(multiblock.getMachineName()), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
 		}
 
-		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<ModuleBase>(), TextureResources.starryBG, 165, 120, 0, 500);
+		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<ModuleBase>(), TextureResources.starryBG, 160, 100, 0, 500);
 		modules.add(panningContainer);
 		return modules;
 	}
