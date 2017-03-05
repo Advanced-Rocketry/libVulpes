@@ -12,12 +12,25 @@ import net.minecraft.util.ResourceLocation;
 public class ModuleRedstoneOutputButton extends ModuleButton {
 
 	RedstoneState state;
+	String suppText;
 
 	public ModuleRedstoneOutputButton(int offsetX, int offsetY, int buttonId,
 			String text, IButtonInventory tile) {
 		super(offsetX, offsetY, buttonId, text, tile, TextureResources.buttonRedstoneActive, 24 ,24);
 		state = RedstoneState.ON;
+		suppText = "";
 	}
+	
+	
+
+	public ModuleRedstoneOutputButton(int offsetX, int offsetY, int buttonId,
+			String text, IButtonInventory tile, String text2) {
+		this(offsetX, offsetY, buttonId,
+				text, tile);
+			suppText = text2;
+	}
+
+
 
 	public RedstoneState getState() {
 		return state;
@@ -40,15 +53,15 @@ public class ModuleRedstoneOutputButton extends ModuleButton {
 			switch(state) {
 			case ON:
 				button.setButtonTexture(TextureResources.buttonRedstoneActive);
-				tooltipText = "Redstone control normal";
+				tooltipText = suppText + "Redstone control normal";
 				break;
 			case OFF:
 				button.setButtonTexture(TextureResources.buttonRedstoneDisabled);
-				tooltipText = "Redstone control disabled";
+				tooltipText = suppText + "Redstone control disabled";
 				break;
 			case INVERTED:
 				button.setButtonTexture(TextureResources.buttonRedstoneInverted);
-				tooltipText = "Redstone control inverted";
+				tooltipText = suppText + "Redstone control inverted";
 			}
 
 		super.renderBackground(gui, x, y, mouseX, mouseY, font);

@@ -116,9 +116,9 @@ public class ModuleButton extends ModuleBase {
 	}
 
 	public void setBGColor(int color) {
-		if(button == null)
-			this.bgColor = color;
-		else
+
+		this.bgColor = color;
+		if(button != null)
 			button.setBackgroundColor(color);
 	}
 
@@ -213,5 +213,9 @@ public class ModuleButton extends ModuleBase {
 			}
 			//}
 		}
+	}
+
+	public void setToolTipText(String string) {
+		this.tooltipText = string;
 	}
 }

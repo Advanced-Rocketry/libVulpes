@@ -56,11 +56,15 @@ public class BlockHatch extends BlockMultiblockStructure {
 	public int isProvidingWeakPower(IBlockAccess world,
 			int x, int y, int z, int dir) {
 		ForgeDirection direction = ForgeDirection.getOrientation(dir);
-		boolean isPointer = world.getTileEntity(x - direction.offsetX , y- direction.offsetY, z - direction.offsetZ) instanceof TilePointer;
-		if(isPointer)
-			isPointer = isPointer && !(((TilePointer)world.getTileEntity(x - direction.offsetX , y- direction.offsetY, z- direction.offsetZ)).getMasterBlock() instanceof TileMultiBlock);
-
-
+		direction = direction.getOpposite();
+		boolean isPointer = world.getTileEntity(x,y,z) instanceof TilePointer;
+		if(isPointer) {
+			TilePointer tile = (TilePointer)world.getTileEntity(x,y,z);
+			if(!tile.allowRedstoneOutputOnSide(direction.getOpposite()))
+				return 0;
+			isPointer = isPointer && !(tile.getMasterBlock() instanceof TileMultiBlock);
+		}
+		
 		return !isPointer && (world.getBlockMetadata(x, y, z) & 8) != 0 ? 15 : 0;
 	}
 

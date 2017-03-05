@@ -8,7 +8,9 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TilePointer extends TileEntity implements IMultiblock, ILinkableTile {
 	int masterX, masterY, masterZ;
@@ -46,6 +48,11 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 			}
 		}
 		return false;
+	}
+	
+
+	public boolean allowRedstoneOutputOnSide(ForgeDirection facing) {
+		return true;
 	}
 
 	public boolean isSet() { return masterY != -1;}
