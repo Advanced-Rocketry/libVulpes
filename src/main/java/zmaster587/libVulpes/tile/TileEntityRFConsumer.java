@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.tile;
 
+import zmaster587.libVulpes.Configuration;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.util.UniversalBattery;
 import net.minecraft.nbt.NBTTagCompound;
@@ -60,7 +61,7 @@ public abstract class TileEntityRFConsumer extends TileEntity implements IEnergy
 
 		if(canPerformFunction()) {
 
-			if(hasEnoughEnergy(getPowerPerOperation())) {
+			if(hasEnoughEnergy( (int) Math.max(Configuration.powerMult*getPowerPerOperation(), 1))) {
 				if(!worldObj.isRemote) this.energy.extractEnergy(getPowerPerOperation(), false);
 				performFunction();
 			}

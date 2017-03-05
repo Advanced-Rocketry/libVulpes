@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import zmaster587.libVulpes.Configuration;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.ITimeModifier;
 import zmaster587.libVulpes.api.IToggleableMachine;
@@ -100,6 +101,10 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	public int getSoundDuration() {
 		return 1;
 	}
+	
+	public float getPowerMultiplier() {
+		return Configuration.powerMult;
+	}
 
 	/**
 	 * 
@@ -182,7 +187,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	 * @return amount of power to allow the machine to run this tick
 	 */
 	protected int requiredPowerPerTick() {
-		return powerPerTick;
+		return  (int) Math.max(powerPerTick*getPowerMultiplier(),1);
 	}
 
 	/**
