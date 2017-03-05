@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -51,6 +52,10 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 		return false;
 	}
 
+	public boolean allowRedstoneOutputOnSide(EnumFacing facing) {
+		return true;
+	}
+	
 	public boolean isSet() { return masterBlockPos != null;}
 
 	public BlockPos getMasterPos() {

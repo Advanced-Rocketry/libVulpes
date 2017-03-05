@@ -52,11 +52,14 @@ public class BlockHatch extends BlockMultiblockStructure {
 	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess,
 			BlockPos pos, EnumFacing side) {
 		side = side.getOpposite();
-		boolean isPointer = blockAccess.getTileEntity(pos.offset(side)) instanceof TilePointer;
-		if(isPointer)
-			isPointer = isPointer && !(((TilePointer)blockAccess.getTileEntity(pos.offset(side))).getMasterBlock() instanceof TileMultiBlock);
-
-
+		boolean isPointer = blockAccess.getTileEntity(pos) instanceof TilePointer;
+		if(isPointer) {
+			TilePointer tile = (TilePointer)blockAccess.getTileEntity(pos);
+			if(!tile.allowRedstoneOutputOnSide(side.getOpposite()))
+				return 0;
+			isPointer = isPointer && !(tile.getMasterBlock() instanceof TileMultiBlock);
+		}
+		
 		return !isPointer && (blockState.getValue(VARIANT) & 8) != 0 ? 15 : 0;
 	}
 

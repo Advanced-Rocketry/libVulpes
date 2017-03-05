@@ -94,6 +94,10 @@ public class ModuleButton extends ModuleBase {
 	public void setText(String text) {
 		this.text = text;
 	}
+	
+	public void setToolTipText(String text){
+		tooltipText = text;
+	}
 
 	/**
 	 * @return the text displayed on the button
@@ -118,10 +122,10 @@ public class ModuleButton extends ModuleBase {
 	}
 
 	public void setBGColor(int color) {
-		if(button == null)
+		
 			this.bgColor = color;
-		else
-			button.setBackgroundColor(color);
+			if(button != null)
+			button.setBackgroundColor(this.bgColor);
 	}
 
 	/**
