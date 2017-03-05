@@ -129,7 +129,8 @@ public class LibVulpes {
 		config.load();
 
 		zmaster587.libVulpes.Configuration.EUMult = (float)config.get(Configuration.CATEGORY_GENERAL, "EUPowerMultiplier", 7, "How many power unit one EU makes").getDouble();
-
+		zmaster587.libVulpes.Configuration.powerMult =(float)config.get(Configuration.CATEGORY_GENERAL, "PowerMultiplier", 1, "Powermultiplier on machines").getDouble();
+		
 		config.save();
 
 		TeslaCapabilityProvider.registerCap();

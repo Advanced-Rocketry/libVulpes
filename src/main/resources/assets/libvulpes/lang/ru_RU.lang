@@ -14,6 +14,7 @@ tile.coil=Катушка
 tile.Copper.name=Медная руда
 tile.Tin.name=Оловянная руда
 tile.Rutile.name=Руда рутила
+tile.motor.name=Электродвигатель
 
 item.holoProjector.name=Голо-проектор
 

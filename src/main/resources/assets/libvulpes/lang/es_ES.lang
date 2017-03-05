@@ -14,6 +14,7 @@ tile.coil=Bobina
 tile.Copper.name=Mena de cobre
 tile.Tin.name=Mena de estaño
 tile.Rutile.name=Mena de rutilo
+tile.motor.name=Motor
 
 
 item.holoProjector.name=Proyector de hologramas

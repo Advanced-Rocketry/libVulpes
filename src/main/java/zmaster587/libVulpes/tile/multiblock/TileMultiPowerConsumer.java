@@ -16,6 +16,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.libVulpes.Configuration;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.ITimeModifier;
 import zmaster587.libVulpes.api.IToggleableMachine;
@@ -66,6 +67,11 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		return batteries;
 	}
 
+	public float getPowerMultiplier() {
+		return Configuration.powerMult;
+	}
+
+	
 	@Override
 	public int getProgress(int id) {
 		return currentTime;
@@ -179,7 +185,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	 * @return amount of power to allow the machine to run this tick
 	 */
 	protected int requiredPowerPerTick() {
-		return powerPerTick;
+		return  (int) Math.max(powerPerTick*getPowerMultiplier(),1);
 	}
 
 	/**

@@ -13,6 +13,7 @@ tile.coil.copper.name=铜线圈
 tile.coil.tin.name=锡线圈
 tile.coil.steel.name=钢线圈
 tile.coil=线圈
+tile.motor.name=马达
 
 item.holoProjector.name=全息投影器
 
