@@ -34,10 +34,11 @@ public class ModuleBlockSideSelector extends ModuleBase implements IButtonInvent
 				new ModuleButton(offsetX, offsetY + 21, 4, "", this, TextureResources.buttonSquare, directions[4] + stateNames[0], 16, 16),
 				new ModuleButton(offsetX + 42, offsetY + 21, 5, "", this, TextureResources.buttonSquare, directions[5] + stateNames[0], 16, 16)};
 
-		for(ModuleButton button : buttons)
-			button.setBGColor(colors[0]);
+		if(FMLCommonHandler.instance().getSide().isClient())
+			for(ModuleButton button : buttons)
+				button.setBGColor(colors[0]);
 	}
-	
+
 	@Override
 	public void actionPerform(GuiButton button) {
 		for(ModuleButton button2 : buttons)
@@ -76,7 +77,7 @@ public class ModuleBlockSideSelector extends ModuleBase implements IButtonInvent
 	public int getStateForSide(EnumFacing side) {
 		return getStateForSide(side.ordinal());
 	}
-	
+
 	public int getStateForSide(int side) {
 		return bdf.getState(side);
 	}
@@ -84,7 +85,7 @@ public class ModuleBlockSideSelector extends ModuleBase implements IButtonInvent
 	public void setStateForSide(EnumFacing side, int state) {
 		setStateForSide(side.ordinal(), state);
 	}
-	
+
 	public void setStateForSide(int sideNum, int state) {
 		bdf.setState(sideNum, state);
 		if(FMLCommonHandler.instance().getSide().isClient()) {
