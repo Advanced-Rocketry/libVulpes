@@ -97,6 +97,7 @@ public class GuiImageButton extends GuiButton {
 			
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
+			GlStateManager.disableBlend();
 			this.mouseDragged(minecraft, par2, par3);
 		}
 	}
