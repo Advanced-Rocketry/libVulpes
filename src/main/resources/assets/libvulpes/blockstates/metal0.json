@@ -10,7 +10,7 @@
         "varient=7": { "model": "libvulpes:blockTitanium" },
         "varient=8": { "model": "libvulpes:oreDilithium" },
         "varient=9": { "model": "libvulpes:blockAluminum" },
-        "varient=10": { "model": "libvulpes:oreDilithium" },
+        "varient=10": { "model": "libvulpes:blockIridium" },
         "varient=11": { "model": "libvulpes:oreDilithium" },
         "varient=12": { "model": "libvulpes:oreDilithium" },
         "varient=13": { "model": "libvulpes:oreDilithium" },
