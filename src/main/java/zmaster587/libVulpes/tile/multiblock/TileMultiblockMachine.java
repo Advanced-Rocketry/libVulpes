@@ -83,6 +83,10 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		readFromNBT(nbt);
 	}
 
+	public void registerRecipes() {
+		
+	}
+	
 	@Override
 	public void update() {
 		//super.update();
