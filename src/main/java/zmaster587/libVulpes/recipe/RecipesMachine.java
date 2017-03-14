@@ -161,7 +161,7 @@ public class RecipesMachine {
 				}
 
 				for(int i = 0; i < fluidInput.size(); i++) {
-					if(!FluidStack.areFluidStackTagsEqual(fluidInput.get(i), otherRecipe.fluidInput.get(i)))
+					if(fluidInput.get(i).getFluid() != otherRecipe.fluidInput.get(i).getFluid())
 						return false;
 				}
 			}
