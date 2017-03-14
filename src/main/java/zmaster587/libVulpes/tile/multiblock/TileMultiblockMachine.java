@@ -71,6 +71,10 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		return true;
 	}
 
+	public void registerRecipes() {
+		
+	}
+	
 	@Override
 	public void updateEntity() {
 		//super.updateEntity();
