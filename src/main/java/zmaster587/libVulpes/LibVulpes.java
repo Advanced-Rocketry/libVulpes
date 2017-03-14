@@ -3,12 +3,14 @@ package zmaster587.libVulpes;
 
 import ic2.api.item.IC2Items;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -42,6 +44,7 @@ import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.block.multiblock.BlockMultiMachineBattery;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockPlaceHolder;
+import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.items.ItemBlockMeta;
 import zmaster587.libVulpes.items.ItemIngredient;
@@ -51,6 +54,7 @@ import zmaster587.libVulpes.network.PacketChangeKeyState;
 import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.TileModelRender;
 import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.tile.TileInventoriedPointer;
@@ -324,27 +328,29 @@ public class LibVulpes {
 		File file = new File(userModifiableRecipes.get(clazz));
 		if(!file.exists()) {
 			try {
-				file.createNewFile();
-				InputStream inputStream = getClass().getResourceAsStream("/assets/libvulpes/defaultrecipe.xml");
-				byte fileIO[] = new byte[4096];
-				int numRead;
-				OutputStream stream;
-				if(inputStream != null) {
-					stream = new FileOutputStream(file);
-
-					while((numRead = inputStream.read(fileIO)) > 0) {
-						stream.write(fileIO, 0, numRead);
-					}
-					stream.close();
-					inputStream.close();
+			file.createNewFile();
+			BufferedReader inputStream = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/assets/libvulpes/defaultrecipe.xml")));
+			
+			if(inputStream != null) {
+				BufferedWriter stream2 = new BufferedWriter(new FileWriter(file));
+				
+				
+				while(inputStream.ready()) {
+					stream2.write(inputStream.readLine() + "\n");
 				}
-				else {
-					BufferedWriter stream2 = new BufferedWriter(new FileWriter(file));
-					stream2.write("<Recipes>\n</Recipes>");
-					stream2.close();
+				
+				
+				//Write recipes
+				
+				stream2.write("<Recipes useDefault=\"true\">\n");
+				for(IRecipe recipe : RecipesMachine.getInstance().getRecipes(clazz)) {
+					stream2.write(XMLRecipeLoader.writeRecipe(recipe) + "\n");
 				}
-
-
+				stream2.write("</Recipes>");
+				stream2.close();
+				
+				inputStream.close();
+			}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

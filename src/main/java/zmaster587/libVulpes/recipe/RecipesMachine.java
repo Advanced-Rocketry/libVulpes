@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.interfaces.IRecipe;
@@ -19,6 +20,7 @@ public class RecipesMachine {
 	public class Recipe implements IRecipe {
 
 		private LinkedList<LinkedList<ItemStack>> input;
+		private Map<Integer, String> inputOreDict;
 		private LinkedList<FluidStack> fluidInput;
 		private LinkedList<ItemStack> output;
 		private LinkedList<FluidStack> fluidOutput;
@@ -26,7 +28,7 @@ public class RecipesMachine {
 
 		public Recipe() {}
 
-		public Recipe(List<ItemStack> output, LinkedList<LinkedList<ItemStack>> input, int completionTime, int powerReq) {
+		public Recipe(List<ItemStack> output, LinkedList<LinkedList<ItemStack>> input, int completionTime, int powerReq, Map<Integer, String> oreDict) {
 			this.output = new LinkedList<ItemStack>();
 			this.output.addAll(output);
 
@@ -39,10 +41,12 @@ public class RecipesMachine {
 
 			this.fluidInput = new LinkedList<FluidStack>();
 			this.fluidOutput = new LinkedList<FluidStack>();
+			
+			this.inputOreDict = oreDict;
 		}
 
-		public Recipe(List<ItemStack> output, LinkedList<LinkedList<ItemStack>> input, List<FluidStack> fluidOutput, List<FluidStack> fluidInput, int completionTime, int powerReq) {
-			this(output, input, completionTime, powerReq);
+		public Recipe(List<ItemStack> output, LinkedList<LinkedList<ItemStack>> input, List<FluidStack> fluidOutput, List<FluidStack> fluidInput, int completionTime, int powerReq, Map<Integer, String> oreDict) {
+			this(output, input, completionTime, powerReq, oreDict);
 
 			this.fluidInput.addAll(fluidInput);
 			this.fluidOutput.addAll(fluidOutput);
@@ -59,6 +63,8 @@ public class RecipesMachine {
 		public LinkedList<LinkedList<ItemStack>> getIngredients() {
 			return input;
 		}
+		
+		public String getOreDictString(int slot) { return inputOreDict == null ? null : inputOreDict.get(slot); }
 
 		@Override
 		public List<FluidStack> getFluidIngredients() {
@@ -98,7 +104,7 @@ public class RecipesMachine {
 		}
 
 		public IRecipe getRecipeAsAllItemsOnly() {
-			Recipe recipe = new Recipe(output, input, completionTime, power);
+			Recipe recipe = new Recipe(output, input, completionTime, power, null);
 
 			for(FluidStack stack : getFluidIngredients()) {
 				FluidRegistry.getFluidID(stack.getFluid());
@@ -193,7 +199,7 @@ public class RecipesMachine {
 
 
 		LinkedList<LinkedList<ItemStack>> stack = new LinkedList<LinkedList<ItemStack>>();
-
+		Map<Integer, String> oreDict = new HashMap<Integer, String>();
 		ArrayList<FluidStack> inputFluidStacks = new ArrayList<FluidStack>();
 
 		try {
@@ -201,11 +207,13 @@ public class RecipesMachine {
 				LinkedList<ItemStack> innerList = new LinkedList<ItemStack>();
 				if(inputs[i] != null) {
 					if(inputs[i] instanceof String) {
+						oreDict.put(i, ((String)inputs[i]));
 						for (ItemStack itemStack : OreDictionary.getOres((String)inputs[i])) {
 							innerList.add(itemStack.copy());
 						}
 					}
 					else if(inputs[i] instanceof NumberedOreDictStack) {
+						oreDict.put(i, ((NumberedOreDictStack)inputs[i]).ore);
 						for (ItemStack itemStack : OreDictionary.getOres(((NumberedOreDictStack)inputs[i]).getOre())) {
 							int number  = ((NumberedOreDictStack)inputs[i]).getNumber();
 							ItemStack stack2 = itemStack.copy();
@@ -240,9 +248,9 @@ public class RecipesMachine {
 
 			Recipe recipe;
 			if(inputFluidStacks.isEmpty() && outputFluidStacks.isEmpty())
-				recipe = new Recipe(outputItem, stack, timeRequired, power);
+				recipe = new Recipe(outputItem, stack, timeRequired, power,oreDict);
 			else
-				recipe = new Recipe(outputItem, stack, outputFluidStacks, inputFluidStacks, timeRequired, power);
+				recipe = new Recipe(outputItem, stack, outputFluidStacks, inputFluidStacks, timeRequired, power,oreDict);
 
 			if(recipes.contains(recipe)) 
 				LibVulpes.logger.info("Overwriting recipe " + recipes.remove(recipe));

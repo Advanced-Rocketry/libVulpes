@@ -18,4 +18,6 @@ public interface IRecipe {
 	public int getTime();
 	
 	public int getPower();
+
+	public String getOreDictString(int i);
 }

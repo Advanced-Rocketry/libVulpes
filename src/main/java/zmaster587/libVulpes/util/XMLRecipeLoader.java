@@ -22,6 +22,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.NumberedOreDictStack;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.TileEntityMachine;
@@ -255,5 +256,40 @@ public class XMLRecipeLoader {
 		}
 
 		return null;
+	}
+	
+	
+	public static String writeRecipe(IRecipe recipe) {
+		int index = 0;
+		String string = "\t<Recipe timeRequired=\"" + recipe.getTime() + "\" power =\"" + recipe.getPower() + "\">\n" +
+				"\t\t<input>\n";
+		for(List<ItemStack> stackList : recipe.getIngredients()) {
+			if(!stackList.isEmpty()) {
+				ItemStack stack = stackList.get(0);
+				String oreStr = recipe.getOreDictString(index++);
+				if(oreStr != null) {
+					string += "\t\t\t<oreDict>" + oreStr + (stack.stackSize > 1 ? (" " + stack.stackSize) : "") + "</oreDict>\n";
+				}
+				else {
+					string += "\t\t\t<itemStack>" + stack.getItem().delegate.name() + (stack.stackSize > 1 ? (" " + stack.stackSize) : (stack.getItemDamage() > 0 ? " 1" : "") ) + (stack.getItemDamage() > 0 ? (" " + stack.getItemDamage()) : "") +  "</itemStack>\n";
+				}
+			}
+		}
+		for(FluidStack stack : recipe.getFluidIngredients()) {
+			string += "\t\t\t<fluidStack>" + FluidRegistry.getDefaultFluidName(stack.getFluid()).split(":")[1] + " " + stack.amount + "</fluidStack>\n";
+		}
+		string += "\t\t</input>\n\t\t<output>\n";
+		
+		for(ItemStack stack : recipe.getOutput()) {
+			string += "\t\t\t<itemStack>" + stack.getItem().delegate.name() + (stack.stackSize > 1 ? (" " + stack.stackSize) : (stack.getItemDamage() > 0 ? " 1" : "") ) + (stack.getItemDamage() > 0 ? (" " + stack.getItemDamage()) : "") +  "</itemStack>\n";
+		}
+		
+		for(FluidStack stack : recipe.getFluidOutputs()) {
+			string += "\t\t\t<fluidStack>" + FluidRegistry.getDefaultFluidName(stack.getFluid()).split(":")[1] + " " + stack.amount + "</fluidStack>\n";
+		}
+		
+		string += "\t\t</output>\n\t</Recipe>";
+		
+		return string;
 	}
 }
