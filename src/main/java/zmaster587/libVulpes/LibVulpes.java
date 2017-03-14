@@ -5,18 +5,26 @@ package zmaster587.libVulpes;
 import ic2.api.item.IC2Items;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -59,6 +67,7 @@ import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.block.multiblock.BlockMultiMachineBattery;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockPlaceHolder;
 import zmaster587.libVulpes.block.RotatableMachineBlock;
+import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.items.ItemBlockMeta;
 import zmaster587.libVulpes.items.ItemIngredient;
@@ -68,6 +77,7 @@ import zmaster587.libVulpes.network.PacketChangeKeyState;
 import zmaster587.libVulpes.network.PacketEntity;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketMachine;
+import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.tile.TileInventoriedPointer;
 import zmaster587.libVulpes.tile.TileSchematic;
@@ -130,7 +140,7 @@ public class LibVulpes {
 
 		zmaster587.libVulpes.Configuration.EUMult = (float)config.get(Configuration.CATEGORY_GENERAL, "EUPowerMultiplier", 7, "How many power unit one EU makes").getDouble();
 		zmaster587.libVulpes.Configuration.powerMult =(float)config.get(Configuration.CATEGORY_GENERAL, "PowerMultiplier", 1, "Powermultiplier on machines").getDouble();
-		
+
 		config.save();
 
 		TeslaCapabilityProvider.registerCap();
@@ -162,12 +172,12 @@ public class LibVulpes {
 		LibVulpesBlocks.blockCoalGenerator = new BlockTile(TileCoalGenerator.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("coalGenerator").setCreativeTab(tabMultiblock).setHardness(3f);
 		//LibVulpesBlocks.blockRFBattery = new BlockMultiMachineBattery(Material.ROCK, TilePlugInputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("rfBattery").setCreativeTab(tabMultiblock).setHardness(3f);
 		//LibVulpesBlocks.blockRFOutput = new BlockMultiMachineBattery(Material.ROCK, TilePlugOutputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("rfOutput").setCreativeTab(tabMultiblock).setHardness(3f);
-		
+
 		LibVulpesBlocks.blockMotor = new BlockMotor(Material.ROCK, 1f).setCreativeTab(tabMultiblock).setUnlocalizedName("motor").setHardness(2f);
 		LibVulpesBlocks.blockAdvancedMotor = new BlockMotor(Material.ROCK, 1/1.5f).setCreativeTab(tabMultiblock).setUnlocalizedName("advancedMotor").setHardness(2f);
 		LibVulpesBlocks.blockEnhancedMotor = new BlockMotor(Material.ROCK, 1/2f).setCreativeTab(tabMultiblock).setUnlocalizedName("enhancedMotor").setHardness(2f);
 		LibVulpesBlocks.blockEliteMotor = new BlockMotor(Material.ROCK, 1/4f).setCreativeTab(tabMultiblock).setUnlocalizedName("eliteMotor").setHardness(2f);
-		
+
 
 		//Register Blocks
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockPhantom.setRegistryName(LibVulpesBlocks.blockPhantom.getUnlocalizedName().substring(5)));
@@ -178,7 +188,7 @@ public class LibVulpes {
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockForgeInputPlug.setRegistryName(LibVulpesBlocks.blockForgeInputPlug.getUnlocalizedName().substring(5)));
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockForgeOutputPlug.setRegistryName(LibVulpesBlocks.blockForgeOutputPlug.getUnlocalizedName().substring(5)));
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockCoalGenerator.setRegistryName(LibVulpesBlocks.blockCoalGenerator.getUnlocalizedName().substring(5)));
-		
+
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockMotor.setRegistryName("motor"));
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockAdvancedMotor.setRegistryName("advancedMotor"));
 		LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockEnhancedMotor.setRegistryName("enhancedMotor"));
@@ -190,7 +200,7 @@ public class LibVulpes {
 		//populate lists
 		Block motors[] = { LibVulpesBlocks.blockMotor, LibVulpesBlocks.blockAdvancedMotor, LibVulpesBlocks.blockEnhancedMotor, LibVulpesBlocks.blockEliteMotor };
 		LibVulpesBlocks.motors = motors;
-		
+
 		//Register Tile
 		GameRegistry.registerTileEntity(TileOutputHatch.class, "vulpesoutputHatch");
 		GameRegistry.registerTileEntity(TileInputHatch.class, "vulpesinputHatch");
@@ -282,8 +292,8 @@ public class LibVulpes {
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Iridium", "pickaxe", 2, 0xdedcce, AllowedProducts.getProductByName("COIL").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue()));
 
 		materialRegistry.registerOres(tabLibVulpesOres);
-		
-		
+
+
 
 	}
 
@@ -305,14 +315,14 @@ public class LibVulpes {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesBlocks.blockStructureBlock, 4), "sps", "p p", "sps", 'p', "plateIron", 's', "stickIron"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(LibVulpesBlocks.blockAdvStructureBlock, "sps", "psp", "sps", 'p', "plateTitanium", 's', "stickTitanium"));
 		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockCoalGenerator), "a", "b", 'a', LibVulpesItems.itemBattery, 'b', Blocks.FURNACE);
-		
+
 		//Motors
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesBlocks.blockMotor), " cp", "rrp"," cp", 'c', "coilCopper", 'p', "plateSteel", 'r', "stickSteel"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesBlocks.blockAdvancedMotor), " cp", "rrp"," cp", 'c', "coilGold", 'p', "plateSteel", 'r', "stickSteel"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesBlocks.blockEnhancedMotor), " cp", "rrp"," cp", 'c', "coilAluminum", 'p', "plateTitanium", 'r', "stickTitanium"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesBlocks.blockEliteMotor), " cp", "rrp"," cp", 'c', "coilTitanium", 'p', "plateIridium", 'r', "stickIridium"));
-		
-		
+
+
 		//Plugs
 		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockForgeInputPlug), " x ", "xmx"," x ", 'x', LibVulpesItems.itemBattery, 'm', LibVulpesBlocks.blockStructureBlock);
 
@@ -376,23 +386,27 @@ public class LibVulpes {
 		if(!file.exists()) {
 			try {
 				file.createNewFile();
-				InputStream inputStream = getClass().getResourceAsStream("/assets/libvulpes/defaultrecipe.xml");
-				byte fileIO[] = new byte[4096];
-				int numRead;
-				OutputStream stream;
+				BufferedReader inputStream = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/assets/libvulpes/defaultrecipe.xml")));
+				
 				if(inputStream != null) {
-					stream = new FileOutputStream(file);
-
-					while((numRead = inputStream.read(fileIO)) > 0) {
-						stream.write(fileIO, 0, numRead);
-					}
-					stream.close();
-					inputStream.close();
-				}
-				else {
 					BufferedWriter stream2 = new BufferedWriter(new FileWriter(file));
-					stream2.write("<Recipes>\n</Recipes>");
+					
+					
+					while(inputStream.ready()) {
+						stream2.write(inputStream.readLine() + "\n");
+					}
+					
+					
+					//Write recipes
+					
+					stream2.write("<Recipes useDefault=\"true\">\n");
+					for(IRecipe recipe : RecipesMachine.getInstance().getRecipes(clazz)) {
+						stream2.write(XMLRecipeLoader.writeRecipe(recipe) + "\n");
+					}
+					stream2.write("</Recipes>");
 					stream2.close();
+					
+					inputStream.close();
 				}
 
 
@@ -408,9 +422,8 @@ public class LibVulpes {
 				e.printStackTrace();
 			}
 		}
-		
-	}
 
+	}
 
 	@SubscribeEvent
 	public void tick(TickEvent.ServerTickEvent event) {
