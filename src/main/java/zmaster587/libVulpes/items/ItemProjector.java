@@ -42,6 +42,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.MouseEvent;
@@ -308,7 +309,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 	@Override
 	public boolean canInteractWithContainer(EntityPlayer entity) {
-		return entity != null && !entity.isDead && entity.getHeldItem().getItem() == this;
+		return entity != null && !entity.isDead && entity.getHeldItem() != null && entity.getHeldItem().getItem() == this;
 	}
 
 	@Override
