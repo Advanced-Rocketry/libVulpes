@@ -308,7 +308,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 	@Override
 	public boolean canInteractWithContainer(EntityPlayer entity) {
-		return !entity.isDead && entity.getHeldItem().getItem() == this;
+		return entity != null && !entity.isDead && entity.getHeldItem().getItem() == this;
 	}
 
 	@Override
