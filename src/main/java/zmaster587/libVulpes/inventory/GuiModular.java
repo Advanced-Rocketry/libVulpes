@@ -8,6 +8,7 @@ import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -100,6 +101,9 @@ public class GuiModular extends GuiContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f1,
 			int i2, int i3) {
+		//Garuntee proper color
+		GlStateManager.color(1, 1, 1, 1);
+		
 		this.mc.renderEngine.bindTexture(CommonResources.genericBackground);
 
 		int x = (width - xSize) / 2, y = (height - ySize) / 2;
