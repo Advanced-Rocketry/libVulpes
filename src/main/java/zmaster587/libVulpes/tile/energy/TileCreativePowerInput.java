@@ -1,12 +1,16 @@
 package zmaster587.libVulpes.tile.energy;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import zmaster587.libVulpes.energy.IPower;
 import zmaster587.libVulpes.util.CreativeBattery;
 import zmaster587.libVulpes.util.UniversalBattery;
 
-public class TileCreativePowerInput extends TilePlugBase implements IPower {
+public class TileCreativePowerInput extends TilePlugBase implements IPower, ITickable {
 
 	public TileCreativePowerInput() {
 		//super(1);
@@ -81,5 +85,18 @@ public class TileCreativePowerInput extends TilePlugBase implements IPower {
 		return true;
 	}
 
+	@Override
+	public void update() {
+		if(!worldObj.isRemote) {
+			for(EnumFacing facing : EnumFacing.VALUES) {
+				TileEntity tile = worldObj.getTileEntity(this.getPos().offset(facing));
 
+				if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
+					IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY,  facing.getOpposite());
+					this.extractEnergy(storage.receiveEnergy(getEnergyStored(), false),false);
+				}
+			}
+		}
+	}
+	
 }
