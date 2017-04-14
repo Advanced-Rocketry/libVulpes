@@ -44,7 +44,7 @@ public class HashedBlockPosition  {
 	
 	@Override
 	public int hashCode() {
-		return x % (Short.MAX_VALUE/2) + ( (z % Short.MAX_VALUE)*Short.MAX_VALUE) + (y * 128 * Short.MAX_VALUE);
+		return (x*179425423) ^ (z*179426549)  ^ (y*179424691);
 	}
 	
 	@Override
