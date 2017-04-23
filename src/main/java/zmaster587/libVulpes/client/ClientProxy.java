@@ -47,7 +47,7 @@ public class ClientProxy extends CommonProxy {
 	}
 	@Override
 	public void addScheduledTask(BasePacket packet) {
-		Minecraft.getMinecraft().addScheduledTask(new ExecutorClient(packet, Minecraft.getMinecraft().thePlayer, Side.CLIENT));
+		//Minecraft.getMinecraft().addScheduledTask(new ExecutorClient(packet, Minecraft.getMinecraft().thePlayer, Side.CLIENT));
 	}
 	
 	@Override
