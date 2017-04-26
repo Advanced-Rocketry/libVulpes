@@ -527,7 +527,8 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			int z = nbt.getInteger("z");
 			int dir = nbt.getInteger("dir");
 
-			RebuildStructure(player.worldObj, this.machineList.get(getMachineId(stack)), stack, x, y, z, EnumFacing.getFront(dir));
+			if(getMachineId(stack) != -1)
+				RebuildStructure(player.worldObj, this.machineList.get(getMachineId(stack)), stack, x, y, z, EnumFacing.getFront(dir));
 		}
 	}
 }
