@@ -1,6 +1,7 @@
 package zmaster587.libVulpes.inventory;
 
 import zmaster587.libVulpes.client.util.ProgressBarImage;
+import zmaster587.libVulpes.util.IconResource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -24,4 +25,6 @@ public class TextureResources {
 	public static final ResourceLocation coalGeneratorBarImg = new ResourceLocation("libvulpes", "textures/gui/coalGenerator.png");
 	
 	public static final ProgressBarImage progressGenerator = new ProgressBarImage(16, 0, 16, 16, 0, 0, 16, 16, ForgeDirection.UP, coalGeneratorBarImg);
+	public static final IconResource	slotDisabled = new IconResource(230, 36, 18, 18, new ResourceLocation("libvulpes","textures/gui/maingui.png"));
+
 }

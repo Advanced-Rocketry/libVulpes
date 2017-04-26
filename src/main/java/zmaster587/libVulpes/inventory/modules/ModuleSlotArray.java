@@ -2,7 +2,14 @@ package zmaster587.libVulpes.inventory.modules;
 
 import java.util.List;
 
+import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.inventory.ContainerModular;
+import zmaster587.libVulpes.inventory.TextureResources;
+import zmaster587.libVulpes.render.RenderHelper;
+import zmaster587.libVulpes.util.IconResource;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -31,6 +38,19 @@ public class ModuleSlotArray extends ModuleBase {
 		
 		for(Slot slot : getSlots(container)) {
 			container.addSlotToContainer(slot);
+		}
+	}
+	
+	@Override
+	public void renderBackground(GuiContainer gui, int x, int y, int mouseX,
+			int mouseY, FontRenderer font) {
+		super.renderBackground(gui, x, y, mouseX, mouseY, font);
+		
+		if(!isEnabled()) {
+			gui.mc.getTextureManager().bindTexture(TextureResources.slotDisabled.getResourceLocation());
+			for(Slot slot : slotList) {
+				gui.drawTexturedModalRect(x + slot.xDisplayPosition - 1, y + slot.yDisplayPosition - 1, TextureResources.slotDisabled.getxLoc(), TextureResources.slotDisabled.getyLoc(), TextureResources.slotDisabled.getxSize(), TextureResources.slotDisabled.getySize());
+			}
 		}
 	}
 
