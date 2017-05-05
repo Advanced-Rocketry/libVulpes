@@ -39,4 +39,9 @@ public class BlockPosition  {
 		
 		return super.equals(obj);
 	}
+	
+	@Override
+	public String toString() {
+		return this.x + " " + this.y + " " + this.z;
+	}
 }

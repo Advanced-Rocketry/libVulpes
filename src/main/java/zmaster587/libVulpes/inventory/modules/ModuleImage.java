@@ -12,7 +12,7 @@ import zmaster587.libVulpes.util.IconResource;
 @SideOnly(Side.CLIENT)
 public class ModuleImage extends ModuleBase {
 
-	IconResource icon;
+	protected IconResource icon;
 	
 	public ModuleImage(int offsetX, int offsetY, IconResource icon) {
 		super(offsetX, offsetY);
