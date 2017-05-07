@@ -186,7 +186,8 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 					outInventory.markDirty();
 					totalItems++;
 				}
-				else if(stack.isItemEqual(outputItemStacks.get(i)) && stack.stackSize + outputItemStacks.get(i).stackSize <= outInventory.getInventoryStackLimit()) {
+				else if(stack.isItemEqual(outputItemStacks.get(i)) && 
+						(stack.stackSize + outputItemStacks.get(i).stackSize <= outInventory.getInventoryStackLimit() && stack.stackSize + outputItemStacks.get(i).stackSize <= stack.getMaxStackSize())) {
 					outInventory.getStackInSlot(smartInventoryUpgrade ? outInventory.getSizeInventory() - i - 1 : i).stackSize += outputItemStacks.get(i).stackSize;
 					outInventory.markDirty();
 					totalItems++;
@@ -337,7 +338,8 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 
 						//stack cannot be null when assigning flag
-						if(stack == null || stack.isItemEqual(outputItem) && stack.stackSize + outputItem.stackSize <= outInventory.getInventoryStackLimit()) {
+						if(stack == null || stack.isItemEqual(outputItem) && 
+								(stack.stackSize + outputItem.stackSize <= outInventory.getInventoryStackLimit() && stack.stackSize + outputItem.stackSize <= stack.getMaxStackSize())) {
 							invCheckFlag = false;
 							itemCheck = true;
 							break bottomItemCheck;
@@ -369,7 +371,8 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 							break bottomItemCheck;
 						}
 					}
-					else if(stack == null || stack.isItemEqual(outputItems.get(i)) && stack.stackSize + outputItems.get(i).stackSize <= outInventory.getInventoryStackLimit()) {
+					else if(stack == null || stack.isItemEqual(outputItems.get(i)) && 
+							(stack.stackSize + outputItems.get(i).stackSize <= outInventory.getInventoryStackLimit() && stack.stackSize + outputItems.get(i).stackSize <= stack.getMaxStackSize())) {
 						itemCheck = true;
 						break bottomItemCheck;
 					}
