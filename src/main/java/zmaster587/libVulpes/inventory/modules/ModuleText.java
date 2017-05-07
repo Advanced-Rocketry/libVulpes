@@ -16,6 +16,7 @@ public class ModuleText extends ModuleBase {
 	int color;
 	boolean centered;
 	float scale;
+	boolean alwaysOnTop;
 
 	public ModuleText(int offsetX, int offsetY, String text, int color) {
 		super(offsetX, offsetY);
@@ -25,13 +26,14 @@ public class ModuleText extends ModuleBase {
 		setText(text);
 		this.color = color;
 		centered = false;
+		alwaysOnTop = false;
 	}
 
 	public ModuleText(int offsetX, int offsetY, String text, int color, float scale) {
 		this(offsetX, offsetY, text, color);
 		this.scale = scale;
 	}
-	
+
 	public ModuleText(int offsetX, int offsetY, String text, int color, boolean centered) {
 		this(offsetX, offsetY, text, color);
 		this.centered = centered;
@@ -44,6 +46,10 @@ public class ModuleText extends ModuleBase {
 		for(String str : text.split("\\n")) {
 			this.text.add(str);
 		}
+	}
+
+	public void setAlwaysOnTop(boolean alwaysOnTop) {
+		this.alwaysOnTop = alwaysOnTop;
 	}
 	
 	public void setColor(int color) {
@@ -60,7 +66,7 @@ public class ModuleText extends ModuleBase {
 
 		return str.substring(1);
 	}
-	
+
 	@Override
 	public void renderForeground(int x, int y, int mouseX,
 			int mouseY, float zLevel, GuiContainer gui, FontRenderer font) {
@@ -71,6 +77,9 @@ public class ModuleText extends ModuleBase {
 	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY, FontRenderer font) {
 
 		GL11.glPushMatrix();
+		if(alwaysOnTop)
+			GL11.glDisable(GL11.GL_DEPTH_TEST);
+		
 		GL11.glScalef(scale, scale, scale);
 		for(int i = 0; i < text.size(); i++) {
 			if(centered)
@@ -79,6 +88,9 @@ public class ModuleText extends ModuleBase {
 				font.drawString(text.get(i),(int)((x + offsetX)/scale), (int)((y + offsetY + i*font.FONT_HEIGHT)/scale), color);
 		}
 		GlStateManager.color(1f, 1f, 1f);
+		
+		if(alwaysOnTop)
+			GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glPopMatrix();
 	}
 }
