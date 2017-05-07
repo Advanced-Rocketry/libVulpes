@@ -90,7 +90,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0) {
 			if(!worldObj.isRemote) {
-				//if(isComplete())
+				if(isComplete())
 					canRender = completeStructure = completeStructure(worldObj.getBlockState(pos));
 			}
 			else {
