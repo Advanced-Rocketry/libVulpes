@@ -4,6 +4,7 @@ import java.util.List;
 
 import zmaster587.libVulpes.interfaces.ILinkableTile;
 import zmaster587.libVulpes.tile.IMultiblock;
+import zmaster587.libVulpes.util.BlockPosition;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -174,5 +175,10 @@ public class ItemLinker extends Item {
 			pad.onLinkStart(itemStack, (TileEntity)pad, player, world);
 		else
 			pad.onLinkComplete(itemStack, (TileEntity)pad, player, world);
+	}
+
+
+	public static BlockPosition getMasterCoords(ItemStack item) {
+		return new BlockPosition(getMasterX(item), getMasterY(item), getMasterZ(item));
 	}
 }
