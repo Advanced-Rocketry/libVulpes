@@ -54,6 +54,9 @@ public class EmbeddedInventory implements ISidedInventory {
 
 		@Override
 		public ItemStack getStackInSlot(int slot) {
+			if(slot >= inv.length)
+				return null;
+			
 			return inv[slot];
 		}
 
