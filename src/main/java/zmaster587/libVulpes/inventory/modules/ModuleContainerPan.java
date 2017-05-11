@@ -58,6 +58,7 @@ public class ModuleContainerPan extends ModuleBase {
 
 		buttonList = new LinkedList<GuiButton>();
 		staticButtonList = new LinkedList<GuiButton>();
+		slotList = new LinkedList<Slot>();
 
 		this.backdrop = backdrop;
 
@@ -110,7 +111,7 @@ public class ModuleContainerPan extends ModuleBase {
 		internalOffsetY = y + screenSizeY;
 	}
 
-	protected void setOffset2(int x ,int y) {
+	public void setOffset2(int x ,int y) {
 		int deltaX = -x - currentPosX;
 		int deltaY = -y - currentPosY;
 		currentPosX += deltaX;
@@ -133,6 +134,14 @@ public class ModuleContainerPan extends ModuleBase {
 		}
 	}
 
+	public int getScrollX() {
+		return currentPosX;
+	}
+	
+	public int getScrollY() {
+		return currentPosY;
+	}
+	
 	@Override
 	public List<Slot> getSlots(Container container) {
 		List<Slot> list = new LinkedList<Slot>();
@@ -344,5 +353,16 @@ public class ModuleContainerPan extends ModuleBase {
 
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
+	}
+	
+	@Override
+	public void setEnabled(boolean state) {
+		if(state && !isEnabled()) {
+			moveContainerInterior(10000, 0);
+		}
+		else if(!state && isEnabled()) {
+			moveContainerInterior(-10000, 0);
+		}
+		super.setEnabled(state);
 	}
 }
