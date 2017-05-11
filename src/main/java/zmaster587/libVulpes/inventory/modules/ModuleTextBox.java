@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -17,16 +18,17 @@ public class ModuleTextBox extends ModuleBase {
 	String currentText;
 	IGuiCallback tile;
 
-	@SideOnly(Side.CLIENT)
 	public ModuleTextBox(IGuiCallback tile, int offsetX, int offsetY, int sizeX, int sizeY, int maxStrLen) {
 		super(offsetX, offsetY);
 		this.tile = tile;
-		textBox = new GuiTextField(0, Minecraft.getMinecraft().fontRendererObj ,offsetX, offsetY, sizeX, sizeY);
-		textBox.setCanLoseFocus(true);
-		textBox.setFocused(false);
-		textBox.setEnabled(true);
-		textBox.setMaxStringLength(maxStrLen);
-		textBox.setEnableBackgroundDrawing(true);
+		if(FMLCommonHandler.instance().getSide().isClient()) {
+			textBox = new GuiTextField(0, Minecraft.getMinecraft().fontRendererObj ,offsetX, offsetY, sizeX, sizeY);
+			textBox.setCanLoseFocus(true);
+			textBox.setFocused(false);
+			textBox.setEnabled(true);
+			textBox.setMaxStringLength(maxStrLen);
+			textBox.setEnableBackgroundDrawing(true);
+		}
 		currentText = "";
 	}
 
@@ -54,7 +56,7 @@ public class ModuleTextBox extends ModuleBase {
 				return false;
 			}
 		}
-			
+
 		return true;
 	}
 
