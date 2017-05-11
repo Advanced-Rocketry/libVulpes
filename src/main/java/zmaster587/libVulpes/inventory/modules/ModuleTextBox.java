@@ -2,6 +2,7 @@ package zmaster587.libVulpes.inventory.modules;
 
 import org.lwjgl.input.Keyboard;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import zmaster587.libVulpes.inventory.GuiModular;
@@ -17,22 +18,23 @@ public class ModuleTextBox extends ModuleBase {
 	String currentText;
 	IGuiCallback tile;
 
-	@SideOnly(Side.CLIENT)
 	public ModuleTextBox(IGuiCallback tile, int offsetX, int offsetY, int sizeX, int sizeY, int maxStrLen) {
 		super(offsetX, offsetY);
 		this.tile = tile;
-		textBox = new GuiTextField(Minecraft.getMinecraft().fontRenderer ,offsetX, offsetY, sizeX, sizeY);
-		textBox.setCanLoseFocus(true);
-		textBox.setFocused(false);
-		textBox.setEnabled(true);
-		textBox.setMaxStringLength(maxStrLen);
-		textBox.setEnableBackgroundDrawing(true);
+		if(FMLCommonHandler.instance().getSide().isClient()) {
+			textBox = new GuiTextField(Minecraft.getMinecraft().fontRenderer ,offsetX, offsetY, sizeX, sizeY);
+			textBox.setCanLoseFocus(true);
+			textBox.setFocused(false);
+			textBox.setEnabled(true);
+			textBox.setMaxStringLength(maxStrLen);
+			textBox.setEnableBackgroundDrawing(true);
+		}
 		currentText = "";
 	}
 
 	public ModuleTextBox(IGuiCallback tile, int offsetX, int offsetY, String initialString) {
 		super(offsetX, offsetY);
-		
+
 		this.tile = tile;
 		currentText = initialString;
 	}
@@ -55,7 +57,7 @@ public class ModuleTextBox extends ModuleBase {
 				return false;
 			}
 		}
-			
+
 		return true;
 	}
 
@@ -85,7 +87,7 @@ public class ModuleTextBox extends ModuleBase {
 	public void setText(String str) {
 		textBox.setText(str);
 	}
-	
+
 	public String getText() {
 		return textBox.getText();
 	}
