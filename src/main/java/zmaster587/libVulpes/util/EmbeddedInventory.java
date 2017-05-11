@@ -36,7 +36,7 @@ public class EmbeddedInventory implements ISidedInventory {
 
 		public void readFromNBT(NBTTagCompound nbt) {
 			NBTTagList list = nbt.getTagList("outputItems", 10);
-			inv = new ItemStack[nbt.getInteger("size") == 0 ? 4 : nbt.getInteger("size")];
+			inv = new ItemStack[Math.max(nbt.getInteger("size") == 0 ? 4 : nbt.getInteger("size"), inv.length)];
 
 			for (int i = 0; i < list.tagCount(); i++) {
 				NBTTagCompound tag = (NBTTagCompound) list.getCompoundTagAt(i);
@@ -54,6 +54,9 @@ public class EmbeddedInventory implements ISidedInventory {
 
 		@Override
 		public ItemStack getStackInSlot(int slot) {
+			if(slot >= inv.length)
+				return null;
+			
 			return inv[slot];
 		}
 
