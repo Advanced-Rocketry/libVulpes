@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
@@ -249,7 +248,19 @@ public class LibVulpes {
 		//Recipes
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesBlocks.blockStructureBlock, 4), "sps", "p p", "sps", 'p', "plateIron", 's', "stickIron"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(LibVulpesBlocks.blockAdvStructureBlock, "sps", "psp", "sps", 'p', "plateTitanium", 's', "stickTitanium"));
+		
+		//Hatches
+		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,0), "c", "m"," ", 'c', Blocks.chest, 'm', LibVulpesBlocks.blockStructureBlock);
+		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,1), "m", "c"," ", 'c', Blocks.chest, 'm', LibVulpesBlocks.blockStructureBlock);
+		GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,0), new ItemStack(LibVulpesBlocks.blockHatch,1,1));
+		GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,1), new ItemStack(LibVulpesBlocks.blockHatch,1,0));
+		
+		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,2), "c", "m", " ", 'c', Items.bucket, 'm', LibVulpesBlocks.blockStructureBlock);
+		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,3), "m", "c", " ", 'c', Items.bucket, 'm', LibVulpesBlocks.blockStructureBlock);
+		GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,2), new ItemStack(LibVulpesBlocks.blockHatch,1,3));
+		GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,3), new ItemStack(LibVulpesBlocks.blockHatch,1,2));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(LibVulpesBlocks.blockCoalGenerator, "itemBattery", Blocks.furnace));
+
 	}
 
 	@EventHandler
