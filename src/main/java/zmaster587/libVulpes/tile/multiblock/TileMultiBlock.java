@@ -298,6 +298,11 @@ public class TileMultiBlock extends TileEntity {
 					if(tile instanceof TilePointer) {
 						if(((IMultiblock)tile).hasMaster() && ((IMultiblock)tile).getMasterBlock() != this) {
 							//return false;
+							
+							if(((IMultiblock)tile).getMasterBlock().xCoord == this.xCoord && ((IMultiblock)tile).getMasterBlock().yCoord == this.yCoord
+									&& ((IMultiblock)tile).getMasterBlock().zCoord == this.zCoord) {
+								continue;
+							}
 						}
 						else if(((IMultiblock)tile).getMasterBlock() == this) 
 							continue;
