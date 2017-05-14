@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.util;
 
+import zmaster587.libVulpes.api.material.Material;
 import zmaster587.libVulpes.block.BlockOre;
 import zmaster587.libVulpes.items.ItemOreProduct;
 import net.minecraft.block.Block;
@@ -24,7 +25,11 @@ public class OreProductColorizer   implements IItemColor, IBlockColor  {
 	public int colorMultiplier(IBlockState state, IBlockAccess worldIn,
 			BlockPos pos, int tintIndex) {
 		
-		return ((BlockOre)state.getBlock()).ores[state.getBlock().getMetaFromState(state)].getColor();
+		int meta = state.getBlock().getMetaFromState(state);
+		Material mat = ((BlockOre)state.getBlock()).ores[meta];
+		if(mat != null)
+			return mat.getColor();
+		return 0xFFFFFF;
 	}
 	
 	/*@Override

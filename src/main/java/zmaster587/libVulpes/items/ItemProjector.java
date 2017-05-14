@@ -188,7 +188,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 					List<BlockMeta> block;
 					if(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') {
 						block = new ArrayList<BlockMeta>();
-						block.add(new BlockMeta(blockList.get(id), orientation.ordinal()));
+						block.add(new BlockMeta(blockList.get(id), orientation.getOpposite().ordinal()));
 					}
 					else if(multiblock.getAllowableBlocks(structure[y][z][x]).isEmpty())
 						continue;
@@ -527,7 +527,8 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			int z = nbt.getInteger("z");
 			int dir = nbt.getInteger("dir");
 
-			RebuildStructure(player.worldObj, this.machineList.get(getMachineId(stack)), stack, x, y, z, EnumFacing.getFront(dir));
+			if(getMachineId(stack) != -1)
+				RebuildStructure(player.worldObj, this.machineList.get(getMachineId(stack)), stack, x, y, z, EnumFacing.getFront(dir));
 		}
 	}
 }

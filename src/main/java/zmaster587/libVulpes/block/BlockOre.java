@@ -71,6 +71,9 @@ public class BlockOre extends Block implements INamedMetaBlock {
 
 	@Override
 	public String getUnlocalizedName(int itemDamage) {
-		return  "material." + ores[itemDamage].getUnlocalizedName();
+		zmaster587.libVulpes.api.material.Material mat = ores[itemDamage];
+		if(mat != null)
+			return  "material." + mat.getUnlocalizedName();
+		return "INVALID BLOCK";
 	}
 }

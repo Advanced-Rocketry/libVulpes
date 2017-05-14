@@ -4,7 +4,6 @@ package zmaster587.libVulpes;
 
 import ic2.api.item.IC2Items;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -66,7 +65,6 @@ import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.block.multiblock.BlockMultiMachineBattery;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockPlaceHolder;
-import zmaster587.libVulpes.block.RotatableMachineBlock;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.items.ItemBlockMeta;
@@ -321,8 +319,18 @@ public class LibVulpes {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesBlocks.blockAdvancedMotor), " cp", "rrp"," cp", 'c', "coilGold", 'p', "plateSteel", 'r', "stickSteel"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesBlocks.blockEnhancedMotor), " cp", "rrp"," cp", 'c', "coilAluminum", 'p', "plateTitanium", 'r', "stickTitanium"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesBlocks.blockEliteMotor), " cp", "rrp"," cp", 'c', "coilTitanium", 'p', "plateIridium", 'r', "stickIridium"));
-
-
+		
+		//Hatches
+		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,0), "c", "m"," ", 'c', Blocks.CHEST, 'm', LibVulpesBlocks.blockStructureBlock);
+		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,1), "m", "c"," ", 'c', Blocks.CHEST, 'm', LibVulpesBlocks.blockStructureBlock);
+		GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,0), new ItemStack(LibVulpesBlocks.blockHatch,1,1));
+		GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,1), new ItemStack(LibVulpesBlocks.blockHatch,1,0));
+		
+		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,2), "c", "m", " ", 'c', Items.BUCKET, 'm', LibVulpesBlocks.blockStructureBlock);
+		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,3), "m", "c", " ", 'c', Items.BUCKET, 'm', LibVulpesBlocks.blockStructureBlock);
+		GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,2), new ItemStack(LibVulpesBlocks.blockHatch,1,3));
+		GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockHatch,1,3), new ItemStack(LibVulpesBlocks.blockHatch,1,2));
+		
 		//Plugs
 		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockForgeInputPlug), " x ", "xmx"," x ", 'x', LibVulpesItems.itemBattery, 'm', LibVulpesBlocks.blockStructureBlock);
 
