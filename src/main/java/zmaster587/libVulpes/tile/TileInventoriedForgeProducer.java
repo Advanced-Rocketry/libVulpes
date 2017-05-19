@@ -35,7 +35,7 @@ public abstract class TileInventoriedForgeProducer extends TileEntityForgeProduc
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack) {
-		return false;
+		return true;
 	}
 
 	@Override
