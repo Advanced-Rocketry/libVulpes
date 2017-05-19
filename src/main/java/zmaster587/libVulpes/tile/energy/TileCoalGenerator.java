@@ -63,7 +63,7 @@ public class TileCoalGenerator extends TileInventoriedForgePowerMachine {
 	@Override
 	public void update() {
 		super.update();
-		if(worldObj.isRemote)
+		if(world.isRemote)
 			textModule.setText("Generating " + getLastAmtGenerated() + " RF/t");
 	}
 	@Override

@@ -55,14 +55,14 @@ public class PacketItemModifcation extends BasePacket {
 	}
 
 	private void write(PacketBuffer out) {
-		out.writeInt(entity.worldObj.provider.getDimension());
+		out.writeInt(entity.world.provider.getDimension());
 		out.writeInt(entity.getEntityId());
 		out.writeByte(packetId);
 
 		out.writeBoolean(!nbt.hasNoTags());
 
 		if(!nbt.hasNoTags()) {
-			out.writeNBTTagCompoundToBuffer(nbt);
+			out.writeCompoundTag(nbt);
 		}
 
 		machine.writeDataToNetwork(out, packetId, entity.getHeldItem(EnumHand.MAIN_HAND));
@@ -96,7 +96,7 @@ public class PacketItemModifcation extends BasePacket {
 			NBTTagCompound nbt = null;
 
 			try {
-				nbt = in.readNBTTagCompoundFromBuffer();
+				nbt = in.readCompoundTag();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -147,7 +147,7 @@ public class PacketItemModifcation extends BasePacket {
 		World world;
 
 		buffer.readInt();
-		world = Minecraft.getMinecraft().theWorld;
+		world = Minecraft.getMinecraft().world;
 
 		int entityId = buffer.readInt();
 		packetId = buffer.readByte();
@@ -158,7 +158,7 @@ public class PacketItemModifcation extends BasePacket {
 			NBTTagCompound nbt = null;
 
 			try {
-				nbt = buffer.readNBTTagCompoundFromBuffer();
+				nbt = buffer.readCompoundTag();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

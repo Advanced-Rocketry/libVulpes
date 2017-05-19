@@ -41,7 +41,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 	}
 
 	//TODO: sync changes
-	@Override
+	/*@Override
 	public int numberOfChangesToSend() {
 		return 3;
 	}
@@ -141,7 +141,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 				prevLiquidUUID = invalidFluid;
 			else
 				prevLiquidUUID = FluidRegistry.getFluidID(info.getContents().getFluid());
-	}
+	}*/
 
 	protected float getProgress() {
 		IFluidTankProperties[] info = tile.getTankProperties();

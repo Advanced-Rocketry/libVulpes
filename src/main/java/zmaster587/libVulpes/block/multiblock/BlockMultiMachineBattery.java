@@ -30,8 +30,7 @@ public class BlockMultiMachineBattery extends BlockMultiblockStructure {
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos,
 			IBlockState state, EntityPlayer playerIn, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
+			EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if(!worldIn.isRemote)
 			playerIn.openGui(LibVulpes.instance, guiId, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		return true;

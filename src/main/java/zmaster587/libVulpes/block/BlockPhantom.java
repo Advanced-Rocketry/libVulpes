@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
@@ -90,8 +91,9 @@ public class BlockPhantom extends Block {
 	}
 	
 	@Override
-	public net.minecraft.util.math.AxisAlignedBB getCollisionBoundingBox(
-			IBlockState blockState, World worldIn, BlockPos pos) {
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState,
+			IBlockAccess worldIn, BlockPos pos) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

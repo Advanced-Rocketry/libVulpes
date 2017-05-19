@@ -28,7 +28,7 @@ public class TilePlugInputIC2 extends TileForgePowerOutput implements IEnergySin
 	public void update() {
 		super.update();
 		if(!tickedOnce) {
-			if(!worldObj.isRemote)
+			if(!world.isRemote)
 				MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
 			tickedOnce = true;
 		}

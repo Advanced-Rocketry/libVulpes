@@ -87,9 +87,9 @@ public class TileCreativePowerInput extends TilePlugBase implements IPower, ITic
 
 	@Override
 	public void update() {
-		if(!worldObj.isRemote) {
+		if(!world.isRemote) {
 			for(EnumFacing facing : EnumFacing.VALUES) {
-				TileEntity tile = worldObj.getTileEntity(this.getPos().offset(facing));
+				TileEntity tile = world.getTileEntity(this.getPos().offset(facing));
 
 				if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
 					IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY,  facing.getOpposite());

@@ -122,7 +122,7 @@ public abstract class TileEntityRFConsumer extends TileEntity implements IPower,
 		if(canPerformFunction()) {
 
 			if(hasEnoughEnergy( (int) Math.max(Configuration.powerMult*getPowerPerOperation(), 1))) {
-				if(!worldObj.isRemote) this.energy.extractEnergy(getPowerPerOperation(), false);
+				if(!world.isRemote) this.energy.extractEnergy(getPowerPerOperation(), false);
 				performFunction();
 			}
 			else

@@ -15,7 +15,7 @@ public abstract class TileEntityItemFueledMachine extends TileEntityMachine {
 				//Run update to check for more fuel
 				onInventoryUpdate();
 				if(fuelTime == 0)
-					setRunning(false, worldObj);
+					setRunning(false, world);
 					
 			}
 		}

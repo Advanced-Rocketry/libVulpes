@@ -80,10 +80,15 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		return player.getDistanceSq(pos) < 64;
 	}
 
+	@Override
+	public boolean isEmpty() {
+		return inventory.isEmpty();
+	}
+	
 	@Override
 	public void openInventory(EntityPlayer entity) {
 
@@ -143,7 +148,7 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	@Override
 	public void onChunkUnload() {
 		super.onChunkUnload();
-		if(!worldObj.isRemote) {
+		if(!world.isRemote) {
 			TileEntity tile = getFinalPointedTile();
 			if(tile instanceof TileMultiBlock) {
 				((TileMultiBlock) tile).invalidateComponent(this);

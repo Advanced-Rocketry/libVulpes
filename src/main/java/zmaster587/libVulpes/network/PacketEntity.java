@@ -47,14 +47,14 @@ public class PacketEntity extends BasePacket {
 	}
 
 	private void write(PacketBuffer out) {
-		out.writeInt(((Entity)entity).worldObj.provider.getDimension());
+		out.writeInt(((Entity)entity).world.provider.getDimension());
 		out.writeInt(((Entity)entity).getEntityId());
 		out.writeByte(packetId);
 
 		out.writeBoolean(!nbt.hasNoTags());
 
 		if(!nbt.hasNoTags()) {
-			out.writeNBTTagCompoundToBuffer(nbt);
+			out.writeCompoundTag(nbt);
 		}
 
 		entity.writeDataToNetwork(out, packetId);
@@ -80,7 +80,7 @@ public class PacketEntity extends BasePacket {
 			NBTTagCompound nbt = null;
 
 			try {
-				nbt = in.readNBTTagCompoundFromBuffer();
+				nbt = in.readCompoundTag();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -124,7 +124,7 @@ public class PacketEntity extends BasePacket {
 		World world;
 
 		buffer.readInt();
-		world = Minecraft.getMinecraft().theWorld;
+		world = Minecraft.getMinecraft().world;
 
 
 		int entityId = buffer.readInt();
@@ -136,7 +136,7 @@ public class PacketEntity extends BasePacket {
 			NBTTagCompound nbt = null;
 
 			try {
-				nbt = buffer.readNBTTagCompoundFromBuffer();
+				nbt = buffer.readCompoundTag();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

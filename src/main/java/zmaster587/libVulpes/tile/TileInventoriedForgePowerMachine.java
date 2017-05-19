@@ -28,8 +28,8 @@ public abstract class TileInventoriedForgePowerMachine extends TileInventoriedFo
 	}
 	
 	protected void setState(boolean state) {
-		if(worldObj.getBlockState(getPos()).getValue(BlockTile.STATE) != state)
-			worldObj.setBlockState(getPos(), worldObj.getBlockState(getPos()).withProperty(BlockTile.STATE, state));
+		if(world.getBlockState(getPos()).getValue(BlockTile.STATE) != state)
+			world.setBlockState(getPos(), world.getBlockState(getPos()).withProperty(BlockTile.STATE, state));
 
 	}
 
@@ -43,7 +43,7 @@ public abstract class TileInventoriedForgePowerMachine extends TileInventoriedFo
 		if(canGeneratePower()) {
 			if(hasEnoughEnergyBuffer(getPowerPerOperation())) {
 				lastRFAmount = getPowerPerOperation();
-				if(!worldObj.isRemote) this.energy.acceptEnergy(lastRFAmount, false);
+				if(!world.isRemote) this.energy.acceptEnergy(lastRFAmount, false);
 				onGeneratePower();
 				setState(true);
 				if(timeRemaining < currentTime++) {

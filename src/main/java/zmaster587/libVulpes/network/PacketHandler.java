@@ -151,7 +151,7 @@ public class PacketHandler {
 
 
 	public static final void sendToPlayersTrackingEntity(BasePacket packet, Entity entity) {
-		for( EntityPlayer player : ((WorldServer)entity.worldObj).getEntityTracker().getTrackingPlayers(entity)) {
+		for( EntityPlayer player : ((WorldServer)entity.world).getEntityTracker().getTrackingPlayers(entity)) {
 
 			channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
 			channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
@@ -249,7 +249,7 @@ public class PacketHandler {
 		protected void channelRead0(ChannelHandlerContext ctx, BasePacket packet) throws Exception
 		{
 			Minecraft mc = Minecraft.getMinecraft();
-			packet.executeClient(mc.thePlayer); //actionClient(mc.theWorld, );
+			packet.executeClient(mc.player); //actionClient(mc.theWorld, );
 		}
 	}
 	@Sharable
@@ -263,7 +263,7 @@ public class PacketHandler {
 				// nothing on the client thread
 				return;
 			}
-			EntityPlayerMP player = ((NetHandlerPlayServer) ctx.channel().attr(NetworkRegistry.NET_HANDLER).get()).playerEntity;
+			EntityPlayerMP player = ((NetHandlerPlayServer) ctx.channel().attr(NetworkRegistry.NET_HANDLER).get()).player;
 			packet.executeServer(player); //(player.worldObj, player);
 		}
 	}

@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
@@ -57,7 +58,7 @@ public class BlockOre extends Block implements INamedMetaBlock {
 
 	@Override
 	public void getSubBlocks(Item item, CreativeTabs tab,
-			List list) {
+			NonNullList<ItemStack> list) {
 		for(int i = 0; i < numBlocks; i++)
 			if(product.isOfType(ores[i].getAllowedProducts()))
 				list.add(new ItemStack(item, 1, i));

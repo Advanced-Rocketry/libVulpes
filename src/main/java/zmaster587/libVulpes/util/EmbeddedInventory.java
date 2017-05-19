@@ -44,7 +44,7 @@ public class EmbeddedInventory implements ISidedInventory {
 				NBTTagCompound tag = (NBTTagCompound) list.getCompoundTagAt(i);
 				byte slot = tag.getByte("Slot");
 				if (slot >= 0 && slot < inv.length) {
-					inv[slot] = ItemStack.loadItemStackFromNBT(tag);
+					inv[slot] = new ItemStack(tag);
 				}
 			}
 		}
@@ -66,8 +66,8 @@ public class EmbeddedInventory implements ISidedInventory {
 		public ItemStack decrStackSize(int slot, int amt) {
 			ItemStack stack = inv[slot];
 			if(stack != null) {
-				ItemStack stack2 = stack.splitStack(Math.min(amt, stack.stackSize));
-				if(stack.stackSize == 0)
+				ItemStack stack2 = stack.splitStack(Math.min(amt, stack.getCount()));
+				if(stack.getCount() == 0)
 					inv[slot] = null;
 				
 				return stack2;
@@ -91,7 +91,16 @@ public class EmbeddedInventory implements ISidedInventory {
 		}
 
 		@Override
-		public boolean isUseableByPlayer(EntityPlayer player) {
+		public boolean isUsableByPlayer(EntityPlayer player) {
+			return true;
+		}
+		
+		@Override
+		public boolean isEmpty() {
+			for(ItemStack i : inv) {
+				if(i != null)
+					return false;
+			}
 			return true;
 		}
 
@@ -107,7 +116,7 @@ public class EmbeddedInventory implements ISidedInventory {
 
 		@Override
 		public boolean isItemValidForSlot(int slot, ItemStack item) {
-			return inv[slot] == null || (inv[slot].isItemEqual(item) && inv[slot].getMaxStackSize() != inv[slot].stackSize);
+			return inv[slot] == null || (inv[slot].isItemEqual(item) && inv[slot].getMaxStackSize() != inv[slot].getCount());
 		}
 
 		@Override

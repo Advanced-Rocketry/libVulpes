@@ -57,7 +57,7 @@ public class ZUtils {
 	}
 
 	public static int getDirectionFacing(float rotationYaw) {
-		int l = MathHelper.floor_double((double)(MathHelper.wrapDegrees(rotationYaw) * 4.0F / 360.0F) + 0.5D) & 3;
+		int l = MathHelper.floor((double)(MathHelper.wrapDegrees(rotationYaw) * 4.0F / 360.0F) + 0.5D) & 3;
 
 		if(l == 0)
 			l = 2;
@@ -241,7 +241,7 @@ public class ZUtils {
 	public static boolean doesInvHaveRoom(ItemStack item, IInventory inv) {
 		for(int i = 0; i < inv.getSizeInventory(); i++)
 		{
-			if(inv.getStackInSlot(i) == null || (item.isItemEqual(inv.getStackInSlot(i)) && inv.getStackInSlot(i).stackSize < inv.getInventoryStackLimit()))
+			if(inv.getStackInSlot(i) == null || (item.isItemEqual(inv.getStackInSlot(i)) && inv.getStackInSlot(i).getCount() < inv.getInventoryStackLimit()))
 				return true;
 		}
 
@@ -252,7 +252,7 @@ public class ZUtils {
 
 		for(int i = 0; i < inv.getSizeInventory(); i++)
 		{
-			if(inv.getStackInSlot(i) != null && inv.getStackInSlot(i).getMaxStackSize() == inv.getStackInSlot(i).stackSize)
+			if(inv.getStackInSlot(i) != null && inv.getStackInSlot(i).getMaxStackSize() == inv.getStackInSlot(i).getCount())
 				return true;
 		}
 
@@ -276,7 +276,7 @@ public class ZUtils {
 
 		for(int i = 0; i < inv.getSizeInventory(); i++)
 		{
-			if(inv.getStackInSlot(i) != null && inv.getStackInSlot(i).stackSize == inv.getStackInSlot(i).getMaxStackSize())
+			if(inv.getStackInSlot(i) != null && inv.getStackInSlot(i).getCount() == inv.getStackInSlot(i).getMaxStackSize())
 				num++;
 		}
 
@@ -297,17 +297,17 @@ public class ZUtils {
 					}
 					else if(b.getStackInSlot(slot).isItemEqual(a[i])) //b.isItemValidForSlot(slot, a[i]))//
 					{
-						int maxTransfer = b.getInventoryStackLimit() - b.getStackInSlot(slot).stackSize;
+						int maxTransfer = b.getInventoryStackLimit() - b.getStackInSlot(slot).getCount();
 
-						if(a[i].stackSize < maxTransfer) {
+						if(a[i].getCount() < maxTransfer) {
 							//chest.setInventorySlotContents(g, itemstack);
-							b.getStackInSlot(slot).stackSize += a[i].stackSize;
+							b.getStackInSlot(slot).setCount(b.getStackInSlot(slot).getCount() + a[i].getCount());
 							a[i] = null;
 							break;
 						}
 						else {
-							b.getStackInSlot(slot).stackSize = b.getInventoryStackLimit();
-							a[i].stackSize -= maxTransfer;
+							b.getStackInSlot(slot).setCount(b.getInventoryStackLimit());
+							a[i].setCount(a[i].getCount() - maxTransfer);
 						}
 					}
 				}
@@ -333,23 +333,23 @@ public class ZUtils {
 				}
 				else if(b.getStackInSlot(slot).isItemEqual(a)) //b.isItemValidForSlot(slot, a[i]))//
 				{
-					int maxTransfer = b.getInventoryStackLimit() - b.getStackInSlot(slot).stackSize;
+					int maxTransfer = b.getInventoryStackLimit() - b.getStackInSlot(slot).getCount();
 
-					if(a.stackSize < maxTransfer) {
+					if(a.getCount() < maxTransfer) {
 						//chest.setInventorySlotContents(g, itemstack);
-						b.getStackInSlot(slot).stackSize += a.stackSize;
+						b.getStackInSlot(slot).setCount(b.getStackInSlot(slot).getCount() + a.getCount());
 						a = null;
 						break;
 					}
 					else {
-						b.getStackInSlot(slot).stackSize = b.getInventoryStackLimit();
-						a.stackSize -= maxTransfer;
+						b.getStackInSlot(slot).setCount( b.getInventoryStackLimit());
+						a.setCount( a.getCount() - maxTransfer);
 					}
 				}
 			}
 
 			if(a != null && firstEmtpySlot != -1) {
-				if(a.stackSize != 0)
+				if(a.getCount() != 0)
 					b.setInventorySlotContents(firstEmtpySlot, a.copy());
 				a = null;
 			}

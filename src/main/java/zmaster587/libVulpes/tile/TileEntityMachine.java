@@ -91,7 +91,7 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 			NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
 			byte slot = tag.getByte("Slot");
 			if (slot >= 0 && slot < inv.length) {
-				inv[slot] = ItemStack.loadItemStackFromNBT(tag);
+				inv[slot] = new ItemStack(tag);
 			}
 		}
 		
@@ -113,10 +113,10 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 
 		if(inv[i] == null)
 			return;
-		else if(inv[i].stackSize + amt > inv[i].getMaxStackSize())
-			inv[i].stackSize = inv[i].getMaxStackSize();
+		else if(inv[i].getCount() + amt > inv[i].getMaxStackSize())
+			inv[i].setCount(inv[i].getMaxStackSize());
 		else
-			inv[i].stackSize += amt;
+			inv[i].setCount(inv[i].getCount() + amt);
 	}
 	
 	@Override
@@ -124,7 +124,7 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 		ItemStack ret;
 		if(inv[i] == null)
 			ret = null;
-		else if(inv[i].stackSize > j) {
+		else if(inv[i].getCount() > j) {
 			ret = inv[i].splitStack(j);
 		}
 		else {
@@ -150,7 +150,7 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 	}
 	
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
+	public boolean isUsableByPlayer(EntityPlayer entityplayer) {
 		return entityplayer.getDistanceSq(this.pos) < 64;
 	}
 }

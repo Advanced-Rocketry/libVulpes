@@ -22,7 +22,7 @@ public class ModuleTextBox extends ModuleBase {
 		super(offsetX, offsetY);
 		this.tile = tile;
 		if(FMLCommonHandler.instance().getSide().isClient()) {
-			textBox = new GuiTextField(0, Minecraft.getMinecraft().fontRendererObj ,offsetX, offsetY, sizeX, sizeY);
+			textBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer ,offsetX, offsetY, sizeX, sizeY);
 			textBox.setCanLoseFocus(true);
 			textBox.setFocused(false);
 			textBox.setEnabled(true);

@@ -100,7 +100,7 @@ public class TileMultiBlock extends TileEntity {
 	}
 
 	public void setMachineRunning(boolean running) {
-		worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockTile.STATE, running), 2);
+		world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockTile.STATE, running), 2);
 	}
 
 	public boolean isUsableByPlayer(EntityPlayer player) {
@@ -158,7 +158,7 @@ public class TileMultiBlock extends TileEntity {
 	public void deconstructMultiBlock(World world, BlockPos destroyedPos, boolean blockBroken, IBlockState state) {
 		canRender = completeStructure = false;
 		if(this.pos.compareTo(destroyedPos) != 0) 
-			worldObj.setBlockState(this.pos, world.getBlockState(pos).withProperty(BlockTile.STATE, false));
+			world.setBlockState(this.pos, world.getBlockState(pos).withProperty(BlockTile.STATE, false));
 
 
 
@@ -184,8 +184,8 @@ public class TileMultiBlock extends TileEntity {
 							globalY == destroyedPos.getY() &&
 							globalZ == destroyedPos.getZ())
 						continue;
-					TileEntity tile = worldObj.getTileEntity(new BlockPos(globalX, globalY, globalZ));
-					Block block = worldObj.getBlockState(new BlockPos(globalX, globalY, globalZ)).getBlock();
+					TileEntity tile = world.getTileEntity(new BlockPos(globalX, globalY, globalZ));
+					Block block = world.getBlockState(new BlockPos(globalX, globalY, globalZ)).getBlock();
 
 					destroyBlockAt(new BlockPos(globalX, globalY, globalZ), block, tile);
 
@@ -211,7 +211,7 @@ public class TileMultiBlock extends TileEntity {
 
 		//if it's an instance of multiblock structure call its destroyStructure method
 		if(block instanceof BlockMultiblockStructure) {
-			((BlockMultiblockStructure)block).destroyStructure(worldObj, destroyedPos, worldObj.getBlockState(destroyedPos));
+			((BlockMultiblockStructure)block).destroyStructure(world, destroyedPos, world.getBlockState(destroyedPos));
 		}
 
 		//If the the tile is a placeholder then make sure to replace it with its original block and tile
@@ -221,14 +221,14 @@ public class TileMultiBlock extends TileEntity {
 			//Must set incomplete BEFORE changing the block to prevent stack overflow!
 			placeholder.setIncomplete();
 
-			worldObj.setBlockState(destroyedPos, placeholder.getReplacedState());
+			world.setBlockState(destroyedPos, placeholder.getReplacedState());
 
 			//Dont try to set a tile if none existed
 			if(placeholder.getReplacedTileEntity() != null) {
 				NBTTagCompound nbt = new NBTTagCompound();
 				placeholder.getReplacedTileEntity().writeToNBT(nbt);
 
-				worldObj.getTileEntity(destroyedPos).readFromNBT(nbt);
+				world.getTileEntity(destroyedPos).readFromNBT(nbt);
 			}
 		}
 		//Make all pointers incomplete
@@ -312,11 +312,11 @@ public class TileMultiBlock extends TileEntity {
 					int globalZ = pos.getZ() - (x - offset.x)*front.getFrontOffsetX()  - (z-offset.z)*front.getFrontOffsetZ();
 					BlockPos globalPos = new BlockPos(globalX, globalY, globalZ);
 
-					if(!worldObj.getChunkFromBlockCoords(globalPos).isLoaded())
+					if(!world.getChunkFromBlockCoords(globalPos).isLoaded())
 						return false;
 
-					TileEntity tile = worldObj.getTileEntity(globalPos);
-					IBlockState blockState = worldObj.getBlockState(globalPos);
+					TileEntity tile = world.getTileEntity(globalPos);
+					IBlockState blockState = world.getBlockState(globalPos);
 					Block block = blockState.getBlock();
 					int meta = block.getMetaFromState(blockState);
 
@@ -340,9 +340,9 @@ public class TileMultiBlock extends TileEntity {
 							continue;
 					}
 					//Make sure the structure is valid
-					if(!(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') && !(structure[y][z][x] instanceof Block && (Block)structure[y][z][x] == Blocks.AIR && worldObj.isAirBlock(globalPos)) && !getAllowableBlocks(structure[y][z][x]).contains(new BlockMeta(block,meta))) {
+					if(!(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') && !(structure[y][z][x] instanceof Block && (Block)structure[y][z][x] == Blocks.AIR && world.isAirBlock(globalPos)) && !getAllowableBlocks(structure[y][z][x]).contains(new BlockMeta(block,meta))) {
 
-						LibVulpes.proxy.spawnParticle("errorBox", worldObj, globalX, globalY, globalZ, 0, 0, 0);
+						LibVulpes.proxy.spawnParticle("errorBox", world, globalX, globalY, globalZ, 0, 0, 0);
 						return false;
 					}
 				}
@@ -360,25 +360,25 @@ public class TileMultiBlock extends TileEntity {
 					BlockPos globalPos = new BlockPos(globalX, globalY, globalZ);
 
 
-					TileEntity tile = worldObj.getTileEntity(globalPos);
-					IBlockState blockState = worldObj.getBlockState(globalPos);
+					TileEntity tile = world.getTileEntity(globalPos);
+					IBlockState blockState = world.getBlockState(globalPos);
 					Block block = blockState.getBlock();
 					int meta = block.getMetaFromState(blockState);
 
 					if(block instanceof BlockMultiBlockComponentVisible) {
-						((BlockMultiBlockComponentVisible)block).hideBlock(worldObj, globalPos, blockState);
+						((BlockMultiBlockComponentVisible)block).hideBlock(world, globalPos, blockState);
 
-						tile = worldObj.getTileEntity(globalPos);
+						tile = world.getTileEntity(globalPos);
 
 						if(tile instanceof IMultiblock)
 							((IMultiblock)tile).setComplete(globalPos);
 					}
 					else if(block instanceof BlockMultiblockStructure) {
-						if(shouldHideBlock(worldObj, globalPos, blockState))
-							((BlockMultiblockStructure)block).hideBlock(worldObj, globalPos, blockState);
+						if(shouldHideBlock(world, globalPos, blockState))
+							((BlockMultiblockStructure)block).hideBlock(world, globalPos, blockState);
 					}
 
-					if(structure[y][z][x] != null && !block.isAir(blockState, worldObj, globalPos) && !(tile instanceof IMultiblock) && !(tile instanceof TileMultiBlock)) {
+					if(structure[y][z][x] != null && !block.isAir(blockState, world, globalPos) && !(tile instanceof IMultiblock) && !(tile instanceof TileMultiBlock)) {
 						replaceStandardBlock(globalPos, blockState, tile);
 					}
 				}
@@ -390,7 +390,7 @@ public class TileMultiBlock extends TileEntity {
 			integrateTile(tile);
 		}
 		markDirty();
-		worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
+		world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 		return true;
 	}
 
@@ -446,8 +446,8 @@ public class TileMultiBlock extends TileEntity {
 	 */
 	protected void replaceStandardBlock(BlockPos newPos, IBlockState state, TileEntity tile) {
 
-		worldObj.setBlockState(newPos, LibVulpesBlocks.blockPlaceHolder.getDefaultState());
-		TilePlaceholder newTile = (TilePlaceholder)worldObj.getTileEntity(newPos);
+		world.setBlockState(newPos, LibVulpesBlocks.blockPlaceHolder.getDefaultState());
+		TilePlaceholder newTile = (TilePlaceholder)world.getTileEntity(newPos);
 
 		newTile.setReplacedBlockState(state);
 		newTile.setReplacedTileEntity(tile);

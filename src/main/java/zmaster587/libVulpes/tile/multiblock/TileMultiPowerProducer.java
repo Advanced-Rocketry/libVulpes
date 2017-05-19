@@ -40,7 +40,7 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 	public void setMachineEnabled(boolean enabled) {
 		this.enabled = enabled;
 		this.markDirty();
-		worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
+		world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 	}
 
 	@Override
@@ -51,8 +51,8 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 			toggleSwitch.setToggleState(getMachineEnabled());
 
 			//Last ditch effort to update the toggle switch when it's flipped
-			if(!worldObj.isRemote)
-				PacketHandler.sendToNearby(new PacketMachine(this, (byte)NetworkPackets.TOGGLE.ordinal()), worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64);
+			if(!world.isRemote)
+				PacketHandler.sendToNearby(new PacketMachine(this, (byte)NetworkPackets.TOGGLE.ordinal()), world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64);
 		}
 	}
 	
@@ -125,7 +125,7 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 		super.integrateTile(tile);
 
 		for(BlockMeta block : TileMultiBlock.getMapping('p')) {
-			if(block.getBlock() == worldObj.getBlockState(tile.getPos()).getBlock())
+			if(block.getBlock() == world.getBlockState(tile.getPos()).getBlock())
 				batteries.addBattery((IUniversalEnergy) tile);
 		}
 	}

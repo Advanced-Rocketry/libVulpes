@@ -122,7 +122,7 @@ public class ContainerModular extends Container {
 				return null;
 			}
 
-			if (itemstack1.stackSize == 0)
+			if (itemstack1.getCount() == 0)
 			{
 				slot.putStack((ItemStack)null);
 			}
@@ -153,26 +153,26 @@ public class ContainerModular extends Container {
 
         if (p_75135_1_.isStackable())
         {
-            while (p_75135_1_.stackSize > 0 && (!p_75135_4_ && k < p_75135_3_ || p_75135_4_ && k >= p_75135_2_))
+            while (p_75135_1_.getCount() > 0 && (!p_75135_4_ && k < p_75135_3_ || p_75135_4_ && k >= p_75135_2_))
             {
                 slot = (Slot)this.inventorySlots.get(k);
                 itemstack1 = slot.getStack();
 
                 if (itemstack1 != null && itemstack1.getItem() == p_75135_1_.getItem() && (!p_75135_1_.getHasSubtypes() || p_75135_1_.getItemDamage() == itemstack1.getItemDamage()) && ItemStack.areItemStackTagsEqual(p_75135_1_, itemstack1))
                 {
-                    int l = itemstack1.stackSize + p_75135_1_.stackSize;
+                    int l = itemstack1.getCount() + p_75135_1_.getCount();
 
-                    if (l <= p_75135_1_.getMaxStackSize())
+                    if (l <= p_75135_1_.getCount())
                     {
-                        p_75135_1_.stackSize = 0;
-                        itemstack1.stackSize = l;
+                        p_75135_1_.setCount(0);
+                        itemstack1.setCount(l);
                         slot.onSlotChanged();
                         flag1 = true;
                     }
-                    else if (itemstack1.stackSize < p_75135_1_.getMaxStackSize())
+                    else if (itemstack1.getCount() < p_75135_1_.getCount())
                     {
-                        p_75135_1_.stackSize -= p_75135_1_.getMaxStackSize() - itemstack1.stackSize;
-                        itemstack1.stackSize = p_75135_1_.getMaxStackSize();
+                        p_75135_1_.setCount(p_75135_1_.getCount() - p_75135_1_.getCount() - itemstack1.getCount());
+                        itemstack1.setCount(p_75135_1_.getCount());
                         slot.onSlotChanged();
                         flag1 = true;
                     }
@@ -189,7 +189,7 @@ public class ContainerModular extends Container {
             }
         }
 
-        if (p_75135_1_.stackSize > 0)
+        if (p_75135_1_.getCount() > 0)
         {
             if (p_75135_4_)
             {
@@ -210,7 +210,7 @@ public class ContainerModular extends Container {
                 {
                     slot.putStack(p_75135_1_.copy());
                     slot.onSlotChanged();
-                    p_75135_1_.stackSize = 0;
+                    p_75135_1_.setCount(0);
                     flag1 = true;
                     break;
                 }

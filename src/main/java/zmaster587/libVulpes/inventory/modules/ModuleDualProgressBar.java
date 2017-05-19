@@ -40,8 +40,8 @@ public class ModuleDualProgressBar extends ModuleProgress {
 			int centerPoint = progress.getTotalProgress(id);
 			int variation = progress.getProgress(id);
 			
-			String newStr = string.replaceAll("%b", String.format("%.2f",multiplier*MathHelper.clamp_float(centerPoint - variation/2,0,100)));
-			newStr = newStr.replaceAll("%a", String.format("%.2f",multiplier*MathHelper.clamp_float(centerPoint + variation/2,0,100)));
+			String newStr = string.replaceAll("%b", String.format("%.2f",multiplier*MathHelper.clamp(centerPoint - variation/2,0,100)));
+			newStr = newStr.replaceAll("%a", String.format("%.2f",multiplier*MathHelper.clamp(centerPoint + variation/2,0,100)));
 			modifiedList.add(newStr);
 		}
 		return modifiedList;

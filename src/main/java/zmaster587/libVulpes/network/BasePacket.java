@@ -96,7 +96,7 @@ public abstract class BasePacket implements IMessage {
 		@Override
 		public IMessage onMessage(BasePacket message, MessageContext ctx) {
 
-			((WorldServer) ctx.getServerHandler().playerEntity.worldObj).addScheduledTask(new executor(message, ctx.getServerHandler().playerEntity, ctx.side));
+			((WorldServer) ctx.getServerHandler().player.world).addScheduledTask(new executor(message, ctx.getServerHandler().player, ctx.side));
 
 
 
@@ -127,10 +127,10 @@ public abstract class BasePacket implements IMessage {
 		public IMessage onMessage(BasePacket message, MessageContext ctx) {
 			switch(ctx.side) {
 			case CLIENT:
-				Minecraft.getMinecraft().addScheduledTask(new executor(message, Minecraft.getMinecraft().thePlayer, ctx.side));
+				Minecraft.getMinecraft().addScheduledTask(new executor(message, Minecraft.getMinecraft().player, ctx.side));
 				break;
 			case SERVER:
-				((WorldServer) ctx.getServerHandler().playerEntity.worldObj).addScheduledTask(new executor(message, ctx.getServerHandler().playerEntity, ctx.side));
+				((WorldServer) ctx.getServerHandler().player.world).addScheduledTask(new executor(message, ctx.getServerHandler().player, ctx.side));
 				break;
 			}
 

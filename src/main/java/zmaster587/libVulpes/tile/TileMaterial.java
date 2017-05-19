@@ -33,7 +33,7 @@ public class TileMaterial extends TilePointer {
 
 		nbt.setString("material", materialType.getUnlocalizedName());
 
-		return new SPacketUpdateTileEntity(pos, worldObj.provider.getDimension(), nbt);
+		return new SPacketUpdateTileEntity(pos, world.provider.getDimension(), nbt);
 	}
 
 	@Override

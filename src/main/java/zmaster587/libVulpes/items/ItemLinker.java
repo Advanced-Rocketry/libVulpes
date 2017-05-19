@@ -167,24 +167,15 @@ public class ItemLinker extends Item {
 
 		itemStack.setTagInfo("MasterPos", position);
 	}
-
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world,
-			EntityPlayer player, EnumHand hand) {
-
-		//if(player.isSneaking()) {
-			//resetPosition(stack);
-		//}
-		return super.onItemRightClick(stack, world, player, hand);
-	}
-
-	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn,
-			World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
-			float hitX, float hitY, float hitZ) {
+	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn,
+			BlockPos pos, EnumHand hand, EnumFacing facing, float hitX,
+			float hitY, float hitZ) {
 		
 		TileEntity entity = worldIn.getTileEntity(pos);
 
+		ItemStack stack = playerIn.getHeldItem(hand);
+		
 		if(entity != null) {
 			if(entity instanceof ILinkableTile) {
 				applySettings(stack, (ILinkableTile)entity, playerIn, worldIn);

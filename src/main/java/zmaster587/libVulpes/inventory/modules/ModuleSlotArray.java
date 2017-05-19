@@ -49,7 +49,7 @@ public class ModuleSlotArray extends ModuleBase {
 		if(!isEnabled()) {
 			gui.mc.getTextureManager().bindTexture(TextureResources.slotDisabled.getResourceLocation());
 			for(Slot slot : slotList) {
-				gui.drawTexturedModalRect(x + slot.xDisplayPosition - 1, y + slot.yDisplayPosition - 1, TextureResources.slotDisabled.getxLoc(), TextureResources.slotDisabled.getyLoc(), TextureResources.slotDisabled.getxSize(), TextureResources.slotDisabled.getySize());
+				gui.drawTexturedModalRect(x + slot.xPos - 1, y + slot.yPos - 1, TextureResources.slotDisabled.getxLoc(), TextureResources.slotDisabled.getyLoc(), TextureResources.slotDisabled.getxSize(), TextureResources.slotDisabled.getySize());
 			}
 		}
 	}

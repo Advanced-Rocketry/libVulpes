@@ -195,7 +195,7 @@ public class RenderHelper {
 		RenderManager renderManager = mc.getRenderManager();
 		if (d3 <= (double)(sizeOnScreen * sizeOnScreen))
 		{
-			FontRenderer fontrenderer = mc.fontRendererObj;
+			FontRenderer fontrenderer = mc.fontRenderer;
 			float f = 1.6F;
 			float f1 = 0.016666668F * f;
 			GL11.glPushMatrix();
@@ -459,7 +459,7 @@ public class RenderHelper {
 		{
 			EntityItem entityitem = new EntityItem(tile.getWorld(), 0.0D, 0.0D, 0.0D, itemstack);
 			Item item = entityitem.getEntityItem().getItem();
-			entityitem.getEntityItem().stackSize = 1;
+			entityitem.getEntityItem().setCount(1);
 			entityitem.hoverStart = 0.0F;
 			GlStateManager.disableLighting();
 

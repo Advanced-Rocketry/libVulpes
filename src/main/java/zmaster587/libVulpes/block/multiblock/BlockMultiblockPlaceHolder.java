@@ -86,7 +86,7 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 
 				for(ItemStack stack : stackList) {
 					EntityItem entityItem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-					world.spawnEntityInWorld(entityItem);
+					world.spawnEntity(entityItem);
 
 				}
 			}

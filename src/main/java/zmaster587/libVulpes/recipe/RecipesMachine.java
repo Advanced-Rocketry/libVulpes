@@ -12,7 +12,6 @@ import zmaster587.libVulpes.tile.TileEntityMachine;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -104,53 +103,6 @@ public class RecipesMachine {
 			return stack;
 		}
 
-		public IRecipe getRecipeAsAllItemsOnly() {
-			Recipe recipe = new Recipe(output, input, completionTime, power, null);
-
-			for(FluidStack stack : getFluidIngredients()) {
-				FluidRegistry.getFluidID(stack.getFluid());
-
-				Block block = stack.getFluid().getBlock();
-
-				if(block == null) {
-					for(FluidContainerRegistry.FluidContainerData container : FluidContainerRegistry.getRegisteredFluidContainerData()) {
-						if(container.fluid.containsFluid(stack)) {
-							LinkedList<ItemStack> list = new LinkedList<ItemStack>();
-							list.add(container.filledContainer.copy());
-							recipe.input.add(list);
-							break;
-						}
-					}
-				}
-				else {
-					LinkedList<ItemStack> list = new LinkedList<ItemStack>();
-					ItemStack stack2 = new ItemStack(block);
-					stack2.stackSize = stack.amount;
-					list.add(stack2);
-					recipe.input.add(list);
-				}
-			}
-
-			for(FluidStack stack : getFluidOutputs()) {
-				FluidRegistry.getFluidID(stack.getFluid());
-
-				Block block = stack.getFluid().getBlock();
-
-				if(block == null) {
-					for(FluidContainerRegistry.FluidContainerData container : FluidContainerRegistry.getRegisteredFluidContainerData()) {
-						if(container.fluid.containsFluid(stack)) {
-							recipe.output.add(container.filledContainer.copy());
-							break;
-						}
-					}
-				}
-				else
-					recipe.output.add(new ItemStack(block));
-			}
-
-			return recipe;
-		}
-
 		@Override
 		public boolean equals(Object obj) {
 			if(obj instanceof Recipe) {
@@ -218,7 +170,7 @@ public class RecipesMachine {
 						for (ItemStack itemStack : OreDictionary.getOres(((NumberedOreDictStack)inputs[i]).getOre())) {
 							int number  = ((NumberedOreDictStack)inputs[i]).getNumber();
 							ItemStack stack2 = itemStack.copy();
-							stack2.stackSize = number;
+							stack2.setCount(number);
 							innerList.add(stack2);
 						}
 					}

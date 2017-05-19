@@ -13,13 +13,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import zmaster587.libVulpes.cap.FluidCapability;
 import zmaster587.libVulpes.gui.CommonResources;
@@ -147,7 +147,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 
 		list.add(new ModuleSlotArray(45, 18, this, 0, 1));
 		list.add(new ModuleSlotArray(45, 54, this, 1, 2));
-		if(worldObj.isRemote)
+		if(world.isRemote)
 			list.add(new ModuleImage(44, 35, new IconResource(194, 0, 18, 18, CommonResources.genericBackground)));
 		list.add(new ModuleLiquidIndicator(27, 18, this));
 
@@ -191,7 +191,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		return true;
 	}
 
@@ -226,65 +226,29 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	protected boolean useBucket( int slot, ItemStack stack) {
 
 		//Fill tank from bucket
-		if(FluidContainerRegistry.isFilledContainer(stack)) {
-			if(!outputOnly && slot == 0 && fluidTank.getFluidAmount() + FluidContainerRegistry.getContainerCapacity(stack) <= fluidTank.getCapacity()) {
-				ItemStack emptyContainer = FluidContainerRegistry.drainFluidContainer(stack);
-
-				if(emptyContainer != null && getStackInSlot(1) == null || (emptyContainer.isItemEqual(getStackInSlot(1)) && getStackInSlot(1).stackSize < getStackInSlot(1).getMaxStackSize())) {
-					int amtFilled = fluidTank.fill(FluidContainerRegistry.getFluidForFilledItem(stack), true);
-
-					//Handle fluids not being equal
-					if(amtFilled == 0)
-						return false;
-					
-					if(getStackInSlot(1) == null)
-						inventory.setInventorySlotContents(1, emptyContainer);
-					else
-						getStackInSlot(1).stackSize++;
-					decrStackSize(0, 1);
-					return true;
-				}
-			}
-		}
-		//Empty tank into bucket
-		else if(FluidContainerRegistry.isContainer(stack)) {
-			if(slot == 0 && fluidTank.getFluidAmount() >= FluidContainerRegistry.BUCKET_VOLUME) {
-				ItemStack fullContainer = FluidContainerRegistry.fillFluidContainer(fluidTank.drain(FluidContainerRegistry.BUCKET_VOLUME, false), stack);
-
-
-				if(fullContainer != null && (getStackInSlot(1) == null || (fullContainer.isItemEqual(getStackInSlot(1)) && getStackInSlot(1).stackSize < getStackInSlot(1).getMaxStackSize())) ) {
-					fluidTank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
-
-					if(getStackInSlot(1) == null)
-						inventory.setInventorySlotContents(1, fullContainer);
-					else
-						getStackInSlot(1).stackSize++;
-					decrStackSize(0, 1);
-					return true;
-				}
-			}
-		}
 		//Drain tank to bucket
-		else if(stack != null && stack.getItem() instanceof IFluidContainerItem) {
-			IFluidContainerItem fluidItem = ((IFluidContainerItem)stack.getItem());
+		if(stack != null && stack.getItem() instanceof IFluidHandlerItem) {
+			IFluidHandlerItem fluidItem = ((IFluidHandlerItem)stack.getItem());
 			FluidStack fluidStack;
 			stack = stack.copy();
-			stack.stackSize = 1;
+			stack.setCount(1);
+			
+			IFluidTankProperties tankProps = fluidItem.getTankProperties()[0];
 			
 			//Drain the tank into the item
-			if(fluidTank.getFluid() != null && (fluidItem.getFluid(stack) == null || outputOnly)) {
-				int amt = fluidItem.fill(stack, fluidTank.getFluid(), true);
+			if(fluidTank.getFluid() != null && (tankProps.getContents() == null || outputOnly)) {
+				int amt = fluidItem.fill(fluidTank.getFluid(), true);
 				
 				
 				//If the container is full move it down and try again for a new one
-				if(amt != 0 && fluidItem.getCapacity(stack) == fluidItem.getFluid(stack).amount) {
+				if(amt != 0 && tankProps.getCapacity() == tankProps.getContents().amount) {
 					
 					
 					if(getStackInSlot(1) == null) {
 						inventory.setInventorySlotContents(1, stack);
 					}
-					else if(ItemStack.areItemStackTagsEqual(getStackInSlot(1), stack) && getStackInSlot(1).getItem().equals(stack.getItem()) && getStackInSlot(1).getItemDamage() == stack.getItemDamage() && stack.getItem().getItemStackLimit(stack) < getStackInSlot(1).stackSize) {
-						getStackInSlot(1).stackSize++;
+					else if(ItemStack.areItemStackTagsEqual(getStackInSlot(1), stack) && getStackInSlot(1).getItem().equals(stack.getItem()) && getStackInSlot(1).getItemDamage() == stack.getItemDamage() && stack.getItem().getItemStackLimit(stack) < getStackInSlot(1).getCount()) {
+						getStackInSlot(1).setCount(getStackInSlot(1).getCount() + 1);
 
 					}
 					else
@@ -297,7 +261,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 				
 			}
 			else {
-				fluidStack = fluidItem.drain(stack, fluidTank.getCapacity() - fluidTank.getFluidAmount(), false);
+				fluidStack = fluidItem.drain(fluidTank.getCapacity() - fluidTank.getFluidAmount(), false);
 
 				int amountDrained = fluidTank.fill(fluidStack, false);
 				
@@ -305,13 +269,13 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 				if(amountDrained == 0)
 					return false;
 				
-				fluidItem.drain(stack, amountDrained, true);
-				if (fluidItem.getFluid(stack) == null || fluidItem.getFluid(stack).amount == 0) {
+				fluidItem.drain(amountDrained, true);
+				if (tankProps.getContents() == null || tankProps.getContents().amount == 0) {
 					if(getStackInSlot(1) == null) {
 						inventory.setInventorySlotContents(1, stack);
 					}
-					else if(ItemStack.areItemStackTagsEqual(getStackInSlot(1), stack) && getStackInSlot(1).getItem().equals(stack.getItem()) && getStackInSlot(1).getItemDamage() == stack.getItemDamage() && stack.getItem().getItemStackLimit(stack) > getStackInSlot(1).stackSize) {
-						getStackInSlot(1).stackSize++;
+					else if(ItemStack.areItemStackTagsEqual(getStackInSlot(1), stack) && getStackInSlot(1).getItem().equals(stack.getItem()) && getStackInSlot(1).getItemDamage() == stack.getItemDamage() && stack.getItem().getItemStackLimit(stack) > getStackInSlot(1).getCount()) {
+						getStackInSlot(1).setCount(getStackInSlot(1).getCount() + 1);
 
 					}
 					else
@@ -346,6 +310,11 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	@Override
 	public void openInventory(EntityPlayer player) {
 		
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return inventory.isEmpty();
 	}
 
 	@Override

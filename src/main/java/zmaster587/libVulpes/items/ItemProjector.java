@@ -113,8 +113,8 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void mouseEvent(MouseEvent event) {
-		if(Minecraft.getMinecraft().thePlayer.isSneaking() && event.getDwheel() != 0) {
-			ItemStack stack = Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.MAIN_HAND);
+		if(Minecraft.getMinecraft().player.isSneaking() && event.getDwheel() != 0) {
+			ItemStack stack = Minecraft.getMinecraft().player.getHeldItem(EnumHand.MAIN_HAND);
 
 			if(stack != null && stack.getItem() == this && getMachineId(stack) != -1) {
 				if(event.getDwheel() < 0) {
@@ -124,7 +124,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 					setYLevel(stack, getYLevel(stack) - 1);
 				event.setCanceled(true);
 
-				PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getMinecraft().thePlayer, (byte)1));
+				PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getMinecraft().player, (byte)1));
 			}
 		}
 	}
@@ -219,27 +219,26 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		this.setBasePosition(stack, posX, posY, posZ);
 		this.setDirection(stack, orientation.ordinal());
 	}
-
+	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack stack,
-			World world, EntityPlayer player, EnumHand hand) {
-
-
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+		
 		if( player.isSneaking()) {
 			if(!world.isRemote)
 				player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), world, -1, -1, 0);
-			return super.onItemRightClick(stack, world, player, hand);
+			return super.onItemRightClick(world, player, hand);
 		}
-		return super.onItemRightClick(stack, world, player, hand);
+		return super.onItemRightClick(world, player, hand);
 	}
 
-
 	@Override
-	public EnumActionResult onItemUseFirst(ItemStack stack,
-			EntityPlayer player, World world, BlockPos pos1, EnumFacing side,
-			float hitX, float hitY, float hitZ, EnumHand hand) {
+	public EnumActionResult onItemUseFirst(EntityPlayer player, World world,
+			BlockPos blockPos, EnumFacing side, float hitX, float hitY, float hitZ,
+			EnumHand hand) {
 
 
+		ItemStack stack = player.getHeldItem(hand);
+		
 		int id = getMachineId(stack);
 		if(!player.isSneaking() && id != -1 && world.isRemote) {
 			EnumFacing dir = EnumFacing.getFront(ZUtils.getDirectionFacing(player.rotationYaw - 180));
@@ -275,7 +274,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 						setBasePosition(stack, pos.getBlockPos().getX() - globalX, pos.getBlockPos().getY() - controller.y  + 1, pos.getBlockPos().getZ() - globalZ);
 						PacketHandler.sendToServer(new PacketItemModifcation(this, player, (byte)0));
 						PacketHandler.sendToServer(new PacketItemModifcation(this, player, (byte)2));
-						return super.onItemUseFirst(stack, player, world, pos1, side, hitX, hitY, hitZ, hand);
+						return super.onItemUseFirst(player, world, blockPos, side, hitX, hitY, hitZ, hand);
 					}
 				}
 			}
@@ -289,7 +288,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			PacketHandler.sendToServer(new PacketItemModifcation(this, player, (byte)2));
 		}
 
-		return super.onItemUseFirst(stack, player, world, pos1, side, hitX, hitY, hitZ, hand);
+		return super.onItemUseFirst(player, world, blockPos, side, hitX, hitY, hitZ, hand);
 	}
 
 	protected HashedBlockPosition getControllerOffset(Object[][][] structure) {
@@ -333,10 +332,10 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	@SideOnly(Side.CLIENT)
 	public void onInventoryButtonPressed(int buttonId) {
 		//PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getMinecraft().thePlayer, (byte)buttonId));
-		ItemStack stack = Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.MAIN_HAND);
+		ItemStack stack = Minecraft.getMinecraft().player.getHeldItem(EnumHand.MAIN_HAND);
 		if(stack != null && stack.getItem() == this) {
 			setMachineId(stack, buttonId);
-			PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getMinecraft().thePlayer, (byte)0));
+			PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getMinecraft().player, (byte)0));
 		}
 	}
 
@@ -519,7 +518,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		else if(id == 1) {
 			setYLevel(stack, nbt.getInteger("yLevel"));
 			Vector3F<Integer> vec = getBasePosition(stack);
-			RebuildStructure(player.worldObj, this.machineList.get(getMachineId(stack)), stack, vec.x, vec.y, vec.z, EnumFacing.getFront(getDirection(stack)));
+			RebuildStructure(player.world, this.machineList.get(getMachineId(stack)), stack, vec.x, vec.y, vec.z, EnumFacing.getFront(getDirection(stack)));
 		}
 		else if(id == 2) {
 			int x = nbt.getInteger("x");
@@ -528,7 +527,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			int dir = nbt.getInteger("dir");
 
 			if(getMachineId(stack) != -1)
-				RebuildStructure(player.worldObj, this.machineList.get(getMachineId(stack)), stack, x, y, z, EnumFacing.getFront(dir));
+				RebuildStructure(player.world, this.machineList.get(getMachineId(stack)), stack, x, y, z, EnumFacing.getFront(dir));
 		}
 	}
 }

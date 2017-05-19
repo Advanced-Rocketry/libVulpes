@@ -129,12 +129,8 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	public int getInventoryStackLimit() {
 		return 0;
 	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return true;
-	}
-
+	
+	
 	@Override
 	public void openInventory(EntityPlayer player) {
 		
@@ -207,4 +203,13 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 		return  storage.acceptEnergy(amt, simulate);
 	}
 
+	@Override
+	public boolean isUsableByPlayer(EntityPlayer player) {
+		return true;
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
 }

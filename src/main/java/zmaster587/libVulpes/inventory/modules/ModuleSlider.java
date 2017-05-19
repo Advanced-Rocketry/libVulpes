@@ -30,7 +30,7 @@ public class ModuleSlider extends ModuleProgress {
 
 				float percent;
 				if(progressBar.getDirection().getFrontOffsetX() != 0) { // horizontal
-					percent = MathHelper.clamp_float((localX  + progressBar.getInsetX())/ ((float)(progressBar.getBackWidth() - 2*progressBar.getInsetX())),0f,1f);
+					percent = MathHelper.clamp((localX  + progressBar.getInsetX())/ ((float)(progressBar.getBackWidth() - 2*progressBar.getInsetX())),0f,1f);
 				}
 				else if(progressBar.getDirection().getFrontOffsetY() == 1)
 					percent = 1 - (localY / (float)(progressBar.getBackHeight() - progressBar.getInsetY()));

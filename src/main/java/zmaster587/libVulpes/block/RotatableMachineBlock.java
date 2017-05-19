@@ -69,16 +69,16 @@ public class RotatableMachineBlock extends RotatableBlock {
 					float f1 = this.random.nextFloat() * 0.8F + 0.1F;
 					EntityItem entityitem;
 
-					for (float f2 = this.random.nextFloat() * 0.8F + 0.1F; itemstack.stackSize > 0; world.spawnEntityInWorld(entityitem))
+					for (float f2 = this.random.nextFloat() * 0.8F + 0.1F; itemstack.getCount() > 0; world.spawnEntity(entityitem))
 					{
 						int k1 = this.random.nextInt(21) + 10;
 
-						if (k1 > itemstack.stackSize)
+						if (k1 > itemstack.getCount())
 						{
-							k1 = itemstack.stackSize;
+							k1 = itemstack.getCount();
 						}
 
-						itemstack.stackSize -= k1;
+						itemstack.setCount(itemstack.getCount() - k1);
 
 						entityitem = new EntityItem(world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), new ItemStack(itemstack.getItem(), k1, itemstack.getItemDamage()));
 						float f3 = 0.05F;
@@ -97,13 +97,11 @@ public class RotatableMachineBlock extends RotatableBlock {
 
 		super.breakBlock(world,pos, state);
 	}
-
-
+	
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos,
 			IBlockState state, EntityPlayer playerIn, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
+			EnumFacing facing, float hitX, float hitY, float hitZ) {
 		//Handlue gui through modular system
 		if(!worldIn.isRemote )
 			playerIn.openGui(LibVulpes.instance, GuiHandler.guiId.MODULAR.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());

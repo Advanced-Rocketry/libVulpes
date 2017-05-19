@@ -35,7 +35,7 @@ public abstract class TileInventoriedForgeProducer extends TileEntityForgeProduc
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack) {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -83,9 +83,15 @@ public abstract class TileInventoriedForgeProducer extends TileEntityForgeProduc
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		return player.getDistanceSq(this.pos) < 64;
 	}
+	
+	@Override
+	public boolean isEmpty() {
+		return inventory.isEmpty();
+	}
+	
 	@Override
 	public void openInventory(EntityPlayer player) {
 		inventory.openInventory(player);

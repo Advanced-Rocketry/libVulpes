@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
@@ -38,10 +39,10 @@ public class BlockMaterial extends BlockMultiblockStructure {
 
 		return new ItemStack(this, 1, meta);
 	}
-
+	
 	@Override
 	public void getSubBlocks(Item item, CreativeTabs tab,
-			List list) {
+			NonNullList<ItemStack> list) {
 		for(int i = 0; i < ores.length && ores[i] != null; i++) {
 			list.add(new ItemStack(item, 1, i));
 		}
@@ -67,7 +68,7 @@ public class BlockMaterial extends BlockMultiblockStructure {
 		if(!player.capabilities.isCreativeMode) {
 			TileEntity tile = world.getTileEntity(pos);
 			if(tile instanceof TileMaterial) {
-				world.spawnEntityInWorld(new EntityItem(world, pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, new ItemStack(this, 1, ((TileMaterial)tile).getMaterial().getIndex())));
+				world.spawnEntity(new EntityItem(world, pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, new ItemStack(this, 1, ((TileMaterial)tile).getMaterial().getIndex())));
 			}
 		}
 	}

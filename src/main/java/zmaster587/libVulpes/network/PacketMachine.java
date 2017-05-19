@@ -54,7 +54,7 @@ public class PacketMachine extends BasePacket {
 	public void readClient(ByteBuf in) {
 		//DEBUG:
 		in.readInt();
-		World world = Minecraft.getMinecraft().theWorld;
+		World world = Minecraft.getMinecraft().world;
 		int x = in.readInt();
 		int y = in.readInt();
 		int z = in.readInt();

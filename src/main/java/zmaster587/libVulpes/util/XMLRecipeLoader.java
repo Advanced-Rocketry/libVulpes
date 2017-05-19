@@ -256,10 +256,10 @@ public class XMLRecipeLoader {
 				ItemStack stack = stackList.get(0);
 				String oreStr = recipe.getOreDictString(index++);
 				if(oreStr != null) {
-					string += "\t\t\t<oreDict>" + oreStr + (stack.stackSize > 1 ? (" " + stack.stackSize) : "") + "</oreDict>\n";
+					string += "\t\t\t<oreDict>" + oreStr + (stack.getCount() > 1 ? (" " + stack.getCount()) : "") + "</oreDict>\n";
 				}
 				else {
-					string += "\t\t\t<itemStack>" + stack.getItem().delegate.name() + (stack.stackSize > 1 ? (" " + stack.stackSize) : (stack.getItemDamage() > 0 ? " 1" : "") ) + (stack.getItemDamage() > 0 ? (" " + stack.getItemDamage()) : "") +  "</itemStack>\n";
+					string += "\t\t\t<itemStack>" + stack.getItem().delegate.name() + (stack.getCount() > 1 ? (" " + stack.getCount()) : (stack.getItemDamage() > 0 ? " 1" : "") ) + (stack.getItemDamage() > 0 ? (" " + stack.getItemDamage()) : "") +  "</itemStack>\n";
 				}
 			}
 		}
@@ -269,7 +269,7 @@ public class XMLRecipeLoader {
 		string += "\t\t</input>\n\t\t<output>\n";
 		
 		for(ItemStack stack : recipe.getOutput()) {
-			string += "\t\t\t<itemStack>" + stack.getItem().delegate.name() + (stack.stackSize > 1 ? (" " + stack.stackSize) : (stack.getItemDamage() > 0 ? " 1" : "") ) + (stack.getItemDamage() > 0 ? (" " + stack.getItemDamage()) : "") +  "</itemStack>\n";
+			string += "\t\t\t<itemStack>" + stack.getItem().delegate.name() + (stack.getCount() > 1 ? (" " + stack.getCount()) : (stack.getItemDamage() > 0 ? " 1" : "") ) + (stack.getItemDamage() > 0 ? (" " + stack.getItemDamage()) : "") +  "</itemStack>\n";
 		}
 		
 		for(FluidStack stack : recipe.getFluidOutputs()) {

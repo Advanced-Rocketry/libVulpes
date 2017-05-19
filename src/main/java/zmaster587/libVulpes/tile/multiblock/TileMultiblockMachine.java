@@ -93,13 +93,13 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0) {
-			if(!worldObj.isRemote) {
+			if(!world.isRemote) {
 				if(isComplete())
-					canRender = completeStructure = completeStructure(worldObj.getBlockState(pos));
+					canRender = completeStructure = completeStructure(world.getBlockState(pos));
 			}
 			else {
 				SoundEvent str;
-				if(worldObj.isRemote && (str = getSound()) != null) {
+				if(world.isRemote && (str = getSound()) != null) {
 					playMachineSound(str);
 				}
 			}
@@ -108,30 +108,30 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		}
 
 		//In case the machine jams for some reason
-		if(!isRunning() && worldObj.getTotalWorldTime() % 1000L == 0)
+		if(!isRunning() && world.getTotalWorldTime() % 1000L == 0)
 			onInventoryUpdated();
 
 		if(isRunning()) {
-			if( hasEnergy(powerPerTick) || (worldObj.isRemote && hadPowerLastTick)) {
+			if( hasEnergy(powerPerTick) || (world.isRemote && hadPowerLastTick)) {
 
 				//Increment for both client and server
 				onRunningPoweredTick();
 				//If server then check to see if we need to update the client, use power and process output if applicable
-				if(!worldObj.isRemote) {
+				if(!world.isRemote) {
 
 					if(!hadPowerLastTick) {
 						hadPowerLastTick = true;
 						markDirty();
-						worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
+						world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 					}
 
 					useEnergy(powerPerTick);
 				}
 			}
-			else if(!worldObj.isRemote && hadPowerLastTick) { //If server and out of power check to see if client needs update
+			else if(!world.isRemote && hadPowerLastTick) { //If server and out of power check to see if client needs update
 				hadPowerLastTick = false;
 				markDirty();
-				worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
+				world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 			}
 		}
 	}
@@ -165,7 +165,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	protected void processComplete() {
 		completionTime = 0;
 		currentTime = 0;
-		if(!worldObj.isRemote)
+		if(!world.isRemote)
 			dumpOutputToInventory();
 
 		outputItemStacks = null;
@@ -174,7 +174,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		onInventoryUpdated();
 
 		this.markDirty();
-		worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
+		world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 	}
 
 	//When the output of the recipe is dumped to the inventory
@@ -191,8 +191,8 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 					totalItems++;
 				}
 				else if(stack.isItemEqual(outputItemStacks.get(i)) && 
-						(stack.stackSize + outputItemStacks.get(i).stackSize <= outInventory.getInventoryStackLimit() && stack.stackSize + outputItemStacks.get(i).stackSize <= stack.getMaxStackSize())) {
-					outInventory.getStackInSlot(smartInventoryUpgrade ? outInventory.getSizeInventory() - i - 1 : i).stackSize += outputItemStacks.get(i).stackSize;
+						(stack.getCount() + outputItemStacks.get(i).getCount() <= outInventory.getInventoryStackLimit() && stack.getCount() + outputItemStacks.get(i).getCount() <= stack.getMaxStackSize())) {
+					outInventory.getStackInSlot(smartInventoryUpgrade ? outInventory.getSizeInventory() - i - 1 : i).setCount(outInventory.getStackInSlot(smartInventoryUpgrade ? outInventory.getSizeInventory() - i - 1 : i).getCount() + outputItemStacks.get(i).getCount());
 					outInventory.markDirty();
 					totalItems++;
 				}
@@ -251,8 +251,8 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 						ItemStack stackInSlot = hatch.getStackInSlot(i);
 
 						for (ItemStack stack : ingredient) {
-							if(stackInSlot != null && stackInSlot.stackSize >= stack.stackSize && stackInSlot.isItemEqual(stack)) {
-								hatch.decrStackSize(i, stack.stackSize);
+							if(stackInSlot != null && stackInSlot.getCount() >= stack.getCount() && stackInSlot.isItemEqual(stack)) {
+								hatch.decrStackSize(i, stack.getCount());
 								hatch.markDirty();
 								break ingredientCheck;
 							}
@@ -312,7 +312,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 							ItemStack stackInSlot = hatch.getStackInSlot(i);
 
 							for(ItemStack stack : ingredient) {
-								if(stackInSlot != null && stackInSlot.stackSize >= stack.stackSize && (stackInSlot.isItemEqual(stack) || (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE && stack.getItem() == stackInSlot.getItem()))) {
+								if(stackInSlot != null && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.isItemEqual(stack) || (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE && stack.getItem() == stackInSlot.getItem()))) {
 									mask |= (1 << ingredientNum);
 									break ingredientCheck;
 								}
@@ -343,7 +343,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 						//stack cannot be null when assigning flag
 						if(stack == null || stack.isItemEqual(outputItem) && 
-								(stack.stackSize + outputItem.stackSize <= outInventory.getInventoryStackLimit() && stack.stackSize + outputItem.stackSize <= stack.getMaxStackSize())) {
+								(stack.getCount() + outputItem.getCount() <= outInventory.getInventoryStackLimit() && stack.getCount() + outputItem.getCount() <= stack.getMaxStackSize())) {
 							invCheckFlag = false;
 							itemCheck = true;
 							break bottomItemCheck;
@@ -376,7 +376,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 						}
 					}
 					else if(stack == null || stack.isItemEqual(outputItems.get(i)) && 
-							(stack.stackSize + outputItems.get(i).stackSize <= outInventory.getInventoryStackLimit() && stack.stackSize + outputItems.get(i).stackSize <= stack.getMaxStackSize())) {
+							(stack.getCount() + outputItems.get(i).getCount() <= outInventory.getInventoryStackLimit() && stack.getCount() + outputItems.get(i).getCount() <= stack.getMaxStackSize())) {
 						itemCheck = true;
 						break bottomItemCheck;
 					}
@@ -460,7 +460,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 				outputFluidStacks = recipe.getFluidOutputs();
 
 				markDirty();
-				worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
+				world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 
 				setMachineRunning(true); //turn on machine
 
@@ -522,7 +522,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 			for(int i = 0; i < list.tagCount(); i++) {
 				NBTTagCompound tag = list.getCompoundTagAt(i);
 
-				outputItemStacks.add(ItemStack.loadItemStackFromNBT(tag));
+				outputItemStacks.add(new ItemStack(tag));
 			}
 		}
 
@@ -539,7 +539,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	}
 
 	public boolean attemptCompleteStructure() {
-		boolean completeStructure = super.attemptCompleteStructure(worldObj.getBlockState(pos));
+		boolean completeStructure = super.attemptCompleteStructure(world.getBlockState(pos));
 		if(completeStructure)
 			onInventoryUpdated();
 

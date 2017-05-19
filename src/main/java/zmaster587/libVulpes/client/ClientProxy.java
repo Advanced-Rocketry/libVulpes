@@ -61,7 +61,7 @@ public class ClientProxy extends CommonProxy {
 	
 	@Override
 	public void playSound(World worldObj, BlockPos pos, SoundEvent event, SoundCategory cat, float volume, float pitch) {
-		worldObj.playSound(Minecraft.getMinecraft().thePlayer, pos, event, SoundCategory.BLOCKS, Minecraft.getMinecraft().gameSettings.getSoundLevel(cat)*volume,  0.975f + worldObj.rand.nextFloat()*0.05f);
+		worldObj.playSound(Minecraft.getMinecraft().player, pos, event, SoundCategory.BLOCKS, Minecraft.getMinecraft().gameSettings.getSoundLevel(cat)*volume,  0.975f + worldObj.rand.nextFloat()*0.05f);
 		
 	}
 }

@@ -119,8 +119,8 @@ public class ModuleContainerPan extends ModuleBase {
 
 		//Transform
 		for(Slot slot : slotList) {
-			slot.xDisplayPosition += deltaX;
-			slot.yDisplayPosition += deltaX;
+			slot.xPos += deltaX;
+			slot.yPos += deltaX;
 		}
 
 		for(GuiButton button2 : buttonList) {
@@ -281,8 +281,8 @@ public class ModuleContainerPan extends ModuleBase {
 
 		//Transform
 		for(Slot slot : slotList) {
-			slot.xDisplayPosition += deltaX;
-			slot.yDisplayPosition += deltaX;
+			slot.xPos += deltaX;
+			slot.yPos += deltaX;
 		}
 
 		for(GuiButton button2 : buttonList) {

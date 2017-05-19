@@ -24,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -75,10 +76,10 @@ public class BlockHatch extends BlockMultiblockStructure {
 			}
 		}
 	}
-
+	
 	@Override
 	public void getSubBlocks(Item item, CreativeTabs tab,
-			List list) {
+			NonNullList<ItemStack> list) {
 		list.add(new ItemStack(item, 1, 0));
 		list.add(new ItemStack(item, 1, 1));
 		list.add(new ItemStack(item, 1, 2));
@@ -121,7 +122,7 @@ public class BlockHatch extends BlockMultiblockStructure {
 				entityitem.motionY = (double)((float)this.random.nextGaussian() * mult + 0.2F);
 				entityitem.motionZ = (double)((float)this.random.nextGaussian() * mult);
 
-				world.spawnEntityInWorld(entityitem);
+				world.spawnEntity(entityitem);
 			}
 		}
 
@@ -146,8 +147,7 @@ public class BlockHatch extends BlockMultiblockStructure {
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos,
 			IBlockState state, EntityPlayer playerIn, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
+			EnumFacing facing, float hitX, float hitY, float hitZ) {
 		int meta = worldIn.getBlockState(pos).getValue(VARIANT);
 		//Handlue gui through modular system
 		if((meta & 7) < 6 && !worldIn.isRemote)

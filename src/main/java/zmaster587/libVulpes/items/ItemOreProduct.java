@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -45,10 +46,9 @@ public class ItemOreProduct extends Item {
 		}
 	}
 
-	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List itemList) {
+	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, NonNullList<ItemStack>  itemList) {
 
 		for(Entry<Integer, Material> entry : properties.entrySet()) {
 			itemList.add(new ItemStack(this, 1, entry.getKey()));

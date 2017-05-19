@@ -73,7 +73,16 @@ public class MultiInventory implements IInventory {
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer p_70300_1_) {
+	public boolean isUsableByPlayer(EntityPlayer p_70300_1_) {
+		return true;
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		for(IInventory inv : inventories ) {
+			if(!inv.isEmpty())
+				return false;
+		}
 		return true;
 	}
 

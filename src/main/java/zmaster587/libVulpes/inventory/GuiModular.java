@@ -72,11 +72,11 @@ public class GuiModular extends GuiContainer {
 			int b) {
 		super.drawGuiContainerForegroundLayer(a, b);
 
-		this.fontRendererObj.drawString(I18n.format(unlocalizedName, new Object[0]), 8, 6, 4210752);
+		this.fontRenderer.drawString(I18n.format(unlocalizedName, new Object[0]), 8, 6, 4210752);
 
 		for(ModuleBase module : modules)
 			if(module.getVisible())
-				module.renderForeground((width - xSize)/2, (height - ySize) / 2,a - (width - xSize)/2 ,b - (height - ySize) / 2, zLevel, this, this.fontRendererObj);
+				module.renderForeground((width - xSize)/2, (height - ySize) / 2,a - (width - xSize)/2 ,b - (height - ySize) / 2, zLevel, this, this.fontRenderer);
 
 	}
 
@@ -115,7 +115,7 @@ public class GuiModular extends GuiContainer {
 
 		for(ModuleBase module : modules) {
 			if(module.getVisible())
-				module.renderBackground(this, x, y, i2, i3, fontRendererObj);
+				module.renderBackground(this, x, y, i2, i3, fontRenderer);
 		}
 	}
 }

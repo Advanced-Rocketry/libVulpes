@@ -49,9 +49,9 @@ public class TileSchematic extends TilePlaceholder implements ITickable {
 	@Override
 	public void update() {
 
-		if(!worldObj.isRemote) {
+		if(!world.isRemote) {
 			if(timeAlive == ttl) {
-				worldObj.setBlockToAir(pos);
+				world.setBlockToAir(pos);
 			}
 		}
 		timeAlive++;

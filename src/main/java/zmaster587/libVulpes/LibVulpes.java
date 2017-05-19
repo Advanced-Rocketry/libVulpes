@@ -108,16 +108,16 @@ public class LibVulpes {
 
 	private static CreativeTabs tabMultiblock = new CreativeTabs("multiBlock") {
 		@Override
-		public Item getTabIconItem() {
-			return LibVulpesItems.itemLinker;// AdvancedRocketryItems.itemSatelliteIdChip;
+		public ItemStack getTabIconItem() {
+			return new ItemStack(LibVulpesItems.itemLinker);// AdvancedRocketryItems.itemSatelliteIdChip;
 		}
 	};
 
 	public static CreativeTabs tabLibVulpesOres = new CreativeTabs("advancedRocketryOres") {
 
 		@Override
-		public Item getTabIconItem() {
-			return MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("ORE")).getItem();
+		public ItemStack getTabIconItem() {
+			return MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("ORE"));
 		}
 	};
 

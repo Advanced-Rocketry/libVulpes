@@ -69,7 +69,7 @@ public abstract class TileInventoriedRFConsumer extends TileEntityRFConsumer imp
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		return player.getDistanceSq(this.pos) < 64;
 	}
 	@Override
@@ -117,5 +117,10 @@ public abstract class TileInventoriedRFConsumer extends TileEntityRFConsumer imp
 	@Override
 	public void clear() {
 		inventory.clear();
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return inventory.isEmpty();
 	}
 }

@@ -136,13 +136,13 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0) {
-			if(!worldObj.isRemote) {
+			if(!world.isRemote) {
 				if(isComplete())
-					canRender = completeStructure = completeStructure(worldObj.getBlockState(pos));
+					canRender = completeStructure = completeStructure(world.getBlockState(pos));
 			}
 			else {
 				SoundEvent str;
-				if(worldObj.isRemote && (str = getSound()) != null) {
+				if(world.isRemote && (str = getSound()) != null) {
 					playMachineSound(str);
 				}
 			}
@@ -150,33 +150,33 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 			timeAlive = 0x1;
 		}
 
-		if(!worldObj.isRemote && worldObj.getTotalWorldTime() % 1000L == 0 && !isComplete()) {
-			attemptCompleteStructure(worldObj.getBlockState(pos));
+		if(!world.isRemote && world.getTotalWorldTime() % 1000L == 0 && !isComplete()) {
+			attemptCompleteStructure(world.getBlockState(pos));
 			markDirty();
-			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
+			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 		}
 
 		if(isRunning()) {
-			if(hasEnergy(requiredPowerPerTick()) || (worldObj.isRemote && hadPowerLastTick)) {
+			if(hasEnergy(requiredPowerPerTick()) || (world.isRemote && hadPowerLastTick)) {
 
 				onRunningPoweredTick();
 
 				//If server then check to see if we need to update the client, use power and process output if applicable
-				if(!worldObj.isRemote) {
+				if(!world.isRemote) {
 
 					if(!hadPowerLastTick) {
 						hadPowerLastTick = true;
 						markDirty();
-						worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
+						world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 					}
 
 					useEnergy(usedPowerPerTick());
 				}
 			}
-			else if(!worldObj.isRemote && hadPowerLastTick) { //If server and out of power check to see if client needs update
+			else if(!world.isRemote && hadPowerLastTick) { //If server and out of power check to see if client needs update
 				hadPowerLastTick = false;
 				markDirty();
-				worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
+				world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 			}
 		}
 	}
@@ -200,7 +200,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		currentTime++;
 
 		SoundEvent str;
-		if(worldObj.isRemote && (str = getSound()) != null && worldObj.getTotalWorldTime() % getSoundDuration() == 0) {
+		if(world.isRemote && (str = getSound()) != null && world.getTotalWorldTime() % getSoundDuration() == 0) {
 			//playMachineSound(str);
 		}
 
@@ -211,7 +211,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	protected void playMachineSound(SoundEvent str) {
 		//Screw you too
 
-		if(soundToPlay == null && worldObj.isRemote) {
+		if(soundToPlay == null && world.isRemote) {
 			soundToPlay = new RepeatingSound(str, SoundCategory.BLOCKS, this);
 		}
 
@@ -220,9 +220,9 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 	public void setMachineEnabled(boolean enabled) {
 		this.enabled = enabled;
-		if(!worldObj.isRemote) {
+		if(!world.isRemote) {
 			this.markDirty();
-			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
+			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 		}
 
 	}
@@ -259,7 +259,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		currentTime = 0;
 
 		this.markDirty();
-		worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos),  worldObj.getBlockState(pos), 3);
+		world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 	}
 
 	/**
@@ -283,7 +283,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		super.integrateTile(tile);
 
 		for(BlockMeta block : TileMultiBlock.getMapping('P')) {
-			if(block.getBlock() == worldObj.getBlockState(tile.getPos()).getBlock())
+			if(block.getBlock() == world.getBlockState(tile.getPos()).getBlock())
 				batteries.addBattery((IUniversalEnergy) tile);
 		}
 	}
@@ -311,8 +311,8 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		if(nbt.hasKey("timeMult"))
 			timeMultiplier = nbt.getFloat("timeMult");
 
-		if(worldObj != null && worldObj.isRemote && isRunning()) {
-			((BlockTile)getBlockType()).setBlockState(worldObj,worldObj.getBlockState(getPos()), getPos(),true);
+		if(world != null && world.isRemote && isRunning()) {
+			((BlockTile)getBlockType()).setBlockState(world,world.getBlockState(getPos()), getPos(),true);
 		}
 	}
 
@@ -349,8 +349,8 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 			toggleSwitch.setToggleState(getMachineEnabled());
 
 			//Last ditch effort to update the toggle switch when it's flipped
-			if(!worldObj.isRemote)
-				PacketHandler.sendToNearby(new PacketMachine(this, (byte)NetworkPackets.TOGGLE.ordinal()), worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64);
+			if(!world.isRemote)
+				PacketHandler.sendToNearby(new PacketMachine(this, (byte)NetworkPackets.TOGGLE.ordinal()), world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64);
 		}
 	}
 

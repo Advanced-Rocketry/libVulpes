@@ -25,10 +25,10 @@ public class TilePowerOutput extends TilePlugBase implements IPower, ITickable {
 	@Override
 	public void update() {
 
-		if(!worldObj.isRemote) {
+		if(!world.isRemote) {
 			for(EnumFacing dir : EnumFacing.values()) {
 
-				TileEntity tile = worldObj.getTileEntity(this.pos.offset(dir));
+				TileEntity tile = world.getTileEntity(this.pos.offset(dir));
 
 				if(tile instanceof IPower) {
 					IPower handle = (IPower)tile;

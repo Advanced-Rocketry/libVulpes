@@ -138,7 +138,7 @@ public abstract class ModuleBase {
 	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY, FontRenderer font) {
 		gui.mc.getTextureManager().bindTexture(CommonResources.genericBackground);
 		for(Slot slot : slotList) {
-			gui.drawTexturedModalRect(x + slot.xDisplayPosition - 1, y + slot.yDisplayPosition - 1, 176, 0, 18, 18);
+			gui.drawTexturedModalRect(x + slot.xPos - 1, y + slot.yPos - 1, 176, 0, 18, 18);
 		}
 	}
 
