@@ -48,10 +48,11 @@ public class FluidUtils {
 	public static boolean attemptDrainContainerIInv(IInventory inv, IFluidTank tank, ItemStack stack, int inputSlot, int outputSlot) {
 
 		if(containsFluid(stack)) {
-			IFluidHandlerItem fluidItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
+			
 			FluidStack fluidStack;
 			stack = stack.copy();
 			stack.setCount(1);
+			IFluidHandlerItem fluidItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
 
 			FluidStack itemFluidStack = getFluidForItem(stack);
 
@@ -90,7 +91,7 @@ public class FluidUtils {
 					if(inv.getStackInSlot(outputSlot).isEmpty()) {
 						inv.setInventorySlotContents(outputSlot, stack);
 					}
-					else if(ItemStack.areItemStackTagsEqual(inv.getStackInSlot(outputSlot), stack) && inv.getStackInSlot(outputSlot).getItem().equals(stack.getItem()) && inv.getStackInSlot(outputSlot).getItemDamage() == stack.getItemDamage() && stack.getItem().getItemStackLimit(stack) < inv.getStackInSlot(outputSlot).getCount()) {
+					else if(ItemStack.areItemStackTagsEqual(inv.getStackInSlot(outputSlot), stack) && inv.getStackInSlot(outputSlot).getItem().equals(stack.getItem()) && inv.getStackInSlot(outputSlot).getItemDamage() == stack.getItemDamage() && stack.getItem().getItemStackLimit(stack) > inv.getStackInSlot(outputSlot).getCount()) {
 						inv.getStackInSlot(outputSlot).setCount( inv.getStackInSlot(outputSlot).getCount() + 1 );
 
 					}
