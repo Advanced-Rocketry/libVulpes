@@ -13,9 +13,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.registry.RegistryNamespaced;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.oredict.OreDictionary;
@@ -87,13 +89,13 @@ public class ZUtils {
 	public static TileEntity createTile(NBTTagCompound nbt)
 	{
 		TileEntity tileentity = null;
-		String s = nbt.getString("id");
+		ResourceLocation s = new ResourceLocation(nbt.getString("id"));
 		Class <? extends TileEntity > oclass = null;
 
 
 		try
 		{
-			oclass = ((Map < String, Class <? extends TileEntity >>)ObfuscationReflectionHelper.getPrivateValue(TileEntity.class, null, "field_145855_i", "nameToClassMap")).get(s);
+			oclass = ((RegistryNamespaced < ResourceLocation, Class <? extends TileEntity >>)ObfuscationReflectionHelper.getPrivateValue(TileEntity.class, null, "field_145855_i", "REGISTRY")).getObject(s);
 
 			if (oclass != null)
 			{

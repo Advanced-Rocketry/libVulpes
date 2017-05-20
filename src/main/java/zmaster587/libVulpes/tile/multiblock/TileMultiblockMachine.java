@@ -185,7 +185,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 			for(int i = totalItems; i < outputItemStacks.size(); i++) {
 				ItemStack stack = outInventory.getStackInSlot(smartInventoryUpgrade ? outInventory.getSizeInventory() - i - 1 : i);
 
-				if(stack == null) {
+				if(stack == ItemStack.EMPTY) {
 					outInventory.setInventorySlotContents(smartInventoryUpgrade ? outInventory.getSizeInventory() - i - 1 : i, outputItemStacks.get(i));
 					outInventory.markDirty();
 					totalItems++;
@@ -312,7 +312,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 							ItemStack stackInSlot = hatch.getStackInSlot(i);
 
 							for(ItemStack stack : ingredient) {
-								if(stackInSlot != null && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.isItemEqual(stack) || (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE && stack.getItem() == stackInSlot.getItem()))) {
+								if(stackInSlot != ItemStack.EMPTY && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.isItemEqual(stack) || (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE && stack.getItem() == stackInSlot.getItem()))) {
 									mask |= (1 << ingredientNum);
 									break ingredientCheck;
 								}
@@ -342,19 +342,19 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 
 						//stack cannot be null when assigning flag
-						if(stack == null || stack.isItemEqual(outputItem) && 
+						if(stack == ItemStack.EMPTY || stack.isItemEqual(outputItem) && 
 								(stack.getCount() + outputItem.getCount() <= outInventory.getInventoryStackLimit() && stack.getCount() + outputItem.getCount() <= stack.getMaxStackSize())) {
 							invCheckFlag = false;
 							itemCheck = true;
 							break bottomItemCheck;
 						}
 
-						if(stack != null && ZUtils.getFirstFilledSlotIndex(outInventory) >= outputItems.size()) {
+						if(stack != ItemStack.EMPTY && ZUtils.getFirstFilledSlotIndex(outInventory) >= outputItems.size()) {
 							//Range Check
 							int outputSize = outputItems.size();
 							int j;
 							for(j = 0; j < outputSize; j++) {
-								if(outInventory.getStackInSlot(j) != null) {
+								if(outInventory.getStackInSlot(j) != ItemStack.EMPTY) {
 									invCheckFlag = false;
 									itemCheck = false;
 									break bottomItemCheck;
@@ -367,7 +367,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 							for(j = j + numExtraMoves - 1; j >= 0; j--) {
 								int slot = outInventory.getSizeInventory() - 1;
 								outInventory.setInventorySlotContents(slot - j - outputItems.size(), outInventory.getStackInSlot(slot - j));
-								outInventory.setInventorySlotContents(slot - j, null);
+								outInventory.setInventorySlotContents(slot - j, ItemStack.EMPTY);
 							}
 
 							invCheckFlag = false;
@@ -375,7 +375,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 							break bottomItemCheck;
 						}
 					}
-					else if(stack == null || stack.isItemEqual(outputItems.get(i)) && 
+					else if(stack == ItemStack.EMPTY || stack.isItemEqual(outputItems.get(i)) && 
 							(stack.getCount() + outputItems.get(i).getCount() <= outInventory.getInventoryStackLimit() && stack.getCount() + outputItems.get(i).getCount() <= stack.getMaxStackSize())) {
 						itemCheck = true;
 						break bottomItemCheck;

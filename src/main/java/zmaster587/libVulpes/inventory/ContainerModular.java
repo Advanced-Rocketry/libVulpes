@@ -101,7 +101,7 @@ public class ContainerModular extends Container {
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotId) {
 
-		ItemStack itemstack = null;
+		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = (Slot)this.inventorySlots.get(slotId);
 
 		if (slot != null && slot.getHasStack())
@@ -114,17 +114,17 @@ public class ContainerModular extends Container {
 			{
 				if (!this.mergeItemStack(itemstack1, numSlots, this.inventorySlots.size(), true))
 				{
-					return null;
+					return ItemStack.EMPTY;
 				}
 			}
 			else if (!this.mergeItemStack(itemstack1, 0, slotId, false))
 			{
-				return null;
+				return ItemStack.EMPTY;
 			}
 
 			if (itemstack1.getCount() == 0)
 			{
-				slot.putStack((ItemStack)null);
+				slot.putStack(ItemStack.EMPTY);
 			}
 			else
 			{
@@ -138,7 +138,7 @@ public class ContainerModular extends Container {
 	 /**
      * merges provided ItemStack with the first avaliable one in the container/player inventory
      */
-    protected boolean mergeItemStack(ItemStack p_75135_1_, int p_75135_2_, int p_75135_3_, boolean p_75135_4_)
+    /*protected boolean mergeItemStack(ItemStack p_75135_1_, int p_75135_2_, int p_75135_3_, boolean p_75135_4_)
     {
         boolean flag1 = false;
         int k = p_75135_2_;
@@ -158,7 +158,7 @@ public class ContainerModular extends Container {
                 slot = (Slot)this.inventorySlots.get(k);
                 itemstack1 = slot.getStack();
 
-                if (itemstack1 != null && itemstack1.getItem() == p_75135_1_.getItem() && (!p_75135_1_.getHasSubtypes() || p_75135_1_.getItemDamage() == itemstack1.getItemDamage()) && ItemStack.areItemStackTagsEqual(p_75135_1_, itemstack1))
+                if (itemstack1 != ItemStack.EMPTY && itemstack1.getItem() == p_75135_1_.getItem() && (!p_75135_1_.getHasSubtypes() || p_75135_1_.getItemDamage() == itemstack1.getItemDamage()) && ItemStack.areItemStackTagsEqual(p_75135_1_, itemstack1))
                 {
                     int l = itemstack1.getCount() + p_75135_1_.getCount();
 
@@ -206,7 +206,7 @@ public class ContainerModular extends Container {
                 itemstack1 = slot.getStack();
 
                 //For some awful reason MC doesn't seem to check if a stack is valid...
-                if (itemstack1 == null && slot.isItemValid(p_75135_1_))
+                if (itemstack1 == ItemStack.EMPTY && slot.isItemValid(p_75135_1_))
                 {
                     slot.putStack(p_75135_1_.copy());
                     slot.onSlotChanged();
@@ -227,7 +227,7 @@ public class ContainerModular extends Container {
         }
 
         return flag1;
-    }
+    }*/
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {

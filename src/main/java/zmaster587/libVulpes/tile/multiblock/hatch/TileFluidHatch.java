@@ -31,6 +31,7 @@ import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
 import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.EmbeddedInventory;
+import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.IFluidHandlerInternal;
 import zmaster587.libVulpes.util.IconResource;
 
@@ -224,72 +225,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	//Yes i was lazy
 	//TODO: make better
 	protected boolean useBucket( int slot, ItemStack stack) {
-
-		//Fill tank from bucket
-		//Drain tank to bucket
-		if(stack != null && stack.getItem() instanceof IFluidHandlerItem) {
-			IFluidHandlerItem fluidItem = ((IFluidHandlerItem)stack.getItem());
-			FluidStack fluidStack;
-			stack = stack.copy();
-			stack.setCount(1);
-			
-			IFluidTankProperties tankProps = fluidItem.getTankProperties()[0];
-			
-			//Drain the tank into the item
-			if(fluidTank.getFluid() != null && (tankProps.getContents() == null || outputOnly)) {
-				int amt = fluidItem.fill(fluidTank.getFluid(), true);
-				
-				
-				//If the container is full move it down and try again for a new one
-				if(amt != 0 && tankProps.getCapacity() == tankProps.getContents().amount) {
-					
-					
-					if(getStackInSlot(1) == null) {
-						inventory.setInventorySlotContents(1, stack);
-					}
-					else if(ItemStack.areItemStackTagsEqual(getStackInSlot(1), stack) && getStackInSlot(1).getItem().equals(stack.getItem()) && getStackInSlot(1).getItemDamage() == stack.getItemDamage() && stack.getItem().getItemStackLimit(stack) < getStackInSlot(1).getCount()) {
-						getStackInSlot(1).setCount(getStackInSlot(1).getCount() + 1);
-
-					}
-					else
-						return false;
-					fluidTank.drain(amt, true);
-					decrStackSize(0, 1);
-
-					return true;
-				}
-				
-			}
-			else {
-				fluidStack = fluidItem.drain(fluidTank.getCapacity() - fluidTank.getFluidAmount(), false);
-
-				int amountDrained = fluidTank.fill(fluidStack, false);
-				
-				//prevent bucket eating
-				if(amountDrained == 0)
-					return false;
-				
-				fluidItem.drain(amountDrained, true);
-				if (tankProps.getContents() == null || tankProps.getContents().amount == 0) {
-					if(getStackInSlot(1) == null) {
-						inventory.setInventorySlotContents(1, stack);
-					}
-					else if(ItemStack.areItemStackTagsEqual(getStackInSlot(1), stack) && getStackInSlot(1).getItem().equals(stack.getItem()) && getStackInSlot(1).getItemDamage() == stack.getItemDamage() && stack.getItem().getItemStackLimit(stack) > getStackInSlot(1).getCount()) {
-						getStackInSlot(1).setCount(getStackInSlot(1).getCount() + 1);
-
-					}
-					else
-						return false;
-
-					decrStackSize(0, 1);
-					fluidTank.fill(fluidStack, true);
-					
-					return true;
-					
-				}
-			}
-		}
-		return false;
+		return FluidUtils.attemptDrainContainerIInv(inventory, fluidTank, stack, 0, 1);
 	}
 
 	@Override

@@ -92,13 +92,13 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
 import zmaster587.libVulpes.util.TeslaCapabilityProvider;
 import zmaster587.libVulpes.util.XMLRecipeLoader;
 
-@Mod(modid="libVulpes",name="Vulpes library",version="@MAJOR@.@MINOR@.@REVIS@.@BUILD@",useMetadata=true, dependencies="before:gregtech;after:CoFHCore;after:BuildCraft|Core")
+@Mod(modid="libvulpes",name="Vulpes library",version="@MAJOR@.@MINOR@.@REVIS@.@BUILD@",useMetadata=true, dependencies="before:gregtech;after:CoFHCore;after:BuildCraft|Core")
 public class LibVulpes {
 	public static Logger logger = Logger.getLogger("libVulpes");
 	public static int time = 0;
 	private static HashMap<Class, String> userModifiableRecipes = new HashMap<Class, String>();
 
-	@Instance(value = "libVulpes")
+	@Instance(value = "libvulpes")
 	public static LibVulpes instance;
 	//Classload
 	public static Object teslaHandler = new TeslaHandler();
