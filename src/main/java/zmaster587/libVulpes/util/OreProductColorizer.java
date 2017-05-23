@@ -19,19 +19,21 @@ public class OreProductColorizer   implements IItemColor, IBlockColor  {
 		else 
 			return colorMultiplier(Block.getBlockFromItem(stack.getItem()).getStateFromMeta(stack.getItemDamage()), null, null, 0);
 	}
-	
+
 	//From blockOres
 	@Override
 	public int colorMultiplier(IBlockState state, IBlockAccess worldIn,
 			BlockPos pos, int tintIndex) {
-		
+
 		int meta = state.getBlock().getMetaFromState(state);
-		Material mat = ((BlockOre)state.getBlock()).ores[meta];
-		if(mat != null)
-			return mat.getColor();
+		if(state.getBlock() instanceof BlockOre) {
+			Material mat = ((BlockOre)state.getBlock()).ores[meta];
+			if(mat != null)
+				return mat.getColor();
+		}
 		return 0xFFFFFF;
 	}
-	
+
 	/*@Override
 	public int getColorFromItemstack(ItemStack stack, int tintIndex) {
 		return ((BlockOre)Block.getBlockFromItem(stack.getItem())).ores[stack.getMetadata()].getColor();
