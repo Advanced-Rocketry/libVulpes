@@ -95,7 +95,7 @@ public class ZUtils {
 
 		try
 		{
-			oclass = ((RegistryNamespaced < ResourceLocation, Class <? extends TileEntity >>)ObfuscationReflectionHelper.getPrivateValue(TileEntity.class, null, "field_145855_i", "REGISTRY")).getObject(s);
+			oclass = ((RegistryNamespaced < ResourceLocation, Class <? extends TileEntity >>)ObfuscationReflectionHelper.getPrivateValue(TileEntity.class, null, "field_190562_f", "REGISTRY")).getObject(s);
 
 			if (oclass != null)
 			{
