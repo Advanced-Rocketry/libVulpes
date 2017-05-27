@@ -26,9 +26,9 @@ public class ModuleTexturedLimitedSlotArray extends ModuleLimitedSlotArray {
 			FontRenderer font) {
 		
 		if(iconResource != null) {
-			gui.mc.getTextureManager().bindTexture(iconResource.getResourceLocation());
+			if(iconResource.getResourceLocation() != null)
+				gui.mc.getTextureManager().bindTexture(iconResource.getResourceLocation());
 			for(Slot slot : slotList) {
-				
 				gui.drawTexturedModalRect(x + slot.xDisplayPosition - 1, y + slot.yDisplayPosition - 1, iconResource.getxLoc(), iconResource.getyLoc(), iconResource.getxSize(), iconResource.getySize());
 			}
 		}
