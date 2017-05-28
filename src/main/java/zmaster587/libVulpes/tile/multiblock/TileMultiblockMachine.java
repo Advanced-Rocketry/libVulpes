@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -254,6 +255,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 							if(stackInSlot != null && stackInSlot.getCount() >= stack.getCount() && stackInSlot.isItemEqual(stack)) {
 								hatch.decrStackSize(i, stack.getCount());
 								hatch.markDirty();
+								worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(((TileEntity)hatch).getPos()),  worldObj.getBlockState(((TileEntity)hatch).getPos()), 6);
 								break ingredientCheck;
 							}
 						}
