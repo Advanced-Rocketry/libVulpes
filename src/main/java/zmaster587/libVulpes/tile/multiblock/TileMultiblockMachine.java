@@ -255,7 +255,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 							if(stackInSlot != null && stackInSlot.getCount() >= stack.getCount() && stackInSlot.isItemEqual(stack)) {
 								hatch.decrStackSize(i, stack.getCount());
 								hatch.markDirty();
-								worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(((TileEntity)hatch).getPos()),  worldObj.getBlockState(((TileEntity)hatch).getPos()), 6);
+								world.notifyBlockUpdate(pos, world.getBlockState(((TileEntity)hatch).getPos()),  world.getBlockState(((TileEntity)hatch).getPos()), 6);
 								break ingredientCheck;
 							}
 						}
