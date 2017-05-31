@@ -220,6 +220,8 @@ public class ModuleLiquidIndicator extends ModuleBase {
 			//gui.drawTexturedModelRectFrom(offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), fluidIcon, xSize, (int)(percent*ySize));
 
 			//this.drawProgressBarIconVertical(x + 27, y + 18,, 12, 52, getProgress());
+			
+			GL11.glColor3b((byte)127, (byte)127, (byte)127);
 		}
 	}
 

@@ -294,6 +294,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		currentTime = nbt.getInteger("currentTime");
 		powerPerTick = nbt.getInteger("powerPerTick");
 		enabled = nbt.getBoolean("enabled");
+		toggleSwitch.setToggleState(enabled);
 
 		if(nbt.hasKey("timeMult"))
 			timeMultiplier = nbt.getFloat("timeMult");
