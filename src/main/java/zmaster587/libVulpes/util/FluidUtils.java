@@ -106,4 +106,8 @@ public class FluidUtils {
 		}
 		return false;
 	}
+	
+	public static boolean areFluidsSameType(Fluid in, Fluid otherFluid) {
+		return in != null && otherFluid != null && in.getName().equals(otherFluid.getName());
+	}
 }
