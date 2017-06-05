@@ -107,14 +107,14 @@ public class BlockTile extends RotatableBlock {
 		TileEntity tile = world.getTileEntity(pos);
 
 		//This code could use some optimization -Dark
-		if (tile instanceof IInventory)
+		if (!world.isRemote && tile instanceof IInventory)
 		{
 			IInventory inventory = (IInventory)tile;
 			for (int i1 = 0; i1 < inventory.getSizeInventory(); ++i1)
 			{
 				ItemStack itemstack = inventory.getStackInSlot(i1);
 
-				if (itemstack != null)
+				if (!itemstack.isEmpty())
 				{
 					float f = world.rand.nextFloat() * 0.8F + 0.1F;
 					float f1 = world.rand.nextFloat() * 0.8F + 0.1F;
@@ -140,6 +140,7 @@ public class BlockTile extends RotatableBlock {
 						{
 							entityitem.getEntityItem().setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
 						}
+						world.spawnEntity(entityitem);
 					}
 				}
 			}
