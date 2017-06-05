@@ -42,11 +42,14 @@ public class GuiToggleButtonImage extends GuiButton {
 			//
 			this.hovered = par2 >= this.xPosition && par3 >= this.yPosition && par2 < this.xPosition + this.width && par3 < this.yPosition + this.height;
 			
-			/*if(mousePressed(minecraft, par2, par3) && buttonTexture[2] != null)
-				minecraft.getTextureManager().bindTexture(buttonTexture[2]);*/
-			if(state)
+			//Only display the hover icon if a pressed icon is found and the mouse is hovered
+			if(hovered && (buttonTexture.length > 2 && buttonTexture[2] != null ))
+				minecraft.getTextureManager().bindTexture(buttonTexture[1]);
+			else if(state && ( buttonTexture.length > 2 && buttonTexture[2] != null ))
+				minecraft.getTextureManager().bindTexture(buttonTexture[2]);
+			else if(!state)
 				minecraft.getTextureManager().bindTexture(buttonTexture[0]);
-			else
+			else // if !state and button[2] == null
 				minecraft.getTextureManager().bindTexture(buttonTexture[1]);
 			
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

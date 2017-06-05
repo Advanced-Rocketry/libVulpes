@@ -15,7 +15,7 @@ public class TextureResources {
 	public static final  ResourceLocation buttonLeft[] = {new ResourceLocation("libvulpes", "textures/gui/GuiArrowLeft.png"), new ResourceLocation("libvulpes", "textures/gui/GuiArrowLeft_hover.png"), new ResourceLocation("libvulpes", "textures/gui/GuiArrowLeft_pressed.png"), null};
 	public static final  ResourceLocation buttonRight[] = {new ResourceLocation("libvulpes", "textures/gui/GuiArrowRight.png"), new ResourceLocation("libvulpes", "textures/gui/GuiArrowRight_hover.png"), new ResourceLocation("libvulpes", "textures/gui/GuiArrowRight_pressed.png"), null};
 	public static final  ResourceLocation buttonSquare[] = {new ResourceLocation("libvulpes", "textures/gui/buttonSquare.png"), new ResourceLocation("libvulpes", "textures/gui/buttonSquare_hover.png"), new ResourceLocation("libvulpes", "textures/gui/buttonSquare.png"), null};
-	public static final  ResourceLocation buttonToggleImage[] = new ResourceLocation[] {new ResourceLocation("libvulpes:textures/gui/buttons/switchOn.png"), new ResourceLocation("libvulpes:textures/gui/buttons/switchOff.png")};
+	public static final  ResourceLocation buttonToggleImage[] = new ResourceLocation[] {new ResourceLocation("libvulpes:textures/gui/buttons/switchOff.png"), new ResourceLocation("libvulpes:textures/gui/buttons/switchOn.png")};
 	
 
 	public static final  ResourceLocation buttonRedstoneActive[] = new ResourceLocation[] {new ResourceLocation("libvulpes:textures/gui/buttons/buttonRedstoneAllowed.png"), new ResourceLocation("libvulpes:textures/gui/buttons/buttonRedstoneAllowed_hover.png")};
