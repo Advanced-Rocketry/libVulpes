@@ -139,6 +139,7 @@ public class BlockTile extends RotatableBlock {
 						{
 							entityitem.getEntityItem().setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
 						}
+						world.spawnEntityInWorld(entityitem);
 					}
 				}
 			}
