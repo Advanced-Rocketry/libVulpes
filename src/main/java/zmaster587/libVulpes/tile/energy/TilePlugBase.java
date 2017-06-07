@@ -30,8 +30,12 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	}
 	
 	public TilePlugBase(int teir) {
+		setTeir(teir);
+	}
+	
+	public void setTeir(int teir) {
 		this.teir = teir;
-		storage = new UniversalBattery(getMaxEnergy(teir));
+		storage.setMaxEnergyStored(getMaxEnergy(teir));
 	}
 	
 	protected int getMaxEnergy(int teir) {
