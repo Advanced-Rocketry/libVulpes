@@ -1,6 +1,7 @@
 package zmaster587.libVulpes.block.multiblock;
 
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.tile.energy.TilePlugBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +17,7 @@ public class BlockMultiMachineBattery extends BlockMultiblockStructure {
 	protected Class<? extends TileEntity> tileClass;
 	protected int guiId;
 	
-	public BlockMultiMachineBattery(Material material, Class<? extends TileEntity> tileClass, int guiId) {
+	public BlockMultiMachineBattery(Material material, Class<? extends TilePlugBase> tileClass, int guiId) {
 		super(material);
 		this.tileClass = tileClass;
 		this.guiId = guiId;
@@ -26,6 +27,8 @@ public class BlockMultiMachineBattery extends BlockMultiblockStructure {
 	public boolean hasTileEntity(IBlockState state) {
 		return true;
 	}
+	
+	
 	
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos,
@@ -40,7 +43,9 @@ public class BlockMultiMachineBattery extends BlockMultiblockStructure {
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		try {
-			return tileClass.newInstance();
+			TilePlugBase tile = (TilePlugBase) tileClass.newInstance();
+			tile.setTeir(1);
+			return tile;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
