@@ -87,7 +87,7 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 			try {
 				return ((TilePointer)pointedTile).getFinalPointedTile();
 			} catch (StackOverflowError e) {
-				LibVulpes.logger.warning("Stack overflow has occured with tile at location " + getPos() + ".  The game has been prevented from crashing (in theory)");
+				LibVulpes.logger.warn("Stack overflow has occured with tile at location " + getPos() + ".  The game has been prevented from crashing (in theory)");
 				return null;
 			}
 		else

@@ -66,7 +66,7 @@ public class TileMultiBlock extends TileEntity {
 
 	public static void addMapping(char character, List<BlockMeta> listToAdd) {
 		if(charMapping.containsKey(character))
-			LibVulpes.logger.warning("Overwritting Multiblock mapping of \"" + character + "\"");
+			LibVulpes.logger.warn("Overwritting Multiblock mapping of \"" + character + "\"");
 		charMapping.put(character, listToAdd);
 	}
 
