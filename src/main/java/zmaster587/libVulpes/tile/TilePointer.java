@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.tile;
 
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -83,7 +84,12 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 		if(pointedTile == null)
 			return null;
 		else if(pointedTile instanceof TilePointer)
-			return ((TilePointer)pointedTile).getFinalPointedTile();
+			try {
+				return ((TilePointer)pointedTile).getFinalPointedTile();
+			} catch (StackOverflowError e) {
+				LibVulpes.logger.warn("Stack overflow has occured with tile at location " + getPos() + ".  The game has been prevented from crashing (in theory)");
+				return null;
+			}
 		else
 			return pointedTile;
 	}

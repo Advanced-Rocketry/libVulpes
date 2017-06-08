@@ -77,7 +77,7 @@ public class XMLRecipeLoader {
 				continue;
 			}
 			if(!masterNode.getNodeName().equals("Recipe")) {
-				LibVulpes.logger.warning("Expected \"Recipe\" Node in " + fileName + ", found " + masterNode.getNodeName() + "!  Skipping.");
+				LibVulpes.logger.warn("Expected \"Recipe\" Node in " + fileName + ", found " + masterNode.getNodeName() + "!  Skipping.");
 				masterNode = masterNode.getNextSibling();
 				continue;
 			}
@@ -95,13 +95,13 @@ public class XMLRecipeLoader {
 
 			if(outputNode == null) {
 				masterNode = masterNode.getNextSibling();
-				LibVulpes.logger.warning("Missing \"output\" Node in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
+				LibVulpes.logger.warn("Missing \"output\" Node in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
 				recipeNum++;
 				continue;
 			}
 			if(inputNode == null) {
 				masterNode = masterNode.getNextSibling();
-				LibVulpes.logger.warning("Missing \"input\" Node in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
+				LibVulpes.logger.warn("Missing \"input\" Node in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
 				recipeNum++;
 				continue;
 			}
@@ -114,7 +114,7 @@ public class XMLRecipeLoader {
 
 				Object obj = parseItemType(node,false);
 				if(obj == null) {
-					LibVulpes.logger.warning("Invalid item \"input\" (" + node.getNodeName() + " " + node.getTextContent() + ") in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
+					LibVulpes.logger.warn("Invalid item \"input\" (" + node.getNodeName() + " " + node.getTextContent() + ") in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
 				}
 				else
 					inputList.add(obj);
@@ -129,7 +129,7 @@ public class XMLRecipeLoader {
 
 				Object obj = parseItemType(node, true);
 				if(obj == null) {
-					LibVulpes.logger.warning("Invalid item \"output\" (" + node.getNodeName() + " " + node.getTextContent() + ") in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
+					LibVulpes.logger.warn("Invalid item \"output\" (" + node.getNodeName() + " " + node.getTextContent() + ") in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
 				}
 				else
 					outputList.add(obj);
@@ -141,7 +141,7 @@ public class XMLRecipeLoader {
 					try {
 						time = Integer.parseInt(node.getNodeValue());
 					} catch (NumberFormatException e) {
-						LibVulpes.logger.warning("Recipe " + recipeNum + " has no time value");
+						LibVulpes.logger.warn("Recipe " + recipeNum + " has no time value");
 					}
 				}
 
@@ -150,7 +150,7 @@ public class XMLRecipeLoader {
 					try {
 						energy = Integer.parseInt(node.getNodeValue());
 					} catch (NumberFormatException e) {
-						LibVulpes.logger.warning("Recipe " + recipeNum + " has no power value");
+						LibVulpes.logger.warn("Recipe " + recipeNum + " has no power value");
 					}
 				}
 			}

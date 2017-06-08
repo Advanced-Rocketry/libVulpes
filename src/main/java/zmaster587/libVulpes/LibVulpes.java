@@ -21,9 +21,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.logging.log4j.LogManager;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -94,7 +94,7 @@ import zmaster587.libVulpes.util.XMLRecipeLoader;
 
 @Mod(modid="libvulpes",name="Vulpes library",version="@MAJOR@.@MINOR@.@REVIS@.@BUILD@",useMetadata=true, dependencies="before:gregtech;after:CoFHCore;after:BuildCraft|Core")
 public class LibVulpes {
-	public static Logger logger = Logger.getLogger("libVulpes");
+	public static org.apache.logging.log4j.Logger logger = LogManager.getLogger("libVulpes");
 	public static int time = 0;
 	private static HashMap<Class, String> userModifiableRecipes = new HashMap<Class, String>();
 

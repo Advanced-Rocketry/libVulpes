@@ -217,8 +217,8 @@ public class RecipesMachine {
 				message += "\n\t" + element.toString();
 			}
 
-			LibVulpes.logger.warning("Cannot add recipe!");
-			LibVulpes.logger.warning(message);
+			LibVulpes.logger.warn("Cannot add recipe!");
+			LibVulpes.logger.warn(message);
 
 		}
 	}
