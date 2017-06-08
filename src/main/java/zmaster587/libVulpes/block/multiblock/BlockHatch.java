@@ -48,34 +48,6 @@ public class BlockHatch extends BlockMultiblockStructure {
 	public boolean hasTileEntity(IBlockState state) {
 		return true;
 	}
-
-	@Override
-	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess,
-			BlockPos pos, EnumFacing side) {
-		side = side.getOpposite();
-		boolean isPointer = blockAccess.getTileEntity(pos) instanceof TilePointer;
-		if(isPointer) {
-			TilePointer tile = (TilePointer)blockAccess.getTileEntity(pos);
-			if(!tile.allowRedstoneOutputOnSide(side.getOpposite()))
-				return 0;
-			isPointer = isPointer && !(tile.getMasterBlock() instanceof TileMultiBlock);
-		}
-		
-		return !isPointer && (blockState.getValue(VARIANT) & 8) != 0 ? 15 : 0;
-	}
-
-	public void setRedstoneState(World world, IBlockState bstate , BlockPos pos, boolean state) {
-		if(bstate.getBlock() == this) {
-			if(state && (bstate.getValue(VARIANT) & 8) == 0) {
-				world.setBlockState(pos, bstate.withProperty(VARIANT, bstate.getValue(VARIANT) | 8));
-				world.notifyBlockUpdate(pos, bstate,  bstate, 3);
-			}
-			else if(!state && (bstate.getValue(VARIANT) & 8) != 0) {
-				world.setBlockState(pos, bstate.withProperty(VARIANT, bstate.getValue(VARIANT) & 7));
-				world.notifyBlockUpdate(pos, bstate,  bstate, 3);
-			}
-		}
-	}
 	
 	@Override
 	public void getSubBlocks(Item item, CreativeTabs tab,
