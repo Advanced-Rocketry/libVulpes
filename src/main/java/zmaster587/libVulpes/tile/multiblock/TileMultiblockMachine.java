@@ -343,9 +343,19 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 						ItemStack outputItem = outputItems.get(outInventory.getSizeInventory() - i - 1);
 
 
+						boolean allIngredFit = true;
+						for(int k = 0; k < outputItems.size() && i - k >= 0; k++) {
+							ItemStack stack2 = outInventory.getStackInSlot(outInventory.getSizeInventory()-k-1);
+							ItemStack outputItem2  = outputItems.get(k);
+							allIngredFit = stack2 == null || (stack2.isItemEqual(outputItem2) && stack2.stackSize + outputItem2.stackSize <= outInventory.getInventoryStackLimit() && stack2.stackSize + outputItem2.stackSize <= stack.getMaxStackSize());
+							
+							if(!allIngredFit) break;
+						}
+						
 						//stack cannot be null when assigning flag
-						if(stack == null || stack.isItemEqual(outputItem) && 
-								(stack.stackSize + outputItem.stackSize <= outInventory.getInventoryStackLimit() && stack.stackSize + outputItem.stackSize <= stack.getMaxStackSize())) {
+						if(allIngredFit) {
+							
+							//Check all the slots
 							invCheckFlag = false;
 							itemCheck = true;
 							break bottomItemCheck;
@@ -366,9 +376,9 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 							int numExtraMoves = outInventory.getSizeInventory() - ZUtils.getFirstFilledSlotIndex(outInventory) - 1;
 
 							//J will be last slot in index by now
-							for(j = j + numExtraMoves - 1; j >= 0; j--) {
-								int slot = outInventory.getSizeInventory() - 1;
-								outInventory.setInventorySlotContents(slot - j - outputItems.size(), outInventory.getStackInSlot(slot - j));
+							for(j = outInventory.getSizeInventory() - outputSize; j > 0; j--) {
+								int slot = outInventory.getSizeInventory();
+								outInventory.setInventorySlotContents(slot - j - outputSize, outInventory.getStackInSlot(slot - j));
 								outInventory.setInventorySlotContents(slot - j, null);
 							}
 
