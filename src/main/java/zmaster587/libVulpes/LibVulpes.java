@@ -310,8 +310,8 @@ public class LibVulpes {
 		}
 
 		//Recipes
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesBlocks.blockStructureBlock, 4), "sps", "p p", "sps", 'p', "plateIron", 's', "stickIron"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(LibVulpesBlocks.blockAdvStructureBlock, "sps", "psp", "sps", 'p', "plateTitanium", 's', "stickTitanium"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesBlocks.blockStructureBlock, 16), "sps", "p p", "sps", 'p', "plateIron", 's', "stickIron"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(LibVulpesBlocks.blockAdvStructureBlock, 16), "sps", "psp", "sps", 'p', "plateTitanium", 's', "stickTitanium"));
 		GameRegistry.addShapedRecipe(new ItemStack(LibVulpesBlocks.blockCoalGenerator), "a", "b", 'a', LibVulpesItems.itemBattery, 'b', Blocks.FURNACE);
 
 		//Motors
