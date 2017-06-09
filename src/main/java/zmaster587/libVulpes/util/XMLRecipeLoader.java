@@ -108,7 +108,7 @@ public class XMLRecipeLoader {
 
 			List<Object> inputList = new LinkedList<Object>();
 
-			for(int i = 1; i < inputNode.getChildNodes().getLength(); i++) {
+			for(int i = 0; i < inputNode.getChildNodes().getLength(); i++) {
 				Node node = inputNode.getChildNodes().item(i);
 				if(node.getNodeType() != doc.ELEMENT_NODE) continue;
 
@@ -122,7 +122,7 @@ public class XMLRecipeLoader {
 
 			List<Object> outputList = new LinkedList<Object>();
 
-			for(int i = 1; i < outputNode.getChildNodes().getLength(); i++) {
+			for(int i = 0; i < outputNode.getChildNodes().getLength(); i++) {
 				Node node = outputNode.getChildNodes().item(i);
 
 				if(node.getNodeType() != doc.ELEMENT_NODE) continue;
