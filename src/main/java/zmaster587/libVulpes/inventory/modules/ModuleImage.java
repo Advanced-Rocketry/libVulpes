@@ -20,11 +20,18 @@ public class ModuleImage extends ModuleBase {
 	public ModuleImage(int offsetX, int offsetY, IconResource icon) {
 		super(offsetX, offsetY);
 		this.icon = icon;
+		
+		if(icon != null) {
+			this.sizeX = icon.getxSize();
+			this.sizeY = icon.getySize();
+		}
 	}
 	
 	public ModuleImage(int offsetX, int offsetY, ResourceLocation icon, int sizeX, int sizeY) {
 		super(offsetX, offsetY);
 		this.icon = new IconResource(-1, -1, sizeX, sizeY, icon);
+		this.sizeX = sizeX;
+		this.sizeY = sizeY;
 	}
 
 	@Override

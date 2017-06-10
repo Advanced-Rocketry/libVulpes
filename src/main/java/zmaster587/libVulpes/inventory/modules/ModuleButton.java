@@ -21,11 +21,7 @@ public class ModuleButton extends ModuleBase {
 	boolean prevState;
 	public int buttonId;
 
-	protected int sizeX;
-
-	protected int sizeY;
-
-	int color;
+	protected int color;
 
 	protected int bgColor;
 	String text, tooltipText;
