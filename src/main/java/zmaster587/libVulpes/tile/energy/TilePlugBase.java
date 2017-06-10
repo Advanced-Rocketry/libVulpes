@@ -30,6 +30,7 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	}
 	
 	public TilePlugBase(int teir) {
+		storage = new UniversalBattery(getMaxEnergy(0));
 		setTeir(teir);
 	}
 	
