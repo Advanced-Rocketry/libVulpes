@@ -21,10 +21,6 @@ public class ModuleButton extends ModuleBase {
 	boolean prevState;
 	public int buttonId;
 
-	protected int sizeX;
-
-	protected int sizeY;
-
 	protected int color;
 
 	protected int bgColor;
