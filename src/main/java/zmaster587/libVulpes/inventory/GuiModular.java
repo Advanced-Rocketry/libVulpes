@@ -1,11 +1,14 @@
 package zmaster587.libVulpes.inventory;
 
+import java.awt.Rectangle;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleImage;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -117,5 +120,15 @@ public class GuiModular extends GuiContainer {
 			if(module.getVisible())
 				module.renderBackground(this, x, y, i2, i3, fontRenderer);
 		}
+	}
+
+	public List<Rectangle> getExtraAreasCovered() {
+		List<Rectangle> list = new LinkedList<Rectangle>();
+		
+		for(ModuleBase module : modules) {
+				list.add(new Rectangle((width - xSize) / 2 + module.offsetX, (height - ySize) / 2 + module.offsetY, module.getSizeX(), module.getSizeY()));
+			
+		}
+		return list;
 	}
 }

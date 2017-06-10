@@ -29,6 +29,8 @@ public abstract class ModuleBase {
 	//Gui render offsets
 	public int offsetX;
 	public int offsetY;
+	protected int sizeX;
+	protected int sizeY;
 	//List of slots contained by this module
 	protected List<Slot> slotList;
 	//Because each player has it's own instance of the container, in order to send changes to all clients we need to make sure we're running the same tick when calling "isUpdateRequired"
@@ -49,6 +51,14 @@ public abstract class ModuleBase {
 
 	protected long getCurrentTime() {
 		return LibVulpes.time;
+	}
+	
+	public int getSizeX() {
+		return sizeX;
+	}
+	
+	public int getSizeY() {
+		return sizeY;
 	}
 
 	/**

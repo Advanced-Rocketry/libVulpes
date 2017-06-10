@@ -25,7 +25,8 @@ public class ModuleTab extends ModuleBase implements IButtonInventory {
 		for(int i = 0; i  < numTabs; i++) {
 			buttons[i] = new ModuleButton(offsetX + i*24, offsetY - 20, i, "", this, textures[i], tabText[i], 24,24);
 		}
-		
+		sizeX = 24;
+		sizeY = 24;
 	}
 	
 	
