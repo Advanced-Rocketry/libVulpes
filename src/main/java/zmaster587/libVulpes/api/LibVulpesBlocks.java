@@ -25,5 +25,6 @@ public class LibVulpesBlocks {
 	public static Block blockEnhancedMotor;
 	public static Block blockEliteMotor;
 	public static Block[] motors;
+	public static Block blockCreativeInputPlug;
 	
 }

@@ -59,6 +59,7 @@ import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.tile.TileInventoriedPointer;
 import zmaster587.libVulpes.tile.TileSchematic;
 import zmaster587.libVulpes.tile.energy.TileCoalGenerator;
+import zmaster587.libVulpes.tile.energy.TilePlugCreativeInputRF;
 import zmaster587.libVulpes.tile.energy.TilePlugInputIC2;
 import zmaster587.libVulpes.tile.energy.TilePlugInputRF;
 import zmaster587.libVulpes.tile.energy.TilePlugOutputRF;
@@ -150,6 +151,7 @@ public class LibVulpes {
 		LibVulpesBlocks.blockPlaceHolder = new BlockMultiblockPlaceHolder().setBlockName("placeHolder").setBlockTextureName("libvulpes:machineGeneric").setHardness(1f);
 		LibVulpesBlocks.blockAdvStructureBlock = new BlockAlphaTexture(Material.rock).setBlockName("advStructureMachine").setBlockTextureName("libvulpes:advStructureBlock").setCreativeTab(tabMultiblock).setHardness(3f);
 		LibVulpesBlocks.blockStructureBlock = new BlockAlphaTexture(Material.rock).setBlockName("structureMachine").setBlockTextureName("libvulpes:structureBlock").setCreativeTab(tabMultiblock).setHardness(3f);
+		LibVulpesBlocks.blockCreativeInputPlug = new BlockMultiMachineBattery(Material.rock, TilePlugCreativeInputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockTextureName("libvulpes:batteryCreative").setBlockName("creativePowerBattery").setCreativeTab(tabMultiblock).setHardness(3f);
 		LibVulpesBlocks.blockRFBattery = new BlockMultiMachineBattery(Material.rock, TilePlugInputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("rfBattery").setBlockTextureName("libvulpes:batteryRF").setCreativeTab(tabMultiblock).setHardness(3f);
 		LibVulpesBlocks.blockRFOutput = new BlockMultiMachineBattery(Material.rock, TilePlugOutputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setBlockName("rfOutput").setBlockTextureName("libvulpes:batteryRF").setCreativeTab(tabMultiblock).setHardness(3f);
 
@@ -170,6 +172,7 @@ public class LibVulpes {
 		GameRegistry.registerBlock(LibVulpesBlocks.blockStructureBlock, "blockStructureBlock");
 		GameRegistry.registerBlock(LibVulpesBlocks.blockRFBattery, "rfBattery");
 		GameRegistry.registerBlock(LibVulpesBlocks.blockRFOutput, "batteryOutputRF");
+		GameRegistry.registerBlock(LibVulpesBlocks.blockCreativeInputPlug, LibVulpesBlocks.blockCreativeInputPlug.getUnlocalizedName());
 		GameRegistry.registerBlock(LibVulpesBlocks.blockAdvStructureBlock, LibVulpesBlocks.blockAdvStructureBlock.getUnlocalizedName());
 		GameRegistry.registerBlock(LibVulpesBlocks.blockCoalGenerator, LibVulpesBlocks.blockCoalGenerator.getUnlocalizedName());
 		GameRegistry.registerBlock(LibVulpesBlocks.blockMotor, LibVulpesBlocks.blockMotor.getUnlocalizedName());
@@ -189,6 +192,7 @@ public class LibVulpes {
 		GameRegistry.registerTileEntity(TileSchematic.class, "ARTileSchematic");
 		GameRegistry.registerTileEntity(TilePlugInputRF.class, "ARrfBattery");
 		GameRegistry.registerTileEntity(TilePlugOutputRF.class, "ARrfOutputRF");
+		GameRegistry.registerTileEntity(TilePlugCreativeInputRF.class, "ARrfCreativeRF");
 		GameRegistry.registerTileEntity(TilePointer.class, "TilePointer");
 		GameRegistry.registerTileEntity(TileInventoriedPointer.class, "TileInvPointer");
 		GameRegistry.registerTileEntity(TileCoalGenerator.class, "VulpesCoalGenerator");
