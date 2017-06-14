@@ -328,7 +328,7 @@ public class TileMultiBlock extends TileEntity {
 
 					//If the other block already thinks it's complete just assume valid
 					if(tile instanceof TilePointer) {
-						if(((IMultiblock)tile).hasMaster() && ((IMultiblock)tile).getMasterBlock() != this) {
+						if(((IMultiblock)tile).hasMaster() && ((IMultiblock)tile).getMasterBlock() != this && ((IMultiblock)tile).getMasterBlock() != null) {
 							//return false;
 							
 							if(((IMultiblock)tile).getMasterBlock().getPos().equals(getPos())) {
