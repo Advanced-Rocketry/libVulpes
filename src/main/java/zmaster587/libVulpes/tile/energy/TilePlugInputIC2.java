@@ -20,9 +20,8 @@ public class TilePlugInputIC2 extends TileForgePowerOutput implements IEnergySin
 		return "tile.IC2Plug.name";
 	}
 
-	//I would use onLoad, however this causes an infinite loop with IC2, F*** you too IC2
-	//One day I'll get around to shoving a patch on them for the new capability system...
-	//One of the very few things I like about 1.7.10 -> 1.10.2
+	//[Redacted]
+	//Apologies for the previous comment located here
 
 	@Override
 	public void update() {
