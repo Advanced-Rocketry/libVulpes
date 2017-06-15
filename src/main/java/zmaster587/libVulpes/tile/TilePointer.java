@@ -76,7 +76,10 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 		TileEntity pointedTile;
 
 		try  {
-			pointedTile = this.world.getTileEntity(masterBlockPos);
+			if(world.isAreaLoaded(masterBlockPos, 1))
+				pointedTile = this.world.getTileEntity(masterBlockPos);
+			else
+				pointedTile = null;
 		} catch(NullPointerException e) {
 			return null;
 		}
