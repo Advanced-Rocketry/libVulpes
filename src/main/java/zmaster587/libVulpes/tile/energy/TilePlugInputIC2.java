@@ -36,14 +36,14 @@ public class TilePlugInputIC2 extends TileForgePowerOutput implements IEnergySin
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		if(tickedOnce && !worldObj.isRemote)
+		if(tickedOnce && !world.isRemote)
 			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 	}
 
 	@Override
 	public void onChunkUnload() {
 		super.onChunkUnload();
-		if(tickedOnce && !worldObj.isRemote)
+		if(tickedOnce && !world.isRemote)
 			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 	}
 
