@@ -347,7 +347,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 						for(int k = 0; k < outputItems.size() && i - k >= 0; k++) {
 							ItemStack stack2 = outInventory.getStackInSlot(outInventory.getSizeInventory()-k-1);
 							ItemStack outputItem2  = outputItems.get(k);
-							allIngredFit = stack2 == null || (stack2.isItemEqual(outputItem2) && stack2.getCount() + outputItem2.getCount() <= outInventory.getInventoryStackLimit() && stack2.getCount() + outputItem2.getCount() <= stack.getMaxStackSize());
+							allIngredFit = stack2.isEmpty() || (stack2.isItemEqual(outputItem2) && stack2.getCount() + outputItem2.getCount() <= outInventory.getInventoryStackLimit() && stack2.getCount() + outputItem2.getCount() <= stack.getMaxStackSize());
 							
 							if(!allIngredFit) break;
 						}
