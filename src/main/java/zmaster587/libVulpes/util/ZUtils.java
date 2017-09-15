@@ -366,7 +366,7 @@ public class ZUtils {
 
 	public static int getFirstFilledSlotIndex(IInventory inv) {
 		for(int i = 0; i < inv.getSizeInventory(); i++)
-			if(inv.getStackInSlot(i) != null) return i;
+			if(inv.getStackInSlot(i) != ItemStack.EMPTY) return i;
 		return inv.getSizeInventory();
 	}
 

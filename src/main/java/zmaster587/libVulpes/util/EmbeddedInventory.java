@@ -1,6 +1,7 @@
 package zmaster587.libVulpes.util;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -59,7 +60,7 @@ public class EmbeddedInventory implements ISidedInventory {
 			if(slot >= inv.length)
 				return ItemStack.EMPTY;
 			
-			return inv[slot] == null ? ItemStack.EMPTY : inv[slot];
+			return inv[slot] == null || inv[slot].getItem() == Items.AIR ? ItemStack.EMPTY : inv[slot];
 		}
 
 		@Override
