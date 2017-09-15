@@ -7,6 +7,7 @@ import java.util.List;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -186,7 +187,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 			for(int i = totalItems; i < outputItemStacks.size(); i++) {
 				ItemStack stack = outInventory.getStackInSlot(smartInventoryUpgrade ? outInventory.getSizeInventory() - i - 1 : i);
 
-				if(stack == ItemStack.EMPTY) {
+				if(stack == ItemStack.EMPTY || stack.getItem() == Items.AIR) {
 					outInventory.setInventorySlotContents(smartInventoryUpgrade ? outInventory.getSizeInventory() - i - 1 : i, outputItemStacks.get(i));
 					outInventory.markDirty();
 					totalItems++;
