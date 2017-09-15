@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -41,11 +42,26 @@ public class ModuleLiquidIndicator extends ModuleBase {
 	}
 
 	//TODO: sync changes
-	/*@Override
+	@Override
 	public int numberOfChangesToSend() {
 		return 3;
 	}
 
+	private Fluid getFluid(int id)
+	{
+		for(Fluid fluid : FluidRegistry.getRegisteredFluidIDs().keySet())
+		{
+			if(FluidRegistry.getRegisteredFluidIDs().get(fluid) == id)
+				return fluid;
+		}
+		return FluidRegistry.WATER;
+	}
+	
+	private int getFluidID(Fluid fluid)
+	{
+		return FluidRegistry.getRegisteredFluidIDs().get(fluid);
+	}
+	
 	@Override
 	public void sendChanges(Container container, IContainerListener crafter,
 			int variableId, int localId) {
@@ -59,7 +75,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 			if(info.getContents() == null) 
 				crafter.sendProgressBarUpdate(container, variableId, invalidFluid);
 			else
-				crafter.sendProgressBarUpdate(container, variableId, FluidRegistry.getFluidID(info.getContents().getFluid()));
+				crafter.sendProgressBarUpdate(container, variableId, getFluidID(info.getContents().getFluid()));
 	}
 
 	@Override
@@ -69,9 +85,9 @@ public class ModuleLiquidIndicator extends ModuleBase {
 		if(slot == 2) {
 			if(info.getContents() == null && value != invalidFluid) {
 				if(tile2 != null)
-					tile2.fillInternal(new FluidStack(FluidRegistry.getFluid(value), 1), true);
+					tile2.fillInternal(new FluidStack(getFluid(value), 1), true);
 				else
-					tile.fill(new FluidStack(FluidRegistry.getFluid(value), 1), true);
+					tile.fill(new FluidStack(getFluid(value), 1), true);
 			}
 			else if(value == invalidFluid) {
 				if(tile2 != null) 
@@ -79,7 +95,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 				else
 					tile.drain(info.getCapacity(), true);
 			}
-			else if(info.getContents()  != null && value != FluidRegistry.getFluidID(info.getContents().getFluid())) { //Empty the tank then fill it back up with new resource
+			else if(info.getContents()  != null && value != getFluidID(info.getContents().getFluid())) { //Empty the tank then fill it back up with new resource
 				FluidStack stack;
 				if(tile2 != null)
 					stack = tile2.drainInternal(info.getCapacity(), true);
@@ -125,7 +141,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 			if(info.getContents() == null)
 				return prevLiquidUUID != invalidFluid;
 			else
-				return FluidRegistry.getFluidID(info.getContents().getFluid()) != prevLiquidUUID;
+				return getFluidID(info.getContents().getFluid()) != prevLiquidUUID;
 		}
 
 		return false;
@@ -140,8 +156,8 @@ public class ModuleLiquidIndicator extends ModuleBase {
 			if( info.getContents() == null) 
 				prevLiquidUUID = invalidFluid;
 			else
-				prevLiquidUUID = FluidRegistry.getFluidID(info.getContents().getFluid());
-	}*/
+				prevLiquidUUID = getFluidID(info.getContents().getFluid());
+	}
 
 	protected float getProgress() {
 		IFluidTankProperties[] info = tile.getTankProperties();
