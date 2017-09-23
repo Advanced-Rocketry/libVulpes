@@ -200,7 +200,7 @@ public class ZUtils {
 			return true;
 
 		for(ItemStack i : stack) {
-			if(i != null)
+			if(!i.isEmpty())
 				return false;
 		}
 
@@ -233,7 +233,7 @@ public class ZUtils {
 			return true;
 
 		for(int i = 0; i < stack.getSizeInventory(); i++) {
-			if(stack.getStackInSlot(i) != null)
+			if(!stack.getStackInSlot(i).isEmpty())
 				return false;
 		}
 
@@ -243,7 +243,7 @@ public class ZUtils {
 	public static boolean doesInvHaveRoom(ItemStack item, IInventory inv) {
 		for(int i = 0; i < inv.getSizeInventory(); i++)
 		{
-			if(inv.getStackInSlot(i) == null || (item.isItemEqual(inv.getStackInSlot(i)) && inv.getStackInSlot(i).getCount() < inv.getInventoryStackLimit()))
+			if(inv.getStackInSlot(i).isEmpty() || (item.isItemEqual(inv.getStackInSlot(i)) && inv.getStackInSlot(i).getCount() < inv.getInventoryStackLimit()))
 				return true;
 		}
 
@@ -254,7 +254,7 @@ public class ZUtils {
 
 		for(int i = 0; i < inv.getSizeInventory(); i++)
 		{
-			if(inv.getStackInSlot(i) != null && inv.getStackInSlot(i).getMaxStackSize() == inv.getStackInSlot(i).getCount())
+			if(!inv.getStackInSlot(i).isEmpty() && inv.getStackInSlot(i).getMaxStackSize() == inv.getStackInSlot(i).getCount())
 				return true;
 		}
 
@@ -266,7 +266,7 @@ public class ZUtils {
 
 		for(int i = 0; i < inv.getSizeInventory(); i++)
 		{
-			if(inv.getStackInSlot(i) == null)
+			if(inv.getStackInSlot(i).isEmpty())
 				num++;
 		}
 
@@ -278,7 +278,7 @@ public class ZUtils {
 
 		for(int i = 0; i < inv.getSizeInventory(); i++)
 		{
-			if(inv.getStackInSlot(i) != null && inv.getStackInSlot(i).getCount() == inv.getStackInSlot(i).getMaxStackSize())
+			if(!inv.getStackInSlot(i).isEmpty() && inv.getStackInSlot(i).getCount() == inv.getStackInSlot(i).getMaxStackSize())
 				num++;
 		}
 
@@ -293,7 +293,7 @@ public class ZUtils {
 			if(a[i] != null) {
 				for(slot = 0; slot < b.getSizeInventory(); slot++) {
 
-					if(b.getStackInSlot(slot) == null) {
+					if(b.getStackInSlot(slot).isEmpty()) {
 						if(firstEmtpySlot == -1)
 							firstEmtpySlot = slot;
 					}
@@ -304,7 +304,7 @@ public class ZUtils {
 						if(a[i].getCount() < maxTransfer) {
 							//chest.setInventorySlotContents(g, itemstack);
 							b.getStackInSlot(slot).setCount(b.getStackInSlot(slot).getCount() + a[i].getCount());
-							a[i] = null;
+							a[i] = ItemStack.EMPTY;
 							break;
 						}
 						else {
@@ -314,9 +314,9 @@ public class ZUtils {
 					}
 				}
 
-				if(a[i] != null && firstEmtpySlot != -1) {
+				if(!a[i].isEmpty() && firstEmtpySlot != -1) {
 					b.setInventorySlotContents(firstEmtpySlot, a[i].copy());
-					a[i] = null;
+					a[i] = ItemStack.EMPTY;
 				}
 			}
 		}
@@ -329,7 +329,7 @@ public class ZUtils {
 		if(a != null) {
 			for(slot = 0; slot < b.getSizeInventory(); slot++) {
 
-				if(b.getStackInSlot(slot) == null) {
+				if(b.getStackInSlot(slot).isEmpty()) {
 					if(firstEmtpySlot == -1)
 						firstEmtpySlot = slot;
 				}
@@ -340,7 +340,7 @@ public class ZUtils {
 					if(a.getCount() < maxTransfer) {
 						//chest.setInventorySlotContents(g, itemstack);
 						b.getStackInSlot(slot).setCount(b.getStackInSlot(slot).getCount() + a.getCount());
-						a = null;
+						a = ItemStack.EMPTY;
 						break;
 					}
 					else {
@@ -350,17 +350,17 @@ public class ZUtils {
 				}
 			}
 
-			if(a != null && firstEmtpySlot != -1) {
+			if(!a.isEmpty() && firstEmtpySlot != -1) {
 				if(a.getCount() != 0)
 					b.setInventorySlotContents(firstEmtpySlot, a.copy());
-				a = null;
+				a =  ItemStack.EMPTY;
 			}
 		}
 	}
 
 	public static ItemStack getFirstItemInInv(ItemStack i[]) {
 		for(ItemStack stack : i)
-			if(stack != null) return stack;
+			if(!stack.isEmpty()) return stack;
 		return null;
 	}
 
