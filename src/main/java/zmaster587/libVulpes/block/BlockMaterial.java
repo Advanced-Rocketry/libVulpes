@@ -41,10 +41,10 @@ public class BlockMaterial extends BlockMultiblockStructure {
 	}
 	
 	@Override
-	public void getSubBlocks(Item item, CreativeTabs tab,
+	public void getSubBlocks(CreativeTabs tab,
 			NonNullList<ItemStack> list) {
 		for(int i = 0; i < ores.length && ores[i] != null; i++) {
-			list.add(new ItemStack(item, 1, i));
+			list.add(new ItemStack(this, 1, i));
 		}
 	}
 	

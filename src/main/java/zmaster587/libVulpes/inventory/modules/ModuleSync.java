@@ -32,7 +32,7 @@ public class ModuleSync extends ModuleBase {
 	@Override
 	public void sendChanges(Container container, IContainerListener crafter,
 			int variableId, int localId) {
-		crafter.sendProgressBarUpdate(container, variableId, tile.getData(id));
+		crafter.sendWindowProperty(container, variableId, tile.getData(id));
 	}
 	
 	@Override

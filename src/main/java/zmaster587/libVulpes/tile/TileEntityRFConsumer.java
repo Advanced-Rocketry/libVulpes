@@ -1,14 +1,5 @@
 package zmaster587.libVulpes.tile;
 
-import zmaster587.libVulpes.Configuration;
-import zmaster587.libVulpes.api.IUniversalEnergy;
-import zmaster587.libVulpes.cap.ForgePowerCapability;
-import zmaster587.libVulpes.cap.TeslaHandler;
-import zmaster587.libVulpes.cap.TeslaPowerCapability;
-import zmaster587.libVulpes.energy.IPower;
-import zmaster587.libVulpes.util.TeslaCapabilityProvider;
-import zmaster587.libVulpes.util.UniversalBattery;
-import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -18,6 +9,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
+import zmaster587.libVulpes.Configuration;
+import zmaster587.libVulpes.api.IUniversalEnergy;
+import zmaster587.libVulpes.cap.ForgePowerCapability;
+import zmaster587.libVulpes.cap.TeslaHandler;
+import zmaster587.libVulpes.energy.IPower;
+import zmaster587.libVulpes.util.UniversalBattery;
 
 public abstract class TileEntityRFConsumer extends TileEntity implements IPower, IUniversalEnergy, ITickable {
 	protected UniversalBattery energy;

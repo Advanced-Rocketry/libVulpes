@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -211,7 +211,7 @@ public class RenderHelper {
 			Tessellator tessellator = Tessellator.getInstance();
 			byte b0 = 0;
 
-			VertexBuffer buffer = tessellator.getBuffer();
+			BufferBuilder buffer = tessellator.getBuffer();
 
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
@@ -253,7 +253,7 @@ public class RenderHelper {
 		GL11.glPopMatrix();
 	}
 
-	public static void renderBlockWithEndPointers(VertexBuffer buff, double radius, double x1, double y1, double z1, double x2, double y2, double z2) {
+	public static void renderBlockWithEndPointers(BufferBuilder buff, double radius, double x1, double y1, double z1, double x2, double y2, double z2) {
 		double buffer;
 		renderBottomFaceEndpoints(buff, radius, x1, y1 - radius/2d, z1, x2, y2 - radius/2d, z2);
 		renderTopFaceEndpoints(buff, radius, x1, y1 + radius/2d, z1, x2, y2 + radius/2d, z2);
@@ -263,7 +263,7 @@ public class RenderHelper {
 		renderWestFaceEndpoints(buff, radius, x1 - radius/2d, y1, z1, x2 - radius/2d, y2, z2);
 	}
 
-	public static void renderCrossXZ(VertexBuffer buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
+	public static void renderCrossXZ(BufferBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
 		renderTopFaceEndpoints(buff, width, xMin, yMin, zMin, xMax, yMax, zMax);
 		renderBottomFaceEndpoints(buff, width, xMin, yMin, zMin, xMax, yMax, zMax);
 		renderNorthFaceEndpoints(buff, width, xMin, yMin, zMin, xMax, yMax, zMax);
@@ -271,7 +271,7 @@ public class RenderHelper {
 	}
 
 
-	public static void renderTopFace(VertexBuffer buff, double yMax, double xMin, double zMin, double xMax, double zMax) {
+	public static void renderTopFace(BufferBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax) {
 		//top
 		buff.pos(xMin, yMax, zMin).normal(0, 1, 0).endVertex();
 		buff.pos(xMin, yMax, zMax).normal(0, 1, 0).endVertex();
@@ -280,7 +280,7 @@ public class RenderHelper {
 
 	}
 
-	public static void renderTopFaceEndpoints(VertexBuffer buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
+	public static void renderTopFaceEndpoints(BufferBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
 		//top
 		buff.pos(xMin, yMin, zMin - width).normal(0, 1, 0).endVertex();
 		buff.pos(xMin, yMin, zMin + width).normal(0, 1, 0).endVertex();
@@ -289,7 +289,7 @@ public class RenderHelper {
 
 	}
 
-	public static void renderBottomFace(VertexBuffer buff, double yMax, double xMin, double zMin, double xMax, double zMax) {
+	public static void renderBottomFace(BufferBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax) {
 		//bottom
 		buff.pos(xMax, yMax, zMin).normal(0, -1, 0).endVertex();
 		buff.pos(xMax, yMax, zMax).normal(0, -1, 0).endVertex();
@@ -297,7 +297,7 @@ public class RenderHelper {
 		buff.pos(xMin, yMax, zMin).normal(0, -1, 0).endVertex();
 	}
 
-	public static void renderBottomFaceEndpoints(VertexBuffer buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
+	public static void renderBottomFaceEndpoints(BufferBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
 		//top
 		buff.pos(xMin, yMin, zMin + width).normal(0, -1, 0).endVertex();
 		buff.pos(xMin, yMin, zMin - width).normal(0, -1, 0).endVertex();
@@ -305,7 +305,7 @@ public class RenderHelper {
 		buff.pos(xMax, yMax, zMax + width).normal(0, -1, 0).endVertex();
 	}	
 
-	public static void renderNorthFace(VertexBuffer buff, double zMin, double xMin, double yMin, double xMax, double yMax) {
+	public static void renderNorthFace(BufferBuilder buff, double zMin, double xMin, double yMin, double xMax, double yMax) {
 		//north
 		buff.pos(xMin, yMax, zMin).normal(0, 0, 1).endVertex();
 		buff.pos(xMax, yMax, zMin).normal(0, 0, 1).endVertex();
@@ -313,7 +313,7 @@ public class RenderHelper {
 		buff.pos(xMin, yMin, zMin).normal(0, 0, 1).endVertex();
 	}
 
-	public static void renderNorthFaceEndpoints(VertexBuffer buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
+	public static void renderNorthFaceEndpoints(BufferBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
 		//north
 		buff.pos(xMin, yMin + width, zMin).normal(0, 0, 1).endVertex();
 		buff.pos(xMax, yMax + width, zMax).normal(0, 0, 1).endVertex();
@@ -321,7 +321,7 @@ public class RenderHelper {
 		buff.pos(xMin, yMin - width, zMin).normal(0, 0, 1).endVertex();
 	}
 
-	public static void renderSouthFace(VertexBuffer buff, double zMax, double xMin, double yMin, double xMax, double yMax) {
+	public static void renderSouthFace(BufferBuilder buff, double zMax, double xMin, double yMin, double xMax, double yMax) {
 		//south
 		buff.pos(xMin, yMax, zMax).normal(0, 0, -1).endVertex();
 		buff.pos(xMin, yMin, zMax).normal(0, 0, -1).endVertex();
@@ -329,7 +329,7 @@ public class RenderHelper {
 		buff.pos(xMax, yMax, zMax).normal(0, 0, -1).endVertex();
 	}
 
-	public static void renderSouthFaceEndpoints(VertexBuffer buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
+	public static void renderSouthFaceEndpoints(BufferBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
 		//south
 		buff.pos(xMin, yMin + width, zMin).normal(0, 0, -1).endVertex();
 		buff.pos(xMin, yMin - width, zMin).normal(0, 0, -1).endVertex();
@@ -337,7 +337,7 @@ public class RenderHelper {
 		buff.pos(xMax, yMax + width, zMax).normal(0, 0, -1).endVertex();
 	}
 
-	public static void renderEastFace(VertexBuffer buff, double xMax, double yMin, double zMin, double yMax, double zMax) {
+	public static void renderEastFace(BufferBuilder buff, double xMax, double yMin, double zMin, double yMax, double zMax) {
 		//east
 		buff.pos(xMax, yMax, zMin).normal(1, 0, 0).endVertex();
 		buff.pos(xMax, yMax, zMax).normal(1, 0, 0).endVertex();
@@ -346,7 +346,7 @@ public class RenderHelper {
 	}
 
 
-	public static void renderEastFaceEndpoints(VertexBuffer buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
+	public static void renderEastFaceEndpoints(BufferBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
 		//east
 		buff.pos(xMax, yMax + width, zMin).normal(1, 0, 0).endVertex();
 		buff.pos(xMax, yMax - width, zMax).normal(1, 0, 0).endVertex();
@@ -354,7 +354,7 @@ public class RenderHelper {
 		buff.pos(xMax, yMin + width, zMin).normal(1, 0, 0).endVertex();
 	}
 
-	public static void renderWestFace(VertexBuffer buff, double xMin, double yMin, double zMin, double yMax, double zMax) {
+	public static void renderWestFace(BufferBuilder buff, double xMin, double yMin, double zMin, double yMax, double zMax) {
 		//west
 		buff.pos(xMin, yMin, zMin).normal(-1, 0, 0).endVertex();
 		buff.pos(xMin, yMin, zMax).normal(-1, 0, 0).endVertex();
@@ -362,7 +362,7 @@ public class RenderHelper {
 		buff.pos(xMin, yMax, zMin).normal(-1, 0, 0).endVertex();
 	}
 
-	public static void renderWestFaceEndpoints(VertexBuffer buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
+	public static void renderWestFaceEndpoints(BufferBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
 		//west
 		buff.pos(xMin, yMin + width, zMin).normal(-1, 0, 0).endVertex();
 		buff.pos(xMin, yMin - width, zMax).normal(-1, 0, 0).endVertex();
@@ -370,7 +370,7 @@ public class RenderHelper {
 		buff.pos(xMin, yMax + width, zMin).normal(-1, 0, 0).endVertex();
 	}
 
-	public static void renderTopFaceWithUV(VertexBuffer buff, double yMax, double xMin, double zMin, double xMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
+	public static void renderTopFaceWithUV(BufferBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
 		//top
 		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
 		buff.pos(xMin, yMax, zMax).tex(uMin, vMax).endVertex();
@@ -380,7 +380,7 @@ public class RenderHelper {
 
 	}
 
-	public static void renderBottomFaceWithUV(VertexBuffer buff, double yMax, double xMin, double zMin, double xMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
+	public static void renderBottomFaceWithUV(BufferBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
 		//bottom
 
 		buff.pos(xMax, yMax, zMax).tex(uMax, vMax).endVertex();
@@ -390,7 +390,7 @@ public class RenderHelper {
 
 	}
 
-	public static void renderNorthFaceWithUV(VertexBuffer buff, double zMin, double xMin, double yMin, double xMax, double yMax, double uMin, double uMax, double vMin, double vMax) {
+	public static void renderNorthFaceWithUV(BufferBuilder buff, double zMin, double xMin, double yMin, double xMax, double yMax, double uMin, double uMax, double vMin, double vMax) {
 		//north
 		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
 		buff.pos(xMax, yMax, zMin).tex(uMax, vMin).endVertex();
@@ -398,7 +398,7 @@ public class RenderHelper {
 		buff.pos(xMin, yMin, zMin).tex(uMin, vMax).endVertex();
 	}
 
-	public static void renderNorthFaceWithUVNoNormal(VertexBuffer buff, double zMin, double xMin, double yMin, double xMax, double yMax, double uMin, double uMax, double vMin, double vMax) {
+	public static void renderNorthFaceWithUVNoNormal(BufferBuilder buff, double zMin, double xMin, double yMin, double xMax, double yMax, double uMin, double uMax, double vMin, double vMax) {
 		//north
 		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
 		buff.pos(xMax, yMax, zMin).tex(uMax, vMin).endVertex();
@@ -406,7 +406,7 @@ public class RenderHelper {
 		buff.pos(xMin, yMin, zMin).tex(uMin, vMax).endVertex();
 	}
 
-	public static void renderSouthFaceWithUV(VertexBuffer buff, double zMax, double xMin, double yMin, double xMax, double yMax, double uMin, double uMax, double vMin, double vMax) {
+	public static void renderSouthFaceWithUV(BufferBuilder buff, double zMax, double xMin, double yMin, double xMax, double yMax, double uMin, double uMax, double vMin, double vMax) {
 		//south
 		buff.pos(xMin, yMax, zMax).tex(uMin, vMin).endVertex();
 		buff.pos(xMin, yMin, zMax).tex(uMin, vMax).endVertex();
@@ -414,7 +414,7 @@ public class RenderHelper {
 		buff.pos(xMax, yMax, zMax).tex(uMax, vMin).endVertex();
 	}
 
-	public static void renderEastFaceWithUV(VertexBuffer buff, double xMax, double yMin, double zMin, double yMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
+	public static void renderEastFaceWithUV(BufferBuilder buff, double xMax, double yMin, double zMin, double yMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
 		//east
 		buff.pos(xMax, yMax, zMin).tex(uMin, vMin).endVertex();
 		buff.pos(xMax, yMax, zMax).tex(uMax, vMin).endVertex();
@@ -423,7 +423,7 @@ public class RenderHelper {
 	}
 
 
-	public static void renderWestFaceWithUV(VertexBuffer buff, double xMin, double yMin, double zMin, double yMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
+	public static void renderWestFaceWithUV(BufferBuilder buff, double xMin, double yMin, double zMin, double yMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
 		//west
 		buff.pos(xMin, yMin, zMin).tex(uMin, vMax).endVertex();
 		buff.pos(xMin, yMin, zMax).tex(uMax, vMax).endVertex();
@@ -431,7 +431,7 @@ public class RenderHelper {
 		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
 	}
 
-	public static void renderCubeWithUV(VertexBuffer buff, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
+	public static void renderCubeWithUV(BufferBuilder buff, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
 
 
 		renderTopFaceWithUV(buff, yMax, xMin, zMin, xMax, zMax, uMin, uMax,vMin, vMax);
@@ -442,7 +442,7 @@ public class RenderHelper {
 		renderBottomFaceWithUV(buff, yMin, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
 	}
 
-	public static void renderCube(VertexBuffer buff, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
+	public static void renderCube(BufferBuilder buff, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
 
 
 		renderTopFace(buff, yMax, xMin, zMin, xMax, zMax);
@@ -458,8 +458,8 @@ public class RenderHelper {
 		if (itemstack != null)
 		{
 			EntityItem entityitem = new EntityItem(tile.getWorld(), 0.0D, 0.0D, 0.0D, itemstack);
-			Item item = entityitem.getEntityItem().getItem();
-			entityitem.getEntityItem().setCount(1);
+			Item item = entityitem.getItem().getItem();
+			entityitem.getItem().setCount(1);
 			entityitem.hoverStart = 0.0F;
 			GlStateManager.disableLighting();
 
@@ -467,14 +467,14 @@ public class RenderHelper {
 
 			GlStateManager.scale(0.5F, 0.5F, 0.5F);
 
-			if (!dummyItem.shouldRenderItemIn3D(entityitem.getEntityItem()))
+			if (!dummyItem.shouldRenderItemIn3D(entityitem.getItem()))
 			{
 				GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
 			}
 
 			GlStateManager.pushAttrib();
 			net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
-			dummyItem.renderItem(entityitem.getEntityItem(), ItemCameraTransforms.TransformType.FIXED);
+			dummyItem.renderItem(entityitem.getItem(), ItemCameraTransforms.TransformType.FIXED);
 			net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
 			GlStateManager.popAttrib();
 
@@ -489,14 +489,14 @@ public class RenderHelper {
 		GlStateManager.disableLighting();
 		GlStateManager.scale(0.5F, 0.5F, 0.5F);
 
-		if (!dummyItem.shouldRenderItemIn3D(entityitem.getEntityItem()))
+		if (!dummyItem.shouldRenderItemIn3D(entityitem.getItem()))
 		{
 			GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
 		}
 
 		GlStateManager.pushAttrib();
 		net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
-		dummyItem.renderItem(entityitem.getEntityItem(), ItemCameraTransforms.TransformType.FIXED);
+		dummyItem.renderItem(entityitem.getItem(), ItemCameraTransforms.TransformType.FIXED);
 		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
 		GlStateManager.popAttrib();
 

@@ -48,8 +48,9 @@ public class ItemOreProduct extends Item {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, NonNullList<ItemStack>  itemList) {
+	public void getSubItems(CreativeTabs par2CreativeTabs, NonNullList<ItemStack>  itemList) {
 
+        if (!this.isInCreativeTab(par2CreativeTabs)) return;
 		for(Entry<Integer, Material> entry : properties.entrySet()) {
 			itemList.add(new ItemStack(this, 1, entry.getKey()));
 		}

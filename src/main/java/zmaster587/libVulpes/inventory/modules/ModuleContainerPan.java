@@ -124,8 +124,8 @@ public class ModuleContainerPan extends ModuleBase {
 		}
 
 		for(GuiButton button2 : buttonList) {
-			button2.xPosition += deltaX;
-			button2.yPosition += deltaY;
+			button2.x += deltaX;
+			button2.y += deltaY;
 		}
 
 		for(ModuleBase module : moduleList) {
@@ -286,8 +286,8 @@ public class ModuleContainerPan extends ModuleBase {
 		}
 
 		for(GuiButton button2 : buttonList) {
-			button2.xPosition += deltaX;
-			button2.yPosition += deltaY;
+			button2.x += deltaX;
+			button2.y += deltaY;
 		}
 
 		for(ModuleBase module : moduleList) {
@@ -344,10 +344,10 @@ public class ModuleContainerPan extends ModuleBase {
 		}
 		
 		for(GuiButton button : buttonList)
-			button.drawButton(gui.mc, mouseX, mouseY);
+			button.drawButton(gui.mc, mouseX, mouseY, 0);
 
 		for(GuiButton button : staticButtonList)
-			button.drawButton(gui.mc, mouseX, mouseY);
+			button.drawButton(gui.mc, mouseX, mouseY, 0);
 
 		for(ModuleBase module : moduleList) {
 			module.renderBackground(gui, x, y, mouseX, mouseY, font);

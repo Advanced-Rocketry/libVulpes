@@ -94,11 +94,11 @@ public class ModulePower extends ModuleBase {
 
 		if(localId == 0) {
 			int data = (tile.getEnergyStored() & 0xFFFF);
-			crafter.sendProgressBarUpdate(container, variableId, data);
+			crafter.sendWindowProperty(container, variableId, data);
 		}
 		else if(localId == 1) {
 			int data = (tile.getEnergyStored() & 0xFFFF0000);
-			crafter.sendProgressBarUpdate(container, variableId, data >>> 16);
+			crafter.sendWindowProperty(container, variableId, data >>> 16);
 		}
 	}
 

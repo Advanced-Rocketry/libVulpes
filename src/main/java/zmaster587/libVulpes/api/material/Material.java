@@ -1,17 +1,9 @@
 package zmaster587.libVulpes.api.material;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-
-import zmaster587.libVulpes.api.LibVulpesBlocks;
-import zmaster587.libVulpes.api.LibVulpesItems;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class Material {
 	String unlocalizedName, tool;

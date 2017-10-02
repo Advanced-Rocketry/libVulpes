@@ -4,6 +4,7 @@ import java.util.List;
 
 import zmaster587.libVulpes.interfaces.ILinkableTile;
 import zmaster587.libVulpes.tile.IMultiblock;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -32,7 +33,7 @@ public class ItemLinker extends Item {
 
 
 	@Override
-	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
+	public void addInformation(ItemStack par1ItemStack, World par2EntityPlayer, List par3List, ITooltipFlag par4)
 	{
 		int y = getMasterY(par1ItemStack);
 

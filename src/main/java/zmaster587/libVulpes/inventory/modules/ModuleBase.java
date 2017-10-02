@@ -16,7 +16,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
@@ -323,7 +323,7 @@ public abstract class ModuleBase {
 		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer vertex = tessellator.getBuffer();
+		BufferBuilder vertex = tessellator.getBuffer();
 		vertex.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 		
 		vertex.pos((double)x2, (double)y1, (double)zLevel).color(f1, f2, f3, f).endVertex();

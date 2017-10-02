@@ -20,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.GameData;
 
 public class LibVulpesBlocks {
 	public static final Set<Block> blocks = new HashSet<>();
@@ -70,7 +71,7 @@ public class LibVulpesBlocks {
 
 	public static <ITEM extends Item> ITEM registerItem(ITEM item) {
 
-		return GameRegistry.register(item);
+		return (ITEM) GameData.register_impl(item);
 	}
 
 	/**
@@ -82,7 +83,7 @@ public class LibVulpesBlocks {
 	 * @return The Block instance
 	 */
 	public static <BLOCK extends Block> BLOCK registerBlock(BLOCK block, Class<? extends ItemBlock> clazz, boolean registerItemStates) {
-		GameRegistry.register(block);
+		GameData.register_impl(block);
 
 		if (clazz != null) {
 			ItemBlock itemBlock;
@@ -94,7 +95,7 @@ public class LibVulpesBlocks {
 					ModelLoader.setCustomModelResourceLocation(itemBlock, 0, new ModelResourceLocation(block.getRegistryName(), "inventory"));
 				}
 
-				GameRegistry.register(itemBlock.setRegistryName(block.getRegistryName()));
+				GameData.register_impl(itemBlock.setRegistryName(block.getRegistryName()));
 			} catch (InstantiationException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
