@@ -7,6 +7,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import zmaster587.libVulpes.api.ITimeModifier;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -33,8 +34,8 @@ public class BlockMotor extends RotatableBlock implements ITimeModifier {
 	}
 	 
 	 @Override
-	public void addInformation(ItemStack stack, EntityPlayer player,
-			List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, World player,
+			List<String> tooltip, ITooltipFlag advanced) {
 		super.addInformation(stack, player, tooltip, advanced);
 		
 		tooltip.add(String.format(ChatFormatting.GRAY + "Machine Speed: %.2f", 1/getTimeMult()));

@@ -89,10 +89,10 @@ public class ModuleProgress extends ModuleBase {
 	public void sendChanges(Container container, IContainerListener crafter, int variableId, int localId) {
 		switch(localId) {
 		case 0:
-			crafter.sendProgressBarUpdate(container, variableId, progress.getProgress(id));
+			crafter.sendWindowProperty(container, variableId, progress.getProgress(id));
 			break;
 		case 1:
-			crafter.sendProgressBarUpdate(container, variableId, progress.getTotalProgress(id));
+			crafter.sendWindowProperty(container, variableId, progress.getTotalProgress(id));
 		}
 	}
 

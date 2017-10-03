@@ -73,7 +73,7 @@ public class ModuleRadioButton  extends ModuleBase {
 	@Override
 	public void sendChanges(Container container, IContainerListener crafter,
 			int variableId, int localId) {
-		crafter.sendProgressBarUpdate(container, variableId, getOptionSelected());
+		crafter.sendWindowProperty(container, variableId, getOptionSelected());
 	}
 
 	@Override

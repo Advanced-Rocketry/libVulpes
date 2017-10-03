@@ -68,14 +68,14 @@ public class ModuleLiquidIndicator extends ModuleBase {
 		IFluidTankProperties info = tile.getTankProperties()[0];
 
 		if(localId == 0 && info.getContents() != null)
-			crafter.sendProgressBarUpdate(container, variableId, info.getContents().amount & 0xFFFF);
+			crafter.sendWindowProperty(container, variableId, info.getContents().amount & 0xFFFF);
 		else if(localId == 1 && info.getContents() != null)
-			crafter.sendProgressBarUpdate(container, variableId, (info.getContents().amount >>> 16) & 0xFFFF);
+			crafter.sendWindowProperty(container, variableId, (info.getContents().amount >>> 16) & 0xFFFF);
 		else if(localId == 2)
 			if(info.getContents() == null) 
-				crafter.sendProgressBarUpdate(container, variableId, invalidFluid);
+				crafter.sendWindowProperty(container, variableId, invalidFluid);
 			else
-				crafter.sendProgressBarUpdate(container, variableId, getFluidID(info.getContents().getFluid()));
+				crafter.sendWindowProperty(container, variableId, getFluidID(info.getContents().getFluid()));
 	}
 
 	@Override

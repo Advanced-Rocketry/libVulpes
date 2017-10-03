@@ -8,7 +8,7 @@ import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -57,12 +57,12 @@ public class GuiImageButton extends GuiButton {
 	}
 
 	@Override
-	public void drawButton(Minecraft minecraft, int par2, int par3)
+	public void drawButton(Minecraft minecraft, int par2, int par3, float f1)
 	{
 		if (this.visible)
 		{
 			//
-			this.hovered = par2 >= this.xPosition && par3 >= this.yPosition && par2 < this.xPosition + this.width && par3 < this.yPosition + this.height;
+			this.hovered = par2 >= this.x && par3 >= this.y && par2 < this.x + this.width && par3 < this.y + this.height;
 			int hoverState = this.getHoverState(this.hovered);
 
 			/*if(mousePressed(minecraft, par2, par3) && buttonTexture[2] != null)
@@ -87,12 +87,12 @@ public class GuiImageButton extends GuiButton {
            
 			
 	        Tessellator tessellator = Tessellator.getInstance();
-	        VertexBuffer vertexbuffer = tessellator.getBuffer();
+	        BufferBuilder vertexbuffer = tessellator.getBuffer();
 	        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-	        vertexbuffer.pos(xPosition, yPosition + height, (double)this.zLevel).tex(0, 1).endVertex();
-	        vertexbuffer.pos(xPosition + width, yPosition + height, (double)this.zLevel).tex( 1, 1).endVertex();
-	        vertexbuffer.pos(xPosition + width, yPosition, (double)this.zLevel).tex(1, 0).endVertex();
-	        vertexbuffer.pos(xPosition, yPosition, (double)this.zLevel).tex(0, 0).endVertex();
+	        vertexbuffer.pos(x, y + height, (double)this.zLevel).tex(0, 1).endVertex();
+	        vertexbuffer.pos(x + width, y + height, (double)this.zLevel).tex( 1, 1).endVertex();
+	        vertexbuffer.pos(x + width, y, (double)this.zLevel).tex(1, 0).endVertex();
+	        vertexbuffer.pos(x, y, (double)this.zLevel).tex(0, 0).endVertex();
 	        tessellator.draw();
 			
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

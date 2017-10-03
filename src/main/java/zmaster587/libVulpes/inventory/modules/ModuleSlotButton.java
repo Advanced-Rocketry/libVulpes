@@ -11,7 +11,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -83,7 +83,7 @@ public class ModuleSlotButton extends ModuleButton {
 		GL11.glTranslatef(-.5f,-255,-.5f);
 		//GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glDepthMask(false);
-		VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		Block itemBlock = Block.getBlockFromItem(stack.getItem());
 		if(itemBlock != null) {
 			IBlockState block =  itemBlock.getStateFromMeta(stack.getItemDamage());

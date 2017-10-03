@@ -57,11 +57,11 @@ public class BlockOre extends Block implements INamedMetaBlock {
 	}
 
 	@Override
-	public void getSubBlocks(Item item, CreativeTabs tab,
+	public void getSubBlocks(CreativeTabs tab,
 			NonNullList<ItemStack> list) {
 		for(int i = 0; i < numBlocks; i++)
 			if(product.isOfType(ores[i].getAllowedProducts()))
-				list.add(new ItemStack(item, 1, i));
+				list.add(new ItemStack(this, 1, i));
 	}
 	
 

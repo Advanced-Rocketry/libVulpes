@@ -99,7 +99,7 @@ public class ModuleToggleSwitch extends ModuleButton {
 	@Override
 	public void sendChanges(Container container, IContainerListener crafter,
 			int variableId, int localId) {
-		crafter.sendProgressBarUpdate(container, variableId, currentState ? 1 : 0);
+		crafter.sendWindowProperty(container, variableId, currentState ? 1 : 0);
 	}
 	
 	public boolean isButton(GuiButton button) {
