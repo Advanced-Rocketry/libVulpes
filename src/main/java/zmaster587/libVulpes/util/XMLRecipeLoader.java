@@ -71,99 +71,105 @@ public class XMLRecipeLoader {
 		masterNode = masterNode.getChildNodes().item(1);
 
 		while(masterNode != null) {
-			int time = 200, energy = 0;
-			if(masterNode.getNodeType() != doc.ELEMENT_NODE) {
-				masterNode = masterNode.getNextSibling();
-				continue;
-			}
-			if(!masterNode.getNodeName().equals("Recipe")) {
-				LibVulpes.logger.warn("Expected \"Recipe\" Node in " + fileName + ", found " + masterNode.getNodeName() + "!  Skipping.");
-				masterNode = masterNode.getNextSibling();
-				continue;
-			}
-
-			Node inputNode = null, outputNode = null;
-			for(int i = 0; i < masterNode.getChildNodes().getLength(); i++) {
-				Node node = masterNode.getChildNodes().item(i);
-				if(node.getNodeName().equals("input")) {
-					inputNode = node;
+			try {
+				int time = 200, energy = 0;
+				if(masterNode.getNodeType() != doc.ELEMENT_NODE) {
+					masterNode = masterNode.getNextSibling();
+					continue;
 				}
-				else if(node.getNodeName().equals("output")) {
-					outputNode = node;
+				if(!masterNode.getNodeName().equals("Recipe")) {
+					LibVulpes.logger.warn("Expected \"Recipe\" Node in " + fileName + ", found " + masterNode.getNodeName() + "!  Skipping.");
+					masterNode = masterNode.getNextSibling();
+					continue;
 				}
-			}
 
-			if(outputNode == null) {
-				masterNode = masterNode.getNextSibling();
-				LibVulpes.logger.warn("Missing \"output\" Node in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
-				recipeNum++;
-				continue;
-			}
-			if(inputNode == null) {
-				masterNode = masterNode.getNextSibling();
-				LibVulpes.logger.warn("Missing \"input\" Node in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
-				recipeNum++;
-				continue;
-			}
-
-			List<Object> inputList = new LinkedList<Object>();
-
-			for(int i = 0; i < inputNode.getChildNodes().getLength(); i++) {
-				Node node = inputNode.getChildNodes().item(i);
-				if(node.getNodeType() != doc.ELEMENT_NODE) continue;
-
-				Object obj = parseItemType(node,false);
-				if(obj == null) {
-					LibVulpes.logger.warn("Invalid item \"input\" (" + node.getNodeName() + " " + node.getTextContent() + ") in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
-				}
-				else
-					inputList.add(obj);
-			}
-
-			List<Object> outputList = new LinkedList<Object>();
-
-			for(int i = 0; i < outputNode.getChildNodes().getLength(); i++) {
-				Node node = outputNode.getChildNodes().item(i);
-
-				if(node.getNodeType() != doc.ELEMENT_NODE) continue;
-
-				Object obj = parseItemType(node, true);
-				if(obj == null) {
-					LibVulpes.logger.warn("Invalid item \"output\" (" + node.getNodeName() + " " + node.getTextContent() + ") in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
-				}
-				else
-					outputList.add(obj);
-			}
-
-			if(masterNode.hasAttributes()) {
-				Node node = masterNode.getAttributes().getNamedItem("timeRequired");
-				if(node != null && !node.getNodeValue().isEmpty()) {
-					try {
-						time = Integer.parseInt(node.getNodeValue());
-					} catch (NumberFormatException e) {
-						LibVulpes.logger.warn("Recipe " + recipeNum + " has no time value");
+				Node inputNode = null, outputNode = null;
+				for(int i = 0; i < masterNode.getChildNodes().getLength(); i++) {
+					Node node = masterNode.getChildNodes().item(i);
+					if(node.getNodeName().equals("input")) {
+						inputNode = node;
+					}
+					else if(node.getNodeName().equals("output")) {
+						outputNode = node;
 					}
 				}
 
-				node = masterNode.getAttributes().getNamedItem("power");
-				if(node != null && !node.getNodeValue().isEmpty()) {
-					try {
-						energy = Integer.parseInt(node.getNodeValue());
-					} catch (NumberFormatException e) {
-						LibVulpes.logger.warn("Recipe " + recipeNum + " has no power value");
+				if(outputNode == null) {
+					masterNode = masterNode.getNextSibling();
+					LibVulpes.logger.warn("Missing \"output\" Node in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
+					recipeNum++;
+					continue;
+				}
+				if(inputNode == null) {
+					masterNode = masterNode.getNextSibling();
+					LibVulpes.logger.warn("Missing \"input\" Node in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
+					recipeNum++;
+					continue;
+				}
+
+				List<Object> inputList = new LinkedList<Object>();
+
+				for(int i = 0; i < inputNode.getChildNodes().getLength(); i++) {
+					Node node = inputNode.getChildNodes().item(i);
+					if(node.getNodeType() != doc.ELEMENT_NODE) continue;
+
+					Object obj = parseItemType(node,false);
+					if(obj == null) {
+						LibVulpes.logger.warn("Invalid item \"input\" (" + node.getNodeName() + " " + node.getTextContent() + ") in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
+					}
+					else
+						inputList.add(obj);
+				}
+
+				List<Object> outputList = new LinkedList<Object>();
+
+				for(int i = 0; i < outputNode.getChildNodes().getLength(); i++) {
+					Node node = outputNode.getChildNodes().item(i);
+
+					if(node.getNodeType() != doc.ELEMENT_NODE) continue;
+
+					Object obj = parseItemType(node, true);
+					if(obj == null) {
+						LibVulpes.logger.warn("Invalid item \"output\" (" + node.getNodeName() + " " + node.getTextContent() + ") in recipe " + recipeNum + " in " + fileName + "!  Skipping.");
+					}
+					else
+						outputList.add(obj);
+				}
+
+				if(masterNode.hasAttributes()) {
+					Node node = masterNode.getAttributes().getNamedItem("timeRequired");
+					if(node != null && !node.getNodeValue().isEmpty()) {
+						try {
+							time = Integer.parseInt(node.getNodeValue());
+						} catch (NumberFormatException e) {
+							LibVulpes.logger.warn("Recipe " + recipeNum + " has no time value");
+						}
+					}
+
+					node = masterNode.getAttributes().getNamedItem("power");
+					if(node != null && !node.getNodeValue().isEmpty()) {
+						try {
+							energy = Integer.parseInt(node.getNodeValue());
+						} catch (NumberFormatException e) {
+							LibVulpes.logger.warn("Recipe " + recipeNum + " has no power value");
+						}
 					}
 				}
-			}
-			else {
-				LibVulpes.logger.info("Recipe " + recipeNum + " has no time or power consumption");
+				else {
+					LibVulpes.logger.info("Recipe " + recipeNum + " has no time or power consumption");
+				}
+
+				if(outputList.isEmpty()) 
+					LibVulpes.logger.info("Output List empty in recipe " + recipeNum);
+				else {
+					RecipesMachine.getInstance().addRecipe(clazz, outputList, time, energy, inputList);
+					LibVulpes.logger.info("Sucessfully added recipe to " + clazz.getName() + " for " + inputList.toString() + " -> " + outputList.toString());
+				}
+			} catch (Exception e) {
+				LibVulpes.logger.warn("Recipe entry #" + recipeNum + " load failed for '" + clazz.getCanonicalName() + "'!");
 			}
 
-			if(outputList.isEmpty()) 
-				LibVulpes.logger.info("Output List empty in recipe " + recipeNum);
-			else {
-				RecipesMachine.getInstance().addRecipe(clazz, outputList, time, energy, inputList);
-				LibVulpes.logger.info("Sucessfully added recipe to " + clazz.getName() + " for " + inputList.toString() + " -> " + outputList.toString());
-			}
+			recipeNum++;
 
 			masterNode = masterNode.getNextSibling();
 		}
@@ -246,7 +252,7 @@ public class XMLRecipeLoader {
 
 		return null;
 	}
-	
+
 	public static String writeRecipe(IRecipe recipe) {
 		int index = 0;
 		String string = "\t<Recipe timeRequired=\"" + recipe.getTime() + "\" power =\"" + recipe.getPower() + "\">\n" +
@@ -267,17 +273,17 @@ public class XMLRecipeLoader {
 			string += "\t\t\t<fluidStack>" + FluidRegistry.getDefaultFluidName(stack.getFluid()).split(":")[1] + " " + stack.amount + "</fluidStack>\n";
 		}
 		string += "\t\t</input>\n\t\t<output>\n";
-		
+
 		for(ItemStack stack : recipe.getOutput()) {
 			string += "\t\t\t<itemStack>" + stack.getItem().delegate.name() + (stack.getCount() > 1 ? (" " + stack.getCount()) : (stack.getItemDamage() > 0 ? " 1" : "") ) + (stack.getItemDamage() > 0 ? (" " + stack.getItemDamage()) : "") +  "</itemStack>\n";
 		}
-		
+
 		for(FluidStack stack : recipe.getFluidOutputs()) {
 			string += "\t\t\t<fluidStack>" + FluidRegistry.getDefaultFluidName(stack.getFluid()).split(":")[1] + " " + stack.amount + "</fluidStack>\n";
 		}
-		
+
 		string += "\t\t</output>\n\t</Recipe>";
-		
+
 		return string;
 	}
 }
