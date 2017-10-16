@@ -2,6 +2,7 @@ package zmaster587.libVulpes.tile;
 
 import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.inventory.modules.IProgressBar;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -28,8 +29,9 @@ public abstract class TileInventoriedForgePowerMachine extends TileInventoriedFo
 	}
 	
 	protected void setState(boolean state) {
-		if(world.getBlockState(getPos()).getValue(BlockTile.STATE) != state)
-			world.setBlockState(getPos(), world.getBlockState(getPos()).withProperty(BlockTile.STATE, state));
+		IBlockState bstate = world.getBlockState(getPos());
+		if(bstate.getBlock() instanceof BlockTile &&  bstate.getValue(BlockTile.STATE) != state)
+			world.setBlockState(getPos(), bstate.withProperty(BlockTile.STATE, state));
 
 	}
 
