@@ -468,7 +468,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 			if(enabled && (recipe = getRecipe(getMachineRecipeList())) != null && canProcessRecipe(recipe)) {
 				consumeItems(recipe);
 				powerPerTick = (int)Math.ceil((getPowerMultiplierForRecipe(recipe)*recipe.getPower()));
-				completionTime = (int)(getTimeMultiplierForRecipe(recipe)*recipe.getTime());
+				completionTime = Math.max((int)(getTimeMultiplierForRecipe(recipe)*recipe.getTime()), 1);
 				outputItemStacks = recipe.getOutput();
 				outputFluidStacks = recipe.getFluidOutputs();
 
