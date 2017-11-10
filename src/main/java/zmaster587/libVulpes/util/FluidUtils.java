@@ -19,7 +19,7 @@ public class FluidUtils {
 		if(containsFluid(stack)) {
 			IFluidHandlerItem fluidItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
 			FluidStack fluidStack = fluidItem.getTankProperties()[0].getContents();
-			if(fluidStack != null && fluidStack.getFluid() == fluid)
+			if(fluidStack != null && areFluidsSameType(fluidStack.getFluid(), fluid))
 				return true;
 		}
 
