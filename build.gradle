@@ -99,3 +99,43 @@ processResources
         exclude 'mcmod.info'
     }
 }
+
+curseforge{
+  if (project.hasProperty("thecursedkey")) {
+        apiKey = project.thecursedkey
+    }
+    else {
+    apiKey = ""
+    }
+  project {
+  //LibVulpes
+    id = "236541"
+    changelog = file('changelog.html')
+    changelogType = 'html'
+    releaseType = "alpha"
+    addGameVersion minecraft.version
+    /*mainArtifact(jar) {
+      displayName = "LibVulpes ${project.version}-UNSTABLE build " + project.getBuildNumber() +  " for " + minecraft.version
+    }*/
+  }
+}
+
+task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
+    file = new File ("changelog.html")
+    untaggedName = "Current release ${project.version}"
+    fromCommit = startGitRev
+    toRef =  "HEAD"
+    gitHubIssuePattern = "nonada123";
+    templateContent = """
+{{#tags}}
+<h1> Highly untested and may break world</h1>
+  <h3>{{name}}</h3>
+  <ul>
+    {{#commits}}
+    <li> <a href="https://github.com/zmaster587/libVulpes/commit/{{hash}}" target=_blank> {{{message}}}</a>
+</li>
+    {{/commits}}
+  </ul>
+{{/tags}}
+"""
+}
