@@ -45,7 +45,7 @@ public class FluidUtils {
 		return fluidItem.getTankProperties()[0].getContents();
 	}
 
-	public static boolean attemptDrainContainerIInv(IInventory inv, IFluidTank tank, ItemStack stack, int inputSlot, int outputSlot) {
+	public static boolean attemptDrainContainerIInv(EmbeddedInventory inv, IFluidTank tank, ItemStack stack, int inputSlot, int outputSlot) {
 
 		if(containsFluid(stack)) {
 			

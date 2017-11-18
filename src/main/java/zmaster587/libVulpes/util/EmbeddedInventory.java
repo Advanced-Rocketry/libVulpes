@@ -8,13 +8,19 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
-public class EmbeddedInventory implements ISidedInventory {
+public class EmbeddedInventory implements  IItemHandler {
 
 		protected NonNullList<ItemStack> inv;
 		
+		ItemStackHandler handler;
+		
 		public EmbeddedInventory(int size) {
 			inv = NonNullList.withSize(size, ItemStack.EMPTY);
+			handler = new ItemStackHandler(inv);
 		}
 		
 		public void writeToNBT(NBTTagCompound nbt) {
@@ -40,7 +46,7 @@ public class EmbeddedInventory implements ISidedInventory {
 		public void readFromNBT(NBTTagCompound nbt) {
 			NBTTagList list = nbt.getTagList("outputItems", 10);
 			inv = NonNullList.withSize(Math.max(nbt.getInteger("size") == 0 ? 4 : nbt.getInteger("size"), inv.size()), ItemStack.EMPTY);
-
+			handler = new ItemStackHandler(inv);
 			for (int i = 0; i < list.tagCount(); i++) {
 				NBTTagCompound tag = (NBTTagCompound) list.getCompoundTagAt(i);
 				byte slot = tag.getByte("Slot");
@@ -50,7 +56,7 @@ public class EmbeddedInventory implements ISidedInventory {
 			}
 		}
 
-		@Override
+		
 		public int getSizeInventory() {
 			return inv.size();
 		}
@@ -63,40 +69,32 @@ public class EmbeddedInventory implements ISidedInventory {
 			return inv.get(slot);
 		}
 
-		@Override
+		
 		public ItemStack decrStackSize(int slot, int amt) {
-			ItemStack stack = inv.get(slot);
-			if(stack != null) {
-				ItemStack stack2 = stack.splitStack(Math.min(amt, stack.getCount()));
-				if(stack.getCount() == 0)
-		            inv.set(slot, ItemStack.EMPTY);
-				
-				return stack2;
-			}
-			return ItemStack.EMPTY;
+			return extractItem(slot, amt, false);
 		}
 
-		@Override
+		
 		public void setInventorySlotContents(int slot, ItemStack stack) {
             inv.set(slot, stack);
 		}
 
-		@Override
+		
 		public boolean hasCustomName() {
 			return false;
 		}
 
-		@Override
+		
 		public int getInventoryStackLimit() {
 			return 64;
 		}
 
-		@Override
+		
 		public boolean isUsableByPlayer(EntityPlayer player) {
 			return true;
 		}
 		
-		@Override
+		
 		public boolean isEmpty() {
 			for(ItemStack i : inv) {
 				if(i != null && !i.isEmpty())
@@ -105,22 +103,22 @@ public class EmbeddedInventory implements ISidedInventory {
 			return true;
 		}
 
-		@Override
+		
 		public void openInventory(EntityPlayer player) {
 
 		}
 
-		@Override
+		
 		public void closeInventory(EntityPlayer player) {
 
 		}
 
-		@Override
+		
 		public boolean isItemValidForSlot(int slot, ItemStack item) {
 			return inv.get(slot).isEmpty() || (inv.get(slot).isItemEqual(item) && inv.get(slot).getMaxStackSize() != inv.get(slot).getCount());
 		}
 
-		@Override
+		
 		public int[] getSlotsForFace(EnumFacing side) {
 			int array[] = new int[inv.size()];
 
@@ -131,56 +129,78 @@ public class EmbeddedInventory implements ISidedInventory {
 		}
 
 		
-		@Override
+		
 		public boolean canInsertItem(int index, ItemStack itemStackIn,
 			EnumFacing direction) {
 		return true;
 		}
 
-		@Override
+		
 		public boolean canExtractItem(int index, ItemStack stack,
 			EnumFacing direction) {
 		return true;
 		}
 
-		@Override
+		
 		public String getName() {
 			return "";
 		}
 
-		@Override
+		
 		public void markDirty() {
 		}
 
-		@Override
+		
 		public ItemStack removeStackFromSlot(int index) {
 			ItemStack stack = inv.get(index);
 			inv.set(index, ItemStack.EMPTY);
 			return stack;
 		}
 
-		@Override
+		
 		public int getField(int id) {
 			return 0;
 		}
 
-		@Override
+		
 		public void setField(int id, int value) {
 			
 		}
 
-		@Override
+		
 		public int getFieldCount() {
 			return 0;
 		}
 
-		@Override
+		
 		public void clear() {
 			
 		}
 
-		@Override
+		
 		public ITextComponent getDisplayName() {
-			return null;
+			return new TextComponentString("Inventory");
+		}
+
+		@Override
+		public int getSlots() {
+			return handler.getSlots();
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack,
+				boolean simulate) {
+			return handler.insertItem(slot, stack, simulate);
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount,
+				boolean simulate) {
+			return handler.extractItem(slot, amount, simulate);
+		}
+
+		@Override
+		public int getSlotLimit(int slot) {
+			return handler.getSlotLimit(slot);
 		}
 }

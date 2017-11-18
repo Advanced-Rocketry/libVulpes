@@ -15,6 +15,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 public class TileInventoryHatch extends TilePointer implements ISidedInventory, IModularInventory {
 
@@ -43,6 +45,23 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	}
 
 	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			return (T) inventory;
+		}
+		return super.getCapability(capability, facing);
+	}
+
+	@Override
 	public int getSizeInventory() {
 		return inventory.getSizeInventory();
 	}
@@ -63,8 +82,8 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 		if(this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
 			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
 	}
-	
-	
+
+
 	public void setInventorySlotContentsNoUpdate(int slot, ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
 	}
@@ -88,7 +107,7 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	public boolean isEmpty() {
 		return inventory.isEmpty();
 	}
-	
+
 	@Override
 	public void openInventory(EntityPlayer entity) {
 
@@ -169,7 +188,7 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	@Override
 	public void setField(int id, int value) {
 		inventory.setField(id, value);
-		
+
 	}
 
 	@Override
