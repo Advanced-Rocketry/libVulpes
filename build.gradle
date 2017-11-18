@@ -105,8 +105,7 @@ processResources
     }
 }
 
-curseforge
-{
+curseforge{
   if (project.hasProperty("thecursedkey")) {
         apiKey = project.thecursedkey
     }
@@ -114,16 +113,19 @@ curseforge
     apiKey = ""
     }
   project {
-  //LibVulpes
+  //libVulpes
     id = "236541"
     changelog = file('changelog.html')
     changelogType = 'html'
     releaseType = "alpha"
     addGameVersion minecraft.version
-    /*mainArtifact(jar) {
+    mainArtifact(jar) {
       displayName = "LibVulpes ${project.version}-UNSTABLE build " + project.getBuildNumber() +  " for " + minecraft.version
-    }*/
-  }
+    }
+    addArtifact (deobfJar){
+    	 displayName = "LibVulpes ${project.version}-UNSTABLE-deobf build " + project.getBuildNumber() + " for " + minecraft.version
+    }
+   }
 }
 
 task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
@@ -138,12 +140,14 @@ task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
   <h3>{{name}}</h3>
   <ul>
     {{#commits}}
-    <li> <a href="https://github.com/zmaster587/libVulpes/commit/{{hash}}" target=_blank> {{{message}}}</a>
+    <li> <a href="https://github.com/zmaster587/LibVulpes/commit/{{hash}}" target=_blank> {{{message}}}</a>
 </li>
     {{/commits}}
   </ul>
 {{/tags}}
 """
 }
+
+tasks.build.dependsOn makeChangelog
 
 tasks.build.dependsOn makeChangelog
