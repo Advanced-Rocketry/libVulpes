@@ -126,8 +126,6 @@ curseforge
   }
 }
 
-tasks.build.dependsOn makeChangelog
-
 task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     file = new File ("changelog.html")
     untaggedName = "Current release ${project.version}"
@@ -147,3 +145,5 @@ task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
 {{/tags}}
 """
 }
+
+tasks.build.dependsOn makeChangelog
