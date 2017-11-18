@@ -79,7 +79,7 @@ dependencies {
     //compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
     
     // compile against the JEI API
-    deobfCompile "mezz.jei:jei_1.11.2:4.3.5.277:api"
+    compile "mezz.jei:jei_1.11.2:4.3.5.277:api"
     // at runtime, use the full JEI jar
     runtime "mezz.jei:jei_1.11.2:4.3.5.277"
 
