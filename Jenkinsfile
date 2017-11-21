@@ -4,7 +4,7 @@
     stages {
         stage('Build') {
             steps {
-                sh 'gradle clean build curseforge236541' 
+                sh 'gradle clean build' 
                 archiveArtifacts artifacts: '**output/*.jar', fingerprint: true 
             }
         }
