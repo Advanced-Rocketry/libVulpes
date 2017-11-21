@@ -1,6 +1,7 @@
 package zmaster587.libVulpes.util;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,7 +13,8 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class EmbeddedInventory implements  IItemHandler {
+public class EmbeddedInventory implements  ISidedInventory {
+	
 
 		protected NonNullList<ItemStack> inv;
 		
@@ -69,32 +71,40 @@ public class EmbeddedInventory implements  IItemHandler {
 			return inv.get(slot);
 		}
 
-		
+		@Override
 		public ItemStack decrStackSize(int slot, int amt) {
-			return extractItem(slot, amt, false);
+			ItemStack stack = inv.get(slot);
+			if(!stack.isEmpty()) {
+				ItemStack stack2 = stack.splitStack(Math.min(amt, stack.getCount()));
+				if(stack.getCount() == 0)
+					inv.set(slot, ItemStack.EMPTY);
+				
+				return stack2;
+			}
+			return null;
 		}
 
-		
+		@Override
 		public void setInventorySlotContents(int slot, ItemStack stack) {
             inv.set(slot, stack);
 		}
 
-		
+		@Override
 		public boolean hasCustomName() {
 			return false;
 		}
 
-		
+		@Override
 		public int getInventoryStackLimit() {
 			return 64;
 		}
 
-		
+		@Override
 		public boolean isUsableByPlayer(EntityPlayer player) {
 			return true;
 		}
 		
-		
+		@Override
 		public boolean isEmpty() {
 			for(ItemStack i : inv) {
 				if(i != null && !i.isEmpty())
@@ -103,22 +113,22 @@ public class EmbeddedInventory implements  IItemHandler {
 			return true;
 		}
 
-		
+		@Override
 		public void openInventory(EntityPlayer player) {
 
 		}
 
-		
+		@Override
 		public void closeInventory(EntityPlayer player) {
 
 		}
 
-		
+		@Override
 		public boolean isItemValidForSlot(int slot, ItemStack item) {
 			return inv.get(slot).isEmpty() || (inv.get(slot).isItemEqual(item) && inv.get(slot).getMaxStackSize() != inv.get(slot).getCount());
 		}
 
-		
+		@Override
 		public int[] getSlotsForFace(EnumFacing side) {
 			int array[] = new int[inv.size()];
 
@@ -129,7 +139,7 @@ public class EmbeddedInventory implements  IItemHandler {
 		}
 
 		
-		
+	
 		public boolean canInsertItem(int index, ItemStack itemStackIn,
 			EnumFacing direction) {
 		return true;
@@ -146,61 +156,44 @@ public class EmbeddedInventory implements  IItemHandler {
 			return "";
 		}
 
-		
+		@Override
 		public void markDirty() {
 		}
 
-		
+		@Override
 		public ItemStack removeStackFromSlot(int index) {
 			ItemStack stack = inv.get(index);
 			inv.set(index, ItemStack.EMPTY);
 			return stack;
 		}
 
-		
+		@Override
 		public int getField(int id) {
 			return 0;
 		}
 
-		
+		@Override
 		public void setField(int id, int value) {
 			
 		}
 
-		
+		@Override
 		public int getFieldCount() {
 			return 0;
 		}
 
-		
+		@Override
 		public void clear() {
 			
 		}
 
-		
+		@Override
 		public ITextComponent getDisplayName() {
 			return new TextComponentString("Inventory");
 		}
 
-		@Override
-		public int getSlots() {
-			return handler.getSlots();
-		}
-
-		@Override
-		public ItemStack insertItem(int slot, ItemStack stack,
-				boolean simulate) {
-			return handler.insertItem(slot, stack, simulate);
-		}
-
-		@Override
-		public ItemStack extractItem(int slot, int amount,
-				boolean simulate) {
-			return handler.extractItem(slot, amount, simulate);
-		}
-
-		@Override
-		public int getSlotLimit(int slot) {
-			return handler.getSlotLimit(slot);
+		public IItemHandler getItemStackHandler()
+		{
+			return new ItemStackHandler(inv);
 		}
 }

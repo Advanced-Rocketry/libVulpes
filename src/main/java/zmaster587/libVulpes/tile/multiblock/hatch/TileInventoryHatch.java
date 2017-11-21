@@ -56,7 +56,7 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			return (T) inventory;
+			return (T) inventory.getItemStackHandler();
 		}
 		return super.getCapability(capability, facing);
 	}

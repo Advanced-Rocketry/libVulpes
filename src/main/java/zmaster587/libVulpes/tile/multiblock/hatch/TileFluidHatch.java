@@ -65,7 +65,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 			return (T) new FluidCapability(this);
 		}
 		else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			return (T) inventory;
+			return (T) inventory.getItemStackHandler();
 		}
 		
 		return super.getCapability(capability, facing);
