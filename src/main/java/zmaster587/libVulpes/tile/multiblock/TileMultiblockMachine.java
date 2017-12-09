@@ -50,6 +50,14 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	public List<ItemStack> getOutputs() {
 		return outputItemStacks;
 	}
+	
+	public void setOutputs(List<ItemStack> stack) {
+		outputItemStacks = stack;
+	}
+	
+	public void setOutputFluids(List<FluidStack> stack) {
+		outputFluidStacks = stack;
+	}
 
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
