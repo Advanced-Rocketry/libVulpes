@@ -48,6 +48,15 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		return outputItemStacks;
 	}
 
+
+	public void setOutputs(List<ItemStack> stack) {
+		outputItemStacks = stack;
+	}
+	
+	public void setOutputFluids(List<FluidStack> stack) {
+		outputFluidStacks = stack;
+	}
+	
 	@Override
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
