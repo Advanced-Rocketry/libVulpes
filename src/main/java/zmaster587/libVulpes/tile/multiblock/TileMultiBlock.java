@@ -313,7 +313,7 @@ public class TileMultiBlock extends TileEntity {
 					if(!(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') && !(structure[y][z][x] instanceof Block && (Block)structure[y][z][x] == Blocks.air && worldObj.isAirBlock(globalX, globalY, globalZ)) && !getAllowableBlocks(structure[y][z][x]).contains(new BlockMeta(block,meta))) {
 
 						//Can it be replaced?
-						if(block.isReplaceable(worldObj, globalX, globalY, globalZ) && (Block)structure[y][z][x] == Blocks.air )
+						if(block.isReplaceable(worldObj, globalX, globalY, globalZ) && structure[y][z][x] instanceof Block && (Block)structure[y][z][x] == Blocks.air )
 							replacableBlocks.add(new BlockPosition(globalX, globalY, globalZ));
 						else {
 							LibVulpes.proxy.spawnParticle("errorBox", worldObj, globalX, globalY, globalZ, 0, 0, 0);
