@@ -293,6 +293,7 @@ public class TileMultiBlock extends TileEntity {
 		Object[][][] structure = getStructure();
 
 		Vector3F<Integer> offset = getControllerOffset(structure);
+		List<BlockPos> replacableBlocks = new LinkedList<BlockPos>();
 
 		EnumFacing front = getFrontDirection(state);
 
@@ -342,8 +343,13 @@ public class TileMultiBlock extends TileEntity {
 					//Make sure the structure is valid
 					if(!(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') && !(structure[y][z][x] instanceof Block && (Block)structure[y][z][x] == Blocks.AIR && world.isAirBlock(globalPos)) && !getAllowableBlocks(structure[y][z][x]).contains(new BlockMeta(block,meta))) {
 
-						LibVulpes.proxy.spawnParticle("errorBox", world, globalX, globalY, globalZ, 0, 0, 0);
-						return false;
+						//Can it be replaced?
+						if(block.isReplaceable(world, globalPos) && (Block)structure[y][z][x] == Blocks.AIR )
+							replacableBlocks.add(globalPos);
+						else {
+							LibVulpes.proxy.spawnParticle("errorBox", world, globalX, globalY, globalZ, 0, 0, 0);
+							return false;
+						}
 					}
 				}
 			}
@@ -389,6 +395,12 @@ public class TileMultiBlock extends TileEntity {
 		for(TileEntity tile : tiles) {
 			integrateTile(tile);
 		}
+		
+		//Replace and drop replaceable blocks
+		for(BlockPos pos : replacableBlocks) {
+			world.setBlockToAir(pos);
+		}
+		
 		markDirty();
 		world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 		return true;
