@@ -19,6 +19,7 @@ import zmaster587.libVulpes.tile.TileSchematic;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInputHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
+import zmaster587.libVulpes.util.BlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -264,6 +265,7 @@ public class TileMultiBlock extends TileEntity {
 		Object[][][] structure = getStructure();
 
 		Vector3F<Integer> offset = getControllerOffset(structure);
+		List<BlockPosition> replacableBlocks = new LinkedList<BlockPosition>();
 
 		ForgeDirection front = getFrontDirection();
 
@@ -310,6 +312,13 @@ public class TileMultiBlock extends TileEntity {
 					//Make sure the structure is valid
 					if(!(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') && !(structure[y][z][x] instanceof Block && (Block)structure[y][z][x] == Blocks.air && worldObj.isAirBlock(globalX, globalY, globalZ)) && !getAllowableBlocks(structure[y][z][x]).contains(new BlockMeta(block,meta))) {
 
+						//Can it be replaced?
+						if(block.isReplaceable(worldObj, globalX, globalY, globalZ) && (Block)structure[y][z][x] == Blocks.air )
+							replacableBlocks.add(new BlockPosition(globalX, globalY, globalZ));
+						else {
+							LibVulpes.proxy.spawnParticle("errorBox", worldObj, globalX, globalY, globalZ, 0, 0, 0);
+							return false;
+						}
 						LibVulpes.proxy.spawnParticle("errorBox", worldObj, globalX, globalY, globalZ, 0, 0, 0);
 						return false;
 					}
@@ -354,6 +363,13 @@ public class TileMultiBlock extends TileEntity {
 		for(TileEntity tile : tiles) {
 			integrateTile(tile);
 		}
+		
+		//Replace and drop replaceable blocks
+		for(BlockPosition pos : replacableBlocks) {
+			worldObj.setBlockToAir(pos.x, pos.y, pos.z);
+		}
+		
+		
 		markDirty();
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 
