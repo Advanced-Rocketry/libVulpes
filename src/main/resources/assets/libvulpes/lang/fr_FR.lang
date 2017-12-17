@@ -32,16 +32,16 @@ tile.eliteMotor.name=Moteur élite
 item.holoProjector.name=Holo-projecteur
 
 type.crystal.name=Cristal
-type.dust.name=Poussière
+type.dust.name=Poudre
 type.boule.name=Barreau
 type.ingot.name=Lingot
 type.nugget.name=Pépite
-type.stick.name=Baton
+type.stick.name=Barre
 type.plate.name=Plaque
 type.ore.name=Minerai
 type.block.name=Bloc
 type.coil.name=Bobine
-type.fan.name=Ventilateur
+type.fan.name=Hélice
 type.sheet.name=Feuille
 type.gear.name=Roue dentée
 
@@ -53,5 +53,5 @@ material.Tin.name=Étain
 material.Steel.name=Acier
 material.Titanium.name=Titane
 material.Rutile.name=Rutile
-material.Aluminum.name=Aluminium
+material.Aluminum.name=Aluminum
 material.Iridium.name=Iridium
