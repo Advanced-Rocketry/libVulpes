@@ -298,8 +298,13 @@ public class TileMultiBlock extends TileEntity {
 
 					//If the other block already thinks it's complete just assume valid
 					if(tile instanceof TilePointer) {
-						if(((IMultiblock)tile).hasMaster() && ((IMultiblock)tile).getMasterBlock() != this) {
-							//return false;
+						TileEntity masterBlock;
+						
+						if(((IMultiblock)tile).hasMaster() && (masterBlock = ((IMultiblock)tile).getMasterBlock()) != this) {
+							
+							//This ~should~ only occur with world edits and being moved to space stations and such
+							if(masterBlock == null)
+								((IMultiblock)tile).setMasterBlock(this.xCoord, this.yCoord, this.zCoord);
 							
 							if(((IMultiblock)tile).getMasterBlock().xCoord == this.xCoord && ((IMultiblock)tile).getMasterBlock().yCoord == this.yCoord
 									&& ((IMultiblock)tile).getMasterBlock().zCoord == this.zCoord) {
