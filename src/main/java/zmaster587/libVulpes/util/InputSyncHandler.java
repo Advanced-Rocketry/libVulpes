@@ -28,7 +28,7 @@ public class InputSyncHandler {
 		switch(key) {
 		case 0:
 			
-			stack = player.inventory.armorItemInSlot(2);
+			stack = player.inventory.armorInventory.get(2);
 			if(stack != null) {
 				IJetPack pack;
 				if(stack.getItem() instanceof IJetPack) {
@@ -51,7 +51,7 @@ public class InputSyncHandler {
 			break;
 			
 		case 1:
-			stack = player.inventory.armorItemInSlot(2);
+			stack = player.inventory.armorInventory.get(2);
 			if(stack != null) {
 				IJetPack pack;
 				if(stack.getItem() instanceof IJetPack) {
