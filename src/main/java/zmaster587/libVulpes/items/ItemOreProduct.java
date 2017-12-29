@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.material.Material;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
 import net.minecraft.creativetab.CreativeTabs;
@@ -59,6 +60,16 @@ public class ItemOreProduct extends Item {
 
 	@Override
 	public String getItemStackDisplayName(ItemStack itemstack) {
-			return StatCollector.translateToLocal("material." + properties.get(itemstack.getItemDamage()).getUnlocalizedName() + ".name") + " " + StatCollector.translateToLocal("type." + outputType + ".name");
+
+		//Attempt to get a specific name first, then fall back
+		try {
+			String translate = "item." + properties.get(itemstack.getItemDamage()).getUnlocalizedName() + "." + outputType + ".name";
+			if(StatCollector.canTranslate(translate))
+				return StatCollector.translateToLocal(translate);
+			else
+				return StatCollector.translateToLocal("material." + properties.get(itemstack.getItemDamage()).getUnlocalizedName() + ".name") + " " + StatCollector.translateToLocal("type." + outputType + ".name");
+			} catch (NullPointerException e2) {
+				return "No name!!!";
+			}
 	}
 }
