@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.material.Material;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -38,7 +39,7 @@ public class ItemOreProduct extends Item {
 		properties.put(meta, ore);
 		for(String oreDictName : ore.getOreDictNames())
 			OreDictionary.registerOre(outputType + oreDictName, new ItemStack(this, 1, meta));
-		
+
 		if(FMLCommonHandler.instance().getSide().isClient()) {
 			for(Entry<Integer, Material> entry : properties.entrySet()) {
 				ModelLoader.setCustomModelResourceLocation(this, entry.getKey(), new ModelResourceLocation(String.format("%s", this.getRegistryName()), "inventory"));
@@ -58,10 +59,16 @@ public class ItemOreProduct extends Item {
 
 	@Override
 	public String getItemStackDisplayName(ItemStack itemstack) {
+
+		//Attempt to get a specific name first, then fall back
 		try {
-			return I18n.translateToLocal("material." + properties.get(itemstack.getItemDamage()).getUnlocalizedName() + ".name") + " " + I18n.translateToLocal("type." + outputType + ".name");
-		} catch (NullPointerException e) {
-			return "No name!!!";
-		}
+			String translate = "item." + properties.get(itemstack.getItemDamage()).getUnlocalizedName() + "." + outputType + ".name";
+			if(I18n.canTranslate(translate))
+				return I18n.translateToLocal(translate);
+			else
+				return I18n.translateToLocal("material." + properties.get(itemstack.getItemDamage()).getUnlocalizedName() + ".name") + " " + I18n.translateToLocal("type." + outputType + ".name");
+			} catch (NullPointerException e2) {
+				return "No name!!!";
+			}
 	}
 }
