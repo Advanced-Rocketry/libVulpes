@@ -29,6 +29,9 @@ public class ItemOre extends ItemBlock {
 	@Override
     public String getItemStackDisplayName(ItemStack stack)
     {
-        return ("" + I18n.translateToLocal(this.getUnlocalizedNameInefficiently(stack) + ".name") + " " + I18n.translateToLocal("type." + ((BlockOre)this.getBlock()).getProduct().name().toLowerCase(Locale.ENGLISH) + ".name")).trim();
+		String translate = "tile." + this.getUnlocalizedNameInefficiently(stack).substring(9) + "." + ((BlockOre)this.getBlock()).getProduct().name().toLowerCase(Locale.ENGLISH) + ".name";
+		if(I18n.canTranslate(translate))
+			return I18n.translateToLocal(translate);
+		return ("" + I18n.translateToLocal(this.getUnlocalizedNameInefficiently(stack) + ".name") + " " + I18n.translateToLocal("type." + ((BlockOre)this.getBlock()).getProduct().name().toLowerCase(Locale.ENGLISH) + ".name")).trim();
     }
 }
