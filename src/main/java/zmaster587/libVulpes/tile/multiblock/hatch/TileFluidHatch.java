@@ -92,7 +92,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandler, IModul
 
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid) {
-		return outputOnly;
+		return !outputOnly;
 	}
 
 	@Override
