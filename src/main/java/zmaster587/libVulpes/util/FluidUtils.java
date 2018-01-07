@@ -85,9 +85,11 @@ public class FluidUtils {
 				fluidStack = fluidItem.drain(tank.getCapacity() - tank.getFluidAmount(), false);
 
 				int amountDrained = tank.fill(fluidStack, true);
-				fluidItem.drain(amountDrained, true);
+				FluidStack fluidStack2 = fluidItem.drain(amountDrained, true);
+				
 				stack = fluidItem.getContainer();
-				if (getFluidForItem(stack) == null || getFluidForItem(stack).amount == 0) {
+				
+				if (getFluidForItem(stack) == null || (fluidStack2 != null && fluidStack2.amount != 0)) {
 					if(inv.getStackInSlot(outputSlot).isEmpty()) {
 						inv.setInventorySlotContents(outputSlot, stack);
 					}
