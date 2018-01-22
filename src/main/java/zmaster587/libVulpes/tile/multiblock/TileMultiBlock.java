@@ -200,7 +200,8 @@ public class TileMultiBlock extends TileEntity {
 				NBTTagCompound nbt = new NBTTagCompound();
 				placeholder.getReplacedTileEntity().writeToNBT(nbt);
 
-				worldObj.getTileEntity(tile.xCoord, tile.yCoord, tile.zCoord).readFromNBT(nbt);
+				if(worldObj.getTileEntity(tile.xCoord, tile.yCoord, tile.zCoord) != null)
+					worldObj.getTileEntity(tile.xCoord, tile.yCoord, tile.zCoord).readFromNBT(nbt);
 			}
 		}
 		//Make all pointers incomplete
