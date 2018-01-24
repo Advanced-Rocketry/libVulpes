@@ -409,7 +409,16 @@ public class LibVulpes {
 					
 					stream2.write("<Recipes useDefault=\"true\">\n");
 					for(IRecipe recipe : RecipesMachine.getInstance().getRecipes(clazz)) {
-						stream2.write(XMLRecipeLoader.writeRecipe(recipe) + "\n");
+						boolean writeable = true;
+						for (ItemStack stack : recipe.getOutput()) {
+							if(stack.hasTagCompound()) {
+								writeable = false;
+								break;
+							}
+						}
+						
+						if(writeable)
+							stream2.write(XMLRecipeLoader.writeRecipe(recipe) + "\n");
 					}
 					stream2.write("</Recipes>");
 					stream2.close();
