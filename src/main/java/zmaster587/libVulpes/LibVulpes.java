@@ -346,26 +346,36 @@ public class LibVulpes {
 			file.createNewFile();
 			BufferedReader inputStream = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/assets/libvulpes/defaultrecipe.xml")));
 			
-			if(inputStream != null) {
-				BufferedWriter stream2 = new BufferedWriter(new FileWriter(file));
-				
-				
-				while(inputStream.ready()) {
-					stream2.write(inputStream.readLine() + "\n");
+
+				if(inputStream != null) {
+					BufferedWriter stream2 = new BufferedWriter(new FileWriter(file));
+					
+					
+					while(inputStream.ready()) {
+						stream2.write(inputStream.readLine() + "\n");
+					}
+					
+					
+					//Write recipes
+					
+					stream2.write("<Recipes useDefault=\"true\">\n");
+					for(IRecipe recipe : RecipesMachine.getInstance().getRecipes(clazz)) {
+						boolean writeable = true;
+						for (ItemStack stack : recipe.getOutput()) {
+							if(stack.hasTagCompound()) {
+								writeable = false;
+								break;
+							}
+						}
+						
+						if(writeable)
+							stream2.write(XMLRecipeLoader.writeRecipe(recipe) + "\n");
+					}
+					stream2.write("</Recipes>");
+					stream2.close();
+					
+					inputStream.close();
 				}
-				
-				
-				//Write recipes
-				
-				stream2.write("<Recipes useDefault=\"true\">\n");
-				for(IRecipe recipe : RecipesMachine.getInstance().getRecipes(clazz)) {
-					stream2.write(XMLRecipeLoader.writeRecipe(recipe) + "\n");
-				}
-				stream2.write("</Recipes>");
-				stream2.close();
-				
-				inputStream.close();
-			}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
