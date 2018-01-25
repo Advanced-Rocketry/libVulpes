@@ -379,6 +379,27 @@ public class ZUtils {
 
 		return dist;
 	}
+	
+	public static int getContinuousBlockLength(World world, EnumFacing direction, BlockPos pos, int maxDist, Block[] blocks) {
+		int dist = 0;
+		for(int i = 0; i < maxDist; i++) {
+			Block blockchecked = world.getBlockState(new BlockPos(pos.add((i*direction.getFrontOffsetX()), (i*direction.getFrontOffsetY()), (i*direction.getFrontOffsetZ())))).getBlock();
+			boolean exists = false;
+			for( Block b : blocks ) {
+				if(blockchecked == b) {
+					exists = true;
+					break;
+				}
+			}
+			
+			if(!exists) 
+				break;
+
+			dist = i+1;
+		}
+
+		return dist;
+	}
 
 	public static boolean areOresSameTypeOreDict(ItemStack stack1, ItemStack stack2) {
 		int[] stack1Id = OreDictionary.getOreIDs(stack1);
