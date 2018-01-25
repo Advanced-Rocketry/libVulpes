@@ -329,6 +329,27 @@ public class ZUtils {
 
 		return dist;
 	}
+	
+	public static int getContinuousBlockLength(World world, ForgeDirection direction, int startx, int starty, int startz, int maxDist, Block[] blocks) {
+		int dist = 0;
+		for(int i = 0; i < maxDist; i++) {
+			Block blockchecked = world.getBlock(startx + (i*direction.offsetX), starty + (i*direction.offsetY), startz + (i*direction.offsetZ));
+			boolean exists = false;
+			for( Block b : blocks ) {
+				if(blockchecked == b) {
+					exists = true;
+					break;
+				}
+			}
+			
+			if(!exists) 
+				break;
+
+			dist = i+1;
+		}
+
+		return dist;
+	}
 
 	public static boolean areOresSameTypeOreDict(ItemStack stack1, ItemStack stack2) {
 		int[] stack1Id = OreDictionary.getOreIDs(stack1);
