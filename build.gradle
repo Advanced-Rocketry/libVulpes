@@ -25,9 +25,8 @@ minecraft {
     replace "@BUILD@", project.getBuildNumber()
 }
 
-
-apply from: "gradle/scripts/jars.gradle"
 apply from: "gradle/scripts/version.gradle"
+apply from: "gradle/scripts/jars.gradle"
 
 group= "zmaster587.libVulpes" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "LibVulpes"
