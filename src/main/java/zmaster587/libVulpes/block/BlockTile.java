@@ -11,6 +11,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -128,9 +129,9 @@ public class BlockTile extends RotatableBlock {
 						{
 							j1 = itemstack.getCount();
 						}
-
+						Item oldItem = itemstack.getItem();
 						itemstack.setCount(itemstack.getCount() - j1);
-						entityitem = new EntityItem(world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), new ItemStack(itemstack.getItem(), j1, itemstack.getItemDamage()));
+						entityitem = new EntityItem(world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), new ItemStack(oldItem, j1, itemstack.getItemDamage()));
 						float f3 = 0.05F;
 						entityitem.motionX = (double)((float)world.rand.nextGaussian() * f3);
 						entityitem.motionY = (double)((float)world.rand.nextGaussian() * f3 + 0.2F);
