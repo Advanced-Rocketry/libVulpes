@@ -45,4 +45,14 @@ public class CommonProxy {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void preInitBlocks() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void preInitItems() {
+		// TODO Auto-generated method stub
+		
+	}
 }
