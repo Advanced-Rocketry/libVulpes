@@ -12,7 +12,7 @@ import zmaster587.libVulpes.tile.TilePointer;
 public class TilePlaceholder extends TilePointer {
 
 	Block replacedBlock;
-	byte blockMeta;
+	int blockMeta;
 	TileEntity replacedTile;
 	
 	public Block getReplacedBlock() {
@@ -23,11 +23,11 @@ public class TilePlaceholder extends TilePointer {
 		replacedBlock = block;
 	}
 	
-	public byte getReplacedBlockMeta() {
+	public int getReplacedBlockMeta() {
 		return blockMeta;
 	}
 	
-	public void setReplacedBlockMeta(byte meta) {
+	public void setReplacedBlockMeta(int meta) {
 		blockMeta = meta;
 	}
 	
@@ -58,7 +58,7 @@ public class TilePlaceholder extends TilePointer {
 		super.writeToNBT(nbt);
 		
 		nbt.setInteger("ID", Block.getIdFromBlock(replacedBlock));
-		nbt.setByte("damage", blockMeta);
+		nbt.setInteger("damage", blockMeta);
 		NBTTagCompound tag = new NBTTagCompound();
 		
 		if(replacedTile != null) {
@@ -74,7 +74,7 @@ public class TilePlaceholder extends TilePointer {
 		//TODO: perform sanity check
 		replacedBlock = Block.getBlockById(nbt.getInteger("ID"));
 		
-		blockMeta = nbt.getByte("damage");
+		blockMeta = nbt.getInteger("damage");
 		
 		if(nbt.hasKey("tile")) {
 			NBTTagCompound tile = nbt.getCompoundTag("tile");

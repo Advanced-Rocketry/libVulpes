@@ -37,7 +37,7 @@ public class TileSchematic extends TilePlaceholder {
 	}
 
 	@Override
-	public void setReplacedBlockMeta(byte meta) {
+	public void setReplacedBlockMeta(int meta) {
 		super.setReplacedBlockMeta(meta);
 		possibleBlocks.clear();
 	}
@@ -52,7 +52,7 @@ public class TileSchematic extends TilePlaceholder {
 	}
 
 	@Override
-	public byte getReplacedBlockMeta() {
+	public int getReplacedBlockMeta() {
 		if(possibleBlocks.isEmpty())
 			return super.getReplacedBlockMeta();
 		else

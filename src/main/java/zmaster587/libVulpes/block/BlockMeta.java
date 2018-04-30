@@ -31,7 +31,7 @@ public class BlockMeta {
 		return block;
 	}
 
-	public byte getMeta() {
+	public int getMeta() {
 		if(meta != WILDCARD)
 			return (byte) meta;
 		return 0;
