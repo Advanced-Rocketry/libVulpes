@@ -125,12 +125,11 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 
 	@Override
 	public int fillInternal(FluidStack resource, boolean doFill) {
-		if(doFill && this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
-			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
-		
-		
 		int fillAmt = fluidTank.fill(resource, doFill);
 		while(useBucket(0, getStackInSlot(0)));
+		
+		if(doFill && this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
+			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
 		
 		
 		return fillAmt;
@@ -189,6 +188,9 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
 		while(useBucket(0, getStackInSlot(0)));
+		
+		if(this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
+			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
 	}
 
 	@Override
