@@ -3,6 +3,7 @@ package zmaster587.libVulpes.tile.multiblock.hatch;
 import java.util.LinkedList;
 import java.util.List;
 
+import zmaster587.libVulpes.interfaces.IInventoryUpdateCallback;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
@@ -18,16 +19,16 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class TileInventoryHatch extends TilePointer implements ISidedInventory, IModularInventory {
+public class TileInventoryHatch extends TilePointer implements ISidedInventory, IModularInventory, IInventoryUpdateCallback {
 
 	protected EmbeddedInventory inventory;
 
 	public TileInventoryHatch() {
-		inventory = new EmbeddedInventory(0);
+		inventory = new EmbeddedInventory(0, this);
 	}
 
 	public TileInventoryHatch(int invSize) {
-		inventory = new EmbeddedInventory(invSize);
+		inventory = new EmbeddedInventory(invSize, this);
 	}
 
 	@Override
@@ -56,7 +57,7 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			return (T) inventory.getItemStackHandler();
+			return (T) inventory;
 		}
 		return super.getCapability(capability, facing);
 	}
@@ -91,6 +92,13 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	@Override
 	public boolean hasCustomName() {
 		return inventory.hasCustomName();
+	}
+	
+	@Override
+	public void markDirty() {
+		super.markDirty();
+		if(this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
+			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
 	}
 
 	@Override
@@ -199,6 +207,11 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	@Override
 	public void clear() {
 		inventory.clear();
+	}
+
+	@Override
+	public void onInventoryUpdated(int slot) {
+		markDirty();
 	}
 
 }
