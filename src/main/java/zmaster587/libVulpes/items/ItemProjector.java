@@ -90,7 +90,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 			List<BlockMeta> blockMeta = multiblock.getAllowableBlocks(entry.getKey());
 
-			if(blockMeta.isEmpty() || Item.getItemFromBlock(blockMeta.get(0).getBlock()) == null )
+			if(blockMeta.isEmpty() || Item.getItemFromBlock(blockMeta.get(0).getBlock()) == null || blockMeta.get(0).getBlock() == Blocks.AIR )
 				continue;
 			for(int i = 0; i < blockMeta.size(); i++) {
 				String itemStr  = Item.getItemFromBlock(blockMeta.get(i).getBlock()).getItemStackDisplayName(new ItemStack(blockMeta.get(i).getBlock(), 1, blockMeta.get(i).getMeta()));
