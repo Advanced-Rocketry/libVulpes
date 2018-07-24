@@ -93,14 +93,6 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	public boolean hasCustomName() {
 		return inventory.hasCustomName();
 	}
-	
-	@Override
-	public void markDirty() {
-		super.markDirty();
-		if(this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
-			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
-	}
-
 	@Override
 	public int getInventoryStackLimit() {
 		return inventory.getInventoryStackLimit();
@@ -211,7 +203,8 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 
 	@Override
 	public void onInventoryUpdated(int slot) {
-		markDirty();
+		if(this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
+			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
 	}
 
 }
