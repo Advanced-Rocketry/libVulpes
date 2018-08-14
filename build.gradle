@@ -58,7 +58,7 @@ repositories {
         }
     ivy {
             name "industrialcraft-2"
-            artifactPattern "http://jenkins.ic2.player.to/job/IC2_111/39/artifact/build/libs/[module]-[revision].[ext]"
+            artifactPattern "http://jenkins.ic2.player.to/job/IC2_112/96/artifact/build/libs/[module]-[revision].[ext]"
         }
     ivy {
             name "Tesla"
@@ -76,7 +76,7 @@ dependencies {
     //compile "some.group:artifact:version:classifier"
     //compile "some.group:artifact:version"
       
-    compile name: 'industrialcraft-2', version: '2.7.39-ex111-api', ext: 'jar'
+    compile name: 'industrialcraft-2', version: '2.8.96-ex112-api', ext: 'jar'
     compile name: 'Tesla', version: '1.11-1.3.0.51-deobf', ext: 'jar'
     //compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
     

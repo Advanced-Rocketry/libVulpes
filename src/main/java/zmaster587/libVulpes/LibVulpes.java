@@ -2,7 +2,7 @@ package zmaster587.libVulpes;
 
 
 
-//import ic2.api.item.IC2Items;
+import ic2.api.item.IC2Items;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -104,7 +104,7 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
 import zmaster587.libVulpes.util.TeslaCapabilityProvider;
 import zmaster587.libVulpes.util.XMLRecipeLoader;
 
-@Mod(modid="libvulpes",name="Vulpes library",version="@MAJOR@.@MINOR@.@REVIS@.@BUILD@",useMetadata=true, dependencies="before:gregtech;after:cofhcore;after:buildcraft|core")
+@Mod(modid="libvulpes",name="Vulpes library",version="@MAJOR@.@MINOR@.@REVIS@.@BUILD@",useMetadata=true, dependencies="after:ic2;after:cofhcore;after:buildcraft|core")
 public class LibVulpes {
 	public static org.apache.logging.log4j.Logger logger = LogManager.getLogger("libVulpes");
 	public static int time = 0;
@@ -150,7 +150,7 @@ public class LibVulpes {
         LibVulpesBlocks.blockAdvStructureBlock = new BlockAlphaTexture(Material.ROCK).setUnlocalizedName("advStructureMachine").setCreativeTab(tabMultiblock).setHardness(3f);
         LibVulpesBlocks.blockStructureBlock = new BlockAlphaTexture(Material.ROCK).setUnlocalizedName("structureMachine").setCreativeTab(tabMultiblock).setHardness(3f);
         LibVulpesBlocks.blockCreativeInputPlug = new BlockMultiMachineBattery(Material.ROCK, TileCreativePowerInput.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("creativePowerBattery").setCreativeTab(tabMultiblock).setHardness(3f);
-        LibVulpesBlocks.blockForgeInputPlug = new BlockMultiMachineBattery(Material.ROCK, TileForgePowerInput.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("forgePowerInput").setCreativeTab(tabMultiblock).setHardness(3f);
+        LibVulpesBlocks.blockForgeInputPlug = new BlockMultiMachineBattery(Material.ROCK, TileForgePowerInput.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("forgePowerInput").setCreativeTab(tabMultiblock).setHardness(3f); 
         LibVulpesBlocks.blockForgeOutputPlug = new BlockMultiMachineBattery(Material.ROCK, TileForgePowerOutput.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("forgePowerOutput").setCreativeTab(tabMultiblock).setHardness(3f);
         LibVulpesBlocks.blockCoalGenerator = new BlockTile(TileCoalGenerator.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("coalGenerator").setCreativeTab(tabMultiblock).setHardness(3f);
         //LibVulpesBlocks.blockRFBattery = new BlockMultiMachineBattery(Material.ROCK, TilePlugInputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("rfBattery").setCreativeTab(tabMultiblock).setHardness(3f);
@@ -161,10 +161,15 @@ public class LibVulpes {
         LibVulpesBlocks.blockEnhancedMotor = new BlockMotor(Material.ROCK, 1/2f).setCreativeTab(tabMultiblock).setUnlocalizedName("enhancedMotor").setHardness(2f);
         LibVulpesBlocks.blockEliteMotor = new BlockMotor(Material.ROCK, 1/4f).setCreativeTab(tabMultiblock).setUnlocalizedName("eliteMotor").setHardness(2f);
         
+        if(Loader.isModLoaded("ic2"))
+        	LibVulpesBlocks.blockIC2Plug = new BlockMultiMachineBattery(Material.ROCK, TilePlugInputIC2.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("forgePowerInput").setCreativeTab(tabMultiblock).setHardness(3f);
+        
+        
         //Initialize Items
         LibVulpesItems.itemLinker = new ItemLinker().setUnlocalizedName("Linker").setCreativeTab(tabMultiblock).setRegistryName("linker");
         LibVulpesItems.itemBattery = new ItemIngredient(2).setUnlocalizedName("libvulpes:battery").setCreativeTab(tabMultiblock).setRegistryName("battery");
         LibVulpesItems.itemHoloProjector = new ItemProjector().setUnlocalizedName("holoProjector").setCreativeTab(tabMultiblock).setRegistryName("holoProjector");
+        
         
     }
 
@@ -233,9 +238,9 @@ public class LibVulpes {
               setRegistryName(new ResourceLocation("libvulpes", "blockhatchdir32")));
 //      
 //      //Plugs
-        if(Loader.isModLoaded("IC2")) {
-//          toRegister.add(new ShapelessOreRecipe(null, new ItemStack(LibVulpesBlocks.blockIC2Plug), LibVulpesBlocks.blockStructureBlock, 
-//                  IC2Items.getItem("te","mv_transformer"), LibVulpesItems.itemBattery).setRegistryName(new ResourceLocation("libvulpes", "itemlinker")));
+        if(Loader.isModLoaded("ic2")) {
+          toRegister.add(new ShapelessOreRecipe(null, new ItemStack(LibVulpesBlocks.blockIC2Plug), LibVulpesBlocks.blockStructureBlock, 
+                  IC2Items.getItem("te","mv_transformer"), LibVulpesItems.itemBattery).setRegistryName(new ResourceLocation("libvulpes", "itemlinker")));
       }
         
         toRegister.add(new ShapedOreRecipe(null,new ItemStack(LibVulpesBlocks.blockForgeInputPlug), " x ", "xmx"," x ", 'x', LibVulpesItems.itemBattery, 'm', LibVulpesBlocks.blockStructureBlock).
@@ -297,7 +302,7 @@ public class LibVulpes {
 
         //MOD-SPECIFIC ENTRIES --------------------------------------------------------------------------------------------------------------------------
         //Items dependant on IC2
-        if(Loader.isModLoaded("IC2")) {
+        if(Loader.isModLoaded("ic2")) {
             LibVulpesBlocks.blockIC2Plug = new BlockMultiMachineBattery(Material.ROCK ,TilePlugInputIC2.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("IC2Plug").setCreativeTab(tabMultiblock).setHardness(3f);
             LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockIC2Plug.setRegistryName( LibVulpesBlocks.blockIC2Plug.getUnlocalizedName().substring(5)));
             GameRegistry.registerTileEntity(TilePlugInputIC2.class, "ARIC2Plug");
