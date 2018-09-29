@@ -191,7 +191,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	protected void dumpOutputToInventory() {
 
 		int totalItems = 0;
-		for(IInventory outInventory : itemOutPorts) {
+		for(IInventory outInventory : getItemOutPorts()) {
 			for(int i = totalItems; i < outputItemStacks.size(); i++) {
 				ItemStack stack = outInventory.getStackInSlot(smartInventoryUpgrade ? outInventory.getSizeInventory() - i - 1 : i);
 
@@ -256,7 +256,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 			ingredientCheck:
 
-				for(IInventory hatch : itemInPorts) {
+				for(IInventory hatch : getItemInPorts()) {
 					for(int i = 0; i < hatch.getSizeInventory(); i++) {
 						ItemStack stackInSlot = hatch.getStackInSlot(i);
 
@@ -317,7 +317,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 				List<ItemStack> ingredient = ingredients.get(ingredientNum);
 				ingredientCheck:
 
-					for(IInventory hatch : itemInPorts) {
+					for(IInventory hatch : getItemInPorts()) {
 
 						for(int i = 0; i < hatch.getSizeInventory(); i++) {
 							ItemStack stackInSlot = hatch.getStackInSlot(i);
@@ -344,7 +344,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 		//Check output Items
 		bottomItemCheck:
-			for(IInventory outInventory : itemOutPorts) {
+			for(IInventory outInventory : getItemOutPorts()) {
 				for(int i = smartInventoryUpgrade ? outInventory.getSizeInventory() - outputItems.size() : 0; (i < (smartInventoryUpgrade ? outInventory.getSizeInventory() : outputItems.size())); i++) {
 					ItemStack stack = outInventory.getStackInSlot(i);
 

@@ -73,6 +73,28 @@ public class TileMultiBlock extends TileEntity {
 	public static List<BlockMeta> getMapping(char character) {
 		return charMapping.get(character);
 	}
+	
+	public List<IInventory> getItemInPorts() {
+		for(int i = 0; i < itemInPorts.size(); i++) {
+			if(itemInPorts.get(i) instanceof TileEntity) {
+				TileEntity newTile = world.getTileEntity(((TileEntity)itemInPorts.get(i)).getPos());
+				if (newTile instanceof IInventory)
+					itemInPorts.set(i, (IInventory)newTile);
+			}
+		}
+		return itemInPorts;
+	}
+	
+	public List<IInventory> getItemOutPorts() {
+		for(int i = 0; i < itemOutPorts.size(); i++) {
+			if(itemOutPorts.get(i) instanceof TileEntity) {
+				TileEntity newTile = world.getTileEntity(((TileEntity)itemOutPorts.get(i)).getPos());
+				if (newTile instanceof IInventory)
+					itemOutPorts.set(i, (IInventory)newTile);
+			}
+		}
+		return itemOutPorts;
+	}
 
 	/**
 	 * Note: it may be true on the server but not the client.  This is because the client needs to form the multiblock
