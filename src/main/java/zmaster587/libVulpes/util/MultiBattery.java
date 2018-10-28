@@ -33,10 +33,10 @@ public class MultiBattery implements IUniversalEnergy {
 	}
 
 	@Override
-	public int getEnergyStored() {
+	public int getUniversalEnergyStored() {
 		int energyStored = 0;
 		for(IUniversalEnergy battery : batteries)
-			energyStored += battery.getEnergyStored();
+			energyStored += battery.getUniversalEnergyStored();
 
 		return energyStored;
 	}
@@ -69,7 +69,7 @@ public class MultiBattery implements IUniversalEnergy {
 
 	@Override
 	public void setEnergyStored(int amt) {
-		int difference = amt - getEnergyStored();
+		int difference = amt - getUniversalEnergyStored();
 		int amtAdded = 0;
 		
 		//Possible inf loop

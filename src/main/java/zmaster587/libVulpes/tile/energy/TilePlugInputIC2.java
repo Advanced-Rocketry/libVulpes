@@ -60,7 +60,7 @@ ITickable {
 
 	@Override
 	public double getDemandedEnergy() {
-		return Math.min(getMaxEnergyStored() - getEnergyStored(), 128.0);
+		return Math.min(getMaxEnergyStored() - getUniversalEnergyStored(), 128.0);
 	}
 
 	@Override

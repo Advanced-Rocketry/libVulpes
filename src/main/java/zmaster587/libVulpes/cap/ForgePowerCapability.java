@@ -24,8 +24,7 @@ public class ForgePowerCapability implements IEnergyStorage {
 
 	@Override
 	public int getEnergyStored() {
-		return energy.getEnergyStored();
-		
+		return energy.getUniversalEnergyStored();
 	}
 
 	@Override

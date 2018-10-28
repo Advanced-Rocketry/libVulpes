@@ -275,7 +275,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	public boolean hasEnergy(int amt) {
-		return batteries.getEnergyStored() >= amt;
+		return batteries.getUniversalEnergyStored() >= amt;
 	}
 
 	@Override

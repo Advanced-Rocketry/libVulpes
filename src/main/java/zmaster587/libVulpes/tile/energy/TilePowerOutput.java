@@ -32,8 +32,8 @@ public class TilePowerOutput extends TilePlugBase implements IPower, ITickable {
 
 				if(tile instanceof IPower) {
 					IPower handle = (IPower)tile;
-					storage.getEnergyStored();
-					storage.extractEnergy(handle.receiveEnergy(dir.getOpposite(), storage.getEnergyStored(), false), false);
+					storage.getUniversalEnergyStored();
+					storage.extractEnergy(handle.receiveEnergy(dir.getOpposite(), storage.getUniversalEnergyStored(), false), false);
 				}
 			}
 		}
@@ -51,7 +51,7 @@ public class TilePowerOutput extends TilePlugBase implements IPower, ITickable {
 
 	@Override
 	public int getEnergyStored(EnumFacing dir) {
-		return storage.getEnergyStored();
+		return storage.getUniversalEnergyStored();
 	}
 
 	@Override

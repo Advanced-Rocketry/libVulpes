@@ -51,7 +51,7 @@ public class UniversalBattery implements IUniversalEnergy {
 	}
 	
 	@Override
-	public int getEnergyStored() {
+	public int getUniversalEnergyStored() {
 		return energy;
 	}
 

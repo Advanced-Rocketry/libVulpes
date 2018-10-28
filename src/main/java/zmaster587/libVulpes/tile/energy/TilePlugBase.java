@@ -194,10 +194,10 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	}
 
 	@Override
-	public int getEnergyStored() {
-		return storage.getEnergyStored();
+	public int getUniversalEnergyStored() {
+		return storage.getUniversalEnergyStored();
 	}
-
+	
 	@Override
 	public int getMaxEnergyStored() {
 		return storage.getMaxEnergyStored();

@@ -6,7 +6,7 @@ public interface IUniversalEnergy  {
 
 	int extractEnergy(int amt, boolean simulate);
 
-	int getEnergyStored();
+	int getUniversalEnergyStored();
 
 	int getMaxEnergyStored();
 

@@ -25,6 +25,11 @@ public class TileForgePowerInput extends TilePlugBase implements IEnergyStorage 
 	}
 
 	@Override
+	public int getEnergyStored() {
+		return getUniversalEnergyStored();
+	}
+	
+	@Override
 	public boolean canReceive() {
 		return true;
 	}

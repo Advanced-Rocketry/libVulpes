@@ -36,6 +36,11 @@ public class TileForgePowerOutput extends TilePlugBase implements IEnergyStorage
 	public boolean canReceive() {
 		return false;
 	}
+	
+	@Override
+	public int getEnergyStored() {
+		return getUniversalEnergyStored();
+	}
 
 	@Override
 	public void update() {
@@ -45,7 +50,7 @@ public class TileForgePowerOutput extends TilePlugBase implements IEnergyStorage
 
 				if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
 					IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY,  facing.getOpposite());
-					this.extractEnergy(storage.receiveEnergy(getEnergyStored(), false),false);
+					this.extractEnergy(storage.receiveEnergy(getUniversalEnergyStored(), false),false);
 				}
 			}
 		}

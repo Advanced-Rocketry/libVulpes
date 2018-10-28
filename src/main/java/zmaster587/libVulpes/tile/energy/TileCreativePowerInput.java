@@ -39,7 +39,7 @@ public class TileCreativePowerInput extends TilePlugBase implements IPower, ITic
 
 	@Override
 	public int getEnergyStored(EnumFacing arg0) {
-		return getEnergyStored();//getEnergyStored();
+		return getUniversalEnergyStored();//getEnergyStored();
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class TileCreativePowerInput extends TilePlugBase implements IPower, ITic
 
 				if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
 					IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY,  facing.getOpposite());
-					this.extractEnergy(storage.receiveEnergy(getEnergyStored(), false),false);
+					this.extractEnergy(storage.receiveEnergy(getUniversalEnergyStored(), false),false);
 				}
 			}
 		}

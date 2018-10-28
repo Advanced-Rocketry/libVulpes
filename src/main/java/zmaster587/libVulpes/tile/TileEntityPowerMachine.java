@@ -69,7 +69,7 @@ public abstract class TileEntityPowerMachine extends TileEntityMachine implement
 
 	@Override
 	public int getEnergyStored(EnumFacing from) {
-		return energy.getEnergyStored();
+		return energy.getUniversalEnergyStored();
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public abstract class TileEntityPowerMachine extends TileEntityMachine implement
 		return energy.getMaxEnergyStored();
 	}
 	
-	public boolean hasEnergy() { return energy.getEnergyStored() > 0; }
+	public boolean hasEnergy() { return energy.getUniversalEnergyStored() > 0; }
 
 	@Override
 	public void setEnergyStored(int value) {
@@ -91,7 +91,7 @@ public abstract class TileEntityPowerMachine extends TileEntityMachine implement
 	
 	
 	public int getPower() {
-		return energy.getEnergyStored();
+		return energy.getUniversalEnergyStored();
 	}
 
 	@Override

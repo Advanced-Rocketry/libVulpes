@@ -40,7 +40,7 @@ public class ModulePower extends ModuleBase {
 		gui.drawTexturedModalRect(x + offsetX + 2, y + offsetY + barYSize + 5, 15, 171, 4, 9);
 
 		//Power Bar
-		float percent = tile.getEnergyStored()/(float)tile.getMaxEnergyStored();
+		float percent = tile.getUniversalEnergyStored()/(float)tile.getMaxEnergyStored();
 
 		gui.drawTexturedModalRect(offsetX + x + 1, 1 + offsetY + y + (barYSize-(int)(percent*barYSize)), textureOffsetX, barYSize- (int)(percent*barYSize) + textureOffsetY, barXSize, (int)(percent*barYSize));
 	}
@@ -54,7 +54,7 @@ public class ModulePower extends ModuleBase {
 
 		if( relativeX > 0 && relativeX < barXSize && relativeY > 0 && relativeY < barYSize) {
 			List<String> list = new LinkedList<String>();
-			list.add(tile.getEnergyStored() + " / " + tile.getMaxEnergyStored() + " Power");
+			list.add(tile.getUniversalEnergyStored() + " / " + tile.getMaxEnergyStored() + " Power");
 
 			this.drawTooltip(gui, list, mouseX, mouseY, zLevel, font);
 		}
@@ -71,20 +71,20 @@ public class ModulePower extends ModuleBase {
 	@Override
 	public boolean needsUpdate(int localId) {
 		if(localId == 0)
-			return (prevPower & 0xFFFF) != (tile.getEnergyStored() & 0xFFFF);
+			return (prevPower & 0xFFFF) != (tile.getUniversalEnergyStored() & 0xFFFF);
 		else if(localId == 1)
-			return ( (prevPower >>> 16 ) & 0xFFFF) != ( ( tile.getEnergyStored()  >>> 16) & 0xFFFF);
+			return ( (prevPower >>> 16 ) & 0xFFFF) != ( ( tile.getUniversalEnergyStored()  >>> 16) & 0xFFFF);
 		return false;
 	}
 	
 	@Override
 	protected void updatePreviousState(int localId) {
 		if(localId == 0) {
-			int data = (tile.getEnergyStored() & 0xFFFF);
+			int data = (tile.getUniversalEnergyStored() & 0xFFFF);
 			prevPower = (prevPower & 0xFFFF0000) | data;
 		}
 		else if(localId == 1) {
-			int data = (tile.getEnergyStored() & 0xFFFF0000);
+			int data = (tile.getUniversalEnergyStored() & 0xFFFF0000);
 			prevPower = (prevPower & 0xFFFF) | data;
 		}
 	}
@@ -93,11 +93,11 @@ public class ModulePower extends ModuleBase {
 	public void sendChanges(Container container, IContainerListener crafter, int variableId, int localId) {
 
 		if(localId == 0) {
-			int data = (tile.getEnergyStored() & 0xFFFF);
+			int data = (tile.getUniversalEnergyStored() & 0xFFFF);
 			crafter.sendWindowProperty(container, variableId, data);
 		}
 		else if(localId == 1) {
-			int data = (tile.getEnergyStored() & 0xFFFF0000);
+			int data = (tile.getUniversalEnergyStored() & 0xFFFF0000);
 			crafter.sendWindowProperty(container, variableId, data >>> 16);
 		}
 	}
@@ -105,12 +105,12 @@ public class ModulePower extends ModuleBase {
 	@Override
 	public void onChangeRecieved(int slot, int value) {
 		if(slot == 0) {
-			int energy = tile.getEnergyStored();
+			int energy = tile.getUniversalEnergyStored();
 			energy = (energy & 0xFFFF0000) | (value & 0xFFFF);
 			tile.setEnergyStored(energy);
 		}
 		else if(slot == 1) {
-			int energy = tile.getEnergyStored();
+			int energy = tile.getUniversalEnergyStored();
 			energy = (energy & 0x0000FFFF) | (value << 16);
 			tile.setEnergyStored(energy);
 		}

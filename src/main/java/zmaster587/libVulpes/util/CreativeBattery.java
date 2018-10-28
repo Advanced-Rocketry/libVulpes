@@ -2,7 +2,7 @@ package zmaster587.libVulpes.util;
 
 public class CreativeBattery extends UniversalBattery {
 	@Override
-	public int getEnergyStored() {
+	public int getUniversalEnergyStored() {
 		return getMaxEnergyStored();
 	}
 	

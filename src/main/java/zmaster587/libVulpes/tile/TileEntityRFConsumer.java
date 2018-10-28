@@ -103,7 +103,7 @@ public abstract class TileEntityRFConsumer extends TileEntity implements IPower,
 	}
 
 	public boolean hasEnoughEnergy(int amt) {
-		return getEnergyStored() >= amt;
+		return getUniversalEnergyStored() >= amt;
 	}
 
 	public int getPowerPerOperation() {
@@ -135,7 +135,7 @@ public abstract class TileEntityRFConsumer extends TileEntity implements IPower,
 
 	@Override
 	public int getEnergyStored(EnumFacing from) {
-		return energy.getEnergyStored();
+		return energy.getUniversalEnergyStored();
 	}
 
 	@Override
@@ -143,7 +143,7 @@ public abstract class TileEntityRFConsumer extends TileEntity implements IPower,
 		return energy.getMaxEnergyStored();
 	}
 
-	public boolean hasEnergy() { return energy.getEnergyStored() > 0; }
+	public boolean hasEnergy() { return energy.getUniversalEnergyStored() > 0; }
 
 	public void setEnergyStored(int value) {
 		energy.setEnergyStored(value);
@@ -155,8 +155,8 @@ public abstract class TileEntityRFConsumer extends TileEntity implements IPower,
 	}
 
 	@Override
-	public int getEnergyStored() {
-		return energy.getEnergyStored();
+	public int getUniversalEnergyStored() {
+		return energy.getUniversalEnergyStored();
 	}
 
 	@Override

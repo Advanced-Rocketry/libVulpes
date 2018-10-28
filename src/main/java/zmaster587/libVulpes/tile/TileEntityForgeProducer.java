@@ -125,7 +125,7 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 	}
 
 	public boolean hasEnoughEnergyBuffer(int amt) {
-		return getMaxEnergyStored() - getEnergyStored() >= amt;
+		return getMaxEnergyStored() - getUniversalEnergyStored() >= amt;
 	}
 
 	public int getPowerPerOperation() {
@@ -159,7 +159,7 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 			if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
 				IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY,  facing.getOpposite());
 				if(storage.canReceive())
-					this.extractEnergy(storage.receiveEnergy(getEnergyStored(), false),false);
+					this.extractEnergy(storage.receiveEnergy(getUniversalEnergyStored(), false),false);
 			}
 		}
 	}
@@ -172,7 +172,12 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 
 	@Override
 	public int getEnergyStored(EnumFacing from) {
-		return energy.getEnergyStored();
+		return energy.getUniversalEnergyStored();
+	}
+	
+	@Override
+	public int getEnergyStored() {
+		return energy.getUniversalEnergyStored();
 	}
 
 	@Override
@@ -180,7 +185,7 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 		return energy.getMaxEnergyStored();
 	}
 
-	public boolean hasEnergy() { return energy.getEnergyStored() > 0; }
+	public boolean hasEnergy() { return energy.getUniversalEnergyStored() > 0; }
 
 	public void setEnergyStored(int value) {
 		energy.setEnergyStored(value);
@@ -192,8 +197,8 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 	}
 
 	@Override
-	public int getEnergyStored() {
-		return energy.getEnergyStored();
+	public int getUniversalEnergyStored() {
+		return energy.getUniversalEnergyStored();
 	}
 
 	@Override

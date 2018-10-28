@@ -24,7 +24,7 @@ public class TeslaPowerCapability implements ITeslaConsumer, ITeslaProducer, ITe
 
 	@Override
 	public long getStoredPower() {
-		return energy.getEnergyStored();
+		return energy.getUniversalEnergyStored();
 	}
 
 	@Override

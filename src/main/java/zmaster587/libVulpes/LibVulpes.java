@@ -95,6 +95,7 @@ import zmaster587.libVulpes.tile.energy.TileCoalGenerator;
 import zmaster587.libVulpes.tile.energy.TileCreativePowerInput;
 import zmaster587.libVulpes.tile.energy.TileForgePowerInput;
 import zmaster587.libVulpes.tile.energy.TileForgePowerOutput;
+import zmaster587.libVulpes.tile.energy.TilePlugInputGregTech;
 import zmaster587.libVulpes.tile.energy.TilePlugInputIC2;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
@@ -163,6 +164,9 @@ public class LibVulpes {
         
         if(Loader.isModLoaded("ic2"))
         	LibVulpesBlocks.blockIC2Plug = new BlockMultiMachineBattery(Material.ROCK, TilePlugInputIC2.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("forgePowerInput").setCreativeTab(tabMultiblock).setHardness(3f);
+        
+        if(Loader.isModLoaded("gregtech"))
+        	LibVulpesBlocks.blockGTPlug = new BlockMultiMachineBattery(Material.ROCK, TilePlugInputGregTech.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("gregPowerInput").setCreativeTab(tabMultiblock).setHardness(3f);
         
         
         //Initialize Items
@@ -241,7 +245,11 @@ public class LibVulpes {
         if(Loader.isModLoaded("ic2")) {
           toRegister.add(new ShapelessOreRecipe(null, new ItemStack(LibVulpesBlocks.blockIC2Plug), LibVulpesBlocks.blockStructureBlock, 
                   IC2Items.getItem("te","mv_transformer"), LibVulpesItems.itemBattery).setRegistryName(new ResourceLocation("libvulpes", "blockIC2Plug")));
-      }
+        }
+        if(Loader.isModLoaded("gregtech")) {
+          toRegister.add(new ShapelessOreRecipe(null, new ItemStack(LibVulpesBlocks.blockGTPlug), LibVulpesBlocks.blockStructureBlock, 
+                  "plateBatteryAlloy","plateBatteryAlloy", LibVulpesItems.itemBattery).setRegistryName(new ResourceLocation("libvulpes", "blockIC2Plug")));
+        }
         
         toRegister.add(new ShapedOreRecipe(null,new ItemStack(LibVulpesBlocks.blockForgeInputPlug), " x ", "xmx"," x ", 'x', LibVulpesItems.itemBattery, 'm', LibVulpesBlocks.blockStructureBlock).
                 setRegistryName(new ResourceLocation("libvulpes", "blockforgeinputplug")));
@@ -306,6 +314,12 @@ public class LibVulpes {
             LibVulpesBlocks.blockIC2Plug = new BlockMultiMachineBattery(Material.ROCK ,TilePlugInputIC2.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("IC2Plug").setCreativeTab(tabMultiblock).setHardness(3f);
             LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockIC2Plug.setRegistryName( LibVulpesBlocks.blockIC2Plug.getUnlocalizedName().substring(5)));
             GameRegistry.registerTileEntity(TilePlugInputIC2.class, "ARIC2Plug");
+        }
+        
+        if(Loader.isModLoaded("gregtech")) {
+            LibVulpesBlocks.blockGTPlug = new BlockMultiMachineBattery(Material.ROCK ,TilePlugInputGregTech.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("GTPLug").setCreativeTab(tabMultiblock).setHardness(3f);
+            LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockGTPlug.setRegistryName( LibVulpesBlocks.blockGTPlug.getUnlocalizedName().substring(5)));
+            GameRegistry.registerTileEntity(TilePlugInputGregTech.class, "ARGTPlug");
         }
 
 
