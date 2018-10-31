@@ -248,7 +248,7 @@ public class LibVulpes {
         }
         if(Loader.isModLoaded("gregtech")) {
           toRegister.add(new ShapelessOreRecipe(null, new ItemStack(LibVulpesBlocks.blockGTPlug), LibVulpesBlocks.blockStructureBlock, 
-                  "plateBatteryAlloy","plateBatteryAlloy", LibVulpesItems.itemBattery).setRegistryName(new ResourceLocation("libvulpes", "blockIC2Plug")));
+                  "plateBatteryAlloy","plateBatteryAlloy", LibVulpesItems.itemBattery).setRegistryName(new ResourceLocation("libvulpes", "blockGTPlug")));
         }
         
         toRegister.add(new ShapedOreRecipe(null,new ItemStack(LibVulpesBlocks.blockForgeInputPlug), " x ", "xmx"," x ", 'x', LibVulpesItems.itemBattery, 'm', LibVulpesBlocks.blockStructureBlock).
@@ -317,7 +317,7 @@ public class LibVulpes {
         }
         
         if(Loader.isModLoaded("gregtech")) {
-            LibVulpesBlocks.blockGTPlug = new BlockMultiMachineBattery(Material.ROCK ,TilePlugInputGregTech.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("GTPLug").setCreativeTab(tabMultiblock).setHardness(3f);
+            LibVulpesBlocks.blockGTPlug = new BlockMultiMachineBattery(Material.ROCK ,TilePlugInputGregTech.class, GuiHandler.guiId.MODULAR.ordinal()).setUnlocalizedName("GTPlug").setCreativeTab(tabMultiblock).setHardness(3f);
             LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockGTPlug.setRegistryName( LibVulpesBlocks.blockGTPlug.getUnlocalizedName().substring(5)));
             GameRegistry.registerTileEntity(TilePlugInputGregTech.class, "ARGTPlug");
         }

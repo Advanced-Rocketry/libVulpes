@@ -1,6 +1,7 @@
 package zmaster587.libVulpes.tile.energy;
 
 import zmaster587.libVulpes.Configuration;
+import zmaster587.libVulpes.compat.GTEnergyCapability;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyEmitter;
@@ -9,11 +10,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
-public class TilePlugInputGregTech extends TilePlugBase implements gregtech.api.capability.IEnergyContainer, 
-ITickable {
+public class TilePlugInputGregTech extends TileForgePowerOutput {
 
 	public TilePlugInputGregTech() {
 		super();
@@ -21,12 +22,26 @@ ITickable {
 	boolean tickedOnce = false;
 	@Override
 	public String getModularInventoryName() {
-		return "tile.GregtechPlug.name";
+		return "tile.GTPlug.name";
 	}
 
 	@Override
 	public String getName() {
 		return null;
+	}
+	
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		if( capability == gregtech.api.capability.GregtechCapabilities.CAPABILITY_ENERGY_CONTAINER)
+			return true;
+		return super.hasCapability(capability, facing);
+	}
+	
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if( capability == gregtech.api.capability.GregtechCapabilities.CAPABILITY_ENERGY_CONTAINER)
+			return (T) new GTEnergyCapability(storage);
+		return super.getCapability(capability, facing);
 	}
 
 	@Override
@@ -44,44 +59,6 @@ ITickable {
 		return true;
 	}
 	
-	@Override
-	public long getEnergyStored() {
-		return storage.getUniversalEnergyStored();
-	}
-
-	@Override
-	public long acceptEnergyFromNetwork(EnumFacing arg0, long arg1, long arg2) {
-		return storage.acceptEnergy((int)(arg1*arg2*Configuration.EUMult), false);
-	}
-
-	@Override
-	public long changeEnergy(long arg0) {
-		if (arg0 < 0)
-			return storage.extractEnergy((int) -arg0, false);
-		else 
-			return storage.acceptEnergy((int) arg0, false);
-	}
-
-	@Override
-	public long getEnergyCapacity() {
-		// TODO Auto-generated method stub
-		return storage.getMaxEnergyStored();
-	}
-
-	@Override
-	public long getInputAmperage() {
-		return 1;
-	}
-
-	@Override
-	public long getInputVoltage() {
-		return 32;
-	}
-
-	@Override
-	public boolean inputsEnergy(EnumFacing arg0) {
-		return true;
-	}
 
 	@Override
 	public void update() {
@@ -97,3 +74,4 @@ ITickable {
 		}
 	}
 }
+
