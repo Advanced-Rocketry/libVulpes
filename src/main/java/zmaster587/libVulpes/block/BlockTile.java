@@ -130,6 +130,7 @@ public class BlockTile extends RotatableBlock {
 							j1 = itemstack.getCount();
 						}
 						Item oldItem = itemstack.getItem();
+						ItemStack oldStack = itemstack.copy();
 						itemstack.setCount(itemstack.getCount() - j1);
 						entityitem = new EntityItem(world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), new ItemStack(oldItem, j1, itemstack.getItemDamage()));
 						float f3 = 0.05F;
@@ -137,9 +138,9 @@ public class BlockTile extends RotatableBlock {
 						entityitem.motionY = (double)((float)world.rand.nextGaussian() * f3 + 0.2F);
 						entityitem.motionZ = (double)((float)world.rand.nextGaussian() * f3);
 
-						if (itemstack.hasTagCompound())
+						if (oldStack.hasTagCompound())
 						{
-							entityitem.getItem().setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
+							entityitem.getItem().setTagCompound((NBTTagCompound)oldStack.getTagCompound().copy());
 						}
 						world.spawnEntity(entityitem);
 					}
