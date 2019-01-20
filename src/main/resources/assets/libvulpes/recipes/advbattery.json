@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"   ",
+	"bpb",
+	"bpb"
+    ],
+    "key":
+    {
+        "b":
+        {
+            "item": "libvulpes:battery",
+            "data": 0
+        },
+	"p":
+        {
+            "type": "forge:ore_dict",
+            "ore": "plateCopper"
+        }
+    },
+    "result":
+    {
+        "item": "libvulpes:battery",
+        "data": 1,
+        "count": 1
+    }
+}

@@ -1,0 +1,41 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "y",
+        "x"
+    ],
+    "key":
+    {
+        "x":
+        {
+            "item": "minecraft:bucket"
+        },
+        "y":
+        {
+            "item": "libvulpes:structuremachine"
+	}
+    },
+    "result":
+    {
+        "item": "libvulpes:hatch",
+        "count": 1,
+        "data": 3
+    }
+}
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients":
+    [
+        {
+	    "item": "libvulpes:hatch",
+	    "data": 2
+        }
+    ],
+    "result":
+    {
+        "item": "libvulpes:hatch",
+        "count": 1,
+        "data": 3
+    }
+}

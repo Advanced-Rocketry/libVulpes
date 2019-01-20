@@ -1,0 +1,41 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "x",
+        "y"
+    ],
+    "key":
+    {
+        "x":
+        {
+            "item": "minecraft:chest"
+        },
+        "y":
+        {
+            "item": "libvulpes:structuremachine"
+	}
+    },
+    "result":
+    {
+        "item": "libvulpes:hatch",
+        "count": 1,
+        "data": 0
+    }
+}
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients":
+    [
+        {
+	    "item": "libvulpes:hatch",
+	    "data": 1
+        }
+    ],
+    "result":
+    {
+        "item": "libvulpes:hatch",
+        "count": 1,
+        "data": 0
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"a",
+	"b"
+    ],
+    "key":
+    {
+        "a":
+        {
+            "type": "forge:ore_dict",
+            "ore": "itemBattery"
+        },
+	"b":
+        {
+            "item": "minecraft:furnace"
+        }
+    },
+    "result":
+    {
+        "item": "libvulpes:coalGenerator",
+        "count": 1
+    }
+}

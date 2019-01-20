@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "x",
+        "y",
+        "z"
+    ],
+    "key":
+    {
+        "x":
+        {
+            "type": "forge:ore_dict",
+            "ore": "dustRedstone"
+        },
+        "y":
+        {
+            "type": "forge:ore_dict",
+            "ore": "ingotGold"
+        },
+	"z":
+        {
+            "type": "forge:ore_dict",
+            "ore": "ingotIron"
+        }
+    },
+    "result":
+    {
+        "item": "libvulpes:linker",
+        "count": 1
+    }
+}

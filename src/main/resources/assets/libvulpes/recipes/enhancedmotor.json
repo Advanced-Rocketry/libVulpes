@@ -1,0 +1,33 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	" cp",
+	"rrp",
+	" cp"
+    ],
+    "key":
+    {
+        "c":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "coilAluminum"
+        },
+        "p":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "plateTitanium"
+	},
+        "r":
+        {
+	    "type": "forge:ore_dict",
+            "ore": "stickTitanium"
+	}
+    },
+    "result":
+    {
+        "item": "libvulpes:enhancedMotor",
+        "count": 1,
+        "data": 2
+    }
+}

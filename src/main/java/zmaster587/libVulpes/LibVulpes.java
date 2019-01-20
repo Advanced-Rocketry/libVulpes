@@ -198,48 +198,9 @@ public class LibVulpes {
     public void registerRecipes(FMLInitializationEvent evt)
     {
         List<net.minecraft.item.crafting.IRecipe> toRegister = Lists.newArrayList();
-        
-        
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(LibVulpesItems.itemLinker), "x","y","z", 'x', 
-                Items.REDSTONE, 'y', Items.GOLD_INGOT, 'z', Items.IRON_INGOT).setRegistryName(new ResourceLocation("libvulpes", "itemlinker")));
-
-//      //Recipes
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(LibVulpesBlocks.blockStructureBlock, 16), "sps", "p p", "sps", 'p', "plateIron", 's', "stickIron").
-                setRegistryName(new ResourceLocation("libvulpes", "blockstructureblock")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(LibVulpesBlocks.blockAdvStructureBlock, 16), "sps", "psp", "sps", 'p', "plateTitanium", 's', "stickTitanium").
-                setRegistryName(new ResourceLocation("libvulpes", "blockadvstructureblock")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(LibVulpesBlocks.blockCoalGenerator), "a", "b", 'a', LibVulpesItems.itemBattery, 'b', Blocks.FURNACE).
-                setRegistryName(new ResourceLocation("libvulpes", "blockcoalgenerator")));
+   
 //
-//      //Motors
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(LibVulpesBlocks.blockMotor), " cp", "rrp"," cp", 'c', "coilCopper", 'p', "plateSteel", 'r', "stickSteel").
-                setRegistryName(new ResourceLocation("libvulpes", "blockmotor")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(LibVulpesBlocks.blockAdvancedMotor), " cp", "rrp"," cp", 'c', "coilGold", 'p', "plateSteel", 'r', "stickSteel").
-                setRegistryName(new ResourceLocation("libvulpes", "blockadvancedmotor")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(LibVulpesBlocks.blockEnhancedMotor), " cp", "rrp"," cp", 'c', "coilAluminum", 'p', "plateTitanium", 'r', "stickTitanium").
-                setRegistryName(new ResourceLocation("libvulpes", "blockenhancedmotor")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(LibVulpesBlocks.blockEliteMotor), " cp", "rrp"," cp", 'c', "coilTitanium", 'p', "plateIridium", 'r', "stickIridium").
-                setRegistryName(new ResourceLocation("libvulpes", "blockelitemotor")));
-//      
-//      //Hatches
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(LibVulpesBlocks.blockHatch,1,0), "c", "m"," ", 'c', Blocks.CHEST, 'm', LibVulpesBlocks.blockStructureBlock).
-                setRegistryName(new ResourceLocation("libvulpes", "blockhatch0")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(LibVulpesBlocks.blockHatch,1,1), "m", "c"," ", 'c', Blocks.CHEST, 'm', LibVulpesBlocks.blockStructureBlock).
-                setRegistryName(new ResourceLocation("libvulpes", "blockhatch1")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(LibVulpesBlocks.blockHatch,1,0), new ItemStack(LibVulpesBlocks.blockHatch,1,1)).
-              setRegistryName(new ResourceLocation("libvulpes", "blockhatchdir01")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(LibVulpesBlocks.blockHatch,1,1), new ItemStack(LibVulpesBlocks.blockHatch,1,0)).
-              setRegistryName(new ResourceLocation("libvulpes", "blockhatchdir10")));
       
-
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(LibVulpesBlocks.blockHatch,1,2), "c", "m"," ", 'c', Items.BUCKET, 'm', LibVulpesBlocks.blockStructureBlock).
-                setRegistryName(new ResourceLocation("libvulpes", "blockhatch2")));
-        toRegister.add(new ShapedOreRecipe(null, new ItemStack(LibVulpesBlocks.blockHatch,1,3), "m", "c"," ", 'c', Items.BUCKET, 'm', LibVulpesBlocks.blockStructureBlock).
-                setRegistryName(new ResourceLocation("libvulpes", "blockhatch3")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(LibVulpesBlocks.blockHatch,1,2), new ItemStack(LibVulpesBlocks.blockHatch,1,3)).
-              setRegistryName(new ResourceLocation("libvulpes", "blockhatchdir23")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(LibVulpesBlocks.blockHatch,1,3), new ItemStack(LibVulpesBlocks.blockHatch,1,2)).
-              setRegistryName(new ResourceLocation("libvulpes", "blockhatchdir32")));
 //      
 //      //Plugs
         if(Loader.isModLoaded("ic2")) {
@@ -250,13 +211,6 @@ public class LibVulpes {
           toRegister.add(new ShapelessOreRecipe(null, new ItemStack(LibVulpesBlocks.blockGTPlug), LibVulpesBlocks.blockStructureBlock, 
                   "plateBatteryAlloy","plateBatteryAlloy", LibVulpesItems.itemBattery).setRegistryName(new ResourceLocation("libvulpes", "blockGTPlug")));
         }
-        
-        toRegister.add(new ShapedOreRecipe(null,new ItemStack(LibVulpesBlocks.blockForgeInputPlug), " x ", "xmx"," x ", 'x', LibVulpesItems.itemBattery, 'm', LibVulpesBlocks.blockStructureBlock).
-                setRegistryName(new ResourceLocation("libvulpes", "blockforgeinputplug")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(LibVulpesBlocks.blockForgeInputPlug), new ItemStack(LibVulpesBlocks.blockForgeOutputPlug)).
-                setRegistryName(new ResourceLocation("libvulpes", "blockforgeplug1")));
-        toRegister.add(new ShapelessOreRecipe(null, new ItemStack(LibVulpesBlocks.blockForgeOutputPlug), new ItemStack(LibVulpesBlocks.blockForgeInputPlug)).
-                setRegistryName(new ResourceLocation("libvulpes", "blockforgeplug2")));
         
         for(net.minecraft.item.crafting.IRecipe recipe: toRegister)
         {

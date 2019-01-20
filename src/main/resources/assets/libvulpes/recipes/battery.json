@@ -1,0 +1,33 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	" c ",
+	"prp",
+	"prp"
+    ],
+    "key":
+    {
+        "c":
+        {
+            "type": "forge:ore_dict",
+            "ore": "stickIron"
+        },
+	"p":
+        {
+            "type": "forge:ore_dict",
+            "ore": "plateTin"
+        },
+	"r":
+        {
+            "type": "forge:ore_dict",
+            "ore": "dustRedstone"
+        }
+    },
+    "result":
+    {
+        "item": "libvulpes:battery",
+        "count": 4,
+        "data": 0
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"xpx",
+	"p p",
+	"xpx"
+    ],
+    "key":
+    {
+        "x":
+        {
+            "type": "forge:ore_dict",
+            "ore": "stickIron"
+        },
+	"p":
+        {
+            "type": "forge:ore_dict",
+            "ore": "plateIron"
+        }
+    },
+    "result":
+    {
+        "item": "libvulpes:structuremachine",
+        "count": 16
+    }
+}

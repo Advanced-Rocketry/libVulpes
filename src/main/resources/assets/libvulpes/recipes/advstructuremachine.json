@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	"xpx",
+	"p p",
+	"xpx"
+    ],
+    "key":
+    {
+        "x":
+        {
+            "type": "forge:ore_dict",
+            "ore": "stickTitanium"
+        },
+	"p":
+        {
+            "type": "forge:ore_dict",
+            "ore": "plateTitanium"
+        }
+    },
+    "result":
+    {
+        "item": "libvulpes:advstructuremachine",
+        "count": 16
+    }
+}

@@ -9,14 +9,39 @@ import java.util.Map;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.tile.TileEntityMachine;
+import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 import net.minecraft.block.Block;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class RecipesMachine {
+	
+    //This is a bit of a hack
+    static class DummyRecipe implements net.minecraft.item.crafting.IRecipe
+    {
+        private static ItemStack result = new ItemStack(Items.DIAMOND, 64);
+        private ResourceLocation name;
+
+        @Override
+        public net.minecraft.item.crafting.IRecipe setRegistryName(ResourceLocation name) {
+            this.name = name;
+            return this;
+        }
+        @Override public ResourceLocation getRegistryName() { return name; }
+        @Override public Class<net.minecraft.item.crafting.IRecipe> getRegistryType() { return net.minecraft.item.crafting.IRecipe.class; }
+        @Override public boolean matches(InventoryCrafting inv, World worldIn) { return false; } //dirt?
+        @Override public ItemStack getCraftingResult(InventoryCrafting inv) { return result; }
+        @Override public boolean canFit(int width, int height) { return false; }
+        @Override public ItemStack getRecipeOutput() { return result; }
+        @Override public boolean isHidden() { return true; }
+    }
+	
 	public static class Recipe implements IRecipe {
 
 		private List<List<ItemStack>> input;
@@ -129,12 +154,12 @@ public class RecipesMachine {
 		}
 	}
 
-	public HashMap<Class<Object>, List<IRecipe>> recipeList;
+	public HashMap<Class<? extends TileMultiblockMachine>, List<IRecipe>> recipeList;
 
 	private static RecipesMachine instance = new RecipesMachine();
 
 	public RecipesMachine() {
-		recipeList = new HashMap<Class<Object>, List<IRecipe>>();
+		recipeList = new HashMap<Class<? extends TileMultiblockMachine>, List<IRecipe>>();
 	}
 
 	public static RecipesMachine getInstance() { return instance; }
