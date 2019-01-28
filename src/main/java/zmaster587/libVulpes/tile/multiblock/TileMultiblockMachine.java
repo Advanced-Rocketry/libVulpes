@@ -345,6 +345,10 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		//Check output Items
 		bottomItemCheck:
 			for(IInventory outInventory : getItemOutPorts()) {
+				//It's possible for the outputItems to be bigger than the inventory
+				if(outInventory.getSizeInventory() - outputItems.size() < 0)
+					continue;
+				
 				for(int i = smartInventoryUpgrade ? outInventory.getSizeInventory() - outputItems.size() : 0; (i < (smartInventoryUpgrade ? outInventory.getSizeInventory() : outputItems.size())); i++) {
 					ItemStack stack = outInventory.getStackInSlot(i);
 
