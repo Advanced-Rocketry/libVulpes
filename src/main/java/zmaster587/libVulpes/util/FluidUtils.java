@@ -84,7 +84,7 @@ public class FluidUtils {
 			else {
 				fluidStack = fluidItem.drain(tank.getCapacity() - tank.getFluidAmount(), false);
 
-				int amountDrained = tank.fill(fluidStack, true);
+				int amountDrained = tank.fill(fluidStack, false);
 				FluidStack fluidStack2 = fluidItem.drain(amountDrained, true);
 				
 				stack = fluidItem.getContainer();
@@ -99,7 +99,7 @@ public class FluidUtils {
 					}
 					else
 						return false;
-
+					tank.fill(fluidStack, true);
 					inv.decrStackSize(inputSlot, 1);
 
 					return true;
