@@ -1,31 +1,35 @@
-itemGroup.multiBlock=Éléments de machine multibloc
-item.Linker.name=Linker
+itemGroup.multiBlock=Multi Block Machine Parts
+item.Linker.name=Connecteur
 
-tile.hatch.0.name=Sas d'entrée
-tile.hatch.1.name=Sas de sortie
-tile.hatch.2.name=Orifice de remplissage
-tile.hatch.3.name=Orifice de vidange
+tile.hatch.0.name=Écoutille d'entrée
+tile.hatch.1.name=Écoutille de sortie
+tile.hatch.2.name=Écoutille d'entrée de fluide
+tile.hatch.3.name=Écoutille de sortie de fluide
 
 tile.forgePowerInput.name=Power Input Plug
 tile.forgePowerOutput.name=Power Output Plug
 tile.creativePowerBattery.name=Creative Power Input Plug
 tile.rfBattery.name=Interface Redstone Flux(RF)
 tile.IC2Plug.name=Interface IC2(EU)
-tile.structureMachine.name=Bâti de machine
-tile.advStructureMachine.name=Bâti de machine renforcé
-tile.blockGenericMachine.name=Contrôleur de machine
-tile.coil.silicon.name=Bobine en silicium
-tile.coil.copper.name=Bobine de cuivre
-tile.coil.tin.name=Bobine d'étain
-tile.coil.steel.name=Bobine en acier
+tile.structureMachine.name=Structure de machine
+tile.advStructureMachine.name=Structure de machine avancé
+tile.blockGenericMachine.name=Machine Controller Block
+tile.coil.silicon.name=Bobine en silicone
+tile.coil.copper.name=Bobine en cuivre
+tile.coil.tin.name=Bobine en étain
+tile.coil.steel.name=Bobine en en acier
 tile.coil=Bobine
 tile.Copper.name=Minerai de cuivre
 tile.Tin.name=Minerai d'étain
 tile.Rutile.name=Minerai de rutile
-tile.Aluminum.name=Minerai d'aluminium
-tile.coalGenerator.name=Générateur de charbon de bois
+tile.Aluminum.name=Minerai d'aluminum
+tile.coalGenerator.name=Générateur à charbon
+tile.motor.name=Moteur
+tile.advancedMotor.name=Moteur avancé
+tile.enhancedMotor.name=Moteur amélioré
+tile.eliteMotor.name=Moteur élite
 
-item.holoProjector.name=Holoprojecteur
+item.holoProjector.name=Holo-projecteur
 
 type.crystal.name=Cristal
 type.dust.name=Poudre
@@ -39,11 +43,11 @@ type.block.name=Bloc
 type.coil.name=Bobine
 type.fan.name=Hélice
 type.sheet.name=Feuille
-type.gear.name=Engrenage
+type.gear.name=Roue dentée
 
 material.Gold.name=Or
 material.Iron.name=Fer
-material.Silicon.name=Silicium
+material.Silicon.name=Silicone
 material.Copper.name=Cuivre
 material.Tin.name=Étain
 material.Steel.name=Acier
