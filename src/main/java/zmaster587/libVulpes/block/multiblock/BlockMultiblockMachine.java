@@ -1,6 +1,10 @@
 package zmaster587.libVulpes.block.multiblock;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
+
+import com.mojang.realmsclient.gui.ChatFormatting;
 
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.block.BlockTile;
@@ -13,6 +17,7 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -21,6 +26,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * hosts a multiblock machine master tile
@@ -46,6 +53,13 @@ public class BlockMultiblockMachine extends BlockTile {
 				tileMulti.deconstructMultiBlock(worldIn, pos, false, state);
 		}
 		super.breakBlock(worldIn, pos,	state);
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
+		super.addInformation(stack, player, tooltip, advanced);
+		tooltip.add(ChatFormatting.DARK_GRAY + "" + ChatFormatting.ITALIC + LibVulpes.proxy.getLocalizedString("machine.tooltip.multiblock"));
 	}
 	
 	@Override
