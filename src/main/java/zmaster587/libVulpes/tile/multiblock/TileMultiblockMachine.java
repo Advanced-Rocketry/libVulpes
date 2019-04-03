@@ -261,7 +261,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 						ItemStack stackInSlot = hatch.getStackInSlot(i);
 
 						for (ItemStack stack : ingredient) {
-							if(stackInSlot != null && stackInSlot.getCount() >= stack.getCount() && stackInSlot.isItemEqual(stack)) {
+							if(stackInSlot != null && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.isItemEqual(stack) || (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE && stackInSlot.getItem() == stack.getItem() ))) {
 								hatch.decrStackSize(i, stack.getCount());
 								hatch.markDirty();
 								world.notifyBlockUpdate(pos, world.getBlockState(((TileEntity)hatch).getPos()),  world.getBlockState(((TileEntity)hatch).getPos()), 6);
