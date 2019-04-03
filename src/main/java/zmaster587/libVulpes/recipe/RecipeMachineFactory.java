@@ -121,11 +121,18 @@ public abstract class RecipeMachineFactory implements IRecipeFactory {
 		for(ItemStack stack : CraftingHelper.getIngredient(json, context).getMatchingStacks())
 		{
 			int count = 1;
+			int data = 0;
 			ItemStack stack2 = stack.copy();
 			JsonElement countElem = json.getAsJsonObject().get("count");
+			JsonElement dataElem = json.getAsJsonObject().get("data");
 			if(countElem != null)
 				count = countElem.getAsInt();
+			
+			if(dataElem != null)
+				data = dataElem.getAsInt();
+			
 			stack2.setCount(count);
+			stack2.setItemDamage(data);
 			stacks.add(stack2);
 		}
 		return stacks;
