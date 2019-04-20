@@ -32,7 +32,7 @@ public class ModuleTextBox extends ModuleBase {
 		currentText = "";
 	}
 
-	public ModuleTextBox(IGuiCallback tile, int offsetX, int offsetY, String initialString) {
+	protected ModuleTextBox(IGuiCallback tile, int offsetX, int offsetY, String initialString) {
 		super(offsetX, offsetY);
 
 		this.tile = tile;
