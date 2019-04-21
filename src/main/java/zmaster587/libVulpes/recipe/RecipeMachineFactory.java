@@ -120,8 +120,8 @@ public abstract class RecipeMachineFactory implements IRecipeFactory {
 		List<ItemStack> stacks = new LinkedList<ItemStack>();
 		for(ItemStack stack : CraftingHelper.getIngredient(json, context).getMatchingStacks())
 		{
-			int count = 1;
-			int data = 0;
+			int count = stack.getCount();
+			int data = stack.getItemDamage();
 			ItemStack stack2 = stack.copy();
 			JsonElement countElem = json.getAsJsonObject().get("count");
 			JsonElement dataElem = json.getAsJsonObject().get("data");
