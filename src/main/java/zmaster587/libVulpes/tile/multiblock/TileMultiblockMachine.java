@@ -303,6 +303,10 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 			return false;
 
 		invCheckFlag = true;
+		int reservedSpotSize = 0;
+		if(recipe instanceof RecipesMachine.Recipe)
+			reservedSpotSize = ((RecipesMachine.Recipe)recipe).getRequiredEmptyOutputs();
+		
 		List<ItemStack> outputItems = getItemOutputs(recipe);
 
 		boolean itemCheck = outputItems.size() == 0;
@@ -342,6 +346,8 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		}
 
 
+		if(reservedSpotSize < 0)
+		{
 		//Check output Items
 		bottomItemCheck:
 			for(IInventory outInventory : getItemOutPorts()) {
@@ -408,6 +414,19 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 				}
 			}
+		}
+		else //Chance output
+		{
+			for(IInventory outInventory : getItemOutPorts()) {
+				for(int i = 0; i < outInventory.getSizeInventory(); i++) {
+					if(outInventory.getStackInSlot(i).isEmpty())
+						reservedSpotSize--;
+				}
+			}
+			
+			if(reservedSpotSize <= 0)
+				itemCheck = true;
+		}
 
 		int[] fluidInputCounter = new int[recipe.getFluidIngredients().size()];
 

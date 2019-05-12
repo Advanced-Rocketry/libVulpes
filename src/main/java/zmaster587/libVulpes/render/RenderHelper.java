@@ -203,17 +203,17 @@ public class RenderHelper {
 			GL11.glRotatef(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
 			GL11.glRotatef(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
 			GL11.glScalef(-f1, -f1, f1);
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glDepthMask(false);
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
-			GL11.glEnable(GL11.GL_BLEND);
-			OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+			GlStateManager.disableLighting();
+			GlStateManager.depthMask(false);
+			GlStateManager.disableDepth();
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(770, 771);
 			Tessellator tessellator = Tessellator.getInstance();
 			byte b0 = 0;
 
 			BufferBuilder buffer = tessellator.getBuffer();
 
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GlStateManager.disableTexture2D();
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 			int j = fontrenderer.getStringWidth(displayString) / 2;
 			GlStateManager.color(0.0F, 0.0F, 0.0F, 0.25F);
@@ -222,15 +222,15 @@ public class RenderHelper {
 			buffer.pos((double)(j + 1), (double)(8 + b0), 0.0D).endVertex();
 			buffer.pos((double)(j + 1), (double)(-1 + b0), 0.0D).endVertex();
 			tessellator.draw();
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GlStateManager.enableTexture2D();
 			fontrenderer.drawString(displayString, -fontrenderer.getStringWidth(displayString) / 2, b0, 553648127);
 
-			GL11.glDepthMask(true);
+			GlStateManager.depthMask(true);
 			fontrenderer.drawString(displayString, -fontrenderer.getStringWidth(displayString) / 2, b0, -1);
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			GlStateManager.enableLighting();
+			GlStateManager.enableDepth();
+			GlStateManager.disableBlend();
+			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			GL11.glPopMatrix();
 		}
 	}
@@ -384,9 +384,9 @@ public class RenderHelper {
 		//bottom
 
 		buff.pos(xMax, yMax, zMax).tex(uMax, vMax).endVertex();
-		buff.pos(xMin, yMax, zMax).tex(vMin, uMax).endVertex();
+		buff.pos(xMin, yMax, zMax).tex(uMin, vMax).endVertex();
 		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
-		buff.pos(xMax, yMax, zMin).tex(vMax, uMin).endVertex();
+		buff.pos(xMax, yMax, zMin).tex(uMax, vMin).endVertex();
 
 	}
 

@@ -447,6 +447,9 @@ public class LibVulpes {
 							}
 						}
 						
+						if(((RecipesMachine.Recipe)recipe).outputToOnlyEmptySlots())
+							writeable = false;
+						
 						if(writeable)
 							stream2.write(XMLRecipeLoader.writeRecipe(recipe) + "\n");
 					}

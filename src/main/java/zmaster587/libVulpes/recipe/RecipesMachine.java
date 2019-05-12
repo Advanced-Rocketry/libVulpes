@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.interfaces.IRecipe;
@@ -42,19 +43,44 @@ public class RecipesMachine {
         @Override public boolean isHidden() { return true; }
     }
 	
+    public static class ChanceItemStack
+    {
+    	public ItemStack stack;
+    	public float chance;
+    	
+    	public ChanceItemStack(ItemStack stack, float chance)
+    	{
+    		this.stack = stack;
+    		this.chance = chance;
+    	}
+    }
+    
+    public static class ChanceFluidStack
+    {
+    	public FluidStack stack;
+    	public float chance;
+    	public ChanceFluidStack(FluidStack stack, float chance)
+    	{
+    		this.stack = stack;
+    		this.chance = chance;
+    	}
+
+    }
+    
 	public static class Recipe implements IRecipe {
 
 		private List<List<ItemStack>> input;
 		private Map<Integer, String> inputOreDict;
 		private LinkedList<FluidStack> fluidInput;
-		private LinkedList<ItemStack> output;
-		private LinkedList<FluidStack> fluidOutput;
+		private LinkedList<ChanceItemStack> output;
+		private LinkedList<ChanceFluidStack> fluidOutput;
 		private int completionTime, power;
+		private int maxOutputSize;
 
 		public Recipe() {}
 
-		public Recipe(List<ItemStack> output, List<List<ItemStack>> input, int completionTime, int powerReq, Map<Integer, String> oreDict) {
-			this.output = new LinkedList<ItemStack>();
+		public Recipe(List<ChanceItemStack> output, List<List<ItemStack>> input, int completionTime, int powerReq, Map<Integer, String> oreDict) {
+			this.output = new LinkedList<ChanceItemStack>();
 			this.output.addAll(output);
 
 			this.input = new LinkedList<List<ItemStack>>();
@@ -65,18 +91,22 @@ public class RecipesMachine {
 			this.power = powerReq;
 
 			this.fluidInput = new LinkedList<FluidStack>();
-			this.fluidOutput = new LinkedList<FluidStack>();
+			this.fluidOutput = new LinkedList<ChanceFluidStack>();
 			
 			this.inputOreDict = oreDict;
+			
+			maxOutputSize = -1;
 		}
 
-		public Recipe(List<ItemStack> output, List<List<ItemStack>> input, List<FluidStack> fluidOutput, List<FluidStack> fluidInput, int completionTime, int powerReq, Map<Integer, String> oreDict) {
+		public Recipe(List<ChanceItemStack> output, List<List<ItemStack>> input, List<ChanceFluidStack> fluidOutput, List<FluidStack> fluidInput, int completionTime, int powerReq, Map<Integer, String> oreDict) {
 			this(output, input, completionTime, powerReq, oreDict);
 
 			this.fluidInput.addAll(fluidInput);
 			this.fluidOutput.addAll(fluidOutput);
 		}
 
+		public void setMaxOutputSize(int size) { maxOutputSize = size; }
+		
 		public int getCompletionTime() {return completionTime; }
 
 
@@ -95,6 +125,13 @@ public class RecipesMachine {
 		public List<FluidStack> getFluidIngredients() {
 			return fluidInput;
 		}
+		
+		@Override
+		public List<FluidStack> getFluidOutputs() {
+			List<FluidStack> stacks = new LinkedList<FluidStack>();
+			fluidOutput.forEach((ChanceFluidStack s) -> { stacks.add(s.stack); });
+			return stacks;
+		}
 
 		@Override
 		public int getTime() {
@@ -110,24 +147,57 @@ public class RecipesMachine {
 		public List<ItemStack> getOutput() {
 			ArrayList<ItemStack> stack = new ArrayList<ItemStack>();
 
-			for(ItemStack i : output) {
-				stack.add(i.copy());
+			int maxOutputSize = getRequiredEmptyOutputs();
+			
+			if(maxOutputSize > 0)
+			{
+				float maxChance = 0;
+				Random rand = new Random(System.currentTimeMillis());
+				for(ChanceItemStack i : output) {
+					maxChance += i.chance;
+				}
+				
+				for(int i = 0; i < maxOutputSize; i++)
+				{
+					float currentHit = rand.nextFloat()*maxChance;
+					float currChance = 0;
+					ItemStack nextStack = output.get(0).stack;
+					for(ChanceItemStack currStack : output) {
+						currChance += currStack.chance;
+						if(currChance > currentHit)
+						{
+							stack.add(nextStack.copy());
+							break;
+						}
+						nextStack = currStack.stack;
+					}
+				}
+			}
+			else
+			{
+				for(ChanceItemStack i : output) {
+					stack.add(i.stack.copy());
+				}
 			}
 
 			return stack;
 		}
-
-		@Override
-		public List<FluidStack> getFluidOutputs() {
-			ArrayList<FluidStack> stack = new ArrayList<FluidStack>();
-
-			for(FluidStack i : fluidOutput) {
-				stack.add(i.copy());
-			}
-
-			return stack;
+		
+		public List<ChanceItemStack> getChanceOutputs()
+		{
+			return output;
 		}
 
+		public int getRequiredEmptyOutputs()
+		{
+			return maxOutputSize;
+		}
+
+		public boolean outputToOnlyEmptySlots()
+		{
+			return maxOutputSize != -1;
+		}
+		
 		@Override
 		public boolean equals(Object obj) {
 			if(obj instanceof Recipe) {
@@ -214,14 +284,14 @@ public class RecipesMachine {
 				if(!innerList.isEmpty())
 				stack.add(innerList);
 			}
-			ArrayList<ItemStack> outputItem = new ArrayList<ItemStack>();
-			ArrayList<FluidStack> outputFluidStacks = new ArrayList<FluidStack>();
+			ArrayList<ChanceItemStack> outputItem = new ArrayList<ChanceItemStack>();
+			ArrayList<ChanceFluidStack> outputFluidStacks = new ArrayList<ChanceFluidStack>();
 
 			for(Object outputObject : out) {
 				if(outputObject instanceof ItemStack)
-					outputItem.add((ItemStack)outputObject);
+					outputItem.add(new ChanceItemStack((ItemStack)outputObject, 0f));
 				else
-					outputFluidStacks.add((FluidStack)outputObject);
+					outputFluidStacks.add(new ChanceFluidStack((FluidStack)outputObject, 0f));
 			}
 
 			Recipe recipe;
