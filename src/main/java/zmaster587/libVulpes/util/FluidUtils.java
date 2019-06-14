@@ -1,13 +1,17 @@
 package zmaster587.libVulpes.util;
 
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import zmaster587.libVulpes.event.BucketHandler;
 
 public class FluidUtils {
 
@@ -58,8 +62,28 @@ public class FluidUtils {
 
 			//Drain the tank into the item
 			if(itemFluidStack == null && tank.getFluid() != null) {
-				int amt = fluidItem.fill(tank.getFluid(), true);
-				stack = fluidItem.getContainer();
+				int amt = 0;
+				
+				//Special case handling buckets
+				if(stack.getItem() == Items.BUCKET)
+				{
+					if(tank.getFluidAmount() > 1000)
+					{
+						Item newBucket = BucketHandler.INSTANCE.getItemFromFluid(tank.getFluid().getFluid());
+						if(newBucket != null)
+						{
+							stack = new ItemStack(newBucket);
+							amt = 1000;
+							
+						}
+					}
+				}
+				//General case
+				else
+				{
+					amt = fluidItem.fill(tank.getFluid(), true);
+					stack = fluidItem.getContainer();
+				}
 
 				//If the container is full move it down and try again for a new one
 				if(amt != 0 && getFluidItemCapacity(stack) == getFluidForItem(stack).amount) {

@@ -65,6 +65,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.GameData;
 import zmaster587.libVulpes.cap.TeslaHandler;
 import zmaster587.libVulpes.common.CommonProxy;
+import zmaster587.libVulpes.event.BucketHandler;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.LibVulpesItems;
 import zmaster587.libVulpes.api.material.AllowedProducts;
@@ -372,6 +373,8 @@ public class LibVulpes {
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+		MinecraftForge.EVENT_BUS.register(new BucketHandler());
+		
 		//Init TileMultiblock
 		//Item output
 		List<BlockMeta> list = new LinkedList<BlockMeta>();
