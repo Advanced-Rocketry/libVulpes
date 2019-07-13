@@ -185,6 +185,8 @@ public class LibVulpes {
         LibVulpesBlocks.registerItem(LibVulpesItems.itemLinker);
         LibVulpesBlocks.registerItem(LibVulpesItems.itemBattery);
         LibVulpesBlocks.registerItem(LibVulpesItems.itemHoloProjector);
+        
+        OreDictionary.registerOre("itemBattery", new ItemStack(LibVulpesItems.itemBattery,1,0));
     }
     
 	@SideOnly(Side.CLIENT)
@@ -288,6 +290,12 @@ public class LibVulpes {
         }
         
         materialRegistry.registerOres(tabLibVulpesOres);
+        
+        //Ore dict stuff
+        OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockMotor);
+        OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockAdvancedMotor);
+        OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockEnhancedMotor);
+        OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockEliteMotor);
 	}
 
 	@EventHandler
@@ -362,13 +370,6 @@ public class LibVulpes {
 		PacketHandler.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 		proxy.registerEventHandlers();
-		
-        //Ore dict stuff
-        OreDictionary.registerOre("itemBattery", new ItemStack(LibVulpesItems.itemBattery,1,0));
-        OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockMotor);
-        OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockAdvancedMotor);
-        OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockEnhancedMotor);
-        OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockEliteMotor);
 	}
 
 	@EventHandler
