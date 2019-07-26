@@ -246,7 +246,7 @@ public class XMLRecipeLoader {
 		}
 		else if(node.getNodeName().equals("fluidStack")) {
 
-			String splitStr[] = node.getTextContent().split(" * ");
+			String splitStr[] = node.getTextContent().split("; ");
 			Fluid fluid;
 			if((fluid = FluidRegistry.getFluid(splitStr[0])) != null) {
 				int amount = 1000;
@@ -290,7 +290,7 @@ public class XMLRecipeLoader {
 		}
 
 		for(FluidStack stack : recipe.getFluidOutputs()) {
-			string += "\t\t\t<fluidStack>" + FluidRegistry.getDefaultFluidName(stack.getFluid()).split(":")[1] + " * " + stack.amount + "</fluidStack>\n";
+			string += "\t\t\t<fluidStack>" + FluidRegistry.getDefaultFluidName(stack.getFluid()).split(":")[1] + "; " + stack.amount + "</fluidStack>\n";
 		}
 
 		string += "\t\t</output>\n\t</Recipe>";
