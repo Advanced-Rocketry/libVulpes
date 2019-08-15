@@ -79,10 +79,11 @@ public class ClientProxy extends CommonProxy {
 		blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockEnhancedMotor));
 		blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockForgeInputPlug));
 		blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockForgeOutputPlug));
-		blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockIC2Plug));
+		if(LibVulpesBlocks.blockIC2Plug != null)
+			blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockIC2Plug));
 		blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockMotor));
-		blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockRFBattery));
-		blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockRFOutput));
+		//blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockRFBattery));
+		//blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockRFOutput));
 		blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockStructureBlock));
 		
 		for(Item blockItem2 : blockItems)
