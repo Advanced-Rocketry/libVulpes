@@ -55,11 +55,11 @@ public abstract class RecipeMachineFactory implements IRecipeFactory {
 				{
 					for(JsonElement element : itemResults.getAsJsonArray())
 					{
-						outputs.addAll(getIngredients(context, element));
+						outputs.addAll(getFirstIngredient(context, element));
 					}
 				}
 				else
-					outputs = getIngredients(context, itemResults);
+					outputs = getFirstIngredient(context, itemResults);
 			}
 			
 			JsonElement fluidIngredientElement = json.get("fluidingredients");
@@ -174,4 +174,17 @@ public abstract class RecipeMachineFactory implements IRecipeFactory {
 		return stacks;
 	}
 
+	List<ChanceItemStack> getFirstIngredient(JsonContext context, JsonElement json)
+	{
+		List<ChanceItemStack> stacks = getIngredients(context, json);
+		if(stacks.size() > 1)
+		{
+			ChanceItemStack stack  = stacks.get(0);
+			stacks = new LinkedList<ChanceItemStack>();
+			stacks.add(stack);
+		}
+		
+		
+		return stacks;
+	}
 }
