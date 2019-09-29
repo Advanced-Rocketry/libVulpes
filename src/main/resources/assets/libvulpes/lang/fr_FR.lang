@@ -25,7 +25,7 @@ material.Steel.name=Acier
 material.Titanium.name=Titane
 material.Rutile.name=Rutile
 
-type.crystal.name=Cristal
+type.gem.name=Cristal
 type.dust.name=Poussière
 type.boule.name=Barreau
 type.ingot.name=Lingot

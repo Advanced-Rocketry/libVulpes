@@ -31,7 +31,7 @@ tile.eliteMotor.name=精英马达
 
 item.holoProjector.name=全息投影器
 
-type.crystal.name=晶体
+type.gem.name=晶体
 type.dust.name=粉
 type.boule.name=球
 type.ingot.name=锭

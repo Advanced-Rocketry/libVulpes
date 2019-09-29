@@ -47,7 +47,7 @@ public class AllowedProducts {
 	private static List<AllowedProducts> list = new LinkedList<AllowedProducts>();
 	/*DUST,
 	INGOT,
-	CRYSTAL,
+	GEM,
 	BOULE,
 	NUGGET,
 	COIL(true, AdvancedRocketryBlocks.blockCoil),

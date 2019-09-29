@@ -35,7 +35,7 @@ msg.linker.error.firstMachine=Это должна быть первая маши
 msg.linker.program=Координаты запрограммированны в связывателе
 msg.linker.success=Связано успешно
 
-type.crystal.name=кристалл
+type.gem.name=кристалл
 type.dust.name=порошок
 type.boule.name=шар
 type.ingot.name=слиток

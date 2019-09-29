@@ -43,6 +43,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.RegistryEvent.MissingMappings.Mapping;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -297,6 +298,17 @@ public class LibVulpes {
         OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockEnhancedMotor);
         OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockEliteMotor);
 	}
+	
+	@SubscribeEvent(priority=EventPriority.HIGH)
+	public void missingMappings(RegistryEvent.MissingMappings<Item> evt)
+	{
+		for(Mapping<Item> mapping : evt.getAllMappings())
+		{
+			if (mapping.key.compareTo(new ResourceLocation("libvulpes:productcrystal")) == 0)
+				mapping.remap(MaterialRegistry.getItemStackFromMaterialAndType("Dilithium", AllowedProducts.getProductByName("GEM")).getItem());
+			
+		}
+	}
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -317,7 +329,7 @@ public class LibVulpes {
 
         /*DUST,
         INGOT,
-        CRYSTAL,
+        GEM,
         BOULE,
         NUGGET,
         COIL(true, AdvancedRocketryBlocks.blockCoil),
@@ -332,7 +344,7 @@ public class LibVulpes {
         //Register allowedProducts
         AllowedProducts.registerProduct("DUST");
         AllowedProducts.registerProduct("INGOT");
-        AllowedProducts.registerProduct("CRYSTAL");
+        AllowedProducts.registerProduct("GEM");
         AllowedProducts.registerProduct("BOULE");
         AllowedProducts.registerProduct("NUGGET");
         AllowedProducts.registerProduct("COIL", true);
@@ -346,7 +358,7 @@ public class LibVulpes {
 
         //Register Ores
 
-        materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Dilithium", "pickaxe", 3, 0xddcecb, AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("CRYSTAL").getFlagValue()));
+        materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Dilithium", "pickaxe", 3, 0xddcecb, AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("GEM").getFlagValue()));
         materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Iron", "pickaxe", 1, 0xafafaf, AllowedProducts.getProductByName("SHEET").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue(), false));
         materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Gold", "pickaxe", 1, 0xffff5d, AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("COIL").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue(), false));
         materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("Silicon", "pickaxe", 1, 0x2c2c2b, AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("BOULE").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue(), false));
