@@ -18,7 +18,7 @@ buildscript {
 plugins {
   id "com.gradle.build-scan" version "1.9"
   id "com.matthewprenger.cursegradle" version "1.0.9"
-  id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.50"
+  id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.64"
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -28,7 +28,7 @@ apply from: "gradle/scripts/getbuildnumber.gradle"
 sourceCompatibility = 8
 targetCompatibility = 8
 minecraft {
-    version = "1.12.2-14.23.0.2501"
+    version = "1.12.2-14.23.4.2739"
     runDir = "run"
     mappings = "snapshot_20170624"
     sourceCompatibility = 1.8
