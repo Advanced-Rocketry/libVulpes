@@ -178,25 +178,28 @@ public class XMLRecipeLoader {
 	public Object parseItemType(Node node, boolean output) {
 		if(node.getNodeName().equals("itemStack")) {
 			String text = node.getTextContent();
-			String splitStr[] = text.split(" ");
+			//Backwards compat, " " used to be the delimiter
+			String[] splitStr = text.contains(";") ? text.split(";") : text.split(" ");
+			String name = splitStr[0].trim();
+			
 			int meta = 0;
 			int size = 1;
 			//format: "name meta size"
 			if(splitStr.length > 1) {
 				try {
-					size = Integer.parseInt(splitStr[1]);
+					size = Integer.parseInt(splitStr[1].trim());
 				} catch( NumberFormatException e) {}
 			}
 			if(splitStr.length > 2) {
 				try {
-					meta= Integer.parseInt(splitStr[2]);
+					meta= Integer.parseInt(splitStr[2].trim());
 				} catch (NumberFormatException e) {}
 			}
 
 			ItemStack stack = null;
-			Block block = Block.getBlockFromName(splitStr[0]);
+			Block block = Block.getBlockFromName(name);
 			if(block == null) {
-				Item item = Item.getByNameOrId(splitStr[0]);
+				Item item = Item.getByNameOrId(name);
 				if(item != null)
 					stack = new ItemStack(item, size, meta);
 			}
@@ -206,43 +209,52 @@ public class XMLRecipeLoader {
 			return stack;
 		}
 		else if(node.getNodeName().equals("oreDict")) {
+			
+			String text = node.getTextContent();
+			//Backwards compat, " " used to be the delimiter
+			String[] splitStr = text.contains(";") ? text.split(";") : text.split(" ");
+			String name = splitStr[0].trim();
+			if(OreDictionary.doesOreNameExist(name)) {
 
-			String splitStr[] = node.getTextContent().split(" ");
-			if(OreDictionary.doesOreNameExist(splitStr[0])) {
-
-				Object ret = splitStr[0];
+				
+				Object ret = name;
 				int number = 1;
 				if(splitStr.length > 1) {
 
 					try {
-						number = Integer.parseInt(splitStr[1]);
+						number = Integer.parseInt(splitStr[1].trim());
 					} catch (NumberFormatException e) {}
 				}
 
 				if(splitStr.length >= 1) {
 					if(output) {
-						List<ItemStack> list = OreDictionary.getOres(splitStr[0]);
+						List<ItemStack> list = OreDictionary.getOres(name);
 						if(!list.isEmpty()) {
-							ItemStack oreDict = OreDictionary.getOres(splitStr[0]).get(0);
+							ItemStack oreDict = OreDictionary.getOres(name).get(0);
 							ret = new ItemStack(oreDict.getItem(), number, oreDict.getMetadata());
 						}
 					}
 					else
-						ret = new NumberedOreDictStack(splitStr[0], number);
+						ret = new NumberedOreDictStack(name, number);
 				}
 
 				return ret;
 			}
 		}
 		else if(node.getNodeName().equals("fluidStack")) {
-
-			String splitStr[] = node.getTextContent().split(" ");
+			
+			String text = node.getTextContent();
+			String splitStr[];
+			
+			//Backwards compat, " " used to be the delimiter
+			splitStr = text.contains(";") ? text.split(";") : text.split(" ");
+			
 			Fluid fluid;
-			if((fluid = FluidRegistry.getFluid(splitStr[0])) != null) {
+			if((fluid = FluidRegistry.getFluid(splitStr[0].trim())) != null) {
 				int amount = 1000;
 				if(splitStr.length > 1) {
 					try {
-						amount = Integer.parseInt(splitStr[1]);
+						amount = Integer.parseInt(splitStr[1].trim());
 					} catch (NumberFormatException e) {}
 				}
 
@@ -262,24 +274,24 @@ public class XMLRecipeLoader {
 				ItemStack stack = stackList.get(0);
 				String oreStr = recipe.getOreDictString(index++);
 				if(oreStr != null) {
-					string += "\t\t\t<oreDict>" + oreStr + (stack.getCount() > 1 ? (" " + stack.getCount()) : "") + "</oreDict>\n";
+					string += "\t\t\t<oreDict>" + oreStr + (stack.getCount() > 1 ? (";" + stack.getCount()) : "") + "</oreDict>\n";
 				}
 				else {
-					string += "\t\t\t<itemStack>" + stack.getItem().delegate.name() + (stack.getCount() > 1 ? (" " + stack.getCount()) : (stack.getItemDamage() > 0 ? " 1" : "") ) + (stack.getItemDamage() > 0 ? (" " + stack.getItemDamage()) : "") +  "</itemStack>\n";
+					string += "\t\t\t<itemStack>" + stack.getItem().delegate.name() + (stack.getCount() > 1 ? (";" + stack.getCount()) : (stack.getItemDamage() > 0 ? ";1" : "") ) + (stack.getItemDamage() > 0 ? (";" + stack.getItemDamage()) : "") +  "</itemStack>\n";
 				}
 			}
 		}
 		for(FluidStack stack : recipe.getFluidIngredients()) {
-			string += "\t\t\t<fluidStack>" + FluidRegistry.getDefaultFluidName(stack.getFluid()).split(":")[1] + " " + stack.amount + "</fluidStack>\n";
+			string += "\t\t\t<fluidStack>" + FluidRegistry.getDefaultFluidName(stack.getFluid()).split(":")[1] + ";" + stack.amount + "</fluidStack>\n";
 		}
 		string += "\t\t</input>\n\t\t<output>\n";
 
 		for(ItemStack stack : recipe.getOutput()) {
-			string += "\t\t\t<itemStack>" + stack.getItem().delegate.name() + (stack.getCount() > 1 ? (" " + stack.getCount()) : (stack.getItemDamage() > 0 ? " 1" : "") ) + (stack.getItemDamage() > 0 ? (" " + stack.getItemDamage()) : "") +  "</itemStack>\n";
+			string += "\t\t\t<itemStack>" + stack.getItem().delegate.name() + (stack.getCount() > 1 ? (";" + stack.getCount()) : (stack.getItemDamage() > 0 ? ";1" : "") ) + (stack.getItemDamage() > 0 ? (";" + stack.getItemDamage()) : "") +  "</itemStack>\n";
 		}
 
 		for(FluidStack stack : recipe.getFluidOutputs()) {
-			string += "\t\t\t<fluidStack>" + FluidRegistry.getDefaultFluidName(stack.getFluid()).split(":")[1] + " " + stack.amount + "</fluidStack>\n";
+			string += "\t\t\t<fluidStack>" + FluidRegistry.getDefaultFluidName(stack.getFluid()).split(":")[1] + ";" + stack.amount + "</fluidStack>\n";
 		}
 
 		string += "\t\t</output>\n\t</Recipe>";
