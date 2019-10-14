@@ -245,14 +245,19 @@ public class XMLRecipeLoader {
 			}
 		}
 		else if(node.getNodeName().equals("fluidStack")) {
-
-			String splitStr[] = node.getTextContent().split(" ");
+			
+			String text = node.getTextContent();
+			String splitStr[];
+			
+			//Backwards compat, " " used to be the delimiter
+			splitStr = text.contains(";") ? text.split(";") : text.split(" ");
+			
 			Fluid fluid;
-			if((fluid = FluidRegistry.getFluid(splitStr[0])) != null) {
+			if((fluid = FluidRegistry.getFluid(splitStr[0].trim())) != null) {
 				int amount = 1000;
 				if(splitStr.length > 1) {
 					try {
-						amount = Integer.parseInt(splitStr[1]);
+						amount = Integer.parseInt(splitStr[1].trim());
 					} catch (NumberFormatException e) {}
 				}
 
@@ -281,7 +286,7 @@ public class XMLRecipeLoader {
 			}
 		}
 		for(FluidStack stack : recipe.getFluidIngredients()) {
-			string += "\t\t\t<fluidStack>" + FluidRegistry.getDefaultFluidName(stack.getFluid()).split(":")[1] + " " + stack.amount + "</fluidStack>\n";
+			string += "\t\t\t<fluidStack>" + FluidRegistry.getDefaultFluidName(stack.getFluid()).split(":")[1] + ";" + stack.amount + "</fluidStack>\n";
 		}
 		string += "\t\t</input>\n\t\t<output>\n";
 
