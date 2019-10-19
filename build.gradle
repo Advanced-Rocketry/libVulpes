@@ -73,7 +73,8 @@ dependencies {
     compile 'codechicken:NotEnoughItems:1.7.10-1.0.4.95:dev'
     compile name: 'industrialcraft-2', version: '2.2.827-experimental-api', ext: 'jar'
     
-    compile name: 'CoFHCore', version: '[1.7.10]3.0.3-303', ext: 'jar'
+    // gotta get it manually now, RIP downloading from curseforge, their examples don't even work now
+    //compile name: 'CoFHCore', version: '[1.7.10]3.0.3-303', ext: 'jar'
     //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
 
     // for more info...
