@@ -1,5 +1,10 @@
 package zmaster587.libVulpes.util;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -14,6 +19,8 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import zmaster587.libVulpes.event.BucketHandler;
 
 public class FluidUtils {
+	
+	private static Map<String, List<String>> fluidEquivilentMapping = new HashMap<String, List<String>>();
 
 	public static boolean containsFluid(ItemStack stack) {
 		return stack != null && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
@@ -133,7 +140,37 @@ public class FluidUtils {
 		return false;
 	}
 	
+	public static void addFluidMapping(Fluid in, String altName)
+	{
+		String fluidKeyName = in.getName();
+		addFluidMapping(fluidKeyName, altName);
+		addFluidMapping(altName, fluidKeyName);
+	}
+	
+	private static void addFluidMapping(String in, String altName)
+	{
+		String fluidKeyName = in;
+		List<String> mappedValues;
+		if(!fluidEquivilentMapping.containsKey(fluidKeyName))
+		{
+			mappedValues = new LinkedList<String>();
+			fluidEquivilentMapping.put(fluidKeyName, mappedValues);
+		}
+		else
+			mappedValues = fluidEquivilentMapping.get(fluidKeyName);
+		
+		mappedValues.add(altName);
+	}
+	
 	public static boolean areFluidsSameType(Fluid in, Fluid otherFluid) {
-		return in != null && otherFluid != null && in.getName().equals(otherFluid.getName());
+		if(in == null || otherFluid == null)
+			return false;
+		String inFluidName = in.getName();
+		String otherFluidName = otherFluid.getName();
+		
+		if(inFluidName.equals(otherFluidName))
+			return true;
+		
+		return fluidEquivilentMapping.containsKey(inFluidName) && fluidEquivilentMapping.get(inFluidName).contains(otherFluidName);
 	}
 }
