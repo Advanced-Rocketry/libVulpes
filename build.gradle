@@ -131,10 +131,10 @@ curseforge{
     releaseType = "beta"
     addGameVersion minecraft.version
     mainArtifact(jar) {
-      displayName = "LibVulpes ${project.version}-UNSTABLE build " + project.getBuildNumber() +  " for " + minecraft.version
+      displayName = "LibVulpes ${project.version} build " + project.getBuildNumber() +  " for " + minecraft.version
     }
     addArtifact (deobfJar){
-    	 displayName = "LibVulpes ${project.version}-UNSTABLE-deobf build " + project.getBuildNumber() + " for " + minecraft.version
+    	 displayName = "LibVulpes ${project.version}-deobf build " + project.getBuildNumber() + " for " + minecraft.version
     }
    }
 }
@@ -147,7 +147,6 @@ task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     gitHubIssuePattern = "nonada123";
     templateContent = """
 {{#tags}}
-<h1> Highly untested and may break world</h1>
   <h3>{{name}}</h3>
   <ul>
     {{#commits}}
