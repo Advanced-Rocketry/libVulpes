@@ -189,6 +189,10 @@ public class RenderHelper {
     }*/
 
 	public static void renderTag(double distanceSq, String displayString, double x, double y, double z, int sizeOnScreen) {
+		renderTag(distanceSq, displayString, x,y,z, 1);
+	}
+	
+	public static void renderTag(double distanceSq, String displayString, double x, double y, double z, int sizeOnScreen, float scale) {
 		double d3 = distanceSq;
 
 		Minecraft mc = Minecraft.getMinecraft();
@@ -196,7 +200,7 @@ public class RenderHelper {
 		if (d3 <= (double)(sizeOnScreen * sizeOnScreen))
 		{
 			FontRenderer fontrenderer = mc.fontRenderer;
-			float f = 1.6F;
+			float f = 1.6F*scale;
 			float f1 = 0.016666668F * f;
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float)x + 0.0F, (float)y + 0.5F, (float)z);
