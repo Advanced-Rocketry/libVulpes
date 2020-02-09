@@ -189,7 +189,7 @@ public class RenderHelper {
     }*/
 
 	public static void renderTag(double distanceSq, String displayString, double x, double y, double z, int sizeOnScreen) {
-		renderTag(distanceSq, displayString, x,y,z, 1);
+		renderTag(distanceSq, displayString, x,y,z, 6, 1);
 	}
 	
 	public static void renderTag(double distanceSq, String displayString, double x, double y, double z, int sizeOnScreen, float scale) {
