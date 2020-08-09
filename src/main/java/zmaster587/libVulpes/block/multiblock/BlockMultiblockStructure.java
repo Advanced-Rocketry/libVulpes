@@ -3,16 +3,12 @@ package zmaster587.libVulpes.block.multiblock;
 import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.state.IntegerProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 /**
@@ -22,26 +18,16 @@ import net.minecraft.world.World;
  */
 public class BlockMultiblockStructure extends Block {
 	
-	public static final PropertyInteger VARIANT = PropertyInteger.create("varient", 0, 15);
-	protected BlockMultiblockStructure(Material material) {
-		super(material);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT,0));
+	public static final IntegerProperty VARIANT = IntegerProperty.create("varient", 0, 15);
+	protected BlockMultiblockStructure(Properties properties) {
+		super(properties);
+		this.setDefaultState(this.stateContainer.getBaseState().with(VARIANT,0));
 	}
-	
-    protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer(this, new IProperty[] {VARIANT});
-    }
-	
-    @Override
-    public int getMetaFromState(IBlockState state) {
-    	return state.getValue(VARIANT);
-    }
-    
-    @Override
-    public IBlockState getStateFromMeta(int meta) {
-    	return this.blockState.getBaseState().withProperty(VARIANT,meta);
-    }
+
+	@Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+	      builder.add(VARIANT);
+	   }
     
 	/**
 	 * Turns the block invisible or in the case of BlockMultiBlockComponentVisible makes it create a tileEntity
@@ -51,38 +37,34 @@ public class BlockMultiblockStructure extends Block {
 	 * @param z
 	 * @param meta
 	 */
-	public void hideBlock(World world, BlockPos pos, IBlockState state) {
-		world.setBlockState(pos, state.withProperty(VARIANT, state.getValue(VARIANT) | 8));
+	public void hideBlock(World world, BlockPos pos, BlockState state) {
+		world.setBlockState(pos, state.with(VARIANT, state.get(VARIANT) | 8));
 	}
 	
-	@Override
-	public int damageDropped(IBlockState state) {
-		return state.getValue(VARIANT) & 7;
-	}
+	// loot tables
+	/*@Override
+	public int damageDropped(BlockState state) {
+		return state.get(VARIANT) & 7;
+	}*/
 	
-	public void completeStructure(World world, BlockPos pos, IBlockState state) {
+	public void completeStructure(World world, BlockPos pos, BlockState state) {
 		
 	}
 
-	public void destroyStructure(World world, BlockPos pos, IBlockState state) {
-		world.setBlockState(pos, state.withProperty(VARIANT, state.getValue(VARIANT) & 7));
+	public void destroyStructure(World world, BlockPos pos, BlockState state) {
+		world.setBlockState(pos, state.with(VARIANT, state.get(VARIANT) & 7));
 	}
-
+	
 	@Override
-	public boolean shouldSideBeRendered(IBlockState blockState,
-			IBlockAccess blockAccess, BlockPos pos, EnumFacing direction) {
+	public boolean isSideInvisible(net.minecraft.block.BlockState state,
+			net.minecraft.block.BlockState adjacentBlockState, Direction side) {
 		
-		return super.shouldSideBeRendered(blockState, blockAccess, pos, direction) && blockState.getValue(VARIANT) < 8;
+		return super.isSideInvisible(state, adjacentBlockState, side) && (state.get(VARIANT) & 8) != 0;
 	}
 	
 	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-	
-	@Override
-	public void breakBlock(World world, BlockPos pos,
-			IBlockState state) {
+	public void onReplaced(net.minecraft.block.BlockState state, World world, BlockPos pos,
+			net.minecraft.block.BlockState newState, boolean isMoving) {
 		
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof IMultiblock) {
@@ -93,6 +75,7 @@ public class BlockMultiblockStructure extends Block {
 					((TileMultiBlock)tileMulti.getMasterBlock()).deconstructMultiBlock(world, pos,true, world.getBlockState(tileMulti.getMasterBlock().getPos()));
 			}
 		}
-		super.breakBlock(world, pos, state);
+		
+		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 }

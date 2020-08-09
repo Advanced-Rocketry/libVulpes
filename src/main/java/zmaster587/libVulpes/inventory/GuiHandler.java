@@ -1,15 +1,15 @@
 package zmaster587.libVulpes.inventory;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.IGuiHandler;
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.inventory.modules.IModularInventory;
+import net.minecraftforge.fml.DistExecutor;
+import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 
-public class GuiHandler implements IGuiHandler {
+public class GuiHandler {
 
 	public enum guiId {
 		MODULAR,
@@ -18,9 +18,38 @@ public class GuiHandler implements IGuiHandler {
 		MODULARFULLSCREEN
 	}
 
-	//X coord is entity ID num if entity
+	
+	public static TileEntity getTeFromBuf(PacketBuffer buf) {
+		return DistExecutor.runForDist(() -> () -> {
+			BlockPos pos = buf.readBlockPos();
+			return Minecraft.getInstance().world.getTileEntity(pos);
+		}, () -> () -> {
+			throw new RuntimeException("This should not be called on a server!");
+		});
+	}
+
+	public static ItemStack getHeldFromBuf(PacketBuffer buf) {
+		return DistExecutor.runForDist(() -> () -> {
+			Hand hand = buf.readBoolean() ? Hand.MAIN_HAND : Hand.OFF_HAND;
+			return Minecraft.getInstance().player.getHeldItem(hand);
+		}, () -> () -> {
+			throw new RuntimeException("This should not be called on a server!");
+		});
+	}
+	
+	public static boolean doesIncludePlayerInv(int ID)
+	{
+		return ID == guiId.MODULAR.ordinal();
+	}
+	
+	public static boolean doesIncludeHotBar(int ID)
+	{
+		return ID != guiId.MODULARFULLSCREEN.ordinal() && ID != guiId.MODULARCENTEREDFULLSCREEN.ordinal();
+	}
+	
+	/*//X coord is entity ID num if entity
 	@Override
-	public Object getServerGuiElement(int ID, EntityPlayer player, World world,
+	public Object getServerGuiElement(int ID, PlayerEntity player, World world,
 			int x, int y, int z) {
 
 		Object tile;
@@ -29,14 +58,14 @@ public class GuiHandler implements IGuiHandler {
 		if(y > -1)
 			tile = world.getTileEntity(pos);
 		else if(x == -1) {
-			ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
+			ItemStack stack = player.getHeldItem(Hand.MAIN_HAND);
 			
 			//If there is latency or some desync odd things can happen so check for that
 			if(stack == null || !(stack.getItem() instanceof IModularInventory)) {
 				return null;
 			}
 			
-			tile = player.getHeldItem(EnumHand.MAIN_HAND).getItem();
+			tile = player.getHeldItem(Hand.MAIN_HAND).getItem();
 		}
 		else
 			tile = world.getEntityByID(x);
@@ -48,7 +77,7 @@ public class GuiHandler implements IGuiHandler {
 	}
 
 	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world,
+	public Object getClientGuiElement(int ID, PlayerEntity player, World world,
 			int x, int y, int z) {
 
 		Object tile;
@@ -57,14 +86,14 @@ public class GuiHandler implements IGuiHandler {
 		if(y > -1)
 			tile = world.getTileEntity(pos);
 		else if(x == -1) {
-			ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
+			ItemStack stack = player.getHeldItem(Hand.MAIN_HAND);
 			
 			//If there is latency or some desync odd things can happen so check for that
 			if(stack == null || !(stack.getItem() instanceof IModularInventory)) {
 				return null;
 			}
 			
-			tile = player.getHeldItem(EnumHand.MAIN_HAND).getItem();
+			tile = player.getHeldItem(Hand.MAIN_HAND).getItem();
 		}
 		else
 			tile = world.getEntityByID(x);
@@ -78,6 +107,6 @@ public class GuiHandler implements IGuiHandler {
 			return new GuiModularFullScreen(player,modularTile.getModules(ID, player), modularTile, ID == guiId.MODULAR.ordinal(), false, modularTile.getModularInventoryName());
 		}
 		return null;
-	}
+	}*/
 
 }

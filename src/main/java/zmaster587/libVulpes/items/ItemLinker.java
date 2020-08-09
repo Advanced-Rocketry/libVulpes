@@ -3,19 +3,18 @@ package zmaster587.libVulpes.items;
 import java.util.List;
 
 import zmaster587.libVulpes.interfaces.ILinkableTile;
-import zmaster587.libVulpes.tile.IMultiblock;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
 public class ItemLinker extends Item {
@@ -23,11 +22,10 @@ public class ItemLinker extends Item {
 	protected int linkX,linkY,linkZ, dimId;
 	private final static int EMPTYSETTING = 0;
 
-	public ItemLinker() {
-		super();
-
-		this.maxStackSize = 1;
-		this.setCreativeTab(CreativeTabs.TRANSPORTATION);
+	public ItemLinker(Properties properties) {
+		super(properties);
+		properties.maxStackSize(1);
+		properties.group(ItemGroup.TRANSPORTATION);
 		dimId = 0;
 	}
 
@@ -38,15 +36,15 @@ public class ItemLinker extends Item {
 		int y = getMasterY(par1ItemStack);
 
 		if(y == 0){
-			par3List.add("Coords unset!");
+			par3List.add(new StringTextComponent("Coords unset!"));
 		}
 		else {
-			par3List.add("X: " + getMasterX(par1ItemStack));
-			par3List.add("Y: " + getMasterY(par1ItemStack));
-			par3List.add("Z: " + getMasterZ(par1ItemStack));
+			par3List.add(new StringTextComponent("X: " + getMasterX(par1ItemStack)));
+			par3List.add(new StringTextComponent("Y: " + getMasterY(par1ItemStack)));
+			par3List.add(new StringTextComponent("Z: " + getMasterZ(par1ItemStack)));
 			int dimId = getDimId(par1ItemStack);
 			if(dimId != -1)
-				par3List.add("Dim: " + dimId);
+				par3List.add(new StringTextComponent("Dim: " + dimId));
 		}
 	}
 
@@ -56,91 +54,91 @@ public class ItemLinker extends Item {
 
 	@Deprecated
 	public static int getMasterX(ItemStack itemStack) {
-		NBTTagCompound nbt = itemStack.getTagCompound();
-		nbt = nbt.getCompoundTag("MasterPos");
+		CompoundNBT nbt = itemStack.getTag();
+		nbt = nbt.getCompound("MasterPos");
 
-		return nbt.getInteger("MasterX");
+		return nbt.getInt("MasterX");
 	}
 	@Deprecated
 	public static int getMasterY(ItemStack itemStack) {
-		NBTTagCompound nbt = itemStack.getTagCompound();
+		CompoundNBT nbt = itemStack.getTag();
 
 		if(nbt == null)
 			return 0;
 
-		nbt = nbt.getCompoundTag("MasterPos");
+		nbt = nbt.getCompound("MasterPos");
 
-		return nbt.getInteger("MasterY");
+		return nbt.getInt("MasterY");
 	}
 	@Deprecated
 	public static int getMasterZ(ItemStack itemStack) {
-		NBTTagCompound nbt = itemStack.getTagCompound();
-		nbt = nbt.getCompoundTag("MasterPos");
+		CompoundNBT nbt = itemStack.getTag();
+		nbt = nbt.getCompound("MasterPos");
 
-		return nbt.getInteger("MasterZ");
+		return nbt.getInt("MasterZ");
 	}
 	
 	public static void setDimId(ItemStack itemStack, int id) {
-		NBTTagCompound nbt;
-		if(!itemStack.hasTagCompound()) {
-			nbt = new NBTTagCompound();
-			itemStack.setTagCompound(nbt);
+		CompoundNBT nbt;
+		if(!itemStack.hasTag()) {
+			nbt = new CompoundNBT();
+			itemStack.setTag(nbt);
 		}
 		else
-			nbt = itemStack.getTagCompound();
+			nbt = itemStack.getTag();
 		
-		nbt.setInteger("dimId", id);
+		nbt.putInt("dimId", id);
 		
 	}
 	
 	public static int getDimId(ItemStack itemStack) {
-		NBTTagCompound nbt;
-		if(!itemStack.hasTagCompound()) {
-			nbt = new NBTTagCompound();
+		CompoundNBT nbt;
+		if(!itemStack.hasTag()) {
+			nbt = new CompoundNBT();
 		}
 		else
-			nbt = itemStack.getTagCompound();
+			nbt = itemStack.getTag();
 		
-		return nbt.hasKey("dimId") ? nbt.getInteger("dimId") : -1;
+		return nbt.hasUniqueId("dimId") ? nbt.getInt("dimId") : -1;
 		
 	}
 
 	public static void setMasterX(ItemStack itemStack, int num) {
-		NBTTagCompound nbt = itemStack.getTagCompound();
-		nbt = nbt.getCompoundTag("MasterPos");
+		CompoundNBT nbt = itemStack.getTag();
+		nbt = nbt.getCompound("MasterPos");
 
-		nbt.setInteger("MasterX", num);
+		nbt.putInt("MasterX", num);
 	}
 
 	public static void setMasterY(ItemStack itemStack, int num) {
-		NBTTagCompound nbt = itemStack.getTagCompound();
-		nbt = nbt.getCompoundTag("MasterPos");
+		CompoundNBT nbt = itemStack.getTag();
+		nbt = nbt.getCompound("MasterPos");
 
-		nbt.setInteger("MasterY", num);
+		nbt.putInt("MasterY", num);
 	}
 
 	public static void setMasterZ(ItemStack itemStack, int num) {
-		NBTTagCompound nbt = itemStack.getTagCompound();
-		nbt = nbt.getCompoundTag("MasterPos");
+		CompoundNBT nbt = itemStack.getTag();
+		nbt = nbt.getCompound("MasterPos");
 
-		nbt.setInteger("MasterZ", num);
+		nbt.putInt("MasterZ", num);
 	}
 
 	public static void setMasterCoords(ItemStack stack , int x, int y, int z) {
-		NBTTagCompound nbt;
-		if(!stack.hasTagCompound()) {
-			nbt = new NBTTagCompound();
-			stack.setTagCompound(nbt);
+		CompoundNBT nbt;
+		if(!stack.hasTag()) {
+			nbt = new CompoundNBT();
+			stack.setTag(nbt);
 		}
 		else {
-			nbt = stack.getTagCompound();
+			nbt = stack.getTag();
 		}
-		NBTTagCompound tag = new NBTTagCompound();
+		CompoundNBT tag = new CompoundNBT();
 		
-		tag.setInteger("MasterX", x);
-		tag.setInteger("MasterY", y);
-		tag.setInteger("MasterZ", z);
-		nbt.setTag("MasterPos", tag);
+		tag.putInt("MasterX", x);
+		tag.putInt("MasterY", y);
+		tag.putInt("MasterZ", z);
+		nbt.put("MasterPos", tag);
 	}
 	
 	public static void setMasterCoords(ItemStack stack, BlockPos pos) {
@@ -148,30 +146,34 @@ public class ItemLinker extends Item {
 	}
 
 	public static BlockPos getMasterCoords(ItemStack stack ) {
-		if(!stack.hasTagCompound()) {
+		if(!stack.hasTag()) {
 
-			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setTag("MasterPos", new NBTTagCompound());
-			stack.setTagCompound(nbt);
+			CompoundNBT nbt = new CompoundNBT();
+			nbt.put("MasterPos", new CompoundNBT());
+			stack.setTag(nbt);
 		}
 		
 		return new BlockPos(getMasterX(stack),getMasterY(stack),getMasterZ(stack));
 	}
 	
 	public static void resetPosition(ItemStack itemStack) {
-		NBTTagCompound position = new NBTTagCompound();
+		CompoundNBT position = new CompoundNBT();
 
-		position.setInteger("MasterX", EMPTYSETTING);
-		position.setInteger("MasterY", EMPTYSETTING);
-		position.setInteger("MasterZ", EMPTYSETTING);
-		position.setInteger("dimId", -1);
+		position.putInt("MasterX", EMPTYSETTING);
+		position.putInt("MasterY", EMPTYSETTING);
+		position.putInt("MasterZ", EMPTYSETTING);
+		position.putInt("dimId", -1);
 
 		itemStack.setTagInfo("MasterPos", position);
 	}
+	
+	
 	@Override
-	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn,
-			BlockPos pos, EnumHand hand, EnumFacing facing, float hitX,
-			float hitY, float hitZ) {
+	public ActionResultType onItemUse(ItemUseContext context) {
+		World worldIn = context.getWorld();
+		BlockPos pos = context.getPos();
+		PlayerEntity playerIn = context.getPlayer();
+		Hand hand = context.getHand();
 		
 		TileEntity entity = worldIn.getTileEntity(pos);
 
@@ -180,18 +182,18 @@ public class ItemLinker extends Item {
 		if(entity != null) {
 			if(entity instanceof ILinkableTile) {
 				applySettings(stack, (ILinkableTile)entity, playerIn, worldIn);
-				return EnumActionResult.SUCCESS;
+				return ActionResultType.SUCCESS;
 			}
 		}
 		else if(playerIn.isSneaking()) {
 			resetPosition(stack);
-			return EnumActionResult.SUCCESS;
+			return ActionResultType.SUCCESS;
 		}
 
-		return EnumActionResult.FAIL;
+		return ActionResultType.FAIL;
 	}
 
-	protected void applySettings(ItemStack itemStack, ILinkableTile pad, EntityPlayer player, World world) {
+	protected void applySettings(ItemStack itemStack, ILinkableTile pad, PlayerEntity player, World world) {
 		if(!isSet(itemStack)) 
 			pad.onLinkStart(itemStack, (TileEntity)pad, player, world);
 		else

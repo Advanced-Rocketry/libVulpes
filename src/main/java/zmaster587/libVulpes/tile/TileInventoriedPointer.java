@@ -1,13 +1,18 @@
 package zmaster587.libVulpes.tile;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 
 public class TileInventoriedPointer extends TilePointer implements IInventoryMultiblock, ISidedInventory {
+
+	public TileInventoriedPointer(TileEntityType<?> type) {
+		super(type);
+	}
 
 	@Override
 	public int getSizeInventory() {
@@ -41,22 +46,6 @@ public class TileInventoriedPointer extends TilePointer implements IInventoryMul
 	}
 
 	@Override
-	public String getName() {
-		TileEntity e = world.getTileEntity(masterBlockPos);
-		if(e != null && e instanceof IInventory)
-			return ((IInventory)e).getName();
-		return null;
-	}
-
-	@Override
-	public boolean hasCustomName() {
-		TileEntity e = world.getTileEntity(masterBlockPos);
-		if(e != null && e instanceof IInventory)
-			return ((IInventory)e).hasCustomName();
-		return false;
-	}
-
-	@Override
 	public int getInventoryStackLimit() {
 		TileEntity e = world.getTileEntity(masterBlockPos);
 		if(e != null && e instanceof IInventory)
@@ -65,7 +54,7 @@ public class TileInventoriedPointer extends TilePointer implements IInventoryMul
 	}
 	
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer entityplayer) {
+	public boolean isUsableByPlayer(PlayerEntity entityplayer) {
 		TileEntity e = world.getTileEntity(masterBlockPos);
 		if(e != null && e instanceof IInventory)
 			return ((IInventory)e).isUsableByPlayer(entityplayer);
@@ -81,14 +70,14 @@ public class TileInventoriedPointer extends TilePointer implements IInventoryMul
 	}
 	
 	@Override
-	public void openInventory(EntityPlayer player) {
+	public void openInventory(PlayerEntity player) {
 		TileEntity e = world.getTileEntity(masterBlockPos);
 		if(e != null && e instanceof IInventory)
 			((IInventory)e).openInventory(player);
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer player) {
+	public void closeInventory(PlayerEntity player) {
 		TileEntity e = world.getTileEntity(masterBlockPos);
 		if(e != null && e instanceof IInventory)
 			((IInventory)e).closeInventory(player);
@@ -103,7 +92,7 @@ public class TileInventoriedPointer extends TilePointer implements IInventoryMul
 	}
 	
 	@Override
-	public int[] getSlotsForFace(EnumFacing side) {
+	public int[] getSlotsForFace(Direction side) {
 		TileEntity e = world.getTileEntity(masterBlockPos);
 		if(e != null && e instanceof ISidedInventory)
 			return ((ISidedInventory)e).getSlotsForFace(side);
@@ -120,7 +109,7 @@ public class TileInventoriedPointer extends TilePointer implements IInventoryMul
 	}
 	
 	@Override
-	public boolean canInsertItem(int i, ItemStack itemstack, EnumFacing direction) {
+	public boolean canInsertItem(int i, ItemStack itemstack, Direction direction) {
 		TileEntity e = world.getTileEntity(masterBlockPos);
 		if(e != null && e instanceof ISidedInventory)
 			return ((ISidedInventory)e).canInsertItem(i,itemstack, direction);
@@ -128,7 +117,7 @@ public class TileInventoriedPointer extends TilePointer implements IInventoryMul
 	}
 
 	@Override
-	public boolean canExtractItem(int i, ItemStack itemstack, EnumFacing direction) {
+	public boolean canExtractItem(int i, ItemStack itemstack, Direction direction) {
 		TileEntity e = world.getTileEntity(masterBlockPos);
 		if(e != null && e instanceof ISidedInventory)
 			return ((ISidedInventory)e).canExtractItem(i,itemstack, direction);
@@ -144,22 +133,7 @@ public class TileInventoriedPointer extends TilePointer implements IInventoryMul
 		
 		return null;
 	}
-
-	@Override
-	public int getField(int id) {
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value) {
-		
-	}
-
-	@Override
-	public int getFieldCount() {
-		return 0;
-	}
-
+	
 	@Override
 	public void clear() {
 		

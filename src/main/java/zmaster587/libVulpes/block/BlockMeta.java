@@ -1,52 +1,52 @@
 package zmaster587.libVulpes.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 
 public class BlockMeta {
-	Block block;
-	int meta;
+	BlockState block;
+	boolean wildcard;
 	public static final int WILDCARD = -1;
 
-	public BlockMeta(Block block, int meta) {
+	public BlockMeta(BlockState block, boolean wildcard) {
 		this.block = block;
-		this.meta = meta;
+		this.wildcard = wildcard;
 	}
 
 
-	public BlockMeta(Block block) {
+	public BlockMeta(BlockState block) {
 		this.block = block;
-		this.meta = WILDCARD;
+		this.wildcard = false;
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
 
 		if(obj instanceof BlockMeta) {
-			return ((BlockMeta)obj).block == block && ( meta == -1 || ((BlockMeta)obj).meta == -1 || ((BlockMeta)obj).meta == meta);
+			return ((BlockMeta)obj).block.getBlock() == block.getBlock() && ( wildcard || ((BlockMeta)obj).wildcard || ((BlockMeta)obj).block == block);
 		}
 		return super.equals(obj);
 	}
 
 	public Block getBlock() {
-		return block;
+		return block.getBlock();
 	}
 	
 	@Override
 	public int hashCode() {
-		return block.hashCode() + meta;
+		return block.hashCode();
 	}
 	
-	public IBlockState getBlockState() {
-		if(meta != WILDCARD) {
-			return block.getStateFromMeta(meta);
+	public BlockState getBlockState() {
+		
+		if(wildcard) {
+			return block.getBlock().getDefaultState();
 		}
-		return block.getDefaultState();
+		return block;
 	}
 
-	public byte getMeta() {
-		if(meta != WILDCARD)
-			return (byte) meta;
-		return 0;
+
+	public Boolean isWild() {
+		return wildcard;
 	}
 }

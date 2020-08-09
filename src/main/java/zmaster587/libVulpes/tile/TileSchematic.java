@@ -6,20 +6,22 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ITickable;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
+import zmaster587.libVulpes.api.LibVulpesTileEntityTypes;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 
-public class TileSchematic extends TilePlaceholder implements ITickable {
+public class TileSchematic extends TilePlaceholder implements ITickableTileEntity {
 
 	private final int ttl = 6000;
 	private int timeAlive = 0;
 	List<BlockMeta> possibleBlocks;
 
 	public TileSchematic() {
+		super(LibVulpesTileEntityTypes.TILE_SCHEMATIC);
 		possibleBlocks = new ArrayList<BlockMeta>();
 	}
 
@@ -31,67 +33,60 @@ public class TileSchematic extends TilePlaceholder implements ITickable {
 	public void setReplacedBlock(List<BlockMeta> block) {
 		possibleBlocks = block;
 	}
-	
-	@Override
-	public int getBlockMetadata() {
-		if(possibleBlocks.size() == 0)
-			return 0;
-		return possibleBlocks.get((timeAlive / 20) % possibleBlocks.size()).getMeta();
-	}
 
 	@Override
-	public IBlockState getReplacedState() {
+	public BlockState getReplacedState() {
 		if(possibleBlocks.size() > 0 && possibleBlocks.get((timeAlive / 20) % possibleBlocks.size()).getBlock() != null)
-			return possibleBlocks.get((timeAlive / 20) % possibleBlocks.size()).getBlock().getStateFromMeta(possibleBlocks.get((timeAlive / 20) % possibleBlocks.size()).getMeta());
+			return possibleBlocks.get((timeAlive / 20) % possibleBlocks.size()).getBlockState();
+			//return possibleBlocks.get((timeAlive / 20) % possibleBlocks.size()).getBlock().getStateFromMeta(possibleBlocks.get((timeAlive / 20) % possibleBlocks.size()).getMeta());
 		return Blocks.AIR.getDefaultState();
 	}
 
 	@Override
-	public void update() {
+	public void tick() {
 
 		if(!world.isRemote) {
 			if(timeAlive == ttl) {
-				world.setBlockToAir(pos);
+				world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			}
 		}
 		timeAlive++;
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		nbt.setInteger("timeAlive", timeAlive);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
+		nbt.putInt("timeAlive", timeAlive);
 
 		List<Integer> blockIds = new ArrayList<Integer>();
-		List<Integer> blockMetas = new ArrayList<Integer>();
+		List<Integer> wildCard = new ArrayList<Integer>();
 		for(int i = 0;  i < possibleBlocks.size();i++) {
-			blockIds.add(Block.getIdFromBlock(possibleBlocks.get(i).getBlock()));
-			blockMetas.add((int)possibleBlocks.get(i).getMeta());
+			blockIds.add(Block.getStateId(possibleBlocks.get(i).getBlockState()));
+			wildCard.add(possibleBlocks.get(i).isWild() ? 1 : 0);
 		}
 
 		if(!blockIds.isEmpty()) {
 			Integer[] bufferSpace1 = new Integer[blockIds.size()];
-			Integer[] bufferSpace2 = new Integer[blockIds.size()];
-			nbt.setIntArray("blockIds", ArrayUtils.toPrimitive(blockIds.toArray(bufferSpace1)));
-			nbt.setIntArray("blockMetas", ArrayUtils.toPrimitive(blockMetas.toArray(bufferSpace2)));
+			nbt.putIntArray("blockIds", ArrayUtils.toPrimitive(blockIds.toArray(bufferSpace1)));
+			nbt.putIntArray("blockWild", ArrayUtils.toPrimitive(blockIds.toArray(bufferSpace1)));
 		}
 
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		timeAlive = nbt.getInteger("timeAlive");
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
+		timeAlive = nbt.getInt("timeAlive");
 
-		if(nbt.hasKey("blockIds")) {
+		if(nbt.contains("blockIds")) {
 			int[] block = nbt.getIntArray("blockIds");
 			int[] metas = nbt.getIntArray("blockMetas");
 			possibleBlocks.clear();
 
 			for(int i = 0; i < block.length; i++) {
-				if(Block.getBlockById(block[i]) != Blocks.AIR)
-					possibleBlocks.add(new BlockMeta(Block.getBlockById(block[i]), metas[i]));
+				if(!Block.getStateById(block[i]).isAir())
+					possibleBlocks.add(new BlockMeta(Block.getStateById(block[i]), metas[i] == 1));
 			}
 		}
 	}

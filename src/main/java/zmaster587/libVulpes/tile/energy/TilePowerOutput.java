@@ -1,18 +1,19 @@
 package zmaster587.libVulpes.tile.energy;
 
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import zmaster587.libVulpes.energy.IPower;
 
-public class TilePowerOutput extends TilePlugBase implements IPower, ITickable {
+public class TilePowerOutput extends TilePlugBase implements IPower, ITickableTileEntity {
 
-	public TilePowerOutput() {
-		super(1);
+	public TilePowerOutput(TileEntityType<?> type) {
+		super(type, 1);
 	}
 
 	@Override
-	public boolean canConnectEnergy(EnumFacing arg0) {
+	public boolean canConnectEnergy(Direction arg0) {
 		return true;
 	}
 
@@ -23,10 +24,10 @@ public class TilePowerOutput extends TilePlugBase implements IPower, ITickable {
 	}
 
 	@Override
-	public void update() {
+	public void tick() {
 
 		if(!world.isRemote) {
-			for(EnumFacing dir : EnumFacing.values()) {
+			for(Direction dir : Direction.values()) {
 
 				TileEntity tile = world.getTileEntity(this.pos.offset(dir));
 
@@ -41,26 +42,26 @@ public class TilePowerOutput extends TilePlugBase implements IPower, ITickable {
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.powerOutput.name";
+		return "block.libvulpes.power_output";
 	}
 
 	@Override
-	public int extractEnergy(EnumFacing dir, int maxExtract, boolean simulate) {
+	public int extractEnergy(Direction dir, int maxExtract, boolean simulate) {
 		return storage.extractEnergy(maxExtract, simulate);
 	}
 
 	@Override
-	public int getEnergyStored(EnumFacing dir) {
+	public int getEnergyStored(Direction dir) {
 		return storage.getUniversalEnergyStored();
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing arg0) {
+	public int getMaxEnergyStored(Direction arg0) {
 		return storage.getMaxEnergyStored();
 	}
 
 	@Override
-	public int receiveEnergy(EnumFacing dir, int amt, boolean simulate) {
+	public int receiveEnergy(Direction dir, int amt, boolean simulate) {
 
 		return 0;
 	}
@@ -68,11 +69,6 @@ public class TilePowerOutput extends TilePlugBase implements IPower, ITickable {
 	@Override
 	public int receiveEnergy(int amt, boolean simulate) {
 		return storage.acceptEnergy(amt, simulate);
-	}
-
-	@Override
-	public String getName() {
-		return getModularInventoryName();
 	}
 
 	@Override

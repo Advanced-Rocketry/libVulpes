@@ -2,18 +2,21 @@ package zmaster587.libVulpes.inventory.modules;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.libVulpes.render.RenderHelper;
 import zmaster587.libVulpes.util.IconResource;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(value=Dist.CLIENT)
 public class ModuleImage extends ModuleBase {
 
 	protected IconResource icon;
@@ -36,20 +39,20 @@ public class ModuleImage extends ModuleBase {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY,
+	@OnlyIn(value=Dist.CLIENT)
+	public void renderBackground(ContainerScreen<? extends Container>  gui, MatrixStack mat, int x, int y, int mouseX, int mouseY,
 			FontRenderer font) {
-		super.renderBackground(gui, x, y, mouseX, mouseY, font);
+		super.renderBackground(gui, mat, x, y, mouseX, mouseY, font);
 
 		if(isEnabled()) {
 			GL11.glEnable(GL11.GL_BLEND);
-			Minecraft.getMinecraft().getTextureManager().bindTexture(icon.getResourceLocation());
+			Minecraft.getInstance().getTextureManager().bindTexture(icon.getResourceLocation());
 			if(icon.getxLoc() == -1) {
 				Tessellator.getInstance().getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				RenderHelper.renderNorthFaceWithUV(Tessellator.getInstance().getBuffer(), 0, x + offsetX, y + offsetY, x + offsetX + icon.getxSize(), y + offsetY + icon.getySize(), 0, 1, 0, 1);
 				Tessellator.getInstance().draw();
 			} else
-				gui.drawTexturedModalRect(x + offsetX, y + offsetY, icon.getxLoc(), icon.getyLoc(), icon.getxSize(), icon.getySize());
+				gui.func_238474_b_(mat, x + offsetX, y + offsetY, icon.getxLoc(), icon.getyLoc(), icon.getxSize(), icon.getySize());
 			GL11.glDisable(GL11.GL_BLEND);
 		}
 	}

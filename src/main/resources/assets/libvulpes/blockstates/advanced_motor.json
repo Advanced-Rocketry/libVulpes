@@ -1,0 +1,14 @@
+{
+    "defaults": {
+        "textures": {
+            "#none": "libvulpes:block/models/advancedmotor"
+        },
+        "model": "libvulpes:block/models/advancedmotor"
+    },
+    "variants": {
+        "facing=north": { "model": "libvulpes:block/models/advancedmotor" },
+        "facing=south": { "model": "libvulpes:block/models/advancedmotor", "y": 180 },
+        "facing=west":  { "model": "libvulpes:block/models/advancedmotor", "y": 270 },
+        "facing=east":  { "model": "libvulpes:block/models/advancedmotor", "y": 90 }
+    }
+}

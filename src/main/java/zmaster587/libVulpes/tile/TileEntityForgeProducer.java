@@ -3,36 +3,38 @@ package zmaster587.libVulpes.tile;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import javax.annotation.Nullable;
+
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.cap.ForgePowerCapability;
-import zmaster587.libVulpes.cap.TeslaHandler;
 import zmaster587.libVulpes.energy.IPower;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModulePower;
 import zmaster587.libVulpes.util.UniversalBattery;
 
-public abstract class TileEntityForgeProducer extends TileEntity implements IModularInventory, IEnergyStorage,  IPower, IUniversalEnergy, ITickable {
+public abstract class TileEntityForgeProducer extends TileEntity implements IModularInventory, IEnergyStorage,  IPower, IUniversalEnergy, ITickableTileEntity {
 	protected UniversalBattery energy;
 
-	protected TileEntityForgeProducer(int energy) {
+	protected TileEntityForgeProducer(TileEntityType<?> tileEntityTypeIn, int energy) {
+		super(tileEntityTypeIn);
 		this.energy = new UniversalBattery(energy);
 	}
 
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModulePower(18, 20, energy));
 
@@ -40,48 +42,30 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 	}
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos,
-			IBlockState oldState, IBlockState newSate) {
-		return (oldState.getBlock() != newSate.getBlock());
+	public CompoundNBT getUpdateTag() {
+		return write(new CompoundNBT());
 	}
-
+	
 	@Override
-	public NBTTagCompound getUpdateTag() {
-		return writeToNBT(new NBTTagCompound());
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-
-		if(capability == CapabilityEnergy.ENERGY || TeslaHandler.hasTeslaCapability(this, capability))
-			return true;
-		return false;
-	}
-
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if(capability == CapabilityEnergy.ENERGY )
-			return (T)(new ForgePowerCapability(this));
-		else if(TeslaHandler.hasTeslaCapability(this, capability))
-			return (T)(TeslaHandler.getHandler(this));
+			return LazyOptional.of(() -> new ForgePowerCapability(this)).cast();
+		/*else if(TeslaHandler.hasTeslaCapability(this, capability))
+			return LazyOptional.of(() -> TeslaHandler.getHandler(this)).cast();*/
 
 		return super.getCapability(capability, facing);
 	}
 
 	@Override
-	public NBTTagCompound serializeNBT() {
-		return new NBTTagCompound();
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
+		energy.write(nbt);
+		return nbt;
 	}
 	@Override
-	public void deserializeNBT(NBTTagCompound nbt) {
-
-	}
-
-	@Override
-	public void handleUpdateTag(NBTTagCompound tag) {
-		// TODO Auto-generated method stub
-		super.handleUpdateTag(tag);
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
+		energy.readFromNBT(nbt);
 	}
 
 	@Override
@@ -95,31 +79,18 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 	}
 
 	@Override
-	public boolean canConnectEnergy(EnumFacing arg0) {
+	public boolean canConnectEnergy(Direction arg0) {
 		return true;
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		energy.writeToNBT(nbt);
-		return nbt;
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		energy.readFromNBT(nbt);
-	}
-
-	@Override
-	public int receiveEnergy(EnumFacing from, int maxReceive,
+	public int receiveEnergy(Direction from, int maxReceive,
 			boolean simulate) {
 		return acceptEnergy(maxReceive, simulate);
 	}
 
 	@Override
-	public int extractEnergy(EnumFacing from, int maxExtract,
+	public int extractEnergy(Direction from, int maxExtract,
 			boolean simulate) {
 		return extractEnergy(maxExtract, simulate);
 	}
@@ -134,9 +105,8 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 
 	public abstract boolean canGeneratePower();
 
-
 	@Override
-	public void update() {
+	public void tick() {
 
 		if(canGeneratePower()) {
 
@@ -153,12 +123,12 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 	}
 
 	protected void transmitPower() {
-		for(EnumFacing facing : EnumFacing.VALUES) {
+		for(Direction facing : Direction.values()) {
 			TileEntity tile = world.getTileEntity(this.getPos().offset(facing));
 
-			if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
-				IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY,  facing.getOpposite());
-				if(storage.canReceive())
+			if(tile != null ) {
+				IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite()).orElse(null);
+				if(storage != null && storage.canReceive())
 					this.extractEnergy(storage.receiveEnergy(getUniversalEnergyStored(), false),false);
 			}
 		}
@@ -171,7 +141,7 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 	}
 
 	@Override
-	public int getEnergyStored(EnumFacing from) {
+	public int getEnergyStored(Direction from) {
 		return energy.getUniversalEnergyStored();
 	}
 	
@@ -181,7 +151,7 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from) {
+	public int getMaxEnergyStored(Direction from) {
 		return energy.getMaxEnergyStored();
 	}
 

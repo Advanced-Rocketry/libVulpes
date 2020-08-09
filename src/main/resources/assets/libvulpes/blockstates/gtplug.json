@@ -1,20 +1,20 @@
 {
     "variants": {
-        "varient=0": { "model": "libvulpes:GTPlug" },
-        "varient=1": { "model": "libvulpes:GTPlug" },
-        "varient=2": { "model": "libvulpes:GTPlug" },
-        "varient=3": { "model": "libvulpes:GTPlug" },
-        "varient=4": { "model": "libvulpes:GTPlug" },
-        "varient=5": { "model": "libvulpes:GTPlug" },
-        "varient=6": { "model": "libvulpes:GTPlug" },
-        "varient=7": { "model": "libvulpes:GTPlug" },
-        "varient=8": { "model": "libvulpes:GTPlug" },
-        "varient=9": { "model": "libvulpes:GTPlug" },
-        "varient=10": { "model": "libvulpes:GTPlug" },
-        "varient=11": { "model": "libvulpes:GTPlug" },
-        "varient=12": { "model": "libvulpes:GTPlug" },
-        "varient=13": { "model": "libvulpes:GTPlug" },
-        "varient=14": { "model": "libvulpes:GTPlug" },
-        "varient=15": { "model": "libvulpes:GTPlug" }
+        "varient=0": { "model": "libvulpes:block/gtplug" },
+        "varient=1": { "model": "libvulpes:block/gtplug" },
+        "varient=2": { "model": "libvulpes:block/gtplug" },
+        "varient=3": { "model": "libvulpes:block/gtplug" },
+        "varient=4": { "model": "libvulpes:block/gtplug" },
+        "varient=5": { "model": "libvulpes:block/gtplug" },
+        "varient=6": { "model": "libvulpes:block/gtplug" },
+        "varient=7": { "model": "libvulpes:block/gtplug" },
+        "varient=8": { "model": "libvulpes:block/gtplug" },
+        "varient=9": { "model": "libvulpes:block/gtplug" },
+        "varient=10": { "model": "libvulpes:block/gtplug" },
+        "varient=11": { "model": "libvulpes:block/gtplug" },
+        "varient=12": { "model": "libvulpes:block/gtplug" },
+        "varient=13": { "model": "libvulpes:block/gtplug" },
+        "varient=14": { "model": "libvulpes:block/gtplug" },
+        "varient=15": { "model": "libvulpes:block/gtplug" }
     }
 }

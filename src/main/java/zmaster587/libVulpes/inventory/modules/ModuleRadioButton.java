@@ -2,11 +2,13 @@ package zmaster587.libVulpes.inventory.modules;
 
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerListener;
 public class ModuleRadioButton  extends ModuleBase {
 
 	IToggleButton tile;
@@ -82,9 +84,9 @@ public class ModuleRadioButton  extends ModuleBase {
 	}
 
 	@Override
-	public List<GuiButton> addButtons(int x, int y) {
+	public List<Button> addButtons(int x, int y) {
 
-		List<GuiButton> buttonList = super.addButtons(x, y);
+		List<Button> buttonList = super.addButtons(x, y);
 
 		for(ModuleToggleSwitch button : buttons) {
 			buttonList.addAll(button.addButtons(x, y));
@@ -94,7 +96,7 @@ public class ModuleRadioButton  extends ModuleBase {
 	}
 
 	@Override
-	public void actionPerform(GuiButton buttonObj) {
+	public void actionPerform(Button buttonObj) {
 
 		if(enabled) {
 			super.actionPerform(buttonObj);
@@ -120,22 +122,22 @@ public class ModuleRadioButton  extends ModuleBase {
 	}
 
 	@Override
-	public void renderForeground(int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel,
-			GuiContainer gui, FontRenderer font) {
-		super.renderForeground(guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
+	public void renderForeground(MatrixStack mat, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel,
+			ContainerScreen<? extends Container> gui, FontRenderer font) {
+		super.renderForeground(mat, guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
 
 		for(ModuleToggleSwitch button : buttons) {
-			button.renderForeground(guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
+			button.renderForeground(mat, guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
 		}
 	}
 
 	@Override
-	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY, 
+	public void renderBackground(ContainerScreen<? extends Container>  gui, MatrixStack mat, int x, int y, int mouseX, int mouseY, 
 			FontRenderer font) {
-		super.renderBackground(gui, x, y, mouseX, mouseY, font);
+		super.renderBackground(gui, mat, x, y, mouseX, mouseY, font);
 
 		for(ModuleToggleSwitch button : buttons) {
-			button.renderBackground(gui, x, y, mouseX, mouseY, font);
+			button.renderBackground(gui, mat, x, y, mouseX, mouseY, font);
 		}
 	}
 

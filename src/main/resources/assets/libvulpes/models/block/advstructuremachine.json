@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "libvulpes:blocks/advStructureBlock"
+        "all": "libvulpes:blocks/advstructureblock"
     }
 }

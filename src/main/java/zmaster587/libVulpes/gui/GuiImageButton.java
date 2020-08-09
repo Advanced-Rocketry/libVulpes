@@ -2,22 +2,33 @@ package zmaster587.libVulpes.gui;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.StringTextComponent;
 
-public class GuiImageButton extends GuiButton {
+public class GuiImageButton extends Button {
 
 	protected ResourceLocation[] buttonTexture;
 	private String soundString;
 	private int bgColor;
+	
+	//Workarounds
+	public boolean visible;
+	public boolean hovered;
+	public boolean enabled;
+	public int x,y, width, height;
+	
 	/**
 	 * 
 	 * @param id id of the button
@@ -28,10 +39,14 @@ public class GuiImageButton extends GuiButton {
 	 * @param location index 0: default, index 1: hover, index 2: pressed, index 3: disabled
 	 */
 	public GuiImageButton(int id, int x, int y, int width, int height, ResourceLocation[] location) {
-		super(id, x, y, width, height,"");
+		super(x, y, width, height, new StringTextComponent(""), null);
 		buttonTexture = location;
 		soundString = "";
 		bgColor = 0xFFFFFFFF;
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
 		//TODO: add exception
 	}
 
@@ -47,58 +62,65 @@ public class GuiImageButton extends GuiButton {
 	public void setBackgroundColor(int color) {
 		bgColor = color;
 	}
-
+	
+	// playPressSound
 	@Override
-	public void playPressSound(SoundHandler sound) {
+	public void func_230988_a_(SoundHandler sound) {
 		if(soundString.isEmpty())
-			super.playPressSound(sound);
+			super.func_230988_a_(sound);
 		else
-			sound.playSound(PositionedSoundRecord.getMasterRecord(new SoundEvent(new ResourceLocation("advancedrocketry:" + soundString)), 1.0F));
+			sound.play(SimpleSound.master(new SoundEvent(new ResourceLocation("advancedrocketry:" + soundString)), 1.0F));
 	}
 
+	//DrawButton
 	@Override
-	public void drawButton(Minecraft minecraft, int par2, int par3, float f1)
-	{
+	public void func_230431_b_(MatrixStack matrix, int par2, int par3, float p_230431_4_) {
 		if (this.visible)
 		{
 			//
 			this.hovered = par2 >= this.x && par3 >= this.y && par2 < this.x + this.width && par3 < this.y + this.height;
-			int hoverState = this.getHoverState(this.hovered);
+			// get hover state
+			int hoverState = this.func_230989_a_(this.hovered);
 
 			/*if(mousePressed(minecraft, par2, par3) && buttonTexture[2] != null)
 				minecraft.getTextureManager().bindTexture(buttonTexture[2]);*/
 			if(buttonTexture.length > 1 && hoverState == 2 && buttonTexture[1] != null)
-				minecraft.getTextureManager().bindTexture(buttonTexture[1]);
+				Minecraft.getInstance().getTextureManager().bindTexture(buttonTexture[1]);
 			else if(buttonTexture.length > 2 && hoverState == 4 && buttonTexture[3] != null)
-				minecraft.getTextureManager().bindTexture(buttonTexture[3]);
+				Minecraft.getInstance().getTextureManager().bindTexture(buttonTexture[3]);
 			else
-				minecraft.getTextureManager().bindTexture(buttonTexture[0]);
+				Minecraft.getInstance().getTextureManager().bindTexture(buttonTexture[0]);
 
+			float r = (bgColor & 0xFF)/255f;
+			float g = ((bgColor >>> 8) & 0xFF)/255f;
+			float b = ((bgColor >>> 16) & 0xFF)/255f;
+			float a = 1f;
 			
-			
-			GL11.glColor4ub((byte)(bgColor & 0xFF), (byte)((bgColor >>> 8) & 0xFF), (byte)((bgColor >>> 16) & 0xFF), (byte)0xFF);
+			RenderSystem.color4f(r,g,b,a);
 
 
 			//Draw the button...each button should contain 3 images default state, hover, and pressed
 
-			GlStateManager.enableBlend();
-            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+			RenderSystem.enableBlend();
+			RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA.param, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.param, GlStateManager.SourceFactor.ONE.param, GlStateManager.DestFactor.ZERO.param);
+			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.param, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.param);
            
 			
 	        Tessellator tessellator = Tessellator.getInstance();
 	        BufferBuilder vertexbuffer = tessellator.getBuffer();
+	        // field_230689_k_ == zlevel
 	        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-	        vertexbuffer.pos(x, y + height, (double)this.zLevel).tex(0, 1).endVertex();
-	        vertexbuffer.pos(x + width, y + height, (double)this.zLevel).tex( 1, 1).endVertex();
-	        vertexbuffer.pos(x + width, y, (double)this.zLevel).tex(1, 0).endVertex();
-	        vertexbuffer.pos(x, y, (double)this.zLevel).tex(0, 0).endVertex();
+	        vertexbuffer.pos(x, y + height, (double)this.field_230689_k_).tex(0, 1).endVertex();
+	        vertexbuffer.pos(x + width, y + height, (double)this.field_230689_k_).tex( 1, 1).endVertex();
+	        vertexbuffer.pos(x + width, y, (double)this.field_230689_k_).tex(1, 0).endVertex();
+	        vertexbuffer.pos(x, y, (double)this.field_230689_k_).tex(0, 0).endVertex();
 	        tessellator.draw();
 			
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 			GlStateManager.disableBlend();
-			this.mouseDragged(minecraft, par2, par3);
+			// mousedragged
+			this.func_230430_a_(matrix, (int) par2, (int) par3, 0);
 		}
 	}
 }

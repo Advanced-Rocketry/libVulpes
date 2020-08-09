@@ -1,8 +1,9 @@
 package zmaster587.libVulpes.client.util;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 /**
  * Used to display an arrow or some other image moving along a bar
@@ -10,41 +11,41 @@ import net.minecraft.util.ResourceLocation;
  */
 public class IndicatorBarImage extends ProgressBarImage {
 
-	public IndicatorBarImage(int backOffsetX, int backOffsetY, int backWidth, int backHeight, int foreOffsetX, int foreOffsetY, int foreWidth, int foreHeight, int insetX, int insetY, EnumFacing direction, ResourceLocation image) {
+	public IndicatorBarImage(int backOffsetX, int backOffsetY, int backWidth, int backHeight, int foreOffsetX, int foreOffsetY, int foreWidth, int foreHeight, int insetX, int insetY, Direction direction, ResourceLocation image) {
 		super(backOffsetX, backOffsetY, backWidth, backHeight, foreOffsetX, foreOffsetY, foreWidth, foreHeight, insetX, insetY, direction,image);
 	}
 	
-	public IndicatorBarImage(int backOffsetX, int backOffsetY, int backWidth, int backHeight, int foreOffsetX, int foreOffsetY, int foreWidth, int foreHeight,EnumFacing direction, ResourceLocation image) {
+	public IndicatorBarImage(int backOffsetX, int backOffsetY, int backWidth, int backHeight, int foreOffsetX, int foreOffsetY, int foreWidth, int foreHeight,Direction direction, ResourceLocation image) {
 		super(backOffsetX, backOffsetY, backWidth, backHeight, foreOffsetX, foreOffsetY, foreWidth, foreHeight, 0, 0, direction, image);
 	}
 	
-	public IndicatorBarImage(int backOffsetX, int backOffsetY, int backWidth, int backHeight, int foreOffsetX, int foreOffsetY, EnumFacing direction, ResourceLocation image) {
+	public IndicatorBarImage(int backOffsetX, int backOffsetY, int backWidth, int backHeight, int foreOffsetX, int foreOffsetY, Direction direction, ResourceLocation image) {
 		super(backOffsetX, backOffsetY, backWidth, backHeight, foreOffsetX, foreOffsetY, backWidth, backHeight, 0, 0, direction, image);
 	}
 	
 	@Override
-	public void renderProgressBar(int x, int y, float percent, Gui gui) {
+	public void renderProgressBar(MatrixStack mat, int x, int y, float percent, net.minecraft.client.gui.AbstractGui gui) {
 		
-		Minecraft.getMinecraft().getTextureManager().bindTexture(image);
+		Minecraft.getInstance().getTextureManager().bindTexture(image);
 		
-		gui.drawTexturedModalRect(x, y, backOffsetX, backOffsetY, backWidth, backHeight);
+		gui.func_238474_b_(mat, x, y, backOffsetX, backOffsetY, backWidth, backHeight);
 		
 		int xProgress = 0, yProgress = 0;
 		
-		if(direction == EnumFacing.WEST)
+		if(direction == Direction.WEST)
 			xProgress = (int) (backWidth - insetX - ( ( backWidth - ( insetX*2 ) )*percent)) - foreHeight/2;
-		else if(direction == EnumFacing.EAST)
+		else if(direction == Direction.EAST)
 			xProgress = (int) (insetX - foreWidth + ( ( backWidth - ( insetX*2 ) )*percent));
 		else
 			xProgress = insetX;
 		
-		if(direction == EnumFacing.UP)
+		if(direction == Direction.UP)
 			yProgress = (int) (backHeight - insetY - ( ( backHeight - ( insetY*2 ) )*percent)) - foreHeight/2;
-		else if(direction == EnumFacing.DOWN)
+		else if(direction == Direction.DOWN)
 			yProgress = (int) (insetY + ( ( backHeight - ( insetY*2 ) )*percent)) + foreHeight/2;
 		else
 			yProgress = insetY;
 		
-		gui.drawTexturedModalRect(x + xProgress, y + yProgress, foreOffsetX, foreOffsetY, foreWidth, foreHeight);
+		gui.func_238474_b_(mat, x + xProgress, y + yProgress, foreOffsetX, foreOffsetY, foreWidth, foreHeight);
 	}
 }

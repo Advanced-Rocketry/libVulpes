@@ -12,36 +12,17 @@ import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.tile.TileEntityMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 import net.minecraft.block.Block;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class RecipesMachine {
-	
-    //This is a bit of a hack
-    static class DummyRecipe implements net.minecraft.item.crafting.IRecipe
-    {
-        private static ItemStack result = new ItemStack(Items.DIAMOND, 64);
-        private ResourceLocation name;
-
-        @Override
-        public net.minecraft.item.crafting.IRecipe setRegistryName(ResourceLocation name) {
-            this.name = name;
-            return this;
-        }
-        @Override public ResourceLocation getRegistryName() { return name; }
-        @Override public Class<net.minecraft.item.crafting.IRecipe> getRegistryType() { return net.minecraft.item.crafting.IRecipe.class; }
-        @Override public boolean matches(InventoryCrafting inv, World worldIn) { return false; } //dirt?
-        @Override public ItemStack getCraftingResult(InventoryCrafting inv) { return result; }
-        @Override public boolean canFit(int width, int height) { return false; }
-        @Override public ItemStack getRecipeOutput() { return result; }
-        @Override public boolean isHidden() { return true; }
-    }
 	
     public static class ChanceItemStack
     {
@@ -76,10 +57,12 @@ public class RecipesMachine {
 		private LinkedList<ChanceFluidStack> fluidOutput;
 		private int completionTime, power;
 		private int maxOutputSize;
+		IRecipeSerializer<?> serializer;
+		ResourceLocation name;
 
 		public Recipe() {}
 
-		public Recipe(List<ChanceItemStack> output, List<List<ItemStack>> input, int completionTime, int powerReq, Map<Integer, String> oreDict) {
+		public Recipe(IRecipeSerializer<?> serializer, ResourceLocation name, List<ChanceItemStack> output, List<List<ItemStack>> input, int completionTime, int powerReq, Map<Integer, String> oreDict) {
 			this.output = new LinkedList<ChanceItemStack>();
 			this.output.addAll(output);
 
@@ -96,10 +79,12 @@ public class RecipesMachine {
 			this.inputOreDict = oreDict;
 			
 			maxOutputSize = -1;
+			this.serializer = serializer;
+			this.name = name;
 		}
 
-		public Recipe(List<ChanceItemStack> output, List<List<ItemStack>> input, List<ChanceFluidStack> fluidOutput, List<FluidStack> fluidInput, int completionTime, int powerReq, Map<Integer, String> oreDict) {
-			this(output, input, completionTime, powerReq, oreDict);
+		public Recipe(IRecipeSerializer<?> serializer, ResourceLocation name, List<ChanceItemStack> output, List<List<ItemStack>> input, List<ChanceFluidStack> fluidOutput, List<FluidStack> fluidInput, int completionTime, int powerReq, Map<Integer, String> oreDict) {
+			this(serializer, name, output, input, completionTime, powerReq, oreDict);
 
 			this.fluidInput.addAll(fluidInput);
 			this.fluidOutput.addAll(fluidOutput);
@@ -115,7 +100,7 @@ public class RecipesMachine {
 		}
 
 		@Override
-		public List<List<ItemStack>> getIngredients() {
+		public List<List<ItemStack>> getPossibleIngredients() {
 			return input;
 		}
 		
@@ -143,6 +128,18 @@ public class RecipesMachine {
 			return power;
 		}
 
+		@Override
+		public List<ChanceItemStack> _getRawOutput()
+		{
+			return output;
+		}
+		
+		@Override
+		public List<ChanceFluidStack> _getRawFluidOutput()
+		{
+			return fluidOutput;
+		}
+		
 		@Override
 		public List<ItemStack> getOutput() {
 			ArrayList<ItemStack> stack = new ArrayList<ItemStack>();
@@ -222,6 +219,45 @@ public class RecipesMachine {
 
 			return true;
 		}
+
+		@Override
+		public boolean matches(IInventory inv, World worldIn) {
+			// never match, we handle this in the machines
+			return false;
+		}
+
+		@Override
+		public ItemStack getCraftingResult(IInventory inv) {
+			// do not use
+			return null;
+		}
+
+		@Override
+		public boolean canFit(int width, int height) {
+			// handled in machine
+			return false;
+		}
+
+		@Override
+		public ItemStack getRecipeOutput() {
+			// do not use
+			return null;
+		}
+
+		@Override
+		public ResourceLocation getId() {
+			return name;
+		}
+
+		@Override
+		public IRecipeSerializer<?> getSerializer() {
+			return serializer;
+		}
+
+		@Override
+		public IRecipeType<?> getType() {
+			return RecipeMachineFactory.machiningType;
+		}
 	}
 
 	public HashMap<Class<? extends TileMultiblockMachine>, List<IRecipe>> recipeList;
@@ -238,7 +274,7 @@ public class RecipesMachine {
 		recipeList.get(clazz).clear();
 	}
 	
-	public void addRecipe(Class clazz , Object[] out, int timeRequired, int power, Object ... inputs) {
+	public void addRecipe(ResourceLocation name, IRecipeSerializer<?> serializer, Class clazz , Object[] out, int timeRequired, int power, Object ... inputs) {
 		List<IRecipe> recipes = getRecipes(clazz);
 		if(recipes == null) {
 			recipes = new LinkedList<IRecipe>();
@@ -256,15 +292,15 @@ public class RecipesMachine {
 				if(inputs[i] != null) {
 					if(inputs[i] instanceof String) {
 						oreDict.put(i, ((String)inputs[i]));
-						for (ItemStack itemStack : OreDictionary.getOres((String)inputs[i])) {
-							innerList.add(itemStack.copy());
+						for (Item item : ItemTags.getCollection().get(new ResourceLocation((String)inputs[i])).func_230236_b_() ) {
+							innerList.add(new ItemStack(item));
 						}
 					}
 					else if(inputs[i] instanceof NumberedOreDictStack) {
 						oreDict.put(i, ((NumberedOreDictStack)inputs[i]).ore);
-						for (ItemStack itemStack : OreDictionary.getOres(((NumberedOreDictStack)inputs[i]).getOre())) {
+						for (Item item : ItemTags.getCollection().get(new ResourceLocation((String)inputs[i])).func_230236_b_()) {
 							int number  = ((NumberedOreDictStack)inputs[i]).getNumber();
-							ItemStack stack2 = itemStack.copy();
+							ItemStack stack2 = new ItemStack(item, number);
 							stack2.setCount(number);
 							innerList.add(stack2);
 						}
@@ -296,9 +332,9 @@ public class RecipesMachine {
 
 			Recipe recipe;
 			if(inputFluidStacks.isEmpty() && outputFluidStacks.isEmpty())
-				recipe = new Recipe(outputItem, stack, timeRequired, power, oreDict);
+				recipe = new Recipe(serializer, name, outputItem, stack, timeRequired, power, oreDict);
 			else
-				recipe = new Recipe(outputItem, stack, outputFluidStacks, inputFluidStacks, timeRequired, power, oreDict);
+				recipe = new Recipe(serializer, name, outputItem, stack, outputFluidStacks, inputFluidStacks, timeRequired, power, oreDict);
 
 			if(recipes.contains(recipe)) 
 				LibVulpes.logger.info("Overwriting recipe " + recipes.remove(recipe));
@@ -325,11 +361,11 @@ public class RecipesMachine {
 	 * @param power power units per tick
 	 * @param inputs input objects for the recipe, accepts forge ore dict entries as strings, itemStacks, Items, Blocks, and fluidStacks
 	 */
-	public void addRecipe(Class clazz , Object out, int timeRequired, int power, Object ... inputs) {
-		addRecipe(clazz, new Object[] {out}, timeRequired, power, inputs);
+	public void addRecipe(ResourceLocation name, IRecipeSerializer<?> serializer, Class clazz , Object out, int timeRequired, int power, Object ... inputs) {
+		addRecipe(name, serializer, clazz, new Object[] {out}, timeRequired, power, inputs);
 	}
 	
-	public void addRecipe(Class clazz , List<Object> out, int timeRequired, int power, List<Object> inputs) {
+	public void addRecipe(ResourceLocation name, IRecipeSerializer<?> serializer, Class clazz , List<Object> out, int timeRequired, int power, List<Object> inputs) {
 		
 		Object outputs[] = new Object[out.size()];
 		outputs = out.toArray(outputs);
@@ -337,7 +373,7 @@ public class RecipesMachine {
 		Object inputs2[] = new Object[inputs.size()];
 		inputs2 = inputs.toArray(inputs2);
 		
-		addRecipe(clazz, outputs, timeRequired, power, inputs2);
+		addRecipe(name, serializer, clazz, outputs, timeRequired, power, inputs2);
 	}
 
 	//Given the class return the list

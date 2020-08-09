@@ -3,29 +3,141 @@ package zmaster587.libVulpes.recipe;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.SmithingRecipe;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.IRecipeFactory;
-import net.minecraftforge.common.crafting.JsonContext;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.registries.ForgeRegistryEntry;
+import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine.ChanceFluidStack;
 import zmaster587.libVulpes.recipe.RecipesMachine.ChanceItemStack;
-import zmaster587.libVulpes.recipe.RecipesMachine.DummyRecipe;
-import zmaster587.libVulpes.recipe.RecipesMachine.Recipe;
 
-public abstract class RecipeMachineFactory implements IRecipeFactory {
+public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<IRecipe> {
+
+	public static IRecipeType<SmithingRecipe> machiningType = IRecipeType.register("machining");
+	
+	
 
 	@Override
-	public IRecipe parse(JsonContext context, JsonObject json) {
+	public IRecipe read(ResourceLocation context, PacketBuffer buffer) {
+		List<List<ItemStack>> inputs = new LinkedList<List<ItemStack>>();
+		List<ChanceItemStack> outputs = new LinkedList<ChanceItemStack>();
+		List<FluidStack> inputFluids = new LinkedList<FluidStack>();
+		List<ChanceFluidStack> outputFluids = new LinkedList<ChanceFluidStack>();
+		int timeTaken = 0;
+		int energy = 0;
+		int maxOutput = -1;
+		
+		// Write count
+		int ingredientListSize = buffer.readInt();
+		for(; ingredientListSize > 0; ingredientListSize--)
+		{
+			// Write subingredient count
+			int subingredient = buffer.readInt();
+			List<ItemStack> stacks = new LinkedList<ItemStack>();
+			for(; subingredient > 0; subingredient--)
+			{
+				stacks.add(buffer.readItemStack());
+			}
+			
+			inputs.add(stacks);
+		}
+		
+		// write fluid input count
+		int fluidCount = buffer.readInt();
+		for(; fluidCount > 0; fluidCount--)
+		{
+			FluidStack stack = buffer.readFluidStack();
+			inputFluids.add(stack);
+		}
+		
+		// write item output
+		int productCount = buffer.readInt();
+		for(; productCount > 0; productCount--)
+		{
+			ItemStack stack = buffer.readItemStack();
+			float chance = buffer.readFloat();
+			outputs.add(new ChanceItemStack(stack, chance));
+		}
+		
+		int fluidOutputCount = buffer.readInt();
+		for(; fluidOutputCount > 0; fluidOutputCount--)
+		{
+			FluidStack stack = buffer.readFluidStack();
+			float chance = buffer.readFloat();
+			outputFluids.add(new ChanceFluidStack(stack, chance));
+		}
+		
+		energy = buffer.readInt();
+		timeTaken = buffer.readInt();
+		maxOutput = buffer.readInt();
+		
+		RecipesMachine.Recipe recipe = new RecipesMachine.Recipe(this, context, outputs, inputs, outputFluids, inputFluids, timeTaken, energy, new HashMap<Integer, String>());
+		
+		if(maxOutput > 0)
+			recipe.setMaxOutputSize(maxOutput);
+		
+		RecipesMachine.getInstance().recipeList.get(getMachine()).removeIf(value -> value.getId() == recipe.getId());
+		RecipesMachine.getInstance().recipeList.get(getMachine()).add(recipe);
+		
+		return recipe;
+	}
+
+	@Override
+	public void write(PacketBuffer buffer, IRecipe recipe) {
+		
+		// Write count
+		buffer.writeInt(recipe.getPossibleIngredients().size());
+		for(List<ItemStack> ingredientList : recipe.getPossibleIngredients())
+		{
+			// Write subingredient count
+			buffer.writeInt(ingredientList.size());
+			
+			for(ItemStack ingredient : ingredientList)
+			{
+				buffer.writeItemStack(ingredient);
+			}
+		}
+		
+		// write fluid input count
+		buffer.writeInt(recipe.getFluidIngredients().size());
+		for(FluidStack fluid : recipe.getFluidIngredients() )
+		{
+			buffer.writeFluidStack(fluid);
+		}
+		
+		// write item output
+		buffer.writeInt(recipe.getOutput().size());
+		for(ChanceItemStack product : recipe._getRawOutput())
+		{
+			buffer.writeItemStack(product.stack);
+			buffer.writeFloat(product.chance);
+		}
+		
+		buffer.writeInt(recipe.getFluidOutputs().size());
+		for(ChanceFluidStack fluid : recipe._getRawFluidOutput() )
+		{
+			buffer.writeFluidStack(fluid.stack);
+			buffer.writeFloat(fluid.chance);
+		}
+		
+		buffer.writeInt(recipe.getPower());
+		buffer.writeInt(recipe.getTime());
+		buffer.writeInt(recipe.getRequiredEmptyOutputs());
+	}
+	
+	@Override
+	public IRecipe read(ResourceLocation context, JsonObject json) {
 		
 		List<List<ItemStack>> inputs = new LinkedList<List<ItemStack>>();
 		List<ChanceItemStack> outputs = new LinkedList<ChanceItemStack>();
@@ -81,20 +193,20 @@ public abstract class RecipeMachineFactory implements IRecipeFactory {
 			throw new JsonParseException("Missing parameters");
 		}
 		
-		RecipesMachine.Recipe recipe = new RecipesMachine.Recipe(outputs, inputs, outputFluids, inputFluids, timeTaken, energy, new HashMap<Integer, String>());
+		RecipesMachine.Recipe recipe = new RecipesMachine.Recipe(this, context, outputs, inputs, outputFluids, inputFluids, timeTaken, energy, new HashMap<Integer, String>());
 		
 		if(maxOutput > 0)
 			recipe.setMaxOutputSize(maxOutput);
 		
 		RecipesMachine.getInstance().recipeList.get(getMachine()).add(recipe);
 
-		// We handle our own registry
-		return new DummyRecipe();
+		// We handle our own registry, but we need to pass it back to sync
+		return recipe;
 	}
 	
 	public abstract Class getMachine();
 	
-	public List<ChanceFluidStack> getFluidStacks(JsonContext context, JsonElement json)
+	public List<ChanceFluidStack> getFluidStacks(ResourceLocation context, JsonElement json)
 	{
 		
 		if(!json.isJsonArray())
@@ -111,7 +223,7 @@ public abstract class RecipeMachineFactory implements IRecipeFactory {
 		return fluidstacks;
 	}
 	
-	public ChanceFluidStack parseFluid(JsonContext context, JsonElement json)
+	public ChanceFluidStack parseFluid(ResourceLocation context, JsonElement json)
 	{
 		String fluidname = json.getAsJsonObject().get("fluid").getAsString();
 		int size = json.getAsJsonObject().get("amount").getAsInt();
@@ -120,11 +232,11 @@ public abstract class RecipeMachineFactory implements IRecipeFactory {
 		
 		if(chanceElem != null)
 			chance = chanceElem.getAsFloat();
-		
-		return new ChanceFluidStack(new FluidStack(FluidRegistry.getFluid(fluidname),size), chance);
+		Fluid fluid = net.minecraft.util.registry.Registry.FLUID.getOrDefault(new ResourceLocation(fluidname));
+		return new ChanceFluidStack(new FluidStack(fluid,size), chance);
 	}
 	
-	List<List<ItemStack>> getIngredientsFromArray(JsonContext context, JsonElement json)
+	List<List<ItemStack>> getIngredientsFromArray(ResourceLocation context, JsonElement json)
 	{
 		if(!json.isJsonArray())
 			//Handle error
@@ -145,13 +257,13 @@ public abstract class RecipeMachineFactory implements IRecipeFactory {
 		return inputs;
 	}
 	
-	List<ChanceItemStack> getIngredients(JsonContext context, JsonElement json)
+	List<ChanceItemStack> getIngredients(ResourceLocation context, JsonElement json)
 	{
 		List<ChanceItemStack> stacks = new LinkedList<ChanceItemStack>();
-		for(ItemStack stack : CraftingHelper.getIngredient(json, context).getMatchingStacks())
+		for(ItemStack stack : CraftingHelper.getIngredient(json).getMatchingStacks())
 		{
 			int count = stack.getCount();
-			int data = stack.getItemDamage();
+			int data = stack.getDamage();
 			float chance = 0f;
 			ItemStack stack2 = stack.copy();
 			JsonElement countElem = json.getAsJsonObject().get("count");
@@ -168,13 +280,13 @@ public abstract class RecipeMachineFactory implements IRecipeFactory {
 				chance = chanceElem.getAsFloat();
 			
 			stack2.setCount(count);
-			stack2.setItemDamage(data);
+			stack2.setDamage(data);
 			stacks.add(new ChanceItemStack(stack2,chance));
 		}
 		return stacks;
 	}
 
-	List<ChanceItemStack> getFirstIngredient(JsonContext context, JsonElement json)
+	List<ChanceItemStack> getFirstIngredient(ResourceLocation context, JsonElement json)
 	{
 		List<ChanceItemStack> stacks = getIngredients(context, json);
 		if(stacks.size() > 1)

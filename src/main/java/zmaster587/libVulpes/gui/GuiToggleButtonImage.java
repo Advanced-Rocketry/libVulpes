@@ -1,16 +1,17 @@
 package zmaster587.libVulpes.gui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
 
-public class GuiToggleButtonImage extends GuiButton {
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+
+public class GuiToggleButtonImage extends GuiImageButton {
 	
 	boolean state = false;
 	protected ResourceLocation[] buttonTexture;
@@ -24,7 +25,7 @@ public class GuiToggleButtonImage extends GuiButton {
 	 * @param location index 0: enabled, index 1: disabled
 	 */
 	public GuiToggleButtonImage(int id, int x, int y, int width, int height, ResourceLocation[] location) {
-		super(id, x, y, width, height,"");
+		super(id, x, y, width, height, location);
 		buttonTexture = location;
 		//TODO: add exception
 	}
@@ -35,7 +36,7 @@ public class GuiToggleButtonImage extends GuiButton {
 	}
 	
 	@Override
-	public void drawButton(Minecraft minecraft, int par2, int par3, float f1)
+	public void func_230431_b_(MatrixStack matrix, int par2, int par3, float p_230431_4_)
 	{
 		if (this.visible)
 		{
@@ -44,34 +45,36 @@ public class GuiToggleButtonImage extends GuiButton {
 			
 			//Only display the hover icon if a pressed icon is found and the mouse is hovered
 			if(hovered && (buttonTexture.length > 2 && buttonTexture[2] != null ))
-				minecraft.getTextureManager().bindTexture(buttonTexture[1]);
+				Minecraft.getInstance().getTextureManager().bindTexture(buttonTexture[1]);
 			else if(state && ( buttonTexture.length > 2 && buttonTexture[2] != null ))
-				minecraft.getTextureManager().bindTexture(buttonTexture[2]);
+				Minecraft.getInstance().getTextureManager().bindTexture(buttonTexture[2]);
 			else if(!state)
-				minecraft.getTextureManager().bindTexture(buttonTexture[0]);
+				Minecraft.getInstance().getTextureManager().bindTexture(buttonTexture[0]);
 			else // if !state and button[2] == null
-				minecraft.getTextureManager().bindTexture(buttonTexture[1]);
+				Minecraft.getInstance().getTextureManager().bindTexture(buttonTexture[1]);
 			
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 
 			//Draw the button...each button should contain 3 images default state, hover, and pressed
 			
-			GlStateManager.enableBlend();
-            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+			RenderSystem.enableBlend();
+			RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA.param, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.param, GlStateManager.SourceFactor.ONE.param, GlStateManager.DestFactor.ZERO.param);
+			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.param, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.param);
            
 			
 	        Tessellator tessellator = Tessellator.getInstance();
 	        BufferBuilder vertexbuffer = tessellator.getBuffer();
+	        // field_230689_k_ == zlevel
 	        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-	        vertexbuffer.pos(x, y + height, (double)this.zLevel).tex(0, 1).endVertex();
-	        vertexbuffer.pos(x + width, y + height, (double)this.zLevel).tex( 1, 1).endVertex();
-	        vertexbuffer.pos(x + width, y, (double)this.zLevel).tex(1, 0).endVertex();
-	        vertexbuffer.pos(x, y, (double)this.zLevel).tex(0, 0).endVertex();
+	        vertexbuffer.pos(x, y + height, (double)this.field_230689_k_).tex(0, 1).endVertex();
+	        vertexbuffer.pos(x + width, y + height, (double)this.field_230689_k_).tex( 1, 1).endVertex();
+	        vertexbuffer.pos(x + width, y, (double)this.field_230689_k_).tex(1, 0).endVertex();
+	        vertexbuffer.pos(x, y, (double)this.field_230689_k_).tex(0, 0).endVertex();
 	        tessellator.draw();
 			
-			this.mouseDragged(minecraft, par2, par3);
+			// mousedragged
+			this.func_230430_a_(matrix, (int) par2, (int) par3, 0);
 		}
 	}
 }

@@ -1,45 +1,46 @@
 package zmaster587.libVulpes.tile;
 
 import zmaster587.libVulpes.cap.FluidCapability;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.BlockState;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public abstract class TileInventoriedRFConsumerTank extends TileInventoriedRFConsumer implements IFluidHandler {
 
 	protected FluidTank tank;
 
-	protected TileInventoriedRFConsumerTank(int energy, int invSize, int tankSize) {
-		super(energy,invSize);
+	protected TileInventoriedRFConsumerTank(TileEntityType<?> type, int energy, int invSize, int tankSize) {
+		super(type, energy,invSize);
 		tank = new FluidTank(tankSize);
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		NBTTagCompound tanks = new NBTTagCompound();
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
+		CompoundNBT tanks = new CompoundNBT();
 		tank.writeToNBT(tanks);
 
-		nbt.setTag("tank", tanks);
+		nbt.put("tank", tanks);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		if(nbt.hasKey("tank"))
-			tank.readFromNBT((NBTTagCompound)nbt.getTag("tank"));
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
+		if(nbt.contains("tank"))
+			tank.readFromNBT((CompoundNBT)nbt.getCompound("tank"));
 	}
 
 	@Override
-	public int fill(FluidStack resource, boolean doFill) {
+	public int fill(FluidStack resource, FluidAction doFill) {
 		return canFill(resource.getFluid()) ? tank.fill(resource, doFill) : 0;
 	}
 
@@ -48,44 +49,21 @@ public abstract class TileInventoriedRFConsumerTank extends TileInventoriedRFCon
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-			return true;
-		return super.hasCapability(capability, facing);
-	}
-	
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return (T) new FluidCapability(this);
+			return LazyOptional.of(() -> new FluidCapability(this)).cast();
 		}
 		return super.getCapability(capability, facing);
 	}
 	
 	@Override
-	public NBTTagCompound serializeNBT() {
-		return new NBTTagCompound();
-	}
-	@Override
-	public void deserializeNBT(NBTTagCompound nbt) {
-		
-	}
-	
-	@Override
 	public FluidStack drain(FluidStack resource,
-			boolean doDrain) {
-		return tank.drain(resource.amount, doDrain);
+			FluidAction doDrain) {
+		return tank.drain(resource.getAmount(), doDrain);
 	}
 
 	@Override
-	public FluidStack drain(int maxDrain, boolean doDrain) {
+	public FluidStack drain(int maxDrain, FluidAction doDrain) {
 		return tank.drain(maxDrain, doDrain);
-	}
-
-
-	@Override
-	public IFluidTankProperties[] getTankProperties() {
-		// TODO Auto-generated method stub
-		return tank.getTankProperties();
 	}
 }

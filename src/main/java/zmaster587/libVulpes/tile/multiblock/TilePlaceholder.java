@@ -1,28 +1,36 @@
 package zmaster587.libVulpes.tile.multiblock;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
+import zmaster587.libVulpes.api.LibVulpesTileEntityTypes;
 import zmaster587.libVulpes.tile.TilePointer;
-import zmaster587.libVulpes.util.ZUtils;
 
 //Used to store info about the block previously at the location
 public class TilePlaceholder extends TilePointer {
-	IBlockState replacedState;
+	public TilePlaceholder(TileEntityType<?> type) {
+		super(type);
+	}
+	
+	public TilePlaceholder() {
+		super(LibVulpesTileEntityTypes.TILE_PLACEHOLDER);
+	}
+
+	BlockState replacedState;
 	TileEntity replacedTile;
 	
-	public IBlockState getReplacedState() {
+	public BlockState getReplacedState() {
 		if(replacedState == null)
 			return Blocks.AIR.getDefaultState();
 		return replacedState;
 	}
 	
-	public void setReplacedBlockState(IBlockState state) {
+	public void setReplacedBlockState(BlockState state) {
 		this.replacedState = state;
 	}
 	
@@ -30,69 +38,58 @@ public class TilePlaceholder extends TilePointer {
 		return replacedTile;
 	}
 	
-	public int getReplacedMeta() {
-		if(replacedState == null || replacedState.getBlock() == null)
-			return 0;
-		return replacedState.getBlock().getMetaFromState(replacedState);
-	}
-	
 	public void setReplacedTileEntity(TileEntity tile) {
 		replacedTile = tile;
 	}
 	
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound nbt = new NBTTagCompound();
+	public SUpdateTileEntityPacket getUpdatePacket() {
+		CompoundNBT nbt = new CompoundNBT();
 
-		writeToNBT(nbt);
-		return new SPacketUpdateTileEntity(pos, 0, nbt);
+		write(nbt);
+		return new SUpdateTileEntityPacket(pos, 0, nbt);
 	}
 	
 	@Override
-	public NBTTagCompound getUpdateTag() {
-		NBTTagCompound nbt = new NBTTagCompound();
+	public CompoundNBT getUpdateTag() {
+		CompoundNBT nbt = new CompoundNBT();
 
-		return writeToNBT(nbt);
+		return write(nbt);
 	}
 	
 	@Override
-	public void handleUpdateTag(NBTTagCompound tag) {
-		super.handleUpdateTag(tag);
+	public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+		super.handleUpdateTag(state, tag);
 	}
-
 	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		NBTTagCompound nbt = pkt.getNbtCompound();
-		readFromNBT(nbt);
+	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+		CompoundNBT nbt = pkt.getNbtCompound();
+		deserializeNBT(nbt);
 	}
 	
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		
-		nbt.setInteger("ID", Block.getIdFromBlock(getReplacedState().getBlock()));
-		nbt.setInteger("damage", getReplacedState().getBlock().getMetaFromState(getReplacedState()));
-		NBTTagCompound tag = new NBTTagCompound();
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
+		nbt.putInt("ID", Block.getStateId(getReplacedState()));
+		CompoundNBT tag = new CompoundNBT();
 		
 		if(replacedTile != null) {
-			replacedTile.writeToNBT(tag);
-			nbt.setTag("tile", tag);
+			replacedTile.write(tag);
+			nbt.put("tile", tag);
 		}
 		return nbt;
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
 		
 		//TODO: perform sanity check
-		replacedState = Block.getBlockById(nbt.getInteger("ID")).getDefaultState();
-		replacedState = replacedState.getBlock().getStateFromMeta(nbt.getInteger("damage"));
+		replacedState = Block.getStateById(nbt.getInt("ID"));
 		
-		if(nbt.hasKey("tile")) {
-			NBTTagCompound tile = nbt.getCompoundTag("tile");
-			
-			replacedTile = ZUtils.createTile(tile);
+		if(nbt.contains("tile")) {
+			CompoundNBT tile = nbt.getCompound("tile");
+			replacedTile = TileEntity.func_235657_b_(replacedState, tile);
 		}
 	}
 }

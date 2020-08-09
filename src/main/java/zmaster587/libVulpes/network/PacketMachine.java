@@ -1,29 +1,31 @@
 package zmaster587.libVulpes.network;
 
-import io.netty.buffer.ByteBuf;
+import java.util.function.Supplier;
+
 import zmaster587.libVulpes.util.INetworkMachine;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkEvent;
 
-public class PacketMachine extends BasePacket {
+public class PacketMachine {
 
 	INetworkMachine machine;
 
-	NBTTagCompound nbt;
+	CompoundNBT nbt;
 
 	byte packetId;
 
 	public PacketMachine() {
-		nbt = new NBTTagCompound();
+		nbt = new CompoundNBT();
 	};
 
 	public PacketMachine(INetworkMachine machine, byte packetId) {
@@ -32,10 +34,38 @@ public class PacketMachine extends BasePacket {
 		this.packetId = packetId;
 	}
 
-
-	@Override
-	public void write(ByteBuf outline) {
-		outline.writeInt(((TileEntity)machine).getWorld().provider.getDimension());
+	
+	public static void encode(PacketMachine pkt, PacketBuffer buf)
+	{
+		pkt.write(buf);
+	}
+	
+	public static PacketMachine decode( PacketBuffer buf)
+	{
+		PacketMachine pkt = new PacketMachine();
+		 
+		pkt.read(buf);
+		return pkt;
+	}
+	
+	public static class Handler 
+	{
+		public static void handle(PacketMachine msg, Supplier<NetworkEvent.Context> ctx)
+		{
+			if(ctx.get().getDirection().getReceptionSide().isServer())
+				ctx.get().enqueueWork(() -> msg.executeServer(ctx.get().getSender()));
+			else
+				ctx.get().enqueueWork(() -> msg.executeClient(Minecraft.getInstance().player));
+			
+			ctx.get().setPacketHandled(true);
+			
+		}
+	}
+	
+	public void write(PacketBuffer outline) {
+		// dimension
+		BasePacket.writeWorld(outline, ((TileEntity)machine).getWorld());
+		outline.writeInt(((TileEntity)machine).getWorld().func_230315_m_().func_241513_m_());
 		outline.writeInt(((TileEntity)machine).getPos().getX());
 		outline.writeInt(((TileEntity)machine).getPos().getY());
 		outline.writeInt(((TileEntity)machine).getPos().getZ());
@@ -43,18 +73,13 @@ public class PacketMachine extends BasePacket {
 		outline.writeByte(packetId);
 
 		machine.writeDataToNetwork(outline, packetId);
-		//ByteBuf buffer
-		//outline.writeBytes(out.toByteArray());
-		//outline.
-		//outline. =  (ByteBuf)out.toByteArray();
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void readClient(ByteBuf in) {
+	@OnlyIn(value=Dist.CLIENT)
+	public void readClient(PacketBuffer in) {
 		//DEBUG:
-		in.readInt();
-		World world = Minecraft.getMinecraft().world;
+		BasePacket.readWorld(in);
+		World world = Minecraft.getInstance().world;
 		int x = in.readInt();
 		int y = in.readInt();
 		int z = in.readInt();
@@ -71,11 +96,9 @@ public class PacketMachine extends BasePacket {
 		}
 	}
 
-	@Override
-	public void read(ByteBuf in) {
-		//DEBUG:
-		int temp = in.readInt();
-		World world = DimensionManager.getWorld(temp);
+	
+	public void read(PacketBuffer in) {
+		World world = BasePacket.readWorld(in);
 
 		int x = in.readInt();
 		int y = in.readInt();
@@ -83,9 +106,9 @@ public class PacketMachine extends BasePacket {
 		packetId = in.readByte();
 
 		BlockPos pos = new BlockPos(x,y,z);
-		Chunk chunk = world.getChunkFromBlockCoords(pos);
-
-		if(chunk != null && chunk.isLoaded()) {
+		Chunk chunk = world.getChunkAt(pos);
+		
+		if(chunk != null && world.isBlockLoaded(pos)) {
 			TileEntity ent = world.getTileEntity(pos);
 
 			if(ent != null && ent instanceof INetworkMachine) {
@@ -98,18 +121,18 @@ public class PacketMachine extends BasePacket {
 		}
 	}
 
-	public void executeClient(EntityPlayer player) {
+	public void executeClient(PlayerEntity player) {
 		//Machine can be null if not all chunks are loaded
 		if(machine != null)
-			machine.useNetworkData(player, Side.CLIENT, packetId, nbt);
+			machine.useNetworkData(player, Dist.CLIENT, packetId, nbt);
 	}
 
-	public void executeServer(EntityPlayerMP player) {
+	public void executeServer(ServerPlayerEntity player) {
 		if(machine != null)
-			machine.useNetworkData(player, Side.SERVER, packetId, nbt);
+			machine.useNetworkData(player, Dist.DEDICATED_SERVER, packetId, nbt);
 	}
 
-	public void execute(EntityPlayer player, Side side) {
+	public void execute(PlayerEntity player, Dist side) {
 		if(machine != null)
 			machine.useNetworkData(player, side, packetId, nbt);
 	}

@@ -3,16 +3,25 @@ package zmaster587.libVulpes.tile.energy;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import zmaster587.libVulpes.api.IUniversalEnergy;
+import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.cap.ForgePowerCapability;
-import zmaster587.libVulpes.cap.TeslaHandler;
+import zmaster587.libVulpes.inventory.ContainerModular;
+import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModulePower;
@@ -25,11 +34,13 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	protected UniversalBattery storage;
 	protected int teir;
 	
-	public TilePlugBase() {
+	public TilePlugBase(TileEntityType<?> type) {
+		super(type);
 		storage = new UniversalBattery(getMaxEnergy(0));
 	}
 	
-	public TilePlugBase(int teir) {
+	public TilePlugBase(TileEntityType<?> type,int teir) {
+		super(type);
 		storage = new UniversalBattery(getMaxEnergy(0));
 		setTeir(teir);
 	}
@@ -48,53 +59,35 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 		storage.setMaxEnergyStored(max);
 		
 	}
-	
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-
-		if(capability == CapabilityEnergy.ENERGY || TeslaHandler.hasTeslaCapability(this, capability))
-			return true;
-		return false;
-	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
 
 		if(capability == CapabilityEnergy.ENERGY )
-			return (T)(new ForgePowerCapability(this));
-		else if(TeslaHandler.hasTeslaCapability(this, capability))
-			return (T)(TeslaHandler.getHandler(this));
+			return LazyOptional.of(() -> (new ForgePowerCapability(this))).cast();
 		
 		return super.getCapability(capability, facing);
 	}
 	
-	@Override
-	public NBTTagCompound serializeNBT() {
-		return new NBTTagCompound();
-	}
-	@Override
-	public void deserializeNBT(NBTTagCompound nbt) {
-		
-	}
 	
 	protected int getMaxDrainRate(int teir) {
 		return 250*(int)Math.pow(2, teir);
 	}
 	
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		nbt.setInteger("teir", teir);
-		storage.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
+		nbt.putInt("teir", teir);
+		storage.write(nbt);
 		
 		return nbt;
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
 		
-		teir = nbt.getInteger("teir");
+		teir = nbt.getInt("teir");
 		
 		storage = new UniversalBattery(getMaxEnergy(teir));
 		storage.readFromNBT(nbt);
@@ -126,23 +119,18 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	}
 
 	@Override
-	public boolean hasCustomName() {
-		return true;
-	}
-
-	@Override
 	public int getInventoryStackLimit() {
 		return 0;
 	}
 	
 	
 	@Override
-	public void openInventory(EntityPlayer player) {
+	public void openInventory(PlayerEntity player) {
 		
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer player) {
+	public void closeInventory(PlayerEntity player) {
 		
 	}
 
@@ -157,34 +145,19 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	}
 
 	@Override
-	public int getField(int id) {
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value) {
-		
-	}
-
-	@Override
-	public int getFieldCount() {
-		return 0;
-	}
-
-	@Override
 	public void clear() {
 		
 	}
 	
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		List<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModulePower(18, 20,this));
 		return modules;
 	}
 
 	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
+	public boolean canInteractWithContainer(PlayerEntity entity) {
 		return true;
 	}
 
@@ -209,12 +182,27 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(PlayerEntity player) {
 		return true;
 	}
 	
 	@Override
 	public boolean isEmpty() {
 		return false;
+	}
+	
+	@Override
+	public int getModularInvType() {
+		return GuiHandler.guiId.MODULAR.ordinal();
+	}
+	
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TranslationTextComponent(getModularInventoryName());
+	}
+
+	@Override
+	public Container createMenu(int ID, PlayerInventory playerInv, PlayerEntity playerEntity) {
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, ID, playerEntity, getModules(getModularInvType(), playerEntity), this);
 	}
 }

@@ -2,21 +2,28 @@ package zmaster587.libVulpes.tile;
 
 
 import zmaster587.libVulpes.api.IToggleableMachine;
+import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.util.UniversalBattery;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.world.World;
 
-public abstract class TileEntityMachine extends TileEntity implements ISidedInventory, ITickable,  IToggleableMachine {
+public abstract class TileEntityMachine extends TileEntity implements ISidedInventory, ITickableTileEntity,  IToggleableMachine {
 	
 	
+	public TileEntityMachine(TileEntityType<?> tileEntityTypeIn) {
+		super(tileEntityTypeIn);
+	}
+
 	protected UniversalBattery energy;
 	
 	protected ItemStack inv[];
@@ -40,65 +47,64 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 	}
 	
 	protected boolean getIsRunning() {
-		return (this.getBlockMetadata() & 8) == 8;
+		return this.getBlockState().get(BlockTile.STATE);
 	}
 	
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound nbt = new NBTTagCompound();
-		this.writeToNBT(nbt);
-
-		return new SPacketUpdateTileEntity(this.pos, 0, nbt);
+	public SUpdateTileEntityPacket getUpdatePacket() {
+		CompoundNBT nbt = new CompoundNBT();
+		nbt = this.write(nbt);
+		return new SUpdateTileEntityPacket(this.pos, 0, nbt);
 	}
 	
 	@Override 
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.getNbtCompound());
+	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+		this.func_230337_a_(getBlockState(), pkt.getNbtCompound());
 	}
 	
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
 
-		NBTTagList list = new NBTTagList();
+		ListNBT list = new ListNBT();
 
-		NBTTagList itemList = new NBTTagList();
+		ListNBT itemList = new ListNBT();
 		for(int i = 0; i < inv.length; i++)
 		{
 			ItemStack stack = inv[i];
 
 			if(stack != null) {
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setByte("Slot", (byte)(i));
-				stack.writeToNBT(tag);
-				itemList.appendTag(tag);
+				CompoundNBT tag = new CompoundNBT();
+				tag.putByte("Slot", (byte)(i));
+				stack.write(tag);
+				itemList.add(tag);
 			}
 		}
-		nbt.setTag("Inventory", itemList);
+		nbt.put("Inventory", itemList);
 		
-		nbt.setInteger("progress", progress);
-		nbt.setInteger("totalTime", totalTime);
+		nbt.putInt("progress", progress);
+		nbt.putInt("totalTime", totalTime);
 		
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
 		
-		NBTTagList tagList = nbt.getTagList("Inventory", (byte)10);
-		for (int i = 0; i < tagList.tagCount(); i++) {
-			NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
+		ListNBT tagList = nbt.getList("Inventory", (byte)10);
+		for (int i = 0; i < tagList.size(); i++) {
+			CompoundNBT tag = (CompoundNBT) tagList.getCompound(i);
 			byte slot = tag.getByte("Slot");
 			if (slot >= 0 && slot < inv.length) {
-				inv[slot] = new ItemStack(tag);
+				inv[slot] = ItemStack.read(tag);
 			}
 		}
 		
-		progress = nbt.getInteger("progress");
-		totalTime = nbt.getInteger("totalTime");
+		progress = nbt.getInt("progress");
+		totalTime = nbt.getInt("totalTime");
 	}
-	
+
 	@Override
 	public int getSizeInventory() {
 		return inv.length;
@@ -125,7 +131,7 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 		if(inv[i] == null)
 			ret = null;
 		else if(inv[i].getCount() > j) {
-			ret = inv[i].splitStack(j);
+			ret = inv[i].split(j);
 		}
 		else {
 			ret = inv[i].copy();
@@ -150,7 +156,7 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 	}
 	
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer entityplayer) {
-		return entityplayer.getDistanceSq(this.pos) < 64;
+	public boolean isUsableByPlayer(PlayerEntity entityplayer) {
+		return entityplayer.getDistanceSq(this.pos.getX(), this.pos.getY(), this.pos.getZ()) < 64;
 	}
 }

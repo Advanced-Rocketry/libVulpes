@@ -1,6 +1,6 @@
 # Blender v2.77 (sub 0) OBJ File: 'bottomTank.blend'
 # www.blender.org
-mtllib advancedMotor.mtl
+mtllib advancedmotor.mtl
 o Motor
 v 0.250000 0.250000 0.312500
 v 0.187500 0.125000 0.312500

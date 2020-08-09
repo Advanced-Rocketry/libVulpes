@@ -1,10 +1,14 @@
 package zmaster587.libVulpes.inventory.modules;
 
 import zmaster587.libVulpes.util.IconResource;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 
 public class ModuleTexturedSlotArray extends ModuleSlotArray {
 
@@ -20,10 +24,10 @@ public class ModuleTexturedSlotArray extends ModuleSlotArray {
 	}
 	
 	@Override
-	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY,
+	public void renderBackground(ContainerScreen<? extends Container> gui, MatrixStack mat, int x, int y, int mouseX, int mouseY,
 			FontRenderer font) {
 		for(Slot slot : slotList) {
-			gui.drawTexturedModalRect(x + slot.xPos - 1, y + slot.yPos - 1, iconResource.getxLoc(), iconResource.getyLoc(), iconResource.getxSize(), iconResource.getySize());
+			gui.func_238474_b_(mat, x + slot.xPos - 1, y + slot.yPos - 1, iconResource.getxLoc(), iconResource.getyLoc(), iconResource.getxSize(), iconResource.getySize());
 		}
 	}
 }

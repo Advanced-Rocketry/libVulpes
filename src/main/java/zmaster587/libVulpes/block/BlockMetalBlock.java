@@ -1,11 +1,12 @@
 package zmaster587.libVulpes.block;
 
-import net.minecraft.world.IBlockAccess;
+import zmaster587.libVulpes.api.material.AllowedProducts;
+import zmaster587.libVulpes.api.material.Material;
 
 public class BlockMetalBlock extends BlockOre {
 
-	public BlockMetalBlock(net.minecraft.block.material.Material mat) {
-		super(mat);
+	public BlockMetalBlock(Properties mat, AllowedProducts product, Material material) {
+		super(mat, product, material);
 	}
 
 }

@@ -1,0 +1,5 @@
+{
+  "loader": "forge:obj",
+  "model": "libvulpes:models/block/models/enhancedmotor.obj",
+  "flip-v": false
+}

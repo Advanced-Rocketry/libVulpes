@@ -1,19 +1,19 @@
 package zmaster587.libVulpes.energy;
 
 import zmaster587.libVulpes.api.IUniversalEnergy;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 public interface IPower extends IUniversalEnergy {
 	
-	public boolean canConnectEnergy(EnumFacing facing);
+	public boolean canConnectEnergy(Direction facing);
 	
-	public int extractEnergy(EnumFacing dir, int maxExtract, boolean simulate);
+	public int extractEnergy(Direction dir, int maxExtract, boolean simulate);
 	
-	public int getEnergyStored(EnumFacing dir);
+	public int getEnergyStored(Direction dir);
 	
-	public int getMaxEnergyStored(EnumFacing dir);
+	public int getMaxEnergyStored(Direction dir);
 	
-	public int receiveEnergy(EnumFacing dir, int amt, boolean simulate);
+	public int receiveEnergy(Direction dir, int amt, boolean simulate);
 	
 	public int receiveEnergy(int amt, boolean simulate);
 }

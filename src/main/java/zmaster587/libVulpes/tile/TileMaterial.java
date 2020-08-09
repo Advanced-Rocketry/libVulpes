@@ -2,16 +2,18 @@ package zmaster587.libVulpes.tile;
 
 import zmaster587.libVulpes.api.material.Material;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.TileEntityType;
 
 public class TileMaterial extends TilePointer {
 
 	Material materialType;
 
-	public TileMaterial() {
-		super();
+	public TileMaterial(TileEntityType<?> type) {
+		super(type);
 	}
 
 	@Override
@@ -28,45 +30,45 @@ public class TileMaterial extends TilePointer {
 	}
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound nbt = new NBTTagCompound();
+	public SUpdateTileEntityPacket getUpdatePacket() {
+		CompoundNBT nbt = new CompoundNBT();
 
-		nbt.setString("material", materialType.getUnlocalizedName());
+		nbt.putString("material", materialType.getUnlocalizedName());
 
-		return new SPacketUpdateTileEntity(pos, world.provider.getDimension(), nbt);
+		return new SUpdateTileEntityPacket(pos, -1, nbt);
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag() {
-		NBTTagCompound nbt = super.getUpdateTag();
-		nbt.setString("material", materialType.getUnlocalizedName());
+	public CompoundNBT getUpdateTag() {
+		CompoundNBT nbt = super.getUpdateTag();
+		nbt.putString("material", materialType.getUnlocalizedName());
 		return nbt;
 	}
 	
 	@Override
-	public void handleUpdateTag(NBTTagCompound tag) {
-		super.handleUpdateTag(tag);
+	public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+		super.handleUpdateTag(state, tag);
 		materialType = MaterialRegistry.getMaterialFromName(tag.getString("material"));
 	}
 	
 	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 		materialType = MaterialRegistry.getMaterialFromName(pkt.getNbtCompound().getString("material"));
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
 		if(materialType != null)
-			nbt.setString("material", materialType.getUnlocalizedName());
+			nbt.putString("material", materialType.getUnlocalizedName());
 		
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		if(nbt.hasKey("material"))
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
+		if(nbt.contains("material"))
 			materialType = MaterialRegistry.getMaterialFromName(nbt.getString("material"));
 	}
 }

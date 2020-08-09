@@ -1,67 +1,47 @@
 package zmaster587.libVulpes.block.multiblock;
 
-import java.util.List;
 import java.util.Random;
 
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.inventory.GuiHandler;
-import zmaster587.libVulpes.tile.TilePointer;
-import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInputHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 public class BlockHatch extends BlockMultiblockStructure {
 
 	private final Random random = new Random();
 
-	public BlockHatch(Material material) {
-		super(material);
-		isBlockContainer = true;
-		this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT,0));
+	public BlockHatch(Properties properties) {
+		super(properties);
 	}
 
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, new IProperty[] {VARIANT});
-	}
 
 	@Override
-	public boolean hasTileEntity(IBlockState state) {
+	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
 	
-	@Override
-	public void getSubBlocks(CreativeTabs tab,
-			NonNullList<ItemStack> list) {
-		list.add(new ItemStack(this, 1, 0));
-		list.add(new ItemStack(this, 1, 1));
-		list.add(new ItemStack(this, 1, 2));
-		list.add(new ItemStack(this, 1, 3));
-	}
 
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		//TODO: multiple sized Hatches
-		int metadata = state.getValue(VARIANT);
+		int metadata = state.get(VARIANT);
 		if((metadata & 7) == 0)
 			return new TileInputHatch(4);
 		else if((metadata & 7) == 1)
@@ -73,9 +53,11 @@ public class BlockHatch extends BlockMultiblockStructure {
 
 		return null;
 	}
+	
+	
 
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+	public void onPlayerDestroy(IWorld world, BlockPos pos, BlockState state) {
 
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile != null && tile instanceof IInventory) {
@@ -86,45 +68,41 @@ public class BlockHatch extends BlockMultiblockStructure {
 				if(stack == null)
 					continue;
 
-				EntityItem entityitem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+				ItemEntity entityitem = new ItemEntity((World) world, pos.getX(), pos.getY(), pos.getZ(), stack);
 
 				float mult = 0.05F;
 
-				entityitem.motionX = (double)((float)this.random.nextGaussian() * mult);
-				entityitem.motionY = (double)((float)this.random.nextGaussian() * mult + 0.2F);
-				entityitem.motionZ = (double)((float)this.random.nextGaussian() * mult);
+				entityitem.setMotion((double)((float)this.random.nextGaussian() * mult),
+				(double)((float)this.random.nextGaussian() * mult + 0.2F),
+				(double)((float)this.random.nextGaussian() * mult));
 
-				world.spawnEntity(entityitem);
+				world.addEntity(entityitem);
 			}
 		}
 
-		super.breakBlock(world, pos, state);
+		super.onPlayerDestroy(world, pos, state);
 	}
 
 
-
 	@Override
-	public boolean shouldSideBeRendered(IBlockState blockState,
-			IBlockAccess blockAccess, BlockPos pos, EnumFacing direction) {
+	public boolean isSideInvisible(BlockState blockState, BlockState adjacentBlockState,
+			Direction direction) {
 
-
-		boolean isPointer = blockAccess.getTileEntity(pos.offset(direction.getOpposite())) instanceof TilePointer;
-		if(isPointer)
-			isPointer = isPointer && !(((TilePointer)blockAccess.getTileEntity(pos.offset(direction.getOpposite()))).getMasterBlock() instanceof TileMultiBlock);
-
-		return blockState.getValue(VARIANT) < 8;
+		return (blockState.get(VARIANT) >= 8);
 
 	}
-
+	
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos,
-			IBlockState state, EntityPlayer playerIn, EnumHand hand,
-			EnumFacing facing, float hitX, float hitY, float hitZ) {
-		int meta = worldIn.getBlockState(pos).getValue(VARIANT);
-		//Handlue gui through modular system
-		if((meta & 7) < 8 && !worldIn.isRemote)
-			playerIn.openGui(LibVulpes.instance, GuiHandler.guiId.MODULAR.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
-
-		return true;
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,
+			Hand handIn, BlockRayTraceResult hit) {
+		int meta = world.getBlockState(pos).get(VARIANT);
+		if((meta & 7) < 8  && !world.isRemote)
+		{
+			
+			TileEntity te = world.getTileEntity(pos);
+			if(te != null)
+				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)te, pos);
+		}
+		return ActionResultType.SUCCESS;
 	}
 }

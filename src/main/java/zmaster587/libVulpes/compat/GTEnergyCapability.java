@@ -1,10 +1,8 @@
 package zmaster587.libVulpes.compat;
 
-import net.minecraft.util.EnumFacing;
-import zmaster587.libVulpes.Configuration;
 import zmaster587.libVulpes.util.UniversalBattery;
 
-public class GTEnergyCapability implements gregtech.api.capability.IEnergyContainer {
+public class GTEnergyCapability /*implements gregtech.api.capability.IEnergyContainer*/ {
 
 	UniversalBattery storage;
 	
@@ -13,13 +11,13 @@ public class GTEnergyCapability implements gregtech.api.capability.IEnergyContai
 		this.storage = storage;
 	}
 	
-	@Override
+	/*@Override
 	public long getEnergyStored() {
 		return storage.getUniversalEnergyStored();
 	}
 
 	@Override
-	public long acceptEnergyFromNetwork(EnumFacing arg0, long arg1, long arg2) {
+	public long acceptEnergyFromNetwork(Direction arg0, long arg1, long arg2) {
 		return storage.acceptEnergy((int)(arg1*arg2*Configuration.EUMult), false);
 	}
 
@@ -48,7 +46,7 @@ public class GTEnergyCapability implements gregtech.api.capability.IEnergyContai
 	}
 
 	@Override
-	public boolean inputsEnergy(EnumFacing arg0) {
+	public boolean inputsEnergy(Direction arg0) {
 		return true;
-	}
+	}*/
 }

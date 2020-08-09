@@ -1,16 +1,15 @@
 package zmaster587.libVulpes.client;
 
 import zmaster587.libVulpes.api.IToggleableMachine;
-import net.minecraft.client.audio.MovingSound;
+import net.minecraft.client.audio.TickableSound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
-public class RepeatingSound extends MovingSound {
-
+@OnlyIn(value=Dist.CLIENT)
+public class RepeatingSound extends TickableSound {
 	TileEntity tile;
 	IToggleableMachine toggle;
 
@@ -18,18 +17,19 @@ public class RepeatingSound extends MovingSound {
 		super(soundIn, categoryIn);
 		this.tile = tile;
 		this.repeat = true;
-		xPosF = tile.getPos().getX();
-		yPosF = tile.getPos().getY();
-		zPosF = tile.getPos().getZ();
+		x = tile.getPos().getX();
+		y = tile.getPos().getY();
+		z = tile.getPos().getZ();
 		
 		if(tile instanceof IToggleableMachine)
 			toggle = (IToggleableMachine)tile;
 	}
-
+	
 	@Override
-	public void update() {
-		if(tile.isInvalid())
-			this.donePlaying = true;
+	public void tick() {
+		if(tile.isRemoved())
+			// done playing
+			this.func_239509_o_();
 		if(toggle != null)
 			this.volume = toggle.isRunning() ? 1f : 0f;
 	}

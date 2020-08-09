@@ -1,39 +1,61 @@
 package zmaster587.libVulpes.network;
 
-import java.io.IOException;
+import java.util.function.Supplier;
 
-import zmaster587.libVulpes.interfaces.INetworkEntity;
-import zmaster587.libVulpes.util.INetworkMachine;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkEvent;
 
-public class PacketItemModifcation extends BasePacket {
+public class PacketItemModifcation {
 
-	NBTTagCompound nbt;
+	public static void encode(PacketItemModifcation pkt, PacketBuffer buf)
+	{
+		pkt.write(buf);
+	}
+	
+	public static PacketItemModifcation decode( PacketBuffer buf)
+	{
+		PacketItemModifcation pkt = new PacketItemModifcation();
+		 
+		pkt.read(buf);
+		return pkt;
+	}
+	
+	public static class Handler 
+	{
+		public static void handle(PacketItemModifcation msg, Supplier<NetworkEvent.Context> ctx)
+		{
+			if(ctx.get().getDirection().getReceptionSide().isServer())
+				ctx.get().enqueueWork(() -> msg.executeServer(ctx.get().getSender()));
+			else
+				ctx.get().enqueueWork(() -> msg.executeClient(Minecraft.getInstance().player));
+			
+			ctx.get().setPacketHandled(true);
+			
+		}
+	}
+	
+	CompoundNBT nbt;
 
 	byte packetId;
 	int entityId;
-	EntityPlayer entity;
+	PlayerEntity entity;
 	INetworkItem machine;
 
 	public PacketItemModifcation() {
-		nbt = new NBTTagCompound();
+		nbt = new CompoundNBT();
 	};
 
-	public PacketItemModifcation(INetworkItem machine, EntityPlayer entity, byte packetId) {
+	public PacketItemModifcation(INetworkItem machine, PlayerEntity entity, byte packetId) {
 		this();
 		this.machine = machine;
 		this.entity = entity;
@@ -42,49 +64,36 @@ public class PacketItemModifcation extends BasePacket {
 	}
 
 
-	public PacketItemModifcation(INetworkItem machine, EntityPlayer entity, byte packetId, NBTTagCompound nbt) {
+	public PacketItemModifcation(INetworkItem machine, PlayerEntity entity, byte packetId, CompoundNBT nbt) {
 		this(machine, entity, packetId);
 		this.nbt = nbt;
 	}
 
-	@Override
-	public void write(ByteBuf out) {
-		PacketBuffer buffer = new PacketBuffer(out);
-
-		write(buffer);
-	}
 
 	private void write(PacketBuffer out) {
-		out.writeInt(entity.world.provider.getDimension());
+		BasePacket.writeWorld(out, entity.world);
 		out.writeInt(entity.getEntityId());
 		out.writeByte(packetId);
 
-		out.writeBoolean(!nbt.hasNoTags());
+		out.writeBoolean(!nbt.isEmpty());
 
-		if(!nbt.hasNoTags()) {
+		if(!nbt.isEmpty()) {
 			out.writeCompoundTag(nbt);
 		}
 
-		machine.writeDataToNetwork(out, packetId, entity.getHeldItem(EnumHand.MAIN_HAND));
+		machine.writeDataToNetwork(out, packetId, entity.getHeldItem(Hand.MAIN_HAND));
 	}
 
-	@Override
-	public void read(ByteBuf in) {
-		PacketBuffer buffer = new PacketBuffer(in);
-		read(buffer, true);
-	}
-
-	public void read(PacketBuffer in, boolean server) {
+	public void read(PacketBuffer in) {
 		//DEBUG:
-		World world;
-		world = DimensionManager.getWorld(in.readInt());
+		World world = BasePacket.readWorld(in);
 
 		int entityId = in.readInt();
 		packetId = in.readByte();
 
 		Entity ent = world.getEntityByID(entityId);
 		if(ent == null) {
-			for(Entity e : world.playerEntities) {
+			for(Entity e : world.getPlayers()) {
 				if(e.getEntityId() == entityId) {
 					ent = e;
 					break;
@@ -93,19 +102,13 @@ public class PacketItemModifcation extends BasePacket {
 		}
 
 		if(in.readBoolean()) {
-			NBTTagCompound nbt = null;
-
-			try {
-				nbt = in.readCompoundTag();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
+			CompoundNBT nbt = null;
+			nbt = in.readCompoundTag();
 			this.nbt = nbt;
 		}
 
-		if(ent != null && ent instanceof EntityPlayer) {
-			ItemStack itemStack = ((EntityPlayer)ent).getHeldItem(EnumHand.MAIN_HAND);
+		if(ent != null && ent instanceof PlayerEntity) {
+			ItemStack itemStack = ((PlayerEntity)ent).getHeldItem(Hand.MAIN_HAND);
 			if(itemStack != null && itemStack.getItem() instanceof INetworkItem) {
 				((INetworkItem)itemStack.getItem()).readDataFromNetwork(in, packetId, nbt, itemStack);
 			}
@@ -115,10 +118,10 @@ public class PacketItemModifcation extends BasePacket {
 		}
 	}
 
-	public void execute(EntityPlayer player, Side side) {
+	public void execute(PlayerEntity player, Dist side) {
 
 		if(player != null) {
-			ItemStack itemStack = player.getHeldItem(EnumHand.MAIN_HAND);
+			ItemStack itemStack = player.getHeldItem(Hand.MAIN_HAND);
 			if(itemStack != null && itemStack.getItem() instanceof INetworkItem) {
 				((INetworkItem)itemStack.getItem()).useNetworkData(player, side, packetId, nbt, itemStack);
 			}
@@ -128,26 +131,25 @@ public class PacketItemModifcation extends BasePacket {
 		}
 	}
 
-	@Override
-	public void executeServer(EntityPlayerMP player) {
-		execute((EntityPlayer)player, Side.SERVER);
+
+	public void executeServer(ServerPlayerEntity player) {
+		execute((PlayerEntity)player, Dist.DEDICATED_SERVER);
 	}
 
-	@Override
-	public void executeClient(EntityPlayer player) {
-		execute((EntityPlayer)player, Side.CLIENT);
+
+	public void executeClient(PlayerEntity player) {
+		execute((PlayerEntity)player, Dist.CLIENT);
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void readClient(ByteBuf in) {
+	@OnlyIn(value=Dist.CLIENT)
+	public void readClient(PacketBuffer in) {
 		PacketBuffer buffer = new PacketBuffer(in);
 
 		//DEBUG:
 		World world;
 
-		buffer.readInt();
-		world = Minecraft.getMinecraft().world;
+		BasePacket.readWorld(in);
+		world = Minecraft.getInstance().world;
 
 		int entityId = buffer.readInt();
 		packetId = buffer.readByte();
@@ -155,19 +157,13 @@ public class PacketItemModifcation extends BasePacket {
 		Entity ent = world.getEntityByID(entityId);
 
 		if(buffer.readBoolean()) {
-			NBTTagCompound nbt = null;
-
-			try {
-				nbt = buffer.readCompoundTag();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
+			CompoundNBT nbt = null;
+			nbt = buffer.readCompoundTag();
 			this.nbt = nbt;
 		}
 
-		if(ent != null && ent instanceof EntityPlayer) {
-			ItemStack itemStack = ((EntityPlayer)ent).getHeldItem(EnumHand.MAIN_HAND);
+		if(ent != null && ent instanceof PlayerEntity) {
+			ItemStack itemStack = ((PlayerEntity)ent).getHeldItem(Hand.MAIN_HAND);
 			if(itemStack != null && itemStack.getItem() instanceof INetworkItem) {
 				((INetworkItem)itemStack.getItem()).readDataFromNetwork(in, packetId, nbt, itemStack);
 			}

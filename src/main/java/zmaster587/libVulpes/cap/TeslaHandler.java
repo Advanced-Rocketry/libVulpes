@@ -1,16 +1,8 @@
 package zmaster587.libVulpes.cap;
 
-import zmaster587.libVulpes.api.IUniversalEnergy;
-import net.darkhax.tesla.api.ITeslaConsumer;
-import net.darkhax.tesla.api.ITeslaHolder;
-import net.darkhax.tesla.api.ITeslaProducer;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-
 public class TeslaHandler {
 
-	public TeslaHandler() {
+	/*public TeslaHandler() {
 	}
 	
 	@CapabilityInject(ITeslaConsumer.class)
@@ -35,5 +27,5 @@ public class TeslaHandler {
 		if(TESLA_CONSUMER == null && TESLA_HOLDER == null && TESLA_PRODUCER == null)
 			return null;
 		return new TeslaPowerCapability(e);
-	}
+	}*/
 }

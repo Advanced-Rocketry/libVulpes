@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "libvulpes:blocks/IC2Plug"
+        "all": "libvulpes:blocks/ic2plug"
     }
 }

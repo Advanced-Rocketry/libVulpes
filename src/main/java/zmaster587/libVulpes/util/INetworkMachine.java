@@ -1,9 +1,9 @@
 package zmaster587.libVulpes.util;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.api.distmarker.Dist;
 
 
 public interface INetworkMachine {
@@ -12,8 +12,8 @@ public interface INetworkMachine {
 	public void writeDataToNetwork(ByteBuf out, byte id);
 	
 	//Reads data, stores read data to nbt to be passed to useNetworkData
-	public void readDataFromNetwork(ByteBuf in, byte packetId, NBTTagCompound nbt);
+	public void readDataFromNetwork(ByteBuf in, byte packetId, CompoundNBT nbt);
 	
 	//Applies changes from network
-	public void useNetworkData(EntityPlayer player, Side side, byte id, NBTTagCompound nbt);
+	public void useNetworkData(PlayerEntity player, Dist side, byte id, CompoundNBT nbt);
 }

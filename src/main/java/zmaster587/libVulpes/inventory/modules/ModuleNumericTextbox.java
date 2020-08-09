@@ -1,6 +1,6 @@
 package zmaster587.libVulpes.inventory.modules;
 
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.glfw.GLFW;
 
 public class ModuleNumericTextbox extends ModuleTextBox {
 
@@ -14,14 +14,15 @@ public class ModuleNumericTextbox extends ModuleTextBox {
 	}
 
 	@Override
-	public boolean keyTyped(char chr, int t) {
+	public boolean keyTyped(int chr, int t) {
 
-		if(textBox.isFocused()) {
-			if(Keyboard.KEY_ESCAPE == t)
-				textBox.setFocused(false);
-			else if(Character.isDigit(chr) || chr == '-' || t == Keyboard.KEY_BACK || t == Keyboard.KEY_DELETE || t == Keyboard.KEY_LEFT || t == Keyboard.KEY_RIGHT) {
+		// is focused
+		if(textBox.func_230999_j_()) {
+			if(GLFW.GLFW_KEY_ESCAPE == t)
+				textBox.setFocused2(false);
+			else if(Character.isDigit(chr) || chr == '-' || t == GLFW.GLFW_KEY_BACKSPACE || t == GLFW.GLFW_KEY_DELETE || t == GLFW.GLFW_KEY_LEFT || t == GLFW.GLFW_KEY_RIGHT) {
 				if((chr != '-' || (textBox.getCursorPosition() == 0 && !textBox.getText().startsWith("-")))) {
-					textBox.textboxKeyTyped(chr, t);
+					textBox.func_231042_a_((char) chr, t);
 
 					//Make callback to calling tile
 					tile.onModuleUpdated(this);

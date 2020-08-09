@@ -1,19 +1,15 @@
 package zmaster587.libVulpes.api;
 
-import java.util.List;
-
 import zmaster587.libVulpes.client.ResourceIcon;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.items.SlotItemHandler;
 
 public interface IArmorComponent {
 	
@@ -25,7 +21,7 @@ public interface IArmorComponent {
 	 * @param modules Inventory of the armorStack containing all modules inlcuding the current one
 	 * @param componentStack the ItemStack representing the current component being ticked
 	 */
-	public void onTick(World world, EntityPlayer player, ItemStack armorStack, IInventory modules, ItemStack componentStack);
+	public void onTick(World world, PlayerEntity player, ItemStack armorStack, IInventory modules, ItemStack componentStack);
 	
 	/**
 	 * Called right before adding a component to the armor
@@ -38,19 +34,19 @@ public interface IArmorComponent {
 	
 	public void onComponentRemoved(World world, ItemStack armorStack);
 	
-	public void onArmorDamaged(EntityLivingBase entity, ItemStack armorStack, ItemStack componentStack, DamageSource source, int damage);
-	
-	public boolean isAllowedInSlot(ItemStack componentStack, EntityEquipmentSlot armorType);
+	public void onArmorDamaged(LivingEntity entity, ItemStack armorStack, ItemStack componentStack, DamageSource source, int damage);
 
-	@SideOnly(Side.CLIENT)
+	public boolean isAllowedInSlot(ItemStack componentStack, SlotItemHandler armorType);
+
+	/*@OnlyIn(value=Dist.CLIENT)
 	public void renderScreen(ItemStack componentStack, List<ItemStack> modules,
-			RenderGameOverlayEvent event, Gui gui);
+			RenderGameOverlayEvent event, Gui gui);*/
 	
 	/**
 	 * @param armorStack
 	 * @return The Icon for the HUD, null renders standard item
 	 */
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(value=Dist.CLIENT)
 	public ResourceIcon getComponentIcon(ItemStack armorStack);
 
 

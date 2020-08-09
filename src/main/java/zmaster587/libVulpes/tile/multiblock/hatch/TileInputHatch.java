@@ -1,7 +1,7 @@
 package zmaster587.libVulpes.tile.multiblock.hatch;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 public class TileInputHatch extends TileInventoryHatch   {
 
@@ -17,12 +17,12 @@ public class TileInputHatch extends TileInventoryHatch   {
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.hatch.0.name";
+		return "block.libvulpes.hatch.0";
 	}
 
 	@Override
 	public boolean canExtractItem(int index, ItemStack stack,
-			EnumFacing direction) {
+			Direction direction) {
 		return false;
 	}
 }

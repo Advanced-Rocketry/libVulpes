@@ -4,12 +4,20 @@ import java.util.LinkedList;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.libVulpes.api.IUniversalEnergy;
+import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.inventory.ContainerModular;
+import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.IToggleButton;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -27,8 +35,8 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 	protected boolean enabled;
 	private ModuleToggleSwitch toggleSwitch;
 
-	public TileMultiPowerProducer() {
-		super();
+	public TileMultiPowerProducer(TileEntityType<?> type) {
+		super(type);
 		enabled = false;
 		toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled());
 	}
@@ -44,15 +52,15 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 		if (id == NetworkPackets.TOGGLE.ordinal()) {
 			setMachineEnabled(nbt.getBoolean("enabled"));
 			toggleSwitch.setToggleState(getMachineEnabled());
 
 			//Last ditch effort to update the toggle switch when it's flipped
 			if(!world.isRemote)
-				PacketHandler.sendToNearby(new PacketMachine(this, (byte)NetworkPackets.TOGGLE.ordinal()), world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64);
+				PacketHandler.sendToNearby(new PacketMachine(this, (byte)NetworkPackets.TOGGLE.ordinal()), world.func_230315_m_().func_241513_m_(), pos.getX(), pos.getY(), pos.getZ(), 64);
 		}
 	}
 	
@@ -65,9 +73,9 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 
 	@Override
 	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
+			CompoundNBT nbt) {
 		if(packetId == NetworkPackets.TOGGLE.ordinal()) {
-			nbt.setBoolean("enabled", in.readBoolean());
+			nbt.putBoolean("enabled", in.readBoolean());
 		}
 	}
 
@@ -91,7 +99,7 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
@@ -112,7 +120,12 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 	}
 	
 	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
+	public int getModularInvType() {
+		return GuiHandler.guiId.MODULAR.ordinal();
+	}
+	
+	@Override
+	public boolean canInteractWithContainer(PlayerEntity entity) {
 		return isComplete();
 	}
 	
@@ -131,14 +144,24 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 	}
 
 	@Override
-	protected void writeNetworkData(NBTTagCompound nbt) {
+	protected void writeNetworkData(CompoundNBT nbt) {
 		super.writeNetworkData(nbt);
-		nbt.setBoolean("enabled", enabled);
+		nbt.putBoolean("enabled", enabled);
 	}
 	
 	@Override
-	protected void readNetworkData(NBTTagCompound nbt) {
+	protected void readNetworkData(CompoundNBT nbt) {
 		super.readNetworkData(nbt);
 		enabled = nbt.getBoolean("enabled");
+	}
+	
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TranslationTextComponent(getModularInventoryName());
+	}
+
+	@Override
+	public Container createMenu(int ID, PlayerInventory playerInv, PlayerEntity playerEntity) {
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, ID, playerEntity, getModules(getModularInvType(), playerEntity), this);
 	}
 }

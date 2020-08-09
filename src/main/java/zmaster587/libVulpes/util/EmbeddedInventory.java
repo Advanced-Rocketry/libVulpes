@@ -1,18 +1,12 @@
 package zmaster587.libVulpes.util;
 
-import javax.swing.plaf.basic.BasicComboBoxUI.ItemHandler;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import zmaster587.libVulpes.interfaces.IInventoryUpdateCallback;
 
@@ -31,24 +25,24 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 		this.tile = tile;
 	}
 
-	public void writeToNBT(NBTTagCompound nbt) {
+	public void write(CompoundNBT nbt) {
 
-		nbt.setInteger("size", this.stacks.size());
+		nbt.putInt("size", this.stacks.size());
 
-		NBTTagList list = new NBTTagList();
+		ListNBT list = new ListNBT();
 		for(int i = 0; i < this.stacks.size(); i++)
 		{
 			ItemStack stack = this.stacks.get(i);
 
 			if(!stack.isEmpty()) {
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setByte("Slot", (byte)(i));
-				stack.writeToNBT(tag);
-				list.appendTag(tag);
+				CompoundNBT tag = new CompoundNBT();
+				tag.putByte("Slot", (byte)(i));
+				stack.write(tag);
+				list.add(tag);
 			}
 		}
 
-		nbt.setTag("outputItems", list);
+		nbt.put("outputItems", list);
 	}
 
 	@Override
@@ -60,15 +54,15 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 
 	}
 
-	public void readFromNBT(NBTTagCompound nbt) {
-		NBTTagList list = nbt.getTagList("outputItems", 10);
-		this.stacks = NonNullList.withSize(Math.max(nbt.getInteger("size") == 0 ? 4 : nbt.getInteger("size"), this.stacks.size()), ItemStack.EMPTY);
+	public void readFromNBT(CompoundNBT nbt) {
+		ListNBT list = nbt.getList("outputItems", 10);
+		this.stacks = NonNullList.withSize(Math.max(nbt.getInt("size") == 0 ? 4 : nbt.getInt("size"), this.stacks.size()), ItemStack.EMPTY);
 		handler = new ItemStackHandler(this.stacks);
-		for (int i = 0; i < list.tagCount(); i++) {
-			NBTTagCompound tag = (NBTTagCompound) list.getCompoundTagAt(i);
+		for (int i = 0; i < list.size(); i++) {
+			CompoundNBT tag = (CompoundNBT) list.getCompound(i);
 			byte slot = tag.getByte("Slot");
 			if (slot >= 0 && slot < this.stacks.size()) {
-				this.stacks.set(slot, new ItemStack(tag));
+				this.stacks.set(slot, ItemStack.read(tag));
 			}
 		}
 	}
@@ -90,7 +84,7 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 	public ItemStack decrStackSize(int slot, int amt) {
 		ItemStack stack = this.stacks.get(slot);
 		if(!stack.isEmpty()) {
-			ItemStack stack2 = stack.splitStack(Math.min(amt, stack.getCount()));
+			ItemStack stack2 = stack.split(Math.min(amt, stack.getCount()));
 			if(stack.getCount() == 0)
 				this.stacks.set(slot, ItemStack.EMPTY);
 
@@ -105,17 +99,12 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 	}
 
 	@Override
-	public boolean hasCustomName() {
-		return false;
-	}
-
-	@Override
 	public int getInventoryStackLimit() {
 		return 64;
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(PlayerEntity player) {
 		return true;
 	}
 
@@ -129,12 +118,12 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player) {
+	public void openInventory(PlayerEntity player) {
 
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer player) {
+	public void closeInventory(PlayerEntity player) {
 
 	}
 
@@ -144,7 +133,7 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 	}
 
 	@Override
-	public int[] getSlotsForFace(EnumFacing side) {
+	public int[] getSlotsForFace(Direction side) {
 		int array[] = new int[this.stacks.size()];
 
 		for(int i = 0; i < this.stacks.size(); i++) {
@@ -156,13 +145,13 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 
 
 	public boolean canInsertItem(int index, ItemStack itemStackIn,
-			EnumFacing direction) {
+			Direction direction) {
 		return true;
 	}
 
 
 	public boolean canExtractItem(int index, ItemStack stack,
-			EnumFacing direction) {
+			Direction direction) {
 		return true;
 	}
 
@@ -181,29 +170,9 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 		this.stacks.set(index, ItemStack.EMPTY);
 		return stack;
 	}
-
-	@Override
-	public int getField(int id) {
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value) {
-
-	}
-
-	@Override
-	public int getFieldCount() {
-		return 0;
-	}
-
+	
 	@Override
 	public void clear() {
 
-	}
-
-	@Override
-	public ITextComponent getDisplayName() {
-		return new TextComponentString("Inventory");
 	}
 }

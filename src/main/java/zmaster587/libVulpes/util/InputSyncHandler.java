@@ -1,29 +1,28 @@
 package zmaster587.libVulpes.util;
 
 import java.util.HashMap;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
-
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import zmaster587.libVulpes.api.IJetPack;
 import zmaster587.libVulpes.api.IModularArmor;
 
 public class InputSyncHandler {
 
-	public static HashMap<EntityPlayer, Boolean> spaceDown = new HashMap<EntityPlayer, Boolean>();
+	public static HashMap<PlayerEntity, Boolean> spaceDown = new HashMap<PlayerEntity, Boolean>();
 	
 
-	public static boolean isSpaceDown(EntityPlayer player) {
+	public static boolean isSpaceDown(PlayerEntity player) {
 		Boolean bool = spaceDown.get(player);
 		
 		return bool != null && bool;
 	}
 	
 	//Called on server
-	public static void updateKeyPress(EntityPlayer player, int key, boolean state) {
+	public static void updateKeyPress(PlayerEntity player, int key, boolean state) {
 		ItemStack stack;
 		switch(key) {
 		case 0:
@@ -83,11 +82,11 @@ public class InputSyncHandler {
 	
 	@SubscribeEvent
 	public void onPlayerLoggedOut(PlayerLoggedOutEvent evt) {
-		spaceDown.remove(evt.player);
+		spaceDown.remove(evt.getPlayer());
 	}
 
 	@SubscribeEvent
 	public void onDimChanged(PlayerChangedDimensionEvent evt) {
-		spaceDown.remove(evt.player);
+		spaceDown.remove(evt.getPlayer());
 	}
 }

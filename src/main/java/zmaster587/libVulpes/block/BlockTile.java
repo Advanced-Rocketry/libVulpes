@@ -1,114 +1,96 @@
 package zmaster587.libVulpes.block;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import zmaster587.libVulpes.LibVulpes;
+import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.libVulpes.util.IAdjBlockUpdate;
 
 public class BlockTile extends RotatableBlock {
 
-	protected Class<? extends TileEntity> tileClass;
+	protected TileEntityType<?> tileClass;
 	protected int guiId;
-	public static final PropertyBool STATE = PropertyBool.create("state");
+	public static final BooleanProperty STATE = BooleanProperty.create("state");
 
-	public BlockTile(Class<? extends TileEntity> tileClass, int guiId) {
-		super(Material.ROCK);
-		this.tileClass = tileClass;
+	public BlockTile(Properties properties, int guiId) {
+		super(properties);
+		
 		this.guiId = guiId;
-		this.setDefaultState(this.blockState.getBaseState().withProperty(STATE, false));
+		this.setDefaultState(this.stateContainer.getBaseState().with(STATE, false));
 	}
-
-    protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer(this, new IProperty[] {FACING, STATE});
-    }
 	
-    @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn,
-    		BlockPos pos) {
-    	// TODO Auto-generated method stub
-    	return super.getActualState(state, worldIn, pos);
-    }
-    
-    /**
-     * Convert the BlockState into the correct metadata value
-     */
-    public int getMetaFromState(IBlockState state) {
-    	return state.getValue(FACING).getIndex() | (state.getValue(STATE).booleanValue() ? 8 : 0);
-    }
-    
-	public void setBlockState(World world, IBlockState state, BlockPos pos, boolean newState) {
-		world.setBlockState(pos, state.withProperty(STATE, newState), 2);
-		world.markBlockRangeForRenderUpdate(pos, pos);
+	//MUST be called after construction.  The Tile type doesn't yet exist when the block is contructed
+	public void _setTile(TileEntityType<?> tileClass)
+	{
+		this.tileClass = tileClass;
+	}
+
+	@Override
+	protected void fillStateContainer(StateContainer.Builder<Block, net.minecraft.block.BlockState> builder) {
+		builder.add(FACING, STATE);
+	}
+	
+	public void setBlockState(World world, BlockState state, BlockPos pos, boolean newState) {
+		world.setBlockState(pos, state.with(STATE, newState), 2);
+		world.markBlockRangeForRenderUpdate(pos, state, state.with(STATE, newState));
 	}
     
 	@Override
-	public boolean hasTileEntity(IBlockState state) { return true; }
-
+	public boolean hasTileEntity(BlockState state) { return true; }
+	
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
-		try {
-			return tileClass.newInstance();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+		return tileClass.create();
 	}
 	
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand,
-			EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,
+			Hand handIn, BlockRayTraceResult hit) {
 		if(!world.isRemote)
-			player.openGui(LibVulpes.instance, guiId, world, pos.getX(), pos.getY(), pos.getZ());
-		return true;
+		{
+			TileEntity te = world.getTileEntity(pos);
+			if(te != null)
+				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)te, pos);
+		}
+		return ActionResultType.SUCCESS;
 	}
-
+	
 	@Override
-	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
-		super.onNeighborChange(world, pos,
+	public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
+		super.onNeighborChange(state, world, pos,
 				neighbor);
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof IAdjBlockUpdate)
 			((IAdjBlockUpdate)tile).onAdjacentBlockUpdated();
 
 	}
-
-	@Override
-	public boolean isBlockNormalCube(IBlockState state) {
-		return false;
-	}
 	
 	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-	
-	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state)
+	public void onPlayerDestroy(IWorld world, BlockPos pos, BlockState state)
 	{
 		TileEntity tile = world.getTileEntity(pos);
 
 		//This code could use some optimization -Dark
-		if (!world.isRemote && tile instanceof IInventory)
+		if (!world.isRemote() && tile instanceof IInventory)
 		{
 			IInventory inventory = (IInventory)tile;
 			for (int i1 = 0; i1 < inventory.getSizeInventory(); ++i1)
@@ -117,13 +99,13 @@ public class BlockTile extends RotatableBlock {
 
 				if (!itemstack.isEmpty())
 				{
-					float f = world.rand.nextFloat() * 0.8F + 0.1F;
-					float f1 = world.rand.nextFloat() * 0.8F + 0.1F;
-					EntityItem entityitem;
+					float f = world.getRandom().nextFloat() * 0.8F + 0.1F;
+					float f1 = world.getRandom().nextFloat() * 0.8F + 0.1F;
+					ItemEntity entityitem;
 
-					for (float f2 = world.rand.nextFloat() * 0.8F + 0.1F; itemstack.getCount() > 0; world.spawnEntity(entityitem))
+					for (float f2 = world.getRandom().nextFloat() * 0.8F + 0.1F; itemstack.getCount() > 0; world.addEntity(entityitem))
 					{
-						int j1 = world.rand.nextInt(21) + 10;
+						int j1 = world.getRandom().nextInt(21) + 10;
 
 						if (j1 > itemstack.getCount())
 						{
@@ -132,23 +114,23 @@ public class BlockTile extends RotatableBlock {
 						Item oldItem = itemstack.getItem();
 						ItemStack oldStack = itemstack.copy();
 						itemstack.setCount(itemstack.getCount() - j1);
-						entityitem = new EntityItem(world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), new ItemStack(oldItem, j1, itemstack.getItemDamage()));
+						entityitem = new ItemEntity((World) world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), new ItemStack(oldItem, j1, itemstack.getTag()));
 						float f3 = 0.05F;
-						entityitem.motionX = (double)((float)world.rand.nextGaussian() * f3);
-						entityitem.motionY = (double)((float)world.rand.nextGaussian() * f3 + 0.2F);
-						entityitem.motionZ = (double)((float)world.rand.nextGaussian() * f3);
+						entityitem.setMotion((double)((float)world.getRandom().nextGaussian() * f3),
+						(double)((float)world.getRandom().nextGaussian() * f3 + 0.2F),
+						(double)((float)world.getRandom().nextGaussian() * f3));
 
-						if (oldStack.hasTagCompound())
+						if (oldStack.hasTag())
 						{
-							entityitem.getItem().setTagCompound((NBTTagCompound)oldStack.getTagCompound().copy());
+							entityitem.getItem().setTag((CompoundNBT)oldStack.getTag().copy());
 						}
-						world.spawnEntity(entityitem);
+						world.addEntity(entityitem);
 					}
 				}
 			}
 
 		}
 
-		super.breakBlock(world, pos, state);
+		super.onPlayerDestroy(world, pos, state);
 	}
 }

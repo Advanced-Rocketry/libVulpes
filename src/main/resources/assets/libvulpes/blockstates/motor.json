@@ -1,23 +1,14 @@
 {
     "defaults": {
         "textures": {
-            "#None": "libvulpes:/models/motor"
+            "#none": "libvulpes:block/models/motor"
         },
-        "model": "libvulpes:models/motor.obj"
+        "model": "libvulpes:block/models/motor"
     },
     "variants": {
-        "facing=north": { "model": "libvulpes:models/motor.obj" },
-        "facing=south": { "model": "libvulpes:models/motor.obj", "y": 180 },
-        "facing=west":  { "model": "libvulpes:models/motor.obj", "y": 270 },
-        "facing=east":  { "model": "libvulpes:models/motor.obj", "y": 90 },
-        "facing=up":  { "model": "libvulpes:models/motor.obj", "x": 90 },
-        "facing=down":  { "model": "libvulpes:models/motor.obj", "x": -90 },
-        "inventory": {
-            "model": "libvulpes:models/motor.obj", "y": 90,
-            "transform": {
-                    "translation": [ 0, 0, 0],
-                    "scale": 1.0
-                }
-        }
+        "facing=north": { "model": "libvulpes:block/models/motor" },
+        "facing=south": { "model": "libvulpes:block/models/motor", "y": 180 },
+        "facing=west":  { "model": "libvulpes:block/models/motor", "y": 270 },
+        "facing=east":  { "model": "libvulpes:block/models/motor", "y": 90 }
     }
 }

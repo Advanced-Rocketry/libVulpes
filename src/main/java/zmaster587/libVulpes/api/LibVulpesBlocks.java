@@ -1,26 +1,13 @@
 package zmaster587.libVulpes.api;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
-
-import javax.annotation.Nullable;
-
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.color.BlockColors;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.item.BlockItem;
 import net.minecraftforge.registries.GameData;
+import net.minecraftforge.registries.IForgeRegistry;
 
 public class LibVulpesBlocks {
 	public static final Set<Block> blocks = new HashSet<>();
@@ -59,14 +46,14 @@ public class LibVulpesBlocks {
 
 
 	/**
-	 * Register a Block with the default ItemBlock class.
+	 * Register a Block with the default BlockItem class.
 	 *
 	 * @param block The Block instance
 	 * @param <BLOCK>   The Block type
 	 * @return The Block instance
 	 */
 	public static <BLOCK extends Block> BLOCK registerBlock(BLOCK block) {
-		return registerBlock(block, ItemBlock.class, true);
+		return registerBlock(block, BlockItem.class, true);
 	}
 
 	public static <ITEM extends Item> ITEM registerItem(ITEM item) {
@@ -75,46 +62,15 @@ public class LibVulpesBlocks {
 	}
 
 	/**
-	 * Register a Block with a custom ItemBlock class.
+	 * Register a Block with a custom BlockItem class.
 	 *
 	 * @param <BLOCK>     The Block type
 	 * @param block       The Block instance
-	 * @param itemFactory A function that creates the ItemBlock instance, or null if no ItemBlock should be created
+	 * @param itemFactory A function that creates the BlockItem instance, or null if no BlockItem should be created
 	 * @return The Block instance
 	 */
-	public static <BLOCK extends Block> BLOCK registerBlock(BLOCK block, Class<? extends ItemBlock> clazz, boolean registerItemStates) {
+	public static <BLOCK extends Block> BLOCK registerBlock(BLOCK block, Class<? extends BlockItem> clazz, boolean registerItemStates) {
 		GameData.register_impl(block);
-
-		if (clazz != null) {
-			ItemBlock itemBlock;
-			try {
-
-				itemBlock = clazz.getDeclaredConstructor(Block.class).newInstance(block);
-
-				if(FMLCommonHandler.instance().getSide().isClient() && registerItemStates) {
-					ModelLoader.setCustomModelResourceLocation(itemBlock, 0, new ModelResourceLocation(block.getRegistryName(), "inventory"));
-				}
-
-				GameData.register_impl(itemBlock.setRegistryName(block.getRegistryName()));
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
 
 		blocks.add(block);
 		return block;

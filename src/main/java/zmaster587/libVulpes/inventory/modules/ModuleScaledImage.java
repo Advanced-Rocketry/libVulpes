@@ -2,17 +2,18 @@ package zmaster587.libVulpes.inventory.modules;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.Minecraft;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import zmaster587.libVulpes.util.IconResource;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ModuleScaledImage extends ModuleBase {
 	
@@ -60,10 +61,10 @@ public class ModuleScaledImage extends ModuleBase {
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY,
+	@OnlyIn(value=Dist.CLIENT)
+	public void renderBackground(ContainerScreen<? extends Container>  gui, MatrixStack mat, int x, int y, int mouseX, int mouseY,
 			FontRenderer font) {
-		super.renderBackground(gui, x, y, mouseX, mouseY, font);
+		super.renderBackground(gui, mat, x, y, mouseX, mouseY, font);
 		
 		if(alpha < 1f) {
 			GL11.glColor4d(alpha, alpha, alpha, alpha);
@@ -72,8 +73,8 @@ public class ModuleScaledImage extends ModuleBase {
 			GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		}
 			
-		Minecraft.getMinecraft().getTextureManager().bindTexture(icon);
-		GlStateManager.color(alpha, alpha, alpha, alpha);
+		gui.getMinecraft().getTextureManager().bindTexture(icon);
+		GlStateManager.color4f(alpha, alpha, alpha, alpha);
         BufferBuilder buff = Tessellator.getInstance().getBuffer();
         buff.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         buff.pos((double)(x + this.offsetX), (double)(y + this.offsetY + sizeY), (double)0).tex(minX, maxY).endVertex();

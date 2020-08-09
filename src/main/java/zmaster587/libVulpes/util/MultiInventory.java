@@ -2,10 +2,9 @@ package zmaster587.libVulpes.util;
 
 import java.util.List;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
 
 public class MultiInventory implements IInventory {
 
@@ -73,7 +72,7 @@ public class MultiInventory implements IInventory {
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer p_70300_1_) {
+	public boolean isUsableByPlayer(PlayerEntity p_70300_1_) {
 		return true;
 	}
 	
@@ -101,21 +100,6 @@ public class MultiInventory implements IInventory {
 	}
 
 	@Override
-	public String getName() {
-		return null;
-	}
-
-	@Override
-	public boolean hasCustomName() {
-		return false;
-	}
-
-	@Override
-	public ITextComponent getDisplayName() {
-		return null;
-	}
-
-	@Override
 	public ItemStack removeStackFromSlot(int index) {
 		for(IInventory inv : inventories) {
 			if(index >= inv.getSizeInventory()) {
@@ -129,34 +113,15 @@ public class MultiInventory implements IInventory {
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player) {
+	public void openInventory(PlayerEntity player) {
 		
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer player) {
+	public void closeInventory(PlayerEntity player) {
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public int getField(int id) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public int getFieldCount() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 	@Override
 	public void clear() {
 		// TODO Auto-generated method stub

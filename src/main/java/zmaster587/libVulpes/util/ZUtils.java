@@ -1,26 +1,22 @@
 package zmaster587.libVulpes.util;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
-import zmaster587.libVulpes.LibVulpes;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.RegistryNamespaced;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class ZUtils {
 
@@ -45,11 +41,11 @@ public class ZUtils {
 				return RedstoneState.values()[i];
 		}
 		
-		public void writeToNBT(NBTTagCompound tag) {
-			tag.setByte("redstoneState", (byte)this.ordinal());
+		public void write(CompoundNBT tag) {
+			tag.putByte("redstoneState", (byte)this.ordinal());
 		}
 		
-		public static RedstoneState createFromNBT(NBTTagCompound tag) {
+		public static RedstoneState createFromNBT(CompoundNBT tag) {
 			return RedstoneState.values()[tag.getByte("redstoneState")];
 		}
 	}
@@ -84,52 +80,7 @@ public class ZUtils {
 		}
 		return returnList;
 	}
-
-
-	public static TileEntity createTile(NBTTagCompound nbt)
-	{
-		TileEntity tileentity = null;
-		ResourceLocation s = new ResourceLocation(nbt.getString("id"));
-		Class <? extends TileEntity > oclass = null;
-
-
-		try
-		{
-			oclass = ((RegistryNamespaced < ResourceLocation, Class <? extends TileEntity >>)ObfuscationReflectionHelper.getPrivateValue(TileEntity.class, null, "field_190562_f", "REGISTRY")).getObject(s);
-
-			if (oclass != null)
-			{
-				tileentity = (TileEntity)oclass.newInstance();
-			}
-		}
-		catch (Throwable throwable1)
-		{
-			net.minecraftforge.fml.common.FMLLog.log(org.apache.logging.log4j.Level.ERROR, throwable1,
-					"A TileEntity %s(%s) has thrown an exception during loading, its state cannot be restored. Report this to the mod author",
-					s, oclass.getName());
-		}
-
-		if (tileentity != null)
-		{
-			try
-			{
-				tileentity.readFromNBT(nbt);
-			}
-			catch (Throwable throwable)
-			{
-				net.minecraftforge.fml.common.FMLLog.log(org.apache.logging.log4j.Level.ERROR, throwable,
-						"A TileEntity %s(%s) has thrown an exception during loading, its state cannot be restored. Report this to the mod author",
-						s, oclass.getName());
-				tileentity = null;
-			}
-		}
-		else
-		{
-			net.minecraftforge.fml.common.FMLLog.warning("Skipping BlockEntity with id {}", new Object[] {s});
-		}
-
-		return tileentity;
-	}
+	
 	/**
 	 * @param axis Axis Aligned Bounding box to rotate
 	 * @param angleDeg amount to rotate the bounding box in radians
@@ -179,7 +130,7 @@ public class ZUtils {
 		AxisAlignedBB rotatedLocal = rotateAABB(local, angle);
 
 
-		return new AxisAlignedBB(e.posX + rotatedLocal.minX, e.posY + rotatedLocal.minY, e.posZ + rotatedLocal.minZ, rotatedLocal.maxX + e.posX, rotatedLocal.maxY + e.posY, rotatedLocal.maxZ + e.posZ);
+		return new AxisAlignedBB(e.getPosX() + rotatedLocal.minX, e.getPosY() + rotatedLocal.minY, e.getPosZ() + rotatedLocal.minZ, rotatedLocal.maxX + e.getPosX(), rotatedLocal.maxY + e.getPosY(), rotatedLocal.maxZ + e.getPosZ());
 	}
 
 	public static String formatNumber(int number) {
@@ -370,10 +321,10 @@ public class ZUtils {
 		return inv.getSizeInventory();
 	}
 
-	public static int getContinuousBlockLength(World world, EnumFacing direction, BlockPos pos, int maxDist, Block block) {
+	public static int getContinuousBlockLength(World world, Direction direction, BlockPos pos, int maxDist, Block block) {
 		int dist = 0;
 		for(int i = 0; i < maxDist; i++) {
-			if(world.getBlockState(new BlockPos(pos.add((i*direction.getFrontOffsetX()), (i*direction.getFrontOffsetY()), (i*direction.getFrontOffsetZ())))).getBlock() != block) 
+			if(world.getBlockState(new BlockPos(pos.add((i*direction.getXOffset()), (i*direction.getYOffset()), (i*direction.getZOffset())))).getBlock() != block) 
 				break;
 
 			dist = i+1;
@@ -382,10 +333,10 @@ public class ZUtils {
 		return dist;
 	}
 	
-	public static int getContinuousBlockLength(World world, EnumFacing direction, BlockPos pos, int maxDist, Block[] blocks) {
+	public static int getContinuousBlockLength(World world, Direction direction, BlockPos pos, int maxDist, Block[] blocks) {
 		int dist = 0;
 		for(int i = 0; i < maxDist; i++) {
-			Block blockchecked = world.getBlockState(new BlockPos(pos.add((i*direction.getFrontOffsetX()), (i*direction.getFrontOffsetY()), (i*direction.getFrontOffsetZ())))).getBlock();
+			Block blockchecked = world.getBlockState(new BlockPos(pos.add((i*direction.getXOffset()), (i*direction.getYOffset()), (i*direction.getZOffset())))).getBlock();
 			boolean exists = false;
 			for( Block b : blocks ) {
 				if(blockchecked == b) {
@@ -404,16 +355,10 @@ public class ZUtils {
 	}
 
 	public static boolean areOresSameTypeOreDict(ItemStack stack1, ItemStack stack2) {
-		int[] stack1Id = OreDictionary.getOreIDs(stack1);
-		int[] stack2Id = OreDictionary.getOreIDs(stack2);
-
-		for(int i : stack1Id) {
-			for(int j : stack2Id) {
-				if(i == j)
-					return true;
-			}
-		}
-
-		return false;
+		
+		Collection<ResourceLocation> item1s = ItemTags.getCollection().getOwningTags(stack1.getItem());
+		Collection<ResourceLocation> item2s = ItemTags.getCollection().getOwningTags(stack2.getItem());
+		
+		return item1s.stream().anyMatch(value -> item2s.contains(value));
 	}
 }

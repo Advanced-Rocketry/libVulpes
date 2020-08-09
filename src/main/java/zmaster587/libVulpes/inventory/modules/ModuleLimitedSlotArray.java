@@ -2,9 +2,9 @@ package zmaster587.libVulpes.inventory.modules;
 
 import java.util.List;
 
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 import zmaster587.libVulpes.gui.SlotLimitedItem;
 import zmaster587.libVulpes.inventory.ContainerModular;
 

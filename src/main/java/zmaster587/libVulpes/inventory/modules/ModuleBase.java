@@ -7,22 +7,26 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.gui.CommonResources;
+import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.GuiModular;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.Slot;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerListener;
+import net.minecraft.inventory.container.Slot;
+import net.minecraft.util.IntReferenceHolder;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public abstract class ModuleBase {
 
@@ -48,7 +52,6 @@ public abstract class ModuleBase {
 		enabled = true;
 		visible = true;
 	}
-
 	protected long getCurrentTime() {
 		return LibVulpes.time;
 	}
@@ -95,23 +98,23 @@ public abstract class ModuleBase {
 		return enabled;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void onMouseClicked(GuiModular gui, int x, int y, int button) {
+	@OnlyIn(value=Dist.CLIENT)
+	public void onMouseClicked(GuiModular gui, double d, double e, int button) {
 		
 	}
 	
-	@SideOnly(Side.CLIENT)
-	public void onMouseClickedAndDragged(int x, int y, int button, long timeSineLastClick) {
+	@OnlyIn(value=Dist.CLIENT)
+	public void onMouseClickedAndDragged(double d, double e, int button) {
 		
 	}
 	
 	/**
-	 * @param chr char typed
+	 * @param keyCode char typed
 	 * @param t
 	 * @return true to allow allow keybinds to be passed on, false to suppress keybinds
 	 */
-	@SideOnly(Side.CLIENT)
-	public boolean keyTyped(char chr, int t) {
+	@OnlyIn(value=Dist.CLIENT)
+	public boolean keyTyped(int keyCode, int t) {
 		return true;
 	}
 	
@@ -144,11 +147,11 @@ public abstract class ModuleBase {
 	 * @param y y offset of the top left corner of the container
 	 * @param font FontRenderer, passed on the off-chance text needs to be rendered
 	 */
-	@SideOnly(Side.CLIENT)
-	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY, FontRenderer font) {
-		gui.mc.getTextureManager().bindTexture(CommonResources.genericBackground);
+	@OnlyIn(value=Dist.CLIENT)
+	public void renderBackground(ContainerScreen<? extends Container>  gui, MatrixStack matrix, int x, int y, int mouseX, int mouseY, FontRenderer font) {
+		gui.getMinecraft().getTextureManager().bindTexture(CommonResources.genericBackground);
 		for(Slot slot : slotList) {
-			gui.drawTexturedModalRect(x + slot.xPos - 1, y + slot.yPos - 1, 176, 0, 18, 18);
+			gui.func_238474_b_(matrix, x + slot.xPos - 1, y + slot.yPos - 1, 176, 0, 18, 18);
 		}
 	}
 
@@ -161,8 +164,8 @@ public abstract class ModuleBase {
 	 * @param gui gui calling this method
 	 * @param font FontRenderer, passed on the off-chance text needs to be rendered
 	 */
-	@SideOnly(Side.CLIENT)
-	public void renderForeground(int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel, GuiContainer gui, FontRenderer font) {
+	@OnlyIn(value=Dist.CLIENT)
+	public void renderForeground(MatrixStack matrix, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel, ContainerScreen<? extends Container>  gui, FontRenderer font) {
 	}
 
 	/**
@@ -207,17 +210,17 @@ public abstract class ModuleBase {
 	 * @param y y offset of the gui
 	 * @return list of buttons associated with this module
 	 */
-	@SideOnly(Side.CLIENT)
-	public List<GuiButton> addButtons(int x, int y) {
-		return new LinkedList<GuiButton>();
+	@OnlyIn(value=Dist.CLIENT)
+	public List<Button> addButtons(int x, int y) {
+		return new LinkedList<Button>();
 	}
 
 	/**
 	 * Called when a button is clicked
-	 * @param button GuiButton that was clicked
+	 * @param button Button that was clicked
 	 */
-	@SideOnly(Side.CLIENT)
-	public void actionPerform(GuiButton button) {
+	@OnlyIn(value=Dist.CLIENT)
+	public void actionPerform(Button button) {
 
 	}
 
@@ -226,6 +229,11 @@ public abstract class ModuleBase {
 	 */
 	public List<Slot> getSlots(Container container) {
 		return new LinkedList<Slot>();
+	}
+	
+	public List<IntReferenceHolder>  getIntTrackers(Container container)
+	{
+		return new LinkedList<IntReferenceHolder>();
 	}
 
 	/**
@@ -236,8 +244,8 @@ public abstract class ModuleBase {
 	 * @param zLevel zLevel of the gui
 	 * @param font fontrender
 	 */
-	@SideOnly(Side.CLIENT)
-	protected void drawTooltip(GuiContainer gui, List<String> textList ,int x, int y,float zLevel, FontRenderer font) {
+	@OnlyIn(value=Dist.CLIENT)
+	protected void drawTooltip(ContainerScreen<Container> gui, MatrixStack matrix, List<String> textList ,int x, int y,float zLevel, FontRenderer font) {
 		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 		RenderHelper.disableStandardItemLighting();
 		GL11.glDisable(GL11.GL_LIGHTING);
@@ -278,7 +286,7 @@ public abstract class ModuleBase {
 		for (int i2 = 0; i2 < textList.size(); ++i2)
 		{
 			String s1 = (String)textList.get(i2);
-			font.drawStringWithShadow(s1, j2, k2, -1);
+			font.func_238405_a_(matrix, s1, j2, k2, -1);
 
 			if (i2 == 0)
 			{
@@ -306,7 +314,7 @@ public abstract class ModuleBase {
 	 * @param colorB
 	 * @param zLevel
 	 */
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(value=Dist.CLIENT)
 	protected void drawGradientRect(int x1, int y1, int x2, int y2, int colorA, int colorB, float zLevel)
 	{
 		float f = (float)(colorA >> 24 & 255) / 255.0F;
@@ -320,7 +328,7 @@ public abstract class ModuleBase {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
-		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+		GlStateManager.blendFunc(770, 771);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertex = tessellator.getBuffer();

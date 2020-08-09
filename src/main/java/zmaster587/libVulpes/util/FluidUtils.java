@@ -5,31 +5,31 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.init.Items;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.item.Items;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import zmaster587.libVulpes.event.BucketHandler;
 
 public class FluidUtils {
 	
-	private static Map<String, List<String>> fluidEquivilentMapping = new HashMap<String, List<String>>();
+	private static Map<ResourceLocation, List<ResourceLocation>> fluidEquivilentMapping = new HashMap<ResourceLocation, List<ResourceLocation>>();
 
 	public static boolean containsFluid(ItemStack stack) {
-		return stack != null && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
+		return stack != null && stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, Direction.UP).isPresent();
 	}
 
 	public static boolean containsFluid(ItemStack stack, Fluid fluid) {
 		if(containsFluid(stack)) {
-			IFluidHandlerItem fluidItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
-			FluidStack fluidStack = fluidItem.getTankProperties()[0].getContents();
+			IFluidHandlerItem fluidItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, Direction.UP).orElse(null);
+			FluidStack fluidStack = fluidItem.getFluidInTank(0);
 			if(fluidStack != null && areFluidsSameType(fluidStack.getFluid(), fluid))
 				return true;
 		}
@@ -39,21 +39,21 @@ public class FluidUtils {
 
 	public static int getFluidItemCapacity(ItemStack stack) {
 		if(containsFluid(stack)) {
-			IFluidHandlerItem fluidItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
-			return  fluidItem.getTankProperties()[0].getCapacity();
+			IFluidHandlerItem fluidItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, Direction.UP).orElse(null);
+			return  fluidItem.getTankCapacity(0);
 		}
 		return 0;
 	}
 
 	public static IFluidHandlerItem getFluidHandler(ItemStack stack) {
-		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
+		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, Direction.UP).orElse(null);
 	}
 
 	public static FluidStack getFluidForItem(ItemStack item) {
 		if(!containsFluid(item))
 			return null;
-		IFluidHandlerItem fluidItem = item.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
-		return fluidItem.getTankProperties()[0].getContents();
+		IFluidHandlerItem fluidItem = item.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, Direction.UP).orElse(null);
+		return fluidItem.getFluidInTank(0);
 	}
 
 	public static boolean attemptDrainContainerIInv(EmbeddedInventory inv, IFluidTank tank, ItemStack stack, int inputSlot, int outputSlot) {
@@ -63,7 +63,7 @@ public class FluidUtils {
 			FluidStack fluidStack;
 			stack = stack.copy();
 			stack.setCount(1);
-			IFluidHandlerItem fluidItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
+			IFluidHandlerItem fluidItem = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, Direction.UP).orElse(null);
 
 			FluidStack itemFluidStack = getFluidForItem(stack);
 
@@ -88,24 +88,24 @@ public class FluidUtils {
 				//General case
 				else
 				{
-					amt = fluidItem.fill(tank.getFluid(), true);
+					amt = fluidItem.fill(tank.getFluid(), FluidAction.EXECUTE);
 					stack = fluidItem.getContainer();
 				}
 
 				//If the container is full move it down and try again for a new one
-				if(amt != 0 && getFluidItemCapacity(stack) == getFluidForItem(stack).amount) {
+				if(amt != 0 && getFluidItemCapacity(stack) == getFluidForItem(stack).getAmount()) {
 
 
 					if(inv.getStackInSlot(outputSlot).isEmpty()) {
 						inv.setInventorySlotContents(outputSlot, stack);
 					}
-					else if(ItemStack.areItemStackTagsEqual(inv.getStackInSlot(outputSlot), stack) && inv.getStackInSlot(outputSlot).getItem().equals(stack.getItem()) && inv.getStackInSlot(outputSlot).getItemDamage() == stack.getItemDamage() && stack.getItem().getItemStackLimit(stack) < inv.getStackInSlot(outputSlot).getCount()) {
+					else if(ItemStack.areItemStackTagsEqual(inv.getStackInSlot(outputSlot), stack) && inv.getStackInSlot(outputSlot).getItem().equals(stack.getItem()) && inv.getStackInSlot(outputSlot).getDamage() == stack.getDamage() && stack.getItem().getItemStackLimit(stack) < inv.getStackInSlot(outputSlot).getCount()) {
 						inv.getStackInSlot(outputSlot).setCount(inv.getStackInSlot(outputSlot).getCount() + 1);
 
 					}
 					else
 						return false;
-					tank.drain(amt, true);
+					tank.drain(amt, FluidAction.EXECUTE);
 					inv.decrStackSize(inputSlot, 1);
 
 					return true;
@@ -113,24 +113,24 @@ public class FluidUtils {
 
 			}
 			else {
-				fluidStack = fluidItem.drain(tank.getCapacity() - tank.getFluidAmount(), false);
+				fluidStack = fluidItem.drain(tank.getCapacity() - tank.getFluidAmount(), FluidAction.SIMULATE);
 
-				int amountDrained = tank.fill(fluidStack, false);
-				FluidStack fluidStack2 = fluidItem.drain(amountDrained, true);
+				int amountDrained = tank.fill(fluidStack, FluidAction.SIMULATE);
+				FluidStack fluidStack2 = fluidItem.drain(amountDrained, FluidAction.EXECUTE);
 				
 				stack = fluidItem.getContainer();
 				
-				if (getFluidForItem(stack) == null || (fluidStack2 != null && fluidStack2.amount != 0)) {
+				if (getFluidForItem(stack) == null || (fluidStack2 != null && fluidStack2.getAmount() != 0)) {
 					if(inv.getStackInSlot(outputSlot).isEmpty()) {
 						inv.setInventorySlotContents(outputSlot, stack);
 					}
-					else if(ItemStack.areItemStackTagsEqual(inv.getStackInSlot(outputSlot), stack) && inv.getStackInSlot(outputSlot).getItem().equals(stack.getItem()) && inv.getStackInSlot(outputSlot).getItemDamage() == stack.getItemDamage() && stack.getItem().getItemStackLimit(stack) > inv.getStackInSlot(outputSlot).getCount()) {
+					else if(ItemStack.areItemStackTagsEqual(inv.getStackInSlot(outputSlot), stack) && inv.getStackInSlot(outputSlot).getItem().equals(stack.getItem()) && inv.getStackInSlot(outputSlot).getDamage() == stack.getDamage() && stack.getItem().getItemStackLimit(stack) > inv.getStackInSlot(outputSlot).getCount()) {
 						inv.getStackInSlot(outputSlot).setCount( inv.getStackInSlot(outputSlot).getCount() + 1 );
 
 					}
 					else
 						return false;
-					tank.fill(fluidStack, true);
+					tank.fill(fluidStack, FluidAction.EXECUTE);
 					inv.decrStackSize(inputSlot, 1);
 
 					return true;
@@ -140,20 +140,20 @@ public class FluidUtils {
 		return false;
 	}
 	
-	public static void addFluidMapping(Fluid in, String altName)
+	public static void addFluidMapping(Fluid in, ResourceLocation altName)
 	{
-		String fluidKeyName = in.getName();
+		ResourceLocation fluidKeyName = in.getRegistryName();
 		addFluidMapping(fluidKeyName, altName);
 		addFluidMapping(altName, fluidKeyName);
 	}
 	
-	private static void addFluidMapping(String in, String altName)
+	private static void addFluidMapping(ResourceLocation in, ResourceLocation altName)
 	{
-		String fluidKeyName = in;
-		List<String> mappedValues;
+		ResourceLocation fluidKeyName = in;
+		List<ResourceLocation> mappedValues;
 		if(!fluidEquivilentMapping.containsKey(fluidKeyName))
 		{
-			mappedValues = new LinkedList<String>();
+			mappedValues = new LinkedList<ResourceLocation>();
 			fluidEquivilentMapping.put(fluidKeyName, mappedValues);
 		}
 		else
@@ -165,8 +165,8 @@ public class FluidUtils {
 	public static boolean areFluidsSameType(Fluid in, Fluid otherFluid) {
 		if(in == null || otherFluid == null)
 			return false;
-		String inFluidName = in.getName();
-		String otherFluidName = otherFluid.getName();
+		ResourceLocation inFluidName = in.getRegistryName();
+		ResourceLocation otherFluidName = otherFluid.getRegistryName();
 		
 		if(inFluidName.equals(otherFluidName))
 			return true;

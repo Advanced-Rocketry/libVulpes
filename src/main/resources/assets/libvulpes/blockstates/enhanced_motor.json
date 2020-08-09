@@ -1,0 +1,14 @@
+{
+    "defaults": {
+        "textures": {
+            "#none": "libvulpes:block/models/enhancedmotor"
+        },
+        "model": "libvulpes:block/models/enhancedmotor"
+    },
+    "variants": {
+        "facing=north": { "model": "libvulpes:block/models/enhancedmotor" },
+        "facing=south": { "model": "libvulpes:block/models/enhancedmotor", "y": 180 },
+        "facing=west":  { "model": "libvulpes:block/models/enhancedmotor", "y": 270 },
+        "facing=east":  { "model": "libvulpes:block/models/enhancedmotor", "y": 90 }
+    }
+}

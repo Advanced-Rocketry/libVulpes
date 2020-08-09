@@ -3,62 +3,58 @@ package zmaster587.libVulpes.block;
 import java.util.List;
 import java.util.Random;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.inventory.GuiHandler;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 public class RotatableMachineBlock extends RotatableBlock {
 	protected final Random random = new Random();
 	
-	static  PropertyBool STATE = PropertyBool.create("state");
+	static  BooleanProperty STATE = BooleanProperty.create("state");
 
-	public RotatableMachineBlock(Material par2Material) {
+	public RotatableMachineBlock(Properties par2Material) {
 		super(par2Material);
-		this.isBlockContainer = true;
-	}
-	
-	public int getMetaFromState(IBlockState state) {
-		int flag = state.getValue(STATE) ? 8 : 0;
-		return state.getValue(FACING).getIndex() | flag;
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		boolean state = meta >= 8;
-		if(meta > 1)
-			return this.getDefaultState().withProperty(FACING, EnumFacing.values()[meta & 7]).withProperty(STATE, state);
-		else
-			return this.getDefaultState().withProperty(FACING, EnumFacing.NORTH).withProperty(STATE, state);
-	}
-
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[]{FACING, STATE});
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+		super.fillStateContainer(builder);
+		builder.add(STATE);
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
-		super.addInformation(stack, player, tooltip, advanced);
-		tooltip.add(ChatFormatting.ITALIC + LibVulpes.proxy.getLocalizedString("machine.tooltip.multiblock"));
+	@OnlyIn(value=Dist.CLIENT)
+	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip,
+			ITooltipFlag flagIn) {
+		super.addInformation(stack, worldIn, tooltip, flagIn);
+		
+		Style style = Style.field_240709_b_.func_240712_a_(TextFormatting.ITALIC);
+		
+		tooltip.add( new TranslationTextComponent("machine.tooltip.multiblock").func_240703_c_(style));
 	}
 
     /**
@@ -67,7 +63,7 @@ public class RotatableMachineBlock extends RotatableBlock {
      * metadata
      */
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+	public void onPlayerDestroy(IWorld world, BlockPos pos, BlockState state) {
 		IInventory tileentitychest = (IInventory)world.getTileEntity(pos);
 
 		if (tileentitychest != null)
@@ -80,9 +76,9 @@ public class RotatableMachineBlock extends RotatableBlock {
 				{
 					float f = this.random.nextFloat() * 0.8F + 0.1F;
 					float f1 = this.random.nextFloat() * 0.8F + 0.1F;
-					EntityItem entityitem;
+					ItemEntity entityitem;
 
-					for (float f2 = this.random.nextFloat() * 0.8F + 0.1F; itemstack.getCount() > 0; world.spawnEntity(entityitem))
+					for (float f2 = this.random.nextFloat() * 0.8F + 0.1F; itemstack.getCount() > 0; world.addEntity(entityitem))
 					{
 						int k1 = this.random.nextInt(21) + 10;
 
@@ -93,35 +89,35 @@ public class RotatableMachineBlock extends RotatableBlock {
 
 						itemstack.setCount(itemstack.getCount() - k1);
 
-						entityitem = new EntityItem(world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), new ItemStack(itemstack.getItem(), k1, itemstack.getItemDamage()));
+						entityitem = new ItemEntity((World) world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), new ItemStack(itemstack.getItem(), k1, itemstack.getTag() ));
 						float f3 = 0.05F;
-						entityitem.motionX = (double)((float)this.random.nextGaussian() * f3);
-						entityitem.motionY = (double)((float)this.random.nextGaussian() * f3 + 0.2F);
-						entityitem.motionZ = (double)((float)this.random.nextGaussian() * f3);
+						entityitem.setMotion(
+								(double)((float)this.random.nextGaussian() * f3),
+								(double)((float)this.random.nextGaussian() * f3 + 0.2F),
+								(double)((float)this.random.nextGaussian() * f3));
 
-						if (itemstack.hasTagCompound())
+						if (itemstack.hasTag())
 						{
-							entityitem.getItem().setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
+							entityitem.getItem().setTag((CompoundNBT)itemstack.getTag().copy());
 						}
 					}
 				}
 			}
 		}
 
-		super.breakBlock(world,pos, state);
+		super.onPlayerDestroy(world, pos, state);
 	}
 	
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos,
-			IBlockState state, EntityPlayer playerIn, EnumHand hand,
-			EnumFacing facing, float hitX, float hitY, float hitZ) {
-		//Handlue gui through modular system
-		if(!worldIn.isRemote )
-			playerIn.openGui(LibVulpes.instance, GuiHandler.guiId.MODULAR.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
-
-		return true;
+	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player,
+			Hand handIn, BlockRayTraceResult hit) {
+		TileEntity tile = worldIn.getTileEntity(pos);
+			if(tile != null && !worldIn.isRemote) {
+				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)tile, pos);
+			}
+			return ActionResultType.SUCCESS;
 	}
-	
+
 	/**
 	 * Called when the block receives a BlockEvent - see World.addBlockEvent. By default, passes it on to the tile
 	 * entity at this location. Args: world, x, y, z, blockID, EventID, event parameter

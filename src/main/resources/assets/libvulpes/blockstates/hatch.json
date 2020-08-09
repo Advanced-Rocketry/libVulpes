@@ -1,20 +1,20 @@
 {
     "variants": {
-        "varient=0": { "model": "libvulpes:inputHatch" },
-        "varient=1": { "model": "libvulpes:outputHatch" },
-        "varient=2": { "model": "libvulpes:fluidInputHatch" },
-        "varient=3": { "model": "libvulpes:fluidOutputHatch" },
-        "varient=4": { "model": "libvulpes:oreDilithium" },
-        "varient=5": { "model": "libvulpes:oreDilithium" },
-        "varient=6": { "model": "libvulpes:oreDilithium" },
-        "varient=7": { "model": "libvulpes:oreDilithium" },
-        "varient=8": { "model": "libvulpes:inputHatch" },
-        "varient=9": { "model": "libvulpes:outputHatch" },
-        "varient=10": { "model": "libvulpes:fluidInputHatch" },
-        "varient=11": { "model": "libvulpes:fluidOutputHatch" },
-        "varient=12": { "model": "libvulpes:oreDilithium" },
-        "varient=13": { "model": "libvulpes:oreDilithium" },
-        "varient=14": { "model": "libvulpes:oreDilithium" },
-        "varient=15": { "model": "libvulpes:oreDilithium" }
+        "varient=0": { "model": "libvulpes:block/inputhatch" },
+        "varient=1": { "model": "libvulpes:block/outputhatch" },
+        "varient=2": { "model": "libvulpes:block/fluidinputhatch" },
+        "varient=3": { "model": "libvulpes:block/fluidoutputhatch" },
+        "varient=4": { "model": "libvulpes:block/oredilithium" },
+        "varient=5": { "model": "libvulpes:block/oredilithium" },
+        "varient=6": { "model": "libvulpes:block/oredilithium" },
+        "varient=7": { "model": "libvulpes:block/oredilithium" },
+        "varient=8": { "model": "libvulpes:block/inputhatch" },
+        "varient=9": { "model": "libvulpes:block/outputhatch" },
+        "varient=10": { "model": "libvulpes:block/fluidinputhatch" },
+        "varient=11": { "model": "libvulpes:block/fluidoutputhatch" },
+        "varient=12": { "model": "libvulpes:block/oredilithium" },
+        "varient=13": { "model": "libvulpes:block/oredilithium" },
+        "varient=14": { "model": "libvulpes:block/oredilithium" },
+        "varient=15": { "model": "libvulpes:block/oredilithium" }
     }
 }

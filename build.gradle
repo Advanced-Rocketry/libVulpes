@@ -5,13 +5,18 @@ buildscript {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
+	jcenter()
         maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+	maven {
+            name = "mezz.jei"
+            url = "http://dvs1.progwml6.com/files/maven"
+        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
 
@@ -21,30 +26,90 @@ plugins {
   id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.64"
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
 
+apply plugin: 'net.minecraftforge.gradle'
+// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
-apply from: "gradle/scripts/getbuildnumber.gradle"
+//apply from: "gradle/scripts/getbuildnumber.gradle"
+//apply from: "gradle/scripts/jars.gradle"
+//apply from: "gradle/scripts/version.gradle"
+
 sourceCompatibility = 8
 targetCompatibility = 8
+
+
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+
+group= "zmaster587.libVulpes" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = 'LibVulpes'
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+
+
+def mcversion = '1.16.1'
 minecraft {
-    version = "1.12.2-14.23.4.2739"
-    runDir = "run"
-    mappings = "snapshot_20170624"
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-    replace "@MAJOR@", version_major
-    replace "@MINOR@", version_minor
-    replace "@REVIS@", version_revis
-    replace "@BUILD@", project.getBuildNumber()
+	
+        runs {
+        client {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                libVulpes {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                libVulpes {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            args '--mod', 'libVulpes', '--all', '--output', file('src/generated/resources/')
+
+            mods {
+                libVulpes {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+    
+    mappings channel: 'snapshot', version: '20200514-1.16'
 }
 
 
-apply from: "gradle/scripts/jars.gradle"
-apply from: "gradle/scripts/version.gradle"
 
-group= "zmaster587.libVulpes" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "LibVulpes"
+
+
+
 
 clean {
     delete 'output'
@@ -67,41 +132,42 @@ repositories {
 }
 
 dependencies {
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    //compile "some.group:artifact:version:classifier"
-    //compile "some.group:artifact:version"
+    minecraft 'net.minecraftforge:forge:1.16.1-32.0.75'
       
-    compile name: 'industrialcraft-2', version: '2.8.96-ex112-api', ext: 'jar'
+    ecompile name: 'industrialcraft-2', version: '2.8.96-ex112-api', ext: 'jar'
     //You'll need to download Tesla Tesla-1.12.2-1.0.63-deobf.jar and put it into the libs folder
     //compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
     
     // compile against the JEI API
-    deobfCompile "mezz.jei:jei_1.11.2:4.3.5.277:api"
+    //decompile "mezz.jei:jei-1.16.1:7.0.0.6"
     // at runtime, use the full JEI jar
-    runtime "mezz.jei:jei_1.11.2:4.3.5.277"
+    runtime "mezz.jei:jei-1.16.1:7.0.0.6:api"
 
 }
 
-processResources
+/*processResources
 {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+    inputs.property "mcversion", project.mcversion
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
                 
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version':project.version, 'mcversion':project.mcversion
     }
+    replace "@MAJOR@", version_major
+    replace "@MINOR@", version_minor
+    replace "@REVIS@", version_revis
+    replace "@BUILD@", project.getBuildNumber()
         
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
-}
+}*/
 
 /*task deobfJar(type: Jar) {
      from sourceSets.main.output
@@ -112,10 +178,19 @@ processResources
      manifest {
         attributes 'FMLCorePlugin': 'zmaster587.advancedRocketry.asm.AdvancedRocketryPlugin'
         attributes 'FMLCorePluginContainsFMLMod': 'true'
+	attributes([
+            "Specification-Title": "LibVulpes",
+            "Specification-Vendor": "zmaster587",
+            "Specification-Version": version_major, // We are version 1 of ourselves
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor" :"zmaster587",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
     }
      mustRunAfter "jar" 
 }*/
-
+/*
 curseforge{
   if (project.hasProperty("thecursedkey")) {
         apiKey = project.thecursedkey
@@ -129,12 +204,12 @@ curseforge{
     changelog = file('changelog.html')
     changelogType = 'html'
     releaseType = "beta"
-    addGameVersion minecraft.version
+    addGameVersion mcversion
     mainArtifact(jar) {
-      displayName = "LibVulpes ${project.version} build " + project.getBuildNumber() +  " for " + minecraft.version
+      displayName = "LibVulpes ${project.version} build " + project.getBuildNumber() +  " for " + mcversion
     }
     addArtifact (deobfJar){
-    	 displayName = "LibVulpes ${project.version}-deobf build " + project.getBuildNumber() + " for " + minecraft.version
+    	 displayName = "LibVulpes ${project.version}-deobf build " + project.getBuildNumber() + " for " + mcversion
     }
    }
 }
@@ -159,3 +234,4 @@ task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
 }
 
 tasks.build.dependsOn makeChangelog
+*/

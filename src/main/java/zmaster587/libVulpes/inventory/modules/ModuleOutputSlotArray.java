@@ -3,9 +3,9 @@ package zmaster587.libVulpes.inventory.modules;
 import java.util.List;
 
 import zmaster587.libVulpes.gui.SlotMachineOutput;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 
 public class ModuleOutputSlotArray extends ModuleSlotArray {
 

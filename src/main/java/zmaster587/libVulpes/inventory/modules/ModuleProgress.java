@@ -4,14 +4,17 @@ package zmaster587.libVulpes.inventory.modules;
 import java.util.Arrays;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerListener;
+import net.minecraft.util.IntReferenceHolder;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ModuleProgress extends ModuleBase {
 
@@ -21,17 +24,27 @@ public class ModuleProgress extends ModuleBase {
 	int prevTotalProgress;
 	int id;
 	List<String> tooltip;
+	IntReferenceHolder currentValue;
 
 	public ModuleProgress(int offsetX, int offsetY, int id, ProgressBarImage progressBar, IProgressBar progress) {
 		super(offsetX, offsetY);
 		this.progressBar = progressBar;
 		this.progress = progress;
 		this.id = id;
+		this.currentValue = IntReferenceHolder.single();
 	}
 
 	public ModuleProgress(int offsetX, int offsetY, int id, ProgressBarImage progressBar, IProgressBar progress, String tooltip) {
 		this(offsetX, offsetY, id, progressBar, progress);
 		setTooltip(tooltip);
+	}
+	
+	@Override
+	public List<IntReferenceHolder> getIntTrackers(Container container) {
+		List<IntReferenceHolder> list = super.getIntTrackers(container);
+		
+		list.add(currentValue);
+		return list;
 	}
 
 	public void setTooltip(String tooltip) {
@@ -43,9 +56,9 @@ public class ModuleProgress extends ModuleBase {
 	}
 
 	@Override
-	public void renderForeground(int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel,
-			GuiContainer gui, FontRenderer font) {
-		super.renderForeground(guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
+	public void renderForeground(MatrixStack mat, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel,
+			ContainerScreen<? extends Container>  gui, FontRenderer font) {
+		super.renderForeground(mat, guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
 
 		
 		List<String> tooltip = getToolTip();
@@ -54,7 +67,7 @@ public class ModuleProgress extends ModuleBase {
 			int localY = mouseY - offsetY - progressBar.getInsetY();
 
 			if(localX > 0 && localX < progressBar.getBackWidth() - progressBar.getInsetX() && localY > 0 && localY < progressBar.getBackHeight() - progressBar.getInsetY()) {
-				drawTooltip(gui, tooltip, mouseX, MathHelper.clamp(mouseY, 16, Integer.MAX_VALUE), zLevel, font);
+				drawTooltip((ContainerScreen<Container>) gui, mat, tooltip, mouseX, MathHelper.clamp(mouseY, 16, Integer.MAX_VALUE), zLevel, font);
 			}
 		}
 	}
@@ -117,8 +130,8 @@ public class ModuleProgress extends ModuleBase {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY , FontRenderer font) {
-		progressBar.renderProgressBar(x + offsetX, y + offsetY,getProgress(), gui);
+	@OnlyIn(value=Dist.CLIENT)
+	public void renderBackground(ContainerScreen<? extends Container>  gui, MatrixStack mat, int x, int y, int mouseX, int mouseY , FontRenderer font) {
+		progressBar.renderProgressBar(mat, x + offsetX, y + offsetY,getProgress(), gui);
 	}
 }

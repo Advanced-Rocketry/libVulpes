@@ -2,17 +2,15 @@ package zmaster587.libVulpes.inventory.modules;
 
 import java.util.List;
 
-import zmaster587.libVulpes.gui.CommonResources;
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.TextureResources;
-import zmaster587.libVulpes.render.RenderHelper;
-import zmaster587.libVulpes.util.IconResource;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.inventory.Container;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 
 public class ModuleSlotArray extends ModuleBase {
 
@@ -31,7 +29,7 @@ public class ModuleSlotArray extends ModuleBase {
 
 		for(int i = startSlot; i < endSlot; i++) {
 			container.inventorySlots.remove(i);
-			container.inventoryItemStacks.remove(i);
+			container.getInventory().remove(i);
 		}
 		startSlot = a;
 		endSlot = b;
@@ -42,14 +40,14 @@ public class ModuleSlotArray extends ModuleBase {
 	}
 	
 	@Override
-	public void renderBackground(GuiContainer gui, int x, int y, int mouseX,
+	public void renderBackground(ContainerScreen<? extends Container>  gui, MatrixStack mat, int x, int y, int mouseX,
 			int mouseY, FontRenderer font) {
-		super.renderBackground(gui, x, y, mouseX, mouseY, font);
+		super.renderBackground(gui, mat, x, y, mouseX, mouseY, font);
 		
 		if(!isEnabled()) {
-			gui.mc.getTextureManager().bindTexture(TextureResources.slotDisabled.getResourceLocation());
+			gui.getMinecraft().getTextureManager().bindTexture(TextureResources.slotDisabled.getResourceLocation());
 			for(Slot slot : slotList) {
-				gui.drawTexturedModalRect(x + slot.xPos - 1, y + slot.yPos - 1, TextureResources.slotDisabled.getxLoc(), TextureResources.slotDisabled.getyLoc(), TextureResources.slotDisabled.getxSize(), TextureResources.slotDisabled.getySize());
+				gui.func_238474_b_(mat, x + slot.xPos - 1, y + slot.yPos - 1, TextureResources.slotDisabled.getxLoc(), TextureResources.slotDisabled.getyLoc(), TextureResources.slotDisabled.getxSize(), TextureResources.slotDisabled.getySize());
 			}
 		}
 	}

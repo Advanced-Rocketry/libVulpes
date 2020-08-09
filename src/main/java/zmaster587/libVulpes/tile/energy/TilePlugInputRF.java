@@ -41,7 +41,7 @@ public class TilePlugInputRF extends TilePlugBase implements IEnergyHandler {
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.rfBattery.name";
+		return "block.libvulpes.rfBattery";
 	}
 	
 	@Override

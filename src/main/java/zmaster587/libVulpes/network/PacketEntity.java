@@ -1,30 +1,58 @@
 package zmaster587.libVulpes.network;
 
-import java.io.IOException;
+import java.util.function.Supplier;
 
-import io.netty.buffer.ByteBuf;
 import zmaster587.libVulpes.interfaces.INetworkEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkEvent;
 
 public class PacketEntity extends BasePacket {
 
+	
+	public static void encode(PacketEntity pkt, PacketBuffer buf)
+	{
+		pkt.write(buf);
+	}
+	
+	public static PacketEntity decode( PacketBuffer buf)
+	{
+		PacketEntity pkt = new PacketEntity();
+		 
+		pkt.read(buf);
+		return pkt;
+	}
+	
+	public static class Handler 
+	{
+		public static void handle(PacketEntity msg, Supplier<NetworkEvent.Context> ctx)
+		{
+			if(ctx.get().getDirection().getReceptionSide().isServer())
+				ctx.get().enqueueWork(() -> msg.executeServer(ctx.get().getSender()));
+			else
+				ctx.get().enqueueWork(() -> msg.executeClient(Minecraft.getInstance().player));
+			
+			ctx.get().setPacketHandled(true);
+			
+		}
+	}
+	
+	
 	INetworkEntity entity;
 
-	NBTTagCompound nbt;
+	CompoundNBT nbt;
 	int entityId;
 	byte packetId;
 
 	public PacketEntity() {
-		nbt = new NBTTagCompound();
+		nbt = new CompoundNBT();
 	};
 
 	public PacketEntity(INetworkEntity machine, byte packetId) {
@@ -34,42 +62,28 @@ public class PacketEntity extends BasePacket {
 	}
 
 
-	public PacketEntity(INetworkEntity entity, byte packetId, NBTTagCompound nbt) {
+	public PacketEntity(INetworkEntity entity, byte packetId, CompoundNBT nbt) {
 		this(entity, packetId);
 		this.nbt = nbt;
 	}
 
-	@Override
-	public void write(ByteBuf out) {
-		PacketBuffer buffer = new PacketBuffer(out);
-
-		write(buffer);
-	}
-
 	private void write(PacketBuffer out) {
-		out.writeInt(((Entity)entity).world.provider.getDimension());
+		BasePacket.writeWorld(out, ((Entity)entity).world);
 		out.writeInt(((Entity)entity).getEntityId());
 		out.writeByte(packetId);
 
-		out.writeBoolean(!nbt.hasNoTags());
+		out.writeBoolean(!nbt.isEmpty());
 
-		if(!nbt.hasNoTags()) {
+		if(!nbt.isEmpty()) {
 			out.writeCompoundTag(nbt);
 		}
 
 		entity.writeDataToNetwork(out, packetId);
 	}
 
-	@Override
-	public void read(ByteBuf in) {
-		PacketBuffer buffer = new PacketBuffer(in);
-		read(buffer, true);
-	}
-
-	public void read(PacketBuffer in, boolean server) {
+	public void read(PacketBuffer in) {
 		//DEBUG:
-		World world;
-		world = DimensionManager.getWorld(in.readInt());
+		World world = BasePacket.readWorld(in);
 
 		int entityId = in.readInt();
 		packetId = in.readByte();
@@ -77,14 +91,8 @@ public class PacketEntity extends BasePacket {
 		Entity ent = world.getEntityByID(entityId);
 
 		if(in.readBoolean()) {
-			NBTTagCompound nbt = null;
-
-			try {
-				nbt = in.readCompoundTag();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
+			CompoundNBT nbt = null;
+			nbt = in.readCompoundTag();
 			this.nbt = nbt;
 		}
 
@@ -97,34 +105,34 @@ public class PacketEntity extends BasePacket {
 		}
 	}
 
-	public void execute(EntityPlayer player, Side side) {
+	public void execute(PlayerEntity player, Dist side) {
 		if(entity != null)
 			entity.useNetworkData(player, side, packetId, nbt);
 	}
 
-	@Override
-	public void executeServer(EntityPlayerMP player) {
-		execute((EntityPlayer)player, Side.SERVER);
+	
+	public void executeServer(ServerPlayerEntity player) {
+		execute((PlayerEntity)player, Dist.DEDICATED_SERVER);
 	}
 
-	@Override
-	public void executeClient(EntityPlayer player) {
-		execute((EntityPlayer)player, Side.CLIENT);
+	
+	public void executeClient(PlayerEntity player) {
+		execute((PlayerEntity)player, Dist.CLIENT);
 		if(entity == null) {
 			
 		}
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void readClient(ByteBuf in) {
+	
+	@OnlyIn(value=Dist.CLIENT)
+	public void readClient(PacketBuffer in) {
 		PacketBuffer buffer = new PacketBuffer(in);
 
 		//DEBUG:
 		World world;
 
 		buffer.readInt();
-		world = Minecraft.getMinecraft().world;
+		world = Minecraft.getInstance().world;
 
 
 		int entityId = buffer.readInt();
@@ -133,13 +141,8 @@ public class PacketEntity extends BasePacket {
 		Entity ent = world.getEntityByID(entityId);
 
 		if(buffer.readBoolean()) {
-			NBTTagCompound nbt = null;
-
-			try {
-				nbt = buffer.readCompoundTag();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			CompoundNBT nbt = null;
+			nbt = buffer.readCompoundTag();
 
 			this.nbt = nbt;
 		}

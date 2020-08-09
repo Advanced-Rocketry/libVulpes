@@ -3,12 +3,15 @@ package zmaster587.libVulpes.inventory.modules;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import zmaster587.libVulpes.client.util.ProgressBarImage;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ModuleDualProgressBar extends ModuleProgress {
 
@@ -32,7 +35,7 @@ public class ModuleDualProgressBar extends ModuleProgress {
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(value=Dist.CLIENT)
 	protected List<String> getToolTip() {
 		List<String> modifiedList = new LinkedList<String>();
 		
@@ -48,13 +51,13 @@ public class ModuleDualProgressBar extends ModuleProgress {
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void renderBackground(GuiContainer gui, int x, int y, int mouseX,
+	@OnlyIn(value=Dist.CLIENT)
+	public void renderBackground(ContainerScreen<? extends Container>  gui, MatrixStack mat, int x, int y, int mouseX,
 			int mouseY, FontRenderer font) {
 		
 		float totalProgress = progress.getTotalProgress(id)/100f;
 		float randomnessFactor = progress.getProgress(id)/100f;
 		
-		progressBar.renderProgressBarPartial(x + offsetX, y + offsetY, totalProgress , 0.5f*randomnessFactor, gui);
+		progressBar.renderProgressBarPartial(mat, x + offsetX, y + offsetY, totalProgress , 0.5f*randomnessFactor, gui);
 	}
 }

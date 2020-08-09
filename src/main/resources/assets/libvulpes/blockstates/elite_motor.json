@@ -1,0 +1,14 @@
+{
+    "defaults": {
+        "textures": {
+            "#none": "libvulpes:block/models/elitemotor"
+        },
+        "model": "libvulpes:block/models/elitemotor"
+    },
+    "variants": {
+        "facing=north": { "model": "libvulpes:block/models/elitemotor" },
+        "facing=south": { "model": "libvulpes:block/models/elitemotor", "y": 180 },
+        "facing=west":  { "model": "libvulpes:block/models/elitemotor", "y": 270 },
+        "facing=east":  { "model": "libvulpes:block/models/elitemotor", "y": 90 }
+    }
+}

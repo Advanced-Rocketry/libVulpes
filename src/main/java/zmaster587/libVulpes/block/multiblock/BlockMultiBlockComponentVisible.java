@@ -1,44 +1,32 @@
 package zmaster587.libVulpes.block.multiblock;
 
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import zmaster587.libVulpes.tile.TilePointer;
 
 public class BlockMultiBlockComponentVisible extends BlockMultiblockStructure {
 
-	public BlockMultiBlockComponentVisible(Material material) {
-		super(material);
+	public BlockMultiBlockComponentVisible(Properties property) {
+		super(property);
 	}
+	
+	
 
 	@Override
-	public boolean hasTileEntity(IBlockState state) {
-		return state.getValue(VARIANT) > 7;
+	public boolean hasTileEntity(BlockState state) {
+		return state.get(VARIANT) > 7;
 	}
 	
 	@Override
-	public void completeStructure(World world, BlockPos pos, IBlockState state) {
-		world.setBlockState(pos, state.withProperty(VARIANT, state.getValue(VARIANT) | 8));
+	public void completeStructure(World world, BlockPos pos, BlockState state) {
+		world.setBlockState(pos, state.with(VARIANT, state.get(VARIANT) | 8));
 	}
 	
 	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return super.isOpaqueCube(state);
-	}
-	
-	@Override
-	public boolean shouldSideBeRendered(IBlockState blockState,
-			IBlockAccess blockAccess, BlockPos pos, EnumFacing direction) {
-		
-		return true;//blockAccess.getBlockState(pos.offset(direction)).isOpaqueCube();
-	}
-	
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new TilePointer();
 	}
 }

@@ -1,9 +1,9 @@
 package zmaster587.libVulpes.api.material;
 
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraftforge.common.ToolType;
 
 public class Material {
 	String unlocalizedName, tool;
@@ -82,12 +82,15 @@ public class Material {
 		}
 		
 		if(product.isBlock()) {
-			return new ItemStack(registry.getBlockForProduct(product, this, index), amount, getMeta());
+			ItemStack stack =  new ItemStack(registry.getBlockForProduct(product, this, index), amount);
+			stack.setDamage(getMeta());
+			return stack;
 		}
 		
 		
-		
-		return new ItemStack(registry.oreProducts[product.ordinal()], amount, getMeta());
+		ItemStack stack =  new ItemStack(registry.oreProducts.get(product).get(this), amount);
+		stack.setDamage(getMeta());
+		return stack;
 	}
 	/**
 	 * @param product
@@ -114,8 +117,8 @@ public class Material {
 	/**
 	 * @return tool required to harvest the ore of this material
 	 */
-	public String getTool() {
-		return tool;
+	public ToolType getTool() {
+		return ToolType.get(tool);
 	}
 
 	public String getUnlocalizedName() {
@@ -135,12 +138,6 @@ public class Material {
 	 */
 	public int getColor() {
 		return color;
-	}
-
-	@Deprecated
-	public Block getBlock() {
-		return registry.getBlockListForProduct(AllowedProducts.getProductByName("ORE")).get(index/16);
-		//return LibVulpesBlocks.blockOre.get(this.ordinal()/16);
 	}
 
 	/**

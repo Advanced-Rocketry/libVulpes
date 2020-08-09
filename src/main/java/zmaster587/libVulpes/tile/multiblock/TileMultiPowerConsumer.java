@@ -5,26 +5,36 @@ import java.util.List;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.Dimension;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import zmaster587.libVulpes.Configuration;
+import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.ITimeModifier;
 import zmaster587.libVulpes.api.IToggleableMachine;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.client.RepeatingSound;
+import zmaster587.libVulpes.config.LibVulpesConfig;
+import zmaster587.libVulpes.inventory.ContainerModular;
+import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.IProgressBar;
 import zmaster587.libVulpes.inventory.modules.IToggleButton;
@@ -38,7 +48,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine.NetworkPackets
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.MultiBattery;
 
-public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMachine, IModularInventory, IProgressBar, IToggleButton, ITickable, IToggleableMachine {
+public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMachine, IModularInventory, IProgressBar, IToggleButton, ITickableTileEntity, IToggleableMachine {
 
 	protected MultiBattery batteries = new MultiBattery();
 
@@ -52,8 +62,8 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 	Object soundToPlay;
 
-	public TileMultiPowerConsumer() {
-		super();
+	public TileMultiPowerConsumer(TileEntityType<?> type) {
+		super(type);
 		enabled = false;
 		completionTime = -1;
 		currentTime = -1;
@@ -67,8 +77,8 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		return batteries;
 	}
 
-	public float getPowerMultiplier() {
-		return Configuration.powerMult;
+	public double getPowerMultiplier() {
+		return LibVulpesConfig.common.powerMult.get();
 	}
 
 	
@@ -94,7 +104,6 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 	@Override
 	public float getNormallizedProgress(int id) {
-
 		return completionTime > 0 ? currentTime/(float)completionTime : 0f;
 	}
 
@@ -112,7 +121,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	 * @param tile can be null
 	 * @return
 	 */
-	public float getTimeMultiplierForBlock(IBlockState state, TileEntity tile) {
+	public float getTimeMultiplierForBlock(BlockState state, TileEntity tile) {
 		
 		if(state.getBlock() instanceof ITimeModifier)
 			return ((ITimeModifier)state.getBlock()).getTimeMult();
@@ -125,14 +134,14 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	@Override
-	protected void replaceStandardBlock(BlockPos newPos, IBlockState state,
+	protected void replaceStandardBlock(BlockPos newPos, BlockState state,
 			TileEntity tile) {
 		super.replaceStandardBlock(newPos, state, tile);
 		timeMultiplier *= getTimeMultiplierForBlock(state, tile);
 	}
 	
 	@Override
-	public void update() {
+	public void tick() {
 
 		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0) {
@@ -150,7 +159,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 			timeAlive = 0x1;
 		}
 
-		if(!world.isRemote && world.getTotalWorldTime() % 1000L == 0 && !isComplete()) {
+		if(!world.isRemote && world.getGameTime() % 1000L == 0 && !isComplete()) {
 			attemptCompleteStructure(world.getBlockState(pos));
 			markDirty();
 			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
@@ -200,7 +209,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		currentTime++;
 
 		SoundEvent str;
-		if(world.isRemote && (str = getSound()) != null && world.getTotalWorldTime() % getSoundDuration() == 0) {
+		if(world.isRemote && (str = getSound()) != null && world.getGameTime() % getSoundDuration() == 0) {
 			//playMachineSound(str);
 		}
 
@@ -244,7 +253,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	 * @param blockBroken set true if the block is being broken, otherwise some other means is being used to disassemble the machine
 	 */
 	@Override
-	public void deconstructMultiBlock(World world, BlockPos destroyedPos, boolean blockBroken, IBlockState state) {
+	public void deconstructMultiBlock(World world, BlockPos destroyedPos, boolean blockBroken, BlockState state) {
 		resetCache();
 		completionTime = 0;
 		currentTime = 0;
@@ -289,30 +298,30 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	@Override
-	protected void writeNetworkData(NBTTagCompound nbt) {
+	protected void writeNetworkData(CompoundNBT nbt) {
 		super.writeNetworkData(nbt);
-		nbt.setInteger("completionTime", this.completionTime);
-		nbt.setInteger("currentTime", this.currentTime);
-		nbt.setInteger("powerPerTick", this.powerPerTick);
-		nbt.setBoolean("enabled", enabled);
+		nbt.putInt("completionTime", this.completionTime);
+		nbt.putInt("currentTime", this.currentTime);
+		nbt.putInt("powerPerTick", this.powerPerTick);
+		nbt.putBoolean("enabled", enabled);
 
 		if(timeMultiplier != 1)
-			nbt.setFloat("timeMult", timeMultiplier);
+			nbt.putFloat("timeMult", timeMultiplier);
 	}
 
 	@Override
-	protected void readNetworkData(NBTTagCompound nbt) {
+	protected void readNetworkData(CompoundNBT nbt) {
 		super.readNetworkData(nbt);
-		completionTime = nbt.getInteger("completionTime");
-		currentTime = nbt.getInteger("currentTime");
-		powerPerTick = nbt.getInteger("powerPerTick");
+		completionTime = nbt.getInt("completionTime");
+		currentTime = nbt.getInt("currentTime");
+		powerPerTick = nbt.getInt("powerPerTick");
 		enabled = nbt.getBoolean("enabled");
 
-		if(nbt.hasKey("timeMult"))
+		if(nbt.hasUniqueId("timeMult"))
 			timeMultiplier = nbt.getFloat("timeMult");
 
 		if(world != null && world.isRemote && isRunning()) {
-			((BlockTile)getBlockType()).setBlockState(world,world.getBlockState(getPos()), getPos(),true);
+			((BlockTile)getBlockState().getBlock()).setBlockState(world,world.getBlockState(getPos()), getPos(),true);
 		}
 	}
 
@@ -329,33 +338,32 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 	@Override
 	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			NBTTagCompound nbt) {
+			CompoundNBT nbt) {
 		if(packetId == NetworkPackets.POWERERROR.ordinal()) {
-			nbt.setBoolean("hadPowerLastTick", in.readBoolean());
+			nbt.putBoolean("hadPowerLastTick", in.readBoolean());
 		}
 		else if(packetId == NetworkPackets.TOGGLE.ordinal()) {
-			nbt.setBoolean("enabled", in.readBoolean());
+			nbt.putBoolean("enabled", in.readBoolean());
 		}
 	}
 
 	@Override
-	public void useNetworkData(EntityPlayer player, Side side, byte id,
-			NBTTagCompound nbt) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id,
+			CompoundNBT nbt) {
 
 		if(id == NetworkPackets.POWERERROR.ordinal()) {
 			hadPowerLastTick = nbt.getBoolean("hadPowerLastTick");
 		} else if (id == NetworkPackets.TOGGLE.ordinal()) {
 			setMachineEnabled(nbt.getBoolean("enabled"));
 			toggleSwitch.setToggleState(getMachineEnabled());
-
 			//Last ditch effort to update the toggle switch when it's flipped
 			if(!world.isRemote)
-				PacketHandler.sendToNearby(new PacketMachine(this, (byte)NetworkPackets.TOGGLE.ordinal()), world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64);
+				PacketHandler.sendToNearby(new PacketMachine(this, (byte)NetworkPackets.TOGGLE.ordinal()), world.func_230315_m_().func_241513_m_() /* get dimension */, pos.getX(), pos.getY(), pos.getZ(), 64);
 		}
 	}
 
 	@Override
-	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
+	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
@@ -371,6 +379,11 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	@Override
+	public int getModularInvType() {
+		return GuiHandler.guiId.MODULAR.ordinal();
+	}
+	
+	@Override
 	public void onInventoryButtonPressed(int buttonId) {
 		if(buttonId == 0) {
 			this.setMachineEnabled(toggleSwitch.getState());
@@ -385,7 +398,17 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	@Override
-	public boolean canInteractWithContainer(EntityPlayer entity) {
+	public boolean canInteractWithContainer(PlayerEntity entity) {
 		return isComplete();
+	}
+	
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TranslationTextComponent(getModularInventoryName());
+	}
+
+	@Override
+	public Container createMenu(int ID, PlayerInventory playerInv, PlayerEntity playerEntity) {
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, ID, playerEntity, getModules(getModularInvType(), playerEntity), this);
 	}
 }

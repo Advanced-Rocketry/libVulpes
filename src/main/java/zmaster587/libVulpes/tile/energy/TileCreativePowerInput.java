@@ -1,72 +1,71 @@
 package zmaster587.libVulpes.tile.energy;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.texture.ITickable;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import zmaster587.libVulpes.api.LibVulpesTileEntityTypes;
 import zmaster587.libVulpes.energy.IPower;
 import zmaster587.libVulpes.util.CreativeBattery;
-import zmaster587.libVulpes.util.UniversalBattery;
 
 public class TileCreativePowerInput extends TilePlugBase implements IPower, ITickable {
 
 	public TileCreativePowerInput() {
-		//super(1);
+		super(LibVulpesTileEntityTypes.TILE_CREATIVE_BATTERY);
 		storage = new CreativeBattery();
 	}
 
 	public TileCreativePowerInput(int teir) {
-		//super(1);
+		super(LibVulpesTileEntityTypes.TILE_CREATIVE_BATTERY);
 		storage = new CreativeBattery();
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
 		
-		teir = nbt.getInteger("teir");
+		teir = nbt.getInt("teir");
 		
 		storage = new CreativeBattery();//new UniversalBattery(getMaxEnergy(teir));
 		storage.readFromNBT(nbt);
 	}
 	
 	@Override
-	public int extractEnergy(EnumFacing dir, int amt, boolean sim) {
+	public int extractEnergy(Direction dir, int amt, boolean sim) {
 		return extractEnergy(amt, sim);
 	}
 
 	@Override
-	public int getEnergyStored(EnumFacing arg0) {
+	public int getEnergyStored(Direction arg0) {
 		return getUniversalEnergyStored();//getEnergyStored();
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing arg0) {
+	public int getMaxEnergyStored(Direction arg0) {
 		return getMaxEnergyStored();
 	}
 
 	@Override
-	public int receiveEnergy(EnumFacing arg0, int maxReceive, boolean simulate) {
+	public int receiveEnergy(Direction arg0, int maxReceive, boolean simulate) {
 		return acceptEnergy(maxReceive, simulate);
 	}
 
 	@Override
-	public boolean canConnectEnergy(EnumFacing arg0) {
+	public boolean canConnectEnergy(Direction arg0) {
 		return true;
 	}
 
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.creativePowerBattery.name";
-	}
-
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "block.libvulpes.creative_power_battery";
 	}
 
 	@Override
@@ -86,17 +85,17 @@ public class TileCreativePowerInput extends TilePlugBase implements IPower, ITic
 	}
 
 	@Override
-	public void update() {
+	public void tick() {
 		if(!world.isRemote) {
-			for(EnumFacing facing : EnumFacing.VALUES) {
+			for(Direction facing : Direction.values()) {
 				TileEntity tile = world.getTileEntity(this.getPos().offset(facing));
 
-				if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {
-					IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY,  facing.getOpposite());
-					this.extractEnergy(storage.receiveEnergy(getUniversalEnergyStored(), false),false);
+				if(tile != null) {
+					IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY,  facing.getOpposite()).orElse(null);
+					if(storage != null)
+						this.extractEnergy(storage.receiveEnergy(getUniversalEnergyStored(), false),false);
 				}
 			}
 		}
 	}
-	
 }

@@ -1,118 +1,95 @@
 package zmaster587.libVulpes.block.multiblock;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext.Builder;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 /**
  * Invisible block used to store blocks that are part of a completed multi-block structure
  * 
  */
-public class BlockMultiblockPlaceHolder extends BlockContainer {
+public class BlockMultiblockPlaceHolder extends ContainerBlock {
 
 	public BlockMultiblockPlaceHolder() {
-		super(Material.IRON);
-	}
-	
-	//Make invisible
-	@Override
-	public boolean shouldSideBeRendered(IBlockState blockState,
-			IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
-		return false;
+		super(Properties.create(Material.IRON).hardnessAndResistance(1f));
 	}
 	
 	@Override
-	public boolean isBlockNormalCube(IBlockState state) {
-		return false;
-	}
-	
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public boolean hasTileEntity(IBlockState state) {
+	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
 		return true;
 	}
+	
 
-	//Make sure to get the block this one is storing rather than the placeholder itself
 	@Override
-	public ItemStack getPickBlock(IBlockState state, RayTraceResult target,
-			World world, BlockPos pos, EntityPlayer player) {
-		
-		TilePlaceholder tile = (TilePlaceholder)world.getTileEntity(pos);
-		return new ItemStack(tile.getReplacedState().getBlock(), 1, tile.getReplacedMeta());
+	public boolean hasTileEntity(BlockState state) {
+		return true;
 	}
 	
-	
-
+	//Make sure to get the block this one is storing rather than the placeholder itself
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos,
-			IBlockState state, int fortune) {
-		return new ArrayList<ItemStack>();
+	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
+			PlayerEntity player) {
+		
+		TilePlaceholder tile = (TilePlaceholder)world.getTileEntity(pos);
+		return tile.getReplacedState().getPickBlock(target, world, pos, player);
+	}
+	
+	@Override
+	public List<ItemStack> getDrops(BlockState state, Builder builder) {
+		// TODO Auto-generated method stub
+		return new LinkedList<ItemStack>();
 	}
 	
 	@Override
 	public void onBlockHarvested(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player) {
+			BlockState state, PlayerEntity player) {
 		
 		super.onBlockHarvested(world, pos, state, player);
 
-		if(!world.isRemote && !player.capabilities.isCreativeMode) {
+		if(!world.isRemote && !player.isCreative()) {
 			TilePlaceholder tile = (TilePlaceholder)world.getTileEntity(pos);
 
-			IBlockState newBlockState = tile.getReplacedState();
+			BlockState newBlockState = tile.getReplacedState();
 			Block newBlock = newBlockState.getBlock();
-
-			if(newBlock != null && newBlock != Blocks.AIR && player.canHarvestBlock(newBlockState)) {
-				List<ItemStack> stackList = newBlock.getDrops(world, pos, newBlockState, 0);
-
-				for(ItemStack stack : stackList) {
-					EntityItem entityItem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-					world.spawnEntity(entityItem);
-
-				}
+			
+			
+			if(newBlock != null && newBlock != Blocks.AIR && newBlockState.canHarvestBlock(world, pos, player)) {
+				newBlock.spawnDrops(newBlockState, world, pos);
 			}
 		}
 	}
-
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+	public void onPlayerDestroy(IWorld world, BlockPos pos, BlockState state) {
 		TileEntity tile = world.getTileEntity(pos);
 
 		if(tile != null && tile instanceof TilePlaceholder) {
 			tile = ((TilePlaceholder)tile).getMasterBlock();
 			if(tile instanceof TileMultiBlock)
-				((TileMultiBlock)tile).deconstructMultiBlock(world, pos, true, world.getBlockState(tile.getPos()));
+				((TileMultiBlock)tile).deconstructMultiBlock((World)world, pos, true, world.getBlockState(tile.getPos()));
 		}
 		
-		super.breakBlock(world, pos, state);
+		super.onPlayerDestroy(world, pos, state);
 	}
 
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
-		return new TilePlaceholder();
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createNewTileEntity(IBlockReader worldIn) {
 		return new TilePlaceholder();
 	}
 }

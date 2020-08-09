@@ -1,16 +1,13 @@
 package zmaster587.libVulpes.tile.energy;
 
-import zmaster587.libVulpes.Configuration;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.energy.tile.IEnergySink;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.MinecraftForge;
 
-public class TilePlugInputIC2 extends TileForgePowerOutput implements IEnergySink, 
-ITickable {
+/*public class TilePlugInputIC2 extends TileForgePowerOutput implements IEnergySink, ITickable {
 
 	public TilePlugInputIC2() {
 		super();
@@ -18,7 +15,7 @@ ITickable {
 	boolean tickedOnce = false;
 	@Override
 	public String getModularInventoryName() {
-		return "tile.IC2Plug.name";
+		return "block.libvulpes.IC2Plug";
 	}
 
 	//[Redacted]
@@ -54,7 +51,7 @@ ITickable {
 	}
 
 	@Override
-	public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing side) {
+	public boolean acceptsEnergyFrom(IEnergyEmitter emitter, Direction side) {
 		return true;
 	}
 
@@ -69,7 +66,7 @@ ITickable {
 	}
 
 	@Override
-	public double injectEnergy(EnumFacing directionFrom, double amount,
+	public double injectEnergy(Direction directionFrom, double amount,
 			double voltage) {
 		storage.acceptEnergy((int)(amount*Configuration.EUMult), false);
 		return 0;
@@ -90,4 +87,4 @@ ITickable {
 		return true;
 	}
 
-}
+}*/

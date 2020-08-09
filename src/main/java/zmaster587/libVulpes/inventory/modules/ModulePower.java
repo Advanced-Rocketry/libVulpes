@@ -3,16 +3,15 @@ package zmaster587.libVulpes.inventory.modules;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.matrix.MatrixStack;
 
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.Slot;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerListener;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ModulePower extends ModuleBase {
 
@@ -30,24 +29,24 @@ public class ModulePower extends ModuleBase {
 	}
 
 	@Override
-	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY, FontRenderer font) {
-		super.renderBackground(gui, x, y, mouseX, mouseY, font);
+	public void renderBackground(ContainerScreen<? extends Container> gui, MatrixStack mat, int x, int y, int mouseX, int mouseY, FontRenderer font) {
+		super.renderBackground(gui, mat, x, y, mouseX, mouseY, font);
 
 		//Power bar background
-		gui.drawTexturedModalRect(x + offsetX, y + offsetY, 176, 18, 8, 40);
+		gui.func_238474_b_(mat, x + offsetX, y + offsetY, 176, 18, 8, 40);
 
 		//Battery Icon
-		gui.drawTexturedModalRect(x + offsetX + 2, y + offsetY + barYSize + 5, 15, 171, 4, 9);
+		gui.func_238474_b_(mat, x + offsetX + 2, y + offsetY + barYSize + 5, 15, 171, 4, 9);
 
 		//Power Bar
 		float percent = tile.getUniversalEnergyStored()/(float)tile.getMaxEnergyStored();
 
-		gui.drawTexturedModalRect(offsetX + x + 1, 1 + offsetY + y + (barYSize-(int)(percent*barYSize)), textureOffsetX, barYSize- (int)(percent*barYSize) + textureOffsetY, barXSize, (int)(percent*barYSize));
+		gui.func_238474_b_(mat, offsetX + x + 1, 1 + offsetY + y + (barYSize-(int)(percent*barYSize)), textureOffsetX, barYSize- (int)(percent*barYSize) + textureOffsetY, barXSize, (int)(percent*barYSize));
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(value=Dist.CLIENT)
 	@Override
-	public void renderForeground (int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel, GuiContainer gui, FontRenderer font) {
+	public void renderForeground (MatrixStack mat, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel, ContainerScreen<? extends Container>  gui, FontRenderer font) {
 
 		int relativeX = mouseX - offsetX;
 		int relativeY = mouseY - offsetY;
@@ -56,7 +55,7 @@ public class ModulePower extends ModuleBase {
 			List<String> list = new LinkedList<String>();
 			list.add(tile.getUniversalEnergyStored() + " / " + tile.getMaxEnergyStored() + " Power");
 
-			this.drawTooltip(gui, list, mouseX, mouseY, zLevel, font);
+			this.drawTooltip((ContainerScreen<Container>) gui, mat, list, mouseX, mouseY, zLevel, font);
 		}
 
 	}

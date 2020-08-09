@@ -1,17 +1,8 @@
 package zmaster587.libVulpes.cap;
 
-import zmaster587.libVulpes.api.IUniversalEnergy;
-import net.darkhax.tesla.api.ITeslaConsumer;
-import net.darkhax.tesla.api.ITeslaHolder;
-import net.darkhax.tesla.api.ITeslaProducer;
-import net.darkhax.tesla.capability.TeslaCapabilities;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.energy.IEnergyStorage;
-
-public class TeslaPowerCapability implements ITeslaConsumer, ITeslaProducer, ITeslaHolder {
+public class TeslaPowerCapability /*implements ITeslaConsumer, ITeslaProducer, ITeslaHolder*/ {
 	
-	IUniversalEnergy energy;
+	/*IUniversalEnergy energy;
 	
 	public TeslaPowerCapability(IUniversalEnergy energy) {
 		this.energy = energy;
@@ -35,5 +26,5 @@ public class TeslaPowerCapability implements ITeslaConsumer, ITeslaProducer, ITe
 	@Override
 	public long givePower(long amt, boolean simulate) {
 		return energy.acceptEnergy((int)amt, simulate);
-	}
+	}*/
 }

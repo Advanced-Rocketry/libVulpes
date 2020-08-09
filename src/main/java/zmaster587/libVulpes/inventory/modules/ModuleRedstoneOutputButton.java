@@ -2,12 +2,15 @@ package zmaster587.libVulpes.inventory.modules;
 
 import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.inventory.container.Container;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ModuleRedstoneOutputButton extends ModuleButton {
 
@@ -43,9 +46,9 @@ public class ModuleRedstoneOutputButton extends ModuleButton {
 		state = i;
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(value=Dist.CLIENT)
 	@Override
-	public void renderBackground(GuiContainer gui, int x, int y, int mouseX,
+	public void renderBackground(ContainerScreen<? extends Container>  gui, MatrixStack mat, int x, int y, int mouseX,
 			int mouseY, FontRenderer font) {
 		if(state != null)
 
@@ -63,11 +66,11 @@ public class ModuleRedstoneOutputButton extends ModuleButton {
 				tooltipText = suppText + "Redstone control inverted";
 			}
 
-		super.renderBackground(gui, x, y, mouseX, mouseY, font);
+		super.renderBackground(gui, mat, x, y, mouseX, mouseY, font);
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void actionPerform(GuiButton button) {
+	@OnlyIn(value=Dist.CLIENT)
+	public void actionPerform(Button button) {
 		if(enabled && button == this.button) {
 			if(state == null)
 				state = RedstoneState.ON;

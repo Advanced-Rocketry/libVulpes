@@ -2,78 +2,66 @@ package zmaster587.libVulpes.tile;
 
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.cap.ForgePowerCapability;
-import zmaster587.libVulpes.cap.TeslaHandler;
 import zmaster587.libVulpes.energy.IPower;
 import zmaster587.libVulpes.util.UniversalBattery;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 
 public abstract class TileEntityPowerMachine extends TileEntityMachine implements IPower, IUniversalEnergy {
 
+	public TileEntityPowerMachine(TileEntityType<?> tileEntityTypeIn) {
+		super(tileEntityTypeIn);
+	}
+
 	protected UniversalBattery energy;
 	
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		energy.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
+		energy.write(nbt);
 		return nbt;
 	}
-	
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-
-		if(capability == CapabilityEnergy.ENERGY || TeslaHandler.hasTeslaCapability(this, capability))
-			return true;
-		return false;
-	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
 
 		if(capability == CapabilityEnergy.ENERGY )
-			return (T)(new ForgePowerCapability(this));
-		else if(TeslaHandler.hasTeslaCapability(this, capability))
-			return (T)(TeslaHandler.getHandler(this));
+			return LazyOptional.of(() -> new ForgePowerCapability(this)).cast();
 		
 		return super.getCapability(capability, facing);
 	}
 	
-	@Override
-	public NBTTagCompound serializeNBT() {
-		return new NBTTagCompound();
-	}
-	@Override
-	public void deserializeNBT(NBTTagCompound nbt) {
-		
-	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
 		energy.readFromNBT(nbt);
 	}
 	
 	@Override
-	public int receiveEnergy(EnumFacing from, int maxReceive,
+	public int receiveEnergy(Direction from, int maxReceive,
 			boolean simulate) {
 		return energy.acceptEnergy(maxReceive, simulate);
 	}
 
 	@Override
-	public int extractEnergy(EnumFacing from, int maxExtract,
+	public int extractEnergy(Direction from, int maxExtract,
 			boolean simulate) {
 		return 0;
 	}
 
 	@Override
-	public int getEnergyStored(EnumFacing from) {
+	public int getEnergyStored(Direction from) {
 		return energy.getUniversalEnergyStored();
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from) {
+	public int getMaxEnergyStored(Direction from) {
 		return energy.getMaxEnergyStored();
 	}
 	
@@ -95,7 +83,7 @@ public abstract class TileEntityPowerMachine extends TileEntityMachine implement
 	}
 
 	@Override
-	public boolean canConnectEnergy(EnumFacing arg0) {
+	public boolean canConnectEnergy(Direction arg0) {
 		return true;
 	}
 }

@@ -2,16 +2,16 @@ package zmaster587.libVulpes.tile;
 
 import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.inventory.modules.IProgressBar;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 
 public abstract class TileInventoriedForgePowerMachine extends TileInventoriedForgeProducer implements IProgressBar {
 
 	protected int timeRemaining, currentTime, lastRFAmount;
 
-	protected TileInventoriedForgePowerMachine(int energy, int invSize) {
-		super(energy, invSize);
+	protected TileInventoriedForgePowerMachine(TileEntityType<?> tileEntityTypeIn, int energy, int invSize) {
+		super(tileEntityTypeIn, energy, invSize);
 	}
 
 	@Override
@@ -29,9 +29,9 @@ public abstract class TileInventoriedForgePowerMachine extends TileInventoriedFo
 	}
 	
 	protected void setState(boolean state) {
-		IBlockState bstate = world.getBlockState(getPos());
-		if(bstate.getBlock() instanceof BlockTile &&  bstate.getValue(BlockTile.STATE) != state)
-			world.setBlockState(getPos(), bstate.withProperty(BlockTile.STATE, state));
+		BlockState bstate = world.getBlockState(getPos());
+		if(bstate.getBlock() instanceof BlockTile &&  bstate.get(BlockTile.STATE) != state)
+			world.setBlockState(getPos(), bstate.with(BlockTile.STATE, state));
 
 	}
 
@@ -41,7 +41,7 @@ public abstract class TileInventoriedForgePowerMachine extends TileInventoriedFo
 	};
 
 	@Override
-	public void update() {
+	public void tick() {
 		if(canGeneratePower()) {
 			if(hasEnoughEnergyBuffer(getPowerPerOperation())) {
 				lastRFAmount = getPowerPerOperation();
@@ -64,22 +64,22 @@ public abstract class TileInventoriedForgePowerMachine extends TileInventoriedFo
 	public void notEnoughBufferForFunction() {
 		setState(false);
 	}
-
+	
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		nbt.setInteger("timeRemaining", timeRemaining);
-		nbt.setInteger("currentTime", currentTime);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
+		nbt.putInt("timeRemaining", timeRemaining);
+		nbt.putInt("currentTime", currentTime);
 
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
 
-		timeRemaining = nbt.getInteger("timeRemaining");
-		currentTime= nbt.getInteger("currentTime");
+		timeRemaining = nbt.getInt("timeRemaining");
+		currentTime= nbt.getInt("currentTime");
 
 	}
 

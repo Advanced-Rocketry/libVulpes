@@ -1,6 +1,6 @@
 package zmaster587.libVulpes.util;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 
 public class UniversalBattery implements IUniversalEnergy {
@@ -70,14 +70,14 @@ public class UniversalBattery implements IUniversalEnergy {
 		this.energy = energy;
 	}
 	
-	public void writeToNBT(NBTTagCompound nbt) {
-		nbt.setInteger("energy", this.energy);
-		nbt.setInteger("maxEnergy", this.maxEnergy);
+	public void write(CompoundNBT nbt) {
+		nbt.putInt("energy", this.energy);
+		nbt.putInt("maxEnergy", this.maxEnergy);
 	}
 	
-	public void readFromNBT(NBTTagCompound nbt) {
-		this.energy = nbt.getInteger("energy");
-		this.maxEnergy = nbt.getInteger("maxEnergy");
+	public void readFromNBT(CompoundNBT nbt) {
+		this.energy = nbt.getInt("energy");
+		this.maxEnergy = nbt.getInt("maxEnergy");
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package zmaster587.libVulpes.inventory.modules;
 
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerListener;
 
 public class ModuleSync extends ModuleBase {
 

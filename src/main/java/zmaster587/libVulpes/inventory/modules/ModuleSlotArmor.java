@@ -2,27 +2,20 @@ package zmaster587.libVulpes.inventory.modules;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import zmaster587.libVulpes.inventory.ContainerModular;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 import net.minecraftforge.items.SlotItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.PlayerArmorInvWrapper;
-import net.minecraftforge.items.wrapper.RangedWrapper;
 
 public class ModuleSlotArmor extends ModuleBase {
 
 	int startSlot, endSlot;
-	EntityPlayer player;
+	PlayerEntity player;
 	ContainerModular container; //TODO: fix this OOPs (Object Oriented Poops)
 
-	public ModuleSlotArmor(int offsetX, int offsetY, EntityPlayer player) {
+	public ModuleSlotArmor(int offsetX, int offsetY, PlayerEntity player) {
 		super(offsetX, offsetY);
 		this.player = player;
 		startSlot = 0;
@@ -33,7 +26,7 @@ public class ModuleSlotArmor extends ModuleBase {
 
 		for(int i = startSlot; i < endSlot; i++) {
 			container.inventorySlots.remove(i);
-			container.inventoryItemStacks.remove(i);
+			container.getInventory().remove(i);
 		}
 		startSlot = a;
 		endSlot = b;

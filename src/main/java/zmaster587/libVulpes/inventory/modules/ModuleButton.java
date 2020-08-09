@@ -3,18 +3,22 @@ package zmaster587.libVulpes.inventory.modules;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 import zmaster587.libVulpes.gui.GuiImageButton;
+import zmaster587.libVulpes.inventory.ContainerModular;
 
 public class ModuleButton extends ModuleBase {
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(value=Dist.CLIENT)
 	public GuiImageButton button;
 
 	IButtonInventory tile;
@@ -76,7 +80,7 @@ public class ModuleButton extends ModuleBase {
 
 
 	public void setSound(String str) {
-		if(FMLCommonHandler.instance().getSide().isClient())
+		if(Thread.currentThread().getThreadGroup() == SidedThreadGroups.CLIENT)
 			if(button == null)
 				sound = str;
 			else
@@ -160,10 +164,10 @@ public class ModuleButton extends ModuleBase {
 		return enabled;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public List<GuiButton> addButtons(int x, int y) {
+	@OnlyIn(value=Dist.CLIENT)
+	public List<Button> addButtons(int x, int y) {
 
-		List<GuiButton> list = new LinkedList<GuiButton>();
+		List<Button> list = new LinkedList<Button>();
 
 		button = new GuiImageButton(buttonId, x + offsetX, y + offsetY, sizeX, sizeY, buttonImages);
 
@@ -180,8 +184,8 @@ public class ModuleButton extends ModuleBase {
 		return list;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void actionPerform(GuiButton button) {
+	@OnlyIn(value=Dist.CLIENT)
+	public void actionPerform(Button button) {
 		if(enabled && button == this.button) {
 			tile.onInventoryButtonPressed(buttonId);
 		}
@@ -195,13 +199,15 @@ public class ModuleButton extends ModuleBase {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void renderForeground(int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel,
-			GuiContainer gui, FontRenderer font) {
+	@OnlyIn(value=Dist.CLIENT)
+	public void renderForeground(MatrixStack mat, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel,
+			ContainerScreen<? extends Container> gui, FontRenderer font) {
 
 		//if(visible) {
-		gui.drawCenteredString(font, text, offsetX + sizeX / 2, offsetY + sizeY / 2  - font.FONT_HEIGHT/2, color);
-
+		
+		// RenderCenteredString
+		gui.func_238476_c_(mat, font, text, offsetX + sizeX / 2, offsetY + sizeY / 2  - font.FONT_HEIGHT/2, color);
+		
 		if(tooltipText != null) {
 
 			if( isMouseOver(mouseX, mouseY) ) {
@@ -211,7 +217,7 @@ public class ModuleButton extends ModuleBase {
 					list.add(str);
 
 				}
-				this.drawTooltip(gui, list, mouseX, mouseY, zLevel, font);
+				this.drawTooltip((ContainerScreen<Container>) gui, mat, list, mouseX, mouseY, zLevel, font);
 			}
 			//}
 		}

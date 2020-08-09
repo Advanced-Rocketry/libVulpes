@@ -4,9 +4,9 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public interface IFluidHandlerInternal extends IFluidHandler {
-	public int fillInternal(FluidStack resource, boolean doDrain);
+	public int fillInternal(FluidStack resource, FluidAction doDrain);
 	
-	public FluidStack drainInternal(int maxDrain, boolean doDrain);
+	public FluidStack drainInternal(int maxDrain, FluidAction doDrain);
 	
-	public FluidStack drainInternal(FluidStack maxDrain, boolean doDrain);
+	public FluidStack drainInternal(FluidStack maxDrain, FluidAction doDrain);
 }

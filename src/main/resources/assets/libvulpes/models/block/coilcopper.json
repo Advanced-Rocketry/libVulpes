@@ -1,7 +1,7 @@
 {
-    "parent": "libvulpes:block/tintedCubeColumn",
+    "parent": "libvulpes:block/tintedcubecolumn",
     "textures": {
-        "end": "libvulpes:blocks/coilPole",
-        "side": "libvulpes:blocks/coilSide"
+        "end": "libvulpes:blocks/coilcoppertop",
+        "side": "libvulpes:blocks/coilcopperside"
     }
 }

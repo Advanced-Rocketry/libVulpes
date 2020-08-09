@@ -1,18 +1,21 @@
 package zmaster587.libVulpes.tile.energy;
 
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.energy.IEnergyStorage;
+import zmaster587.libVulpes.api.LibVulpesTileEntityTypes;
 
 public class TileForgePowerInput extends TilePlugBase implements IEnergyStorage {
 
-	@Override
-	public String getModularInventoryName() {
-		return "tile.forgePowerInput.name";
+	public TileForgePowerInput() {
+		super(LibVulpesTileEntityTypes.TILE_FORGE_POWER_INPUT);
 	}
 
+
 	@Override
-	public String getName() {
-		return "";
+	public String getModularInventoryName() {
+		return "block.libvulpes.forge_power_input";
 	}
+
 
 	@Override
 	public int receiveEnergy(int amt, boolean simulate) {

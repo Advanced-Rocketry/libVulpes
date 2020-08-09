@@ -1,6 +1,6 @@
 package zmaster587.libVulpes.util;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
 public class HashedBlockPosition  {
@@ -34,8 +34,8 @@ public class HashedBlockPosition  {
 		return new HashedBlockPosition(dx + x, dy + y, dz + z);
 	}
 	
-	public HashedBlockPosition getPositionAtOffset(EnumFacing facing) {
-		return new HashedBlockPosition(facing.getFrontOffsetX() + x, facing.getFrontOffsetY() + y, facing.getFrontOffsetZ() + z);
+	public HashedBlockPosition getPositionAtOffset(Direction facing) {
+		return new HashedBlockPosition(facing.getXOffset() + x, facing.getYOffset() + y, facing.getZOffset() + z);
 	}
 	
 	public double getDistance(HashedBlockPosition otherPos) {

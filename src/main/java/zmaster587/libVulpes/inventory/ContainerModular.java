@@ -2,31 +2,80 @@ package zmaster587.libVulpes.inventory;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
+import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.inventory.container.IContainerListener;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IntReferenceHolder;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class ContainerModular extends Container {
 
 	List<ModuleBase> modules;
-	int numSlots;
+	int numSlots, numTrackers;
 	IModularInventory modularInventory;
+	public boolean includePlayerInv;
 
-
-	public ContainerModular(EntityPlayer playerInv, List<ModuleBase> modules, IModularInventory modulularInv, boolean includePlayerInv, boolean includeHotBar) {
+	public static ContainerModular createFromNetworkItem(int windowId, PlayerInventory invPlayer, PacketBuffer buf)
+	{
+		ItemStack stack = GuiHandler.getHeldFromBuf(buf);
+		IModularInventory modularItem = (IModularInventory)stack.getItem();
+		int ID = modularItem.getModularInvType();
+		
+		boolean includePlayerInv = GuiHandler.doesIncludePlayerInv(ID);
+		boolean includeHotBar = GuiHandler.doesIncludeHotBar(ID);
+		
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_HELD_ITEM, windowId, invPlayer.player, modularItem.getModules(ID, invPlayer.player), modularItem, includePlayerInv, includeHotBar);
+	}
+	
+	public static ContainerModular createFromNetworkBlock(int windowId, PlayerInventory invPlayer, PacketBuffer buf)
+	{
+		TileEntity tile = GuiHandler.getTeFromBuf(buf);
+		IModularInventory modularItem = (IModularInventory)tile;
+		int ID = modularItem.getModularInvType();
+		
+		boolean includePlayerInv = GuiHandler.doesIncludePlayerInv(ID);
+		boolean includeHotBar = GuiHandler.doesIncludeHotBar(ID);
+		
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, windowId, invPlayer.player, modularItem.getModules(ID, invPlayer.player), modularItem, includePlayerInv, includeHotBar);
+	}
+	
+	public ContainerModular(@Nullable ContainerType<?> type, int id, PlayerEntity playerInv, List<ModuleBase> modules, IModularInventory modulularInv)
+	{
+		this(type, id, playerInv, modules, modulularInv, GuiHandler.doesIncludePlayerInv(modulularInv.getModularInvType()), GuiHandler.doesIncludeHotBar(modulularInv.getModularInvType()));
+	}
+	
+	public ContainerModular(@Nullable ContainerType<?> type, int id, PlayerEntity playerInv, List<ModuleBase> modules, IModularInventory modulularInv, boolean includePlayerInv, boolean includeHotBar) {
+		super(type,  id);
 		this.modularInventory = modulularInv;
 		this.modules = modules;
 		numSlots = 0;
+		numTrackers = 0;
+		this.includePlayerInv = includePlayerInv;
 
 		for(ModuleBase module : modules)
+		{
 			for(Slot slot : module.getSlots(this)) {
 				addSlotToContainer(slot);
 				numSlots++;
 			}
+			
+			for(IntReferenceHolder slot : module.getIntTrackers(this)) {
+				trackInt(slot);
+				numTrackers++;
+			}
+			
+		}
 
 		if(includePlayerInv) {
 			// Player inventory
@@ -46,7 +95,7 @@ public class ContainerModular extends Container {
 	}
 
 	public Slot addSlotToContainer(Slot slot) {
-		return super.addSlotToContainer(slot);
+		return super.addSlot(slot);
 	}
 
 	@Override
@@ -74,8 +123,9 @@ public class ContainerModular extends Container {
 			for(int i = 0; i < module.numberOfChangesToSend(); i++) {
 				if(module.isUpdateRequired(i)) {
 
-					for (int j = 0; j < this.listeners.size(); ++j) {
-						module.sendChanges(this, ((IContainerListener)this.listeners.get(j)), moduleIndex, i);
+					List<IContainerListener> listeners = ObfuscationReflectionHelper.getPrivateValue(Container.class, this, "listeners");
+					for (int j = 0; j < listeners.size(); ++j) {
+						module.sendChanges(this, ((IContainerListener)listeners.get(j)), moduleIndex, i);
 					}
 				}
 				moduleIndex++;
@@ -85,7 +135,7 @@ public class ContainerModular extends Container {
 
 	@Override
 	public void updateProgressBar(int slot, int value) {
-		super.updateProgressBar(slot, value);
+		//super.updateProgressBar(slot, value);
 
 		int moduleIndex = 0;
 
@@ -99,7 +149,7 @@ public class ContainerModular extends Container {
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slotId) {
+	public ItemStack transferStackInSlot(PlayerEntity player, int slotId) {
 
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = (Slot)this.inventorySlots.get(slotId);
@@ -230,7 +280,7 @@ public class ContainerModular extends Container {
     }*/
 
 	@Override
-	public boolean canInteractWith(EntityPlayer player) {
+	public boolean canInteractWith(PlayerEntity player) {
 		return modularInventory.canInteractWithContainer(player);
 	}
 }

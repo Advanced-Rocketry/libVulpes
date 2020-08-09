@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "libvulpes:blocks/batteryCreative"
+        "all": "libvulpes:blocks/batterycreative"
     }
 }

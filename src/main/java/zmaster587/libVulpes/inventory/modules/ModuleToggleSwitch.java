@@ -3,15 +3,17 @@ package zmaster587.libVulpes.inventory.modules;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import zmaster587.libVulpes.gui.GuiToggleButtonImage;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ModuleToggleSwitch extends ModuleButton {
 
@@ -51,10 +53,10 @@ public class ModuleToggleSwitch extends ModuleButton {
 	}
 	
 
-	@SideOnly(Side.CLIENT)
-	public List<GuiButton> addButtons(int x, int y) {
+	@OnlyIn(value=Dist.CLIENT)
+	public List<Button> addButtons(int x, int y) {
 
-		List<GuiButton> list = new LinkedList<GuiButton>();
+		List<Button> list = new LinkedList<Button>();
 
 		enabledButton = new GuiToggleButtonImage(0, x + offsetX, y + offsetY, sizeX, sizeY, buttonImages);
 		enabledButton.setState(currentState);
@@ -64,8 +66,8 @@ public class ModuleToggleSwitch extends ModuleButton {
 		return list;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void actionPerform(GuiButton button) {
+	@OnlyIn(value=Dist.CLIENT)
+	public void actionPerform(Button button) {
 		if(enabled && button == enabledButton) {
 			this.currentState = !this.currentState;
 			this.tile.onInventoryButtonPressed(buttonId);
@@ -102,14 +104,14 @@ public class ModuleToggleSwitch extends ModuleButton {
 		crafter.sendWindowProperty(container, variableId, currentState ? 1 : 0);
 	}
 	
-	public boolean isButton(GuiButton button) {
+	public boolean isButton(Button button) {
 		return button == this.enabledButton;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY, FontRenderer font) {
-		super.renderBackground(gui, x, y, mouseX, mouseY, font);
+	@OnlyIn(value=Dist.CLIENT)
+	public void renderBackground(ContainerScreen<? extends Container> gui, MatrixStack mat, int x, int y, int mouseX, int mouseY, FontRenderer font) {
+		super.renderBackground(gui, mat, x, y, mouseX, mouseY, font);
 		enabledButton.setState(currentState);
 	}
 }

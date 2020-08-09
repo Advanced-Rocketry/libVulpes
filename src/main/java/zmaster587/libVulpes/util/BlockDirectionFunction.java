@@ -1,6 +1,6 @@
 package zmaster587.libVulpes.util;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 public class BlockDirectionFunction {
 
@@ -31,12 +31,12 @@ public class BlockDirectionFunction {
 		states[direction] = (byte)state;
 	}
 	
-	public void writeToNBT(NBTTagCompound nbt) {
-		nbt.setByteArray("BDFstates", states);
+	public void write(CompoundNBT nbt) {
+		nbt.putByteArray("BDFstates", states);
 	}
 	
-	public void readFromNBT(NBTTagCompound nbt) {
-		if(nbt.hasKey("BDFstates"))
+	public void readFromNBT(CompoundNBT nbt) {
+		if(nbt.contains("BDFstates"))
 			states = nbt.getByteArray("BDFstates");
 	}
 }

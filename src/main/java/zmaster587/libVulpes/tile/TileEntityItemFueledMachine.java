@@ -1,12 +1,19 @@
 package zmaster587.libVulpes.tile;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 
 public abstract class TileEntityItemFueledMachine extends TileEntityMachine {
+	
+	public TileEntityItemFueledMachine(TileEntityType<?> tileEntityTypeIn) {
+		super(tileEntityTypeIn);
+	}
+
 	protected int fuelTime, maxFuelTime;
 	
 	@Override
-	public void update() {
+	public void tick() {
 		if(fuelTime > 0) {
 			fuelTime--;
 			if(fuelTime == 0) {
@@ -32,19 +39,21 @@ public abstract class TileEntityItemFueledMachine extends TileEntityMachine {
 	public boolean isBurningFuel() { return fuelTime > 0; }
 	
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
 		
-		nbt.setInteger("fuelTime", fuelTime);
-		nbt.setInteger("maxFuelTime", maxFuelTime);
+		nbt.putInt("fuelTime", fuelTime);
+		nbt.putInt("maxFuelTime", maxFuelTime);
 		return nbt;
 	}
 	
+	
+	
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+		super.func_230337_a_(state, nbt);
 		
-		fuelTime = nbt.getInteger("fuelTime");
-		maxFuelTime = nbt.getInteger("maxFuelTime");
+		fuelTime = nbt.getInt("fuelTime");
+		maxFuelTime = nbt.getInt("maxFuelTime");
 	}
 }

@@ -1,15 +1,16 @@
 package zmaster587.libVulpes.event;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.Event.Result;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,14 +23,14 @@ public class BucketHandler {
 
 	@SubscribeEvent
 	public void onBucketFill(FillBucketEvent event) {
-		if(event.getTarget() == null || Type.BLOCK != event.getTarget().typeOfHit)
+		if(event.getTarget() == null || Type.BLOCK != event.getTarget().getType())
 			return;
-		IBlockState state =  event.getWorld().getBlockState(new BlockPos(event.getTarget().getBlockPos()));
+		BlockState state =  event.getWorld().getBlockState(new BlockPos(event.getTarget().getHitVec()));
 		Block block = state.getBlock();
 		Item bucket = bucketMap.get(block);
 		
 		if(bucket != null && state.equals(block.getDefaultState())) {
-			event.getWorld().setBlockToAir(new BlockPos(event.getTarget().getBlockPos()));
+			event.getWorld().setBlockState(new BlockPos(event.getTarget().getHitVec()), Blocks.AIR.getDefaultState());
 			
 			event.setFilledBucket(new ItemStack(bucket));
 			

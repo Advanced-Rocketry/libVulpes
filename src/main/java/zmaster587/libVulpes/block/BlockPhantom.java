@@ -6,55 +6,45 @@ import java.util.List;
 import zmaster587.libVulpes.tile.TileSchematic;
 import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext.Builder;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.IBlockReader;
 
 public class BlockPhantom extends Block {
 
-	public BlockPhantom(Material mat) {
+	public BlockPhantom(Properties mat) {
 		super(mat);
 	}
 
 	@Override
-	public boolean hasTileEntity(IBlockState state) {
+	public boolean hasTileEntity(BlockState state) {
 		return true;
-	}
-
-	@Override
-	protected boolean canSilkHarvest() {
-		return false;
 	}
 	
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos,
-			IBlockState state, int fortune) {
+	public List<ItemStack> getDrops(BlockState state, Builder builder) {
 		return new ArrayList<ItemStack>();
 	}
 	
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return this.getDefaultState();
-	}
-	
-	
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new TileSchematic();
 	}
 	
 	@Override
-	public ItemStack getPickBlock(IBlockState state, RayTraceResult target,
-			World world, BlockPos pos, EntityPlayer player) {
+	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
+			PlayerEntity player) {
 		TileEntity tile = world.getTileEntity(pos);
 		
 		if(tile != null && tile instanceof TilePlaceholder && ((TilePlaceholder)tile).getReplacedState() != null) {
@@ -66,34 +56,26 @@ public class BlockPhantom extends Block {
 		}
 		return super.getPickBlock(state, target, world, pos, player);
 	}
-
-	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) {
-		// TODO Auto-generated method stub
-		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-	}
 	
 	@Override
-	public boolean shouldSideBeRendered(IBlockState blockState,
-			IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
-		return false;
+	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
+		return true;
 	}
 	
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
 	
-
 	@Override
-	public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos) {
+	public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
 		return true;
 	}
 	
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState,
-			IBlockAccess worldIn, BlockPos pos) {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean isReplaceable(BlockState p_225541_1_, Fluid p_225541_2_) {
+		return true;
+	}
+	
+	@Override
+	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
+			ISelectionContext context) {
+		return VoxelShapes.empty();
 	}
 }

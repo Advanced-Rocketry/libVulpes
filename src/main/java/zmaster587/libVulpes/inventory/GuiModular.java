@@ -1,123 +1,152 @@
 package zmaster587.libVulpes.inventory;
 
 import java.awt.Rectangle;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.annotation.Nullable;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.IGuiEventListener;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
-public class GuiModular extends GuiContainer {
+public class GuiModular extends ContainerScreen<ContainerModular> {
 
 	List<ModuleBase> modules;
 	String unlocalizedName;
 	boolean hasSlots;
+	// field_230708_k_ width
+	// field_230709_l_ height
+	// field_230710_m_ buttonList (tho now technically it's all wigets)
+	// field_230712_o_ fontrenderer
+	// func_238474_b_ renderModelRect
+	// field_230707_j_.zlevel OR field_230662_a_ zlevel
 
-	public GuiModular(EntityPlayer playerInv, List<ModuleBase> modules, IModularInventory modularInv, boolean includePlayerInv, boolean includeHotBar, String name) {
-		super(new ContainerModular(playerInv, modules,modularInv, includePlayerInv, includeHotBar));
-		this.modules = modules;
-		unlocalizedName = name;
-		hasSlots = includePlayerInv;
+	public GuiModular(ContainerModular container, PlayerInventory invPlayer, ITextComponent title) {
+		super(container, invPlayer, title);
+		this.modules = container.modules;
+		unlocalizedName = title.getString();
+		hasSlots = container.includePlayerInv;
 	}
 
+	// InitGui
 	@Override
-	public void initGui() {
-		super.initGui();
+	public void func_231160_c_() {
+		super.func_231160_c_();
 
-		int x = (width - xSize) / 2;
-		int y = (height - ySize) / 2;
+		int x = (field_230708_k_ - xSize) / 2;
+		int y = (field_230709_l_ - ySize) / 2;
 
 		for(ModuleBase module : modules) {
-			List<GuiButton> buttonList = module.addButtons(x, y);
+			List<Button> buttonList = module.addButtons(x, y);
 			if(!buttonList.isEmpty()) {
-				this.buttonList.addAll(buttonList);
+				this.field_230710_m_.addAll(buttonList);
 			}
 		}
 	}
-
+	
+	// Action Performed
 	@Override
-	public void actionPerformed(GuiButton button) throws IOException {
-		super.actionPerformed(button);
+	public void func_231035_a_(@Nullable IGuiEventListener button) {
+		super.func_231035_a_(button);
 
 		for(ModuleBase module : modules) {
-			module.actionPerform(button);
+			module.actionPerform((Button)button);
 		}
-
 	}
 
+	
+	//KeyTyped
 	@Override
-	protected void keyTyped(char key, int something) throws IOException {
+	protected boolean func_195363_d(int keyCode, int scanCode)  {
 
 		boolean superKeypress = true;
 
 		for(ModuleBase module : modules) {
 			if(superKeypress)
-				superKeypress = module.keyTyped(key, something);
+				superKeypress = module.keyTyped(keyCode, scanCode);
 			else
-				module.keyTyped(key, something);
+				module.keyTyped(keyCode, scanCode);
 		}
 
 
 		if(superKeypress)
-			super.keyTyped(key, something);
+			return super.func_195363_d(keyCode, scanCode);
+		
+		return true;
 	}
 
-	@Override
-	protected void drawGuiContainerForegroundLayer(int a,
-			int b) {
-		super.drawGuiContainerForegroundLayer(a, b);
 
-		this.fontRenderer.drawString(I18n.format(unlocalizedName, new Object[0]), 8, 6, 4210752);
+	// Draw foreground
+	@Override
+	protected void func_230451_b_(MatrixStack matrix, int a, int b)  {
+		//super.func_230451_b_(matrix, a, b);
+
+		//renderString
+		this.field_230712_o_.func_238422_b_(matrix, field_230704_d_, 8, 6, 4210752);
 
 		for(ModuleBase module : modules)
 			if(module.getVisible())
-				module.renderForeground((width - xSize)/2, (height - ySize) / 2,a - (width - xSize)/2 ,b - (height - ySize) / 2, zLevel, this, this.fontRenderer);
+				module.renderForeground(matrix, (field_230708_k_ - xSize)/2, (field_230709_l_ - ySize) / 2,a - (field_230708_k_ - xSize)/2 ,b - (field_230709_l_ - ySize) / 2, field_230707_j_.zLevel, this, field_230712_o_);
 
 	}
 
+	//onMouseclicked
 	@Override
-	protected void mouseClicked(int x, int y, int button) throws IOException {
+	public boolean func_231048_c_(double x, double y, int button) {
 
-		super.mouseClicked(x, y, button);
+		boolean handled = super.func_231048_c_(x, y, button);
 
 		for(ModuleBase module : modules)
-			module.onMouseClicked(this, x - (width - xSize) / 2, y - (height - ySize) / 2, button);
-	}
-
-	@Override
-	protected void mouseClickMove(int x, int y,
-			int button, long timeSinceLastClick) {
-		super.mouseClickMove(x, y, button, timeSinceLastClick);
-
-		for(ModuleBase module : modules)
-			module.onMouseClickedAndDragged(x - (width - xSize) / 2, y - (height - ySize) / 2, button,timeSinceLastClick);
-	}
-
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float f1,
-			int i2, int i3) {
-		//Garuntee proper color
-		GlStateManager.color(1, 1, 1, 1);
+			module.onMouseClicked(this, x - (field_230708_k_ - xSize) / 2, y - (field_230709_l_ - ySize) / 2, button);
 		
-		this.mc.renderEngine.bindTexture(CommonResources.genericBackground);
+		return handled;
+	}
 
-		int x = (width - xSize) / 2, y = (height - ySize) / 2;
-		this.drawTexturedModalRect(x, y, 0, 0, 176, 171);
+	// mouse click drag
+	@Override
+	public boolean func_231045_a_(double x, double y, int button, double x2, double y2) {
+		boolean handled = super.func_231045_a_(x, y, button, x2, y2);
+
+		for(ModuleBase module : modules)
+			module.onMouseClickedAndDragged(x - (field_230708_k_ - xSize) / 2, y - (field_230709_l_ - ySize) / 2, button);
+		
+		return handled;
+	}
+
+	// Draw background
+	@Override
+	protected void func_230450_a_(MatrixStack matrix, float f1, int i2, int i3) 
+	{
+		//Guarantee proper color
+		GlStateManager.color4f(1, 1, 1, 1);
+		
+		Minecraft.getInstance().getTextureManager().bindTexture(CommonResources.genericBackground);
+
+		int x = (field_230708_k_ - xSize) / 2, y = (field_230709_l_ - ySize) / 2;
+		this.func_238474_b_(matrix,x, y, 0, 0, 176, 171);
 
 		if(!hasSlots) {
-			this.drawTexturedModalRect(x + 7, y + 88, 7, 12, 162, 54);
+			this.func_238474_b_(matrix, x + 7, y + 88, 7, 12, 162, 54);
 		}
 
 		for(ModuleBase module : modules) {
 			if(module.getVisible())
-				module.renderBackground(this, x, y, i2, i3, fontRenderer);
+				module.renderBackground(this, matrix, x, y, i2, i3, field_230712_o_);
 		}
 	}
 
@@ -125,7 +154,7 @@ public class GuiModular extends GuiContainer {
 		List<Rectangle> list = new LinkedList<Rectangle>();
 		
 		for(ModuleBase module : modules) {
-				list.add(new Rectangle((width - xSize) / 2 + module.offsetX, (height - ySize) / 2 + module.offsetY, module.getSizeX(), module.getSizeY()));
+				list.add(new Rectangle((field_230708_k_ - xSize) / 2 + module.offsetX, (field_230709_l_ - ySize) / 2 + module.offsetY, module.getSizeX(), module.getSizeY()));
 			
 		}
 		return list;
@@ -134,10 +163,10 @@ public class GuiModular extends GuiContainer {
     /**
      * Draws the screen and all the components in it.
      */
-    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    public void drawScreen(MatrixStack matrix, int mouseX, int mouseY, float partialTicks)
     {
-        this.drawDefaultBackground();
-        super.drawScreen(mouseX, mouseY, partialTicks);
-        this.renderHoveredToolTip(mouseX, mouseY);
+        this.func_230446_a_(matrix); // DrawDefaultWorldBackground
+        super.func_230430_a_(matrix, mouseX, mouseY, partialTicks); //drawScreen
+        this.func_230459_a_(matrix, mouseX, mouseY); // renderHoveredToolTip
     }
 }

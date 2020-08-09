@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "libvulpes:blocks/inputHatch"
+        "all": "libvulpes:blocks/inputhatch"
     }
 }

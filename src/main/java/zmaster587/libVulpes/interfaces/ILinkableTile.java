@@ -1,6 +1,6 @@
 package zmaster587.libVulpes.interfaces;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -15,7 +15,7 @@ public interface ILinkableTile {
 	 * @param world the world
 	 * @return true If link is allowed
 	 */
-	public boolean onLinkStart(ItemStack item, TileEntity entity, EntityPlayer player, World world);
+	public boolean onLinkStart(ItemStack item, TileEntity entity, PlayerEntity player, World world);
 	
-	public boolean onLinkComplete(ItemStack item, TileEntity entity,EntityPlayer player, World world);
+	public boolean onLinkComplete(ItemStack item, TileEntity entity,PlayerEntity player, World world);
 }

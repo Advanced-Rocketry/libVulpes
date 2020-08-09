@@ -2,7 +2,7 @@
 
 import zmaster587.libVulpes.energy.IPower;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ITickable;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyReceiver;
@@ -14,7 +14,7 @@ public class TilePlugOutputRF extends TilePlugBase implements IPower, ITickable 
 	}
 
 	@Override
-	public boolean canConnectEnergy(EnumFacing arg0) {
+	public boolean canConnectEnergy(Direction arg0) {
 		return true;
 	}
 
@@ -26,7 +26,7 @@ public class TilePlugOutputRF extends TilePlugBase implements IPower, ITickable 
 
 	@Override
 	public void update() {
-		for(EnumFacing dir : EnumFacing.values()) {
+		for(Direction dir : Direction.values()) {
 			
 			TileEntity tile = worldObj.getTileEntity(this.pos.offset(dir));
 
@@ -40,7 +40,7 @@ public class TilePlugOutputRF extends TilePlugBase implements IPower, ITickable 
 
 	@Override
 	public String getModularInventoryName() {
-		return "tile.rfOutput.name";
+		return "block.libvulpes.rfOutput";
 	}
 
 	@Override
@@ -49,22 +49,22 @@ public class TilePlugOutputRF extends TilePlugBase implements IPower, ITickable 
 	}
 
 	@Override
-	public int extractEnergy(EnumFacing dir, int maxExtract, boolean simulate) {
+	public int extractEnergy(Direction dir, int maxExtract, boolean simulate) {
 		return storage.extractEnergy(maxExtract, simulate);
 	}
 
 	@Override
-	public int getEnergyStored(EnumFacing dir) {
+	public int getEnergyStored(Direction dir) {
 		return storage.getEnergyStored();
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing arg0) {
+	public int getMaxEnergyStored(Direction arg0) {
 		return storage.getMaxEnergyStored();
 	}
 
 	@Override
-	public int receiveEnergy(EnumFacing dir, int amt, boolean simulate) {
+	public int receiveEnergy(Direction dir, int amt, boolean simulate) {
 
 		return 0;
 	}

@@ -1,33 +1,12 @@
 package zmaster587.libVulpes.render;
 
-import java.util.StringTokenizer;
-
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockGrass;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(value=Dist.CLIENT)
 public class RenderHelper {
 
 	/**
@@ -188,15 +167,15 @@ public class RenderHelper {
         return flag;
     }*/
 
-	public static void renderTag(double distanceSq, String displayString, double x, double y, double z, int sizeOnScreen) {
-		renderTag(distanceSq, displayString, x,y,z, 6, 1);
+	/*public static void renderTag(MatrixStack mat, double distanceSq, String displayString, double x, double y, double z, int sizeOnScreen) {
+		renderTag(mat, distanceSq, displayString, x,y,z, 6, 1);
 	}
 	
-	public static void renderTag(double distanceSq, String displayString, double x, double y, double z, int sizeOnScreen, float scale) {
+	public static void renderTag(MatrixStack mat, double distanceSq, String displayString, double x, double y, double z, int sizeOnScreen, float scale) {
 		double d3 = distanceSq;
 
-		Minecraft mc = Minecraft.getMinecraft();
-		RenderManager renderManager = mc.getRenderManager();
+		Minecraft mc = Minecraft.getInstance();
+		EntityRendererManager renderManager = mc.getRenderManager();
 		if (d3 <= (double)(sizeOnScreen * sizeOnScreen))
 		{
 			FontRenderer fontrenderer = mc.fontRenderer;
@@ -209,7 +188,6 @@ public class RenderHelper {
 			GL11.glScalef(-f1, -f1, f1);
 			GlStateManager.disableLighting();
 			GlStateManager.depthMask(false);
-			GlStateManager.disableDepth();
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(770, 771);
 			Tessellator tessellator = Tessellator.getInstance();
@@ -217,7 +195,7 @@ public class RenderHelper {
 
 			BufferBuilder buffer = tessellator.getBuffer();
 
-			GlStateManager.disableTexture2D();
+			GlStateManager.disableTexture();
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 			int j = fontrenderer.getStringWidth(displayString) / 2;
 			GlStateManager.color(0.0F, 0.0F, 0.0F, 0.25F);
@@ -226,13 +204,12 @@ public class RenderHelper {
 			buffer.pos((double)(j + 1), (double)(8 + b0), 0.0D).endVertex();
 			buffer.pos((double)(j + 1), (double)(-1 + b0), 0.0D).endVertex();
 			tessellator.draw();
-			GlStateManager.enableTexture2D();
+			GlStateManager.enableTexture();
 			fontrenderer.drawString(displayString, -fontrenderer.getStringWidth(displayString) / 2, b0, 553648127);
 
 			GlStateManager.depthMask(true);
 			fontrenderer.drawString(displayString, -fontrenderer.getStringWidth(displayString) / 2, b0, -1);
 			GlStateManager.enableLighting();
-			GlStateManager.enableDepth();
 			GlStateManager.disableBlend();
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			GL11.glPopMatrix();
@@ -241,8 +218,8 @@ public class RenderHelper {
 
 	public static void setupPlayerFacingMatrix(double distanceSq, double x, double y, double z) {
 
-		Minecraft mc = Minecraft.getMinecraft();
-		RenderManager renderManager = mc.getRenderManager();
+		Minecraft mc = Minecraft.getInstance();
+		EntityRendererManager renderManager = mc.getRenderManager();
 		float f = 1.6F;
 		float f1 = 0.016666668F * f;
 		GL11.glPushMatrix();
@@ -250,7 +227,7 @@ public class RenderHelper {
 		GL11.glRotatef(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
 		GL11.glScalef(-f1, -f1, f1);
-	}
+	}*/
 	
 	public static void cleanupPlayerFacingMatrix() {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -374,7 +351,7 @@ public class RenderHelper {
 		buff.pos(xMin, yMax + width, zMin).normal(-1, 0, 0).endVertex();
 	}
 
-	public static void renderTopFaceWithUV(BufferBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
+	public static void renderTopFaceWithUV(BufferBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, float uMin, float uMax, float vMin, float vMax) {
 		//top
 		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
 		buff.pos(xMin, yMax, zMax).tex(uMin, vMax).endVertex();
@@ -384,7 +361,7 @@ public class RenderHelper {
 
 	}
 
-	public static void renderBottomFaceWithUV(BufferBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
+	public static void renderBottomFaceWithUV(BufferBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, float uMin, float uMax, float vMin, float vMax) {
 		//bottom
 
 		buff.pos(xMax, yMax, zMax).tex(uMax, vMax).endVertex();
@@ -394,7 +371,7 @@ public class RenderHelper {
 
 	}
 
-	public static void renderNorthFaceWithUV(BufferBuilder buff, double zMin, double xMin, double yMin, double xMax, double yMax, double uMin, double uMax, double vMin, double vMax) {
+	public static void renderNorthFaceWithUV(BufferBuilder buff, double zMin, double xMin, double yMin, double xMax, double yMax, float uMin, float uMax, float vMin, float vMax) {
 		//north
 		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
 		buff.pos(xMax, yMax, zMin).tex(uMax, vMin).endVertex();
@@ -402,7 +379,7 @@ public class RenderHelper {
 		buff.pos(xMin, yMin, zMin).tex(uMin, vMax).endVertex();
 	}
 
-	public static void renderNorthFaceWithUVNoNormal(BufferBuilder buff, double zMin, double xMin, double yMin, double xMax, double yMax, double uMin, double uMax, double vMin, double vMax) {
+	public static void renderNorthFaceWithUVNoNormal(BufferBuilder buff, double zMin, double xMin, double yMin, double xMax, double yMax, float uMin, float uMax, float vMin, float vMax) {
 		//north
 		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
 		buff.pos(xMax, yMax, zMin).tex(uMax, vMin).endVertex();
@@ -410,7 +387,7 @@ public class RenderHelper {
 		buff.pos(xMin, yMin, zMin).tex(uMin, vMax).endVertex();
 	}
 
-	public static void renderSouthFaceWithUV(BufferBuilder buff, double zMax, double xMin, double yMin, double xMax, double yMax, double uMin, double uMax, double vMin, double vMax) {
+	public static void renderSouthFaceWithUV(BufferBuilder buff, double zMax, double xMin, double yMin, double xMax, double yMax, float uMin, float uMax, float vMin, float vMax) {
 		//south
 		buff.pos(xMin, yMax, zMax).tex(uMin, vMin).endVertex();
 		buff.pos(xMin, yMin, zMax).tex(uMin, vMax).endVertex();
@@ -418,7 +395,7 @@ public class RenderHelper {
 		buff.pos(xMax, yMax, zMax).tex(uMax, vMin).endVertex();
 	}
 
-	public static void renderEastFaceWithUV(BufferBuilder buff, double xMax, double yMin, double zMin, double yMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
+	public static void renderEastFaceWithUV(BufferBuilder buff, double xMax, double yMin, double zMin, double yMax, double zMax, float uMin, float uMax, float vMin, float vMax) {
 		//east
 		buff.pos(xMax, yMax, zMin).tex(uMin, vMin).endVertex();
 		buff.pos(xMax, yMax, zMax).tex(uMax, vMin).endVertex();
@@ -427,7 +404,7 @@ public class RenderHelper {
 	}
 
 
-	public static void renderWestFaceWithUV(BufferBuilder buff, double xMin, double yMin, double zMin, double yMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
+	public static void renderWestFaceWithUV(BufferBuilder buff, double xMin, double yMin, double zMin, double yMax, double zMax, float uMin, float uMax, float vMin, float vMax) {
 		//west
 		buff.pos(xMin, yMin, zMin).tex(uMin, vMax).endVertex();
 		buff.pos(xMin, yMin, zMax).tex(uMax, vMax).endVertex();
@@ -435,7 +412,7 @@ public class RenderHelper {
 		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
 	}
 
-	public static void renderCubeWithUV(BufferBuilder buff, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, double uMin, double uMax, double vMin, double vMax) {
+	public static void renderCubeWithUV(BufferBuilder buff, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float uMin, float uMax, float vMin, float vMax) {
 
 
 		renderTopFaceWithUV(buff, yMax, xMin, zMin, xMax, zMax, uMin, uMax,vMin, vMax);
@@ -457,11 +434,11 @@ public class RenderHelper {
 		renderBottomFace(buff, yMin, xMin, zMin, xMax, zMax);
 	}
 
-	public static void renderItem(TileEntity tile, ItemStack itemstack, RenderItem dummyItem)
+	/*public static void renderItem(TileEntity tile, ItemStack itemstack, ItemRenderer dummyItem)
 	{
 		if (itemstack != null)
 		{
-			EntityItem entityitem = new EntityItem(tile.getWorld(), 0.0D, 0.0D, 0.0D, itemstack);
+			ItemEntity entityitem = new ItemEntity(tile.getWorld(), 0.0D, 0.0D, 0.0D, itemstack);
 			Item item = entityitem.getItem().getItem();
 			entityitem.getItem().setCount(1);
 			entityitem.hoverStart = 0.0F;
@@ -488,7 +465,7 @@ public class RenderHelper {
 		}
 	}
 
-	public static void renderItem(TileEntity tile, EntityItem entityitem, RenderItem dummyItem)
+	public static void renderItem(TileEntity tile, ItemEntity entityitem, ItemRenderer dummyItem)
 	{
 		GlStateManager.disableLighting();
 		GlStateManager.scale(0.5F, 0.5F, 0.5F);
@@ -508,5 +485,5 @@ public class RenderHelper {
 
 		GlStateManager.enableLighting();
 
-	}
+	}*/
 }

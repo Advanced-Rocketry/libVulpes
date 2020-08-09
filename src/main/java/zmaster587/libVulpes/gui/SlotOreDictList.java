@@ -3,15 +3,16 @@ package zmaster587.libVulpes.gui;
 import java.util.Set;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ResourceLocation;
 
 public class SlotOreDictList extends Slot {
 
-	Set<String> allowed;
+	Set<ResourceLocation> allowed;
 
-	public SlotOreDictList(IInventory inv, int slot, int x, int y, Set<String> set) {
+	public SlotOreDictList(IInventory inv, int slot, int x, int y, Set<ResourceLocation> set) {
 		super(inv, slot, x, y);
 		allowed = set;
 	}
@@ -19,15 +20,10 @@ public class SlotOreDictList extends Slot {
 	@Override
 	public boolean isItemValid(ItemStack stack)
 	{
-		for(String acceptedNames : allowed) {
-			int oreId = OreDictionary.getOreID(acceptedNames);
-			if(oreId == -1)
-				continue;
-
-			for(int i : OreDictionary.getOreIDs(stack)) {
-				if(i == oreId)
-					return true;
-			}
+		for(ResourceLocation acceptedNames : allowed) {
+			
+			if(ItemTags.getCollection().getOwningTags(stack.getItem()).contains(acceptedNames))
+				return true;
 		}
 		return false;
 	}

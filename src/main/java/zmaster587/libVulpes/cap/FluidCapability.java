@@ -1,9 +1,7 @@
 package zmaster587.libVulpes.cap;
 
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 public class FluidCapability implements IFluidHandler{
 
@@ -12,25 +10,40 @@ public class FluidCapability implements IFluidHandler{
 	public FluidCapability(IFluidHandler tile) {
 		this.tile = tile;
 	}
-	
+
 	@Override
-	public IFluidTankProperties[] getTankProperties() {
-		return tile.getTankProperties();
+	public int getTanks() {
+		return tile.getTanks();
 	}
 
 	@Override
-	public int fill(FluidStack resource, boolean doFill) {
-		return tile.fill(resource, doFill);
+	public FluidStack getFluidInTank(int tank) {
+		return tile.getFluidInTank(tank);
 	}
 
 	@Override
-	public FluidStack drain(FluidStack resource, boolean doDrain) {
-		return tile.drain(resource, doDrain);
+	public int getTankCapacity(int tank) {
+		return tile.getTankCapacity(tank);
 	}
 
 	@Override
-	public FluidStack drain(int maxDrain, boolean doDrain) {
-		return tile.drain(maxDrain, doDrain);
+	public boolean isFluidValid(int tank, FluidStack stack) {
+		return tile.isFluidValid(tank, stack);
+	}
+
+	@Override
+	public int fill(FluidStack resource, FluidAction action) {
+		return tile.fill(resource, action);
+	}
+
+	@Override
+	public FluidStack drain(FluidStack resource, FluidAction action) {
+		return tile.drain(resource, action);
+	}
+
+	@Override
+	public FluidStack drain(int maxDrain, FluidAction action) {
+		return tile.drain(maxDrain, action);
 	}
 
 }

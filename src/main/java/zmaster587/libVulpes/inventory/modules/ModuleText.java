@@ -5,10 +5,12 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.inventory.container.Container;
 
 public class ModuleText extends ModuleBase {
 
@@ -68,13 +70,13 @@ public class ModuleText extends ModuleBase {
 	}
 
 	@Override
-	public void renderForeground(int x, int y, int mouseX,
-			int mouseY, float zLevel, GuiContainer gui, FontRenderer font) {
+	public void renderForeground(MatrixStack buf, int x, int y, int mouseX,
+			int mouseY, float zLevel, ContainerScreen<? extends Container> gui, FontRenderer font) {
 
 	}
 
 	@Override
-	public void renderBackground(GuiContainer gui, int x, int y, int mouseX, int mouseY, FontRenderer font) {
+	public void renderBackground(ContainerScreen<? extends Container> gui, MatrixStack mat, int x, int y, int mouseX, int mouseY, FontRenderer font) {
 
 		GL11.glPushMatrix();
 		if(alwaysOnTop)
@@ -83,11 +85,11 @@ public class ModuleText extends ModuleBase {
 		GL11.glScalef(scale, scale, scale);
 		for(int i = 0; i < text.size(); i++) {
 			if(centered)
-				font.drawString(text.get(i), (x + offsetX - (font.getStringWidth(text.get(i))/2)), y + offsetY + i*font.FONT_HEIGHT, color);
+				font.func_238405_a_(mat, text.get(i), (x + offsetX - (font.getStringWidth(text.get(i))/2)), y + offsetY + i*font.FONT_HEIGHT, color);
 			else
-				font.drawString(text.get(i),(int)((x + offsetX)/scale), (int)((y + offsetY + i*font.FONT_HEIGHT)/scale), color);
+				font.func_238405_a_(mat, text.get(i),(int)((x + offsetX)/scale), (int)((y + offsetY + i*font.FONT_HEIGHT)/scale), color);
 		}
-		GlStateManager.color(1f, 1f, 1f);
+		GlStateManager.color4f(1f, 1f, 1f, 1f);
 		
 		if(alwaysOnTop)
 			GL11.glEnable(GL11.GL_DEPTH_TEST);

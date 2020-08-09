@@ -1,5 +1,5 @@
 {
-    "parent": "libvulpes:block/tintedCube",
+    "parent": "libvulpes:block/tintedcube",
     "textures": {
         "particle": "#side",
         "down": "#end",
