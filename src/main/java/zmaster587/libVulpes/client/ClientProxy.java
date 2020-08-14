@@ -49,7 +49,7 @@ public class ClientProxy extends CommonProxy {
 	
 	@Override
 	public void addScheduledTask(BasePacket packet) {
-		//gui.getInstance().addScheduledTask(new ExecutorClient(packet, gui.getInstance().thePlayer, Side.CLIENT));
+		//gui.getInstance().addScheduledTask(new ExecutorClient(packet, gui.getInstance().thePlayer, Dist.CLIENT));
 	}
 	
 	@Override

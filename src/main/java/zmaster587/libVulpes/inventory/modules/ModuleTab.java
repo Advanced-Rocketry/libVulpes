@@ -15,7 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ModuleTab extends ModuleBase implements IButtonInventory {
 
-	private int tab;
+	private ModuleButton tab;
 	IGuiCallback gameObject;
 	private ModuleButton buttons[];
 	
@@ -26,16 +26,17 @@ public class ModuleTab extends ModuleBase implements IButtonInventory {
 		buttons = new ModuleButton[numTabs];
 		
 		for(int i = 0; i  < numTabs; i++) {
-			buttons[i] = new ModuleButton(offsetX + i*24, offsetY - 20, i, "", this, textures[i], tabText[i], 24,24);
+			buttons[i] = new ModuleButton(offsetX + i*24, offsetY - 20, "", this, textures[i], tabText[i], 24,24);
+			buttons[i].setAdditionalData(i);
 		}
 		sizeX = 24;
 		sizeY = 24;
 	}
 	
 	
-	public void setTab(int tabNum) { tab = tabNum; }
+	public void setTab(int tabNum) { tab = buttons[tabNum]; }
 	
-	public int getTab() { return tab; }
+	public int getTab() { return (int)tab.getAdditionalData(); }
 	
 	@Override
 	public void onMouseClicked(GuiModular gui, double x, double y, int button) {
@@ -87,7 +88,7 @@ public class ModuleTab extends ModuleBase implements IButtonInventory {
 
 
 	@Override
-	public void onInventoryButtonPressed(int buttonId) {
+	public void onInventoryButtonPressed(ModuleButton buttonId) {
 		tab = buttonId;
 		gameObject.onModuleUpdated(this);
 	}

@@ -321,7 +321,8 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 		for(int i = 0; 	i <	machineList.size(); i++) {
 			TileMultiBlock multiblock = machineList.get(i);
-			btns.add(new ModuleButton(60, 4 + i*24, i, LibVulpes.proxy.getLocalizedString(multiblock.getMachineName()), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
+			btns.add(new ModuleButton(60, 4 + i*24, LibVulpes.proxy.getLocalizedString(multiblock.getMachineName()), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
+			((ModuleButton)btns.get(i)).setAdditionalData(i);
 		}
 
 		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<ModuleBase>(), TextureResources.starryBG, 160, 100, 0, 500);
@@ -341,11 +342,11 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public void onInventoryButtonPressed(int buttonId) {
+	public void onInventoryButtonPressed(ModuleButton buttonId) {
 		//PacketHandler.sendToServer(new PacketItemModifcation(this, gui.getInstance().thePlayer, (byte)buttonId));
 		ItemStack stack = Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND);
 		if(stack != null && stack.getItem() == this) {
-			setMachineId(stack, buttonId);
+			setMachineId(stack, (int)buttonId.getAdditionalData());
 			PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getInstance().player, (byte)0));
 		}
 	}

@@ -57,7 +57,7 @@ public class BlockHatch extends BlockMultiblockStructure {
 	
 
 	@Override
-	public void onPlayerDestroy(IWorld world, BlockPos pos, BlockState state) {
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile != null && tile instanceof IInventory) {
@@ -80,7 +80,7 @@ public class BlockHatch extends BlockMultiblockStructure {
 			}
 		}
 
-		super.onPlayerDestroy(world, pos, state);
+		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 
 

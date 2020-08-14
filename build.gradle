@@ -213,7 +213,7 @@ curseforge{
     }
    }
 }
-
+*/
 task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     file = new File ("changelog.html")
     untaggedName = "Current release ${project.version}"
@@ -234,4 +234,4 @@ task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
 }
 
 tasks.build.dependsOn makeChangelog
-*/
+

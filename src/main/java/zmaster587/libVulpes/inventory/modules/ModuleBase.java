@@ -245,7 +245,7 @@ public abstract class ModuleBase {
 	 * @param font fontrender
 	 */
 	@OnlyIn(value=Dist.CLIENT)
-	protected void drawTooltip(ContainerScreen<Container> gui, MatrixStack matrix, List<String> textList ,int x, int y,float zLevel, FontRenderer font) {
+	protected void drawTooltip(ContainerScreen<? extends Container> gui, MatrixStack matrix, List<String> textList ,int x, int y,float zLevel, FontRenderer font) {
 		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 		RenderHelper.disableStandardItemLighting();
 		GL11.glDisable(GL11.GL_LIGHTING);

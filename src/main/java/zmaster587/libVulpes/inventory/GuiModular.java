@@ -34,7 +34,8 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 	// field_230710_m_ buttonList (tho now technically it's all wigets)
 	// field_230712_o_ fontrenderer
 	// func_238474_b_ renderModelRect
-	// field_230707_j_.zlevel OR field_230662_a_ zlevel
+	// field_230707_j_.zlevel OR field_230662_a_ zlevel or func_230927_p_()
+	// drawString func_243246_a w/ shadow
 
 	public GuiModular(ContainerModular container, PlayerInventory invPlayer, ITextComponent title) {
 		super(container, invPlayer, title);
@@ -97,7 +98,7 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 		//super.func_230451_b_(matrix, a, b);
 
 		//renderString
-		this.field_230712_o_.func_238422_b_(matrix, field_230704_d_, 8, 6, 4210752);
+		this.field_230712_o_.func_243246_a(matrix, field_230704_d_, 8, 6, 4210752);
 
 		for(ModuleBase module : modules)
 			if(module.getVisible())

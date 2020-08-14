@@ -10,6 +10,6 @@ public interface IButtonInventory {
 	 * @param buttonId id of the button pressed
 	 */
 	@OnlyIn(value=Dist.CLIENT)
-	public void onInventoryButtonPressed(int buttonId);
+	public void onInventoryButtonPressed(ModuleButton buttonId);
 	
 }

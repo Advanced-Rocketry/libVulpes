@@ -50,6 +50,12 @@ public class ContainerModular extends Container {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, windowId, invPlayer.player, modularItem.getModules(ID, invPlayer.player), modularItem, includePlayerInv, includeHotBar);
 	}
 	
+	public static ContainerModular createFromEntity(int windowId, PlayerInventory invPlayer, PacketBuffer buf)
+	{
+		//TODO:
+		return null;
+	}
+	
 	public ContainerModular(@Nullable ContainerType<?> type, int id, PlayerEntity playerInv, List<ModuleBase> modules, IModularInventory modulularInv)
 	{
 		this(type, id, playerInv, modules, modulularInv, GuiHandler.doesIncludePlayerInv(modulularInv.getModularInvType()), GuiHandler.doesIncludeHotBar(modulularInv.getModularInvType()));

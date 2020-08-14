@@ -198,7 +198,7 @@ public class RenderHelper {
 			GlStateManager.disableTexture();
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 			int j = fontrenderer.getStringWidth(displayString) / 2;
-			GlStateManager.color(0.0F, 0.0F, 0.0F, 0.25F);
+			GlStateManager.color4f(0.0F, 0.0F, 0.0F, 0.25F);
 			buffer.pos((double)(-j - 1), (double)(-1 + b0), 0.0D).endVertex();
 			buffer.pos((double)(-j - 1), (double)(8 + b0), 0.0D).endVertex();
 			buffer.pos((double)(j + 1), (double)(8 + b0), 0.0D).endVertex();
@@ -211,7 +211,7 @@ public class RenderHelper {
 			fontrenderer.drawString(displayString, -fontrenderer.getStringWidth(displayString) / 2, b0, -1);
 			GlStateManager.enableLighting();
 			GlStateManager.disableBlend();
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+			GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 			GL11.glPopMatrix();
 		}
 	}

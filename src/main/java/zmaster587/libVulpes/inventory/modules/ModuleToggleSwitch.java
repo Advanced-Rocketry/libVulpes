@@ -24,26 +24,26 @@ public class ModuleToggleSwitch extends ModuleButton {
 	boolean enabled = true;
 
 
-	public ModuleToggleSwitch(int offsetX, int offsetY, int buttonId, String text, IToggleButton tile, ResourceLocation[] buttonImages, boolean defaultState) {
-		super(offsetX, offsetY, buttonId, text, tile, buttonImages);
+	public ModuleToggleSwitch(int offsetX, int offsetY, String text, IToggleButton tile, ResourceLocation[] buttonImages, boolean defaultState) {
+		super(offsetX, offsetY, text, tile, buttonImages);
 		this.tile = tile;
 		currentState = defaultState;
 	}
 	
-	public ModuleToggleSwitch(int offsetX, int offsetY, int buttonId, String text, IToggleButton tile, ResourceLocation buttonImages[], String tooltipText, boolean defaultState) {
-		super(offsetX, offsetY, buttonId, text, tile, buttonImages, tooltipText);
+	public ModuleToggleSwitch(int offsetX, int offsetY, String text, IToggleButton tile, ResourceLocation buttonImages[], String tooltipText, boolean defaultState) {
+		super(offsetX, offsetY, text, tile, buttonImages, tooltipText);
 		this.tile = tile;
 		currentState = defaultState;
 	}
 
-	public ModuleToggleSwitch(int offsetX, int offsetY, int buttonId, String text, IToggleButton tile, ResourceLocation buttonImages[], int sizeX, int sizeY, boolean defaultState) {
-		super(offsetX, offsetY, buttonId, text, tile, buttonImages, sizeX, sizeY);
+	public ModuleToggleSwitch(int offsetX, int offsetY, String text, IToggleButton tile, ResourceLocation buttonImages[], int sizeX, int sizeY, boolean defaultState) {
+		super(offsetX, offsetY, text, tile, buttonImages, sizeX, sizeY);
 		this.tile = tile;
 		currentState = defaultState;
 	}
 	
-	public ModuleToggleSwitch(int offsetX, int offsetY, int buttonId, String text, IToggleButton tile, ResourceLocation buttonImages[], String tooltipText, int sizeX, int sizeY, boolean defaultState) {
-		super(offsetX, offsetY, buttonId, text, tile, buttonImages, tooltipText, sizeX, sizeY);
+	public ModuleToggleSwitch(int offsetX, int offsetY, String text, IToggleButton tile, ResourceLocation buttonImages[], String tooltipText, int sizeX, int sizeY, boolean defaultState) {
+		super(offsetX, offsetY, text, tile, buttonImages, tooltipText, sizeX, sizeY);
 		this.tile = tile;
 		currentState = defaultState;
 	}
@@ -58,7 +58,7 @@ public class ModuleToggleSwitch extends ModuleButton {
 
 		List<Button> list = new LinkedList<Button>();
 
-		enabledButton = new GuiToggleButtonImage(0, x + offsetX, y + offsetY, sizeX, sizeY, buttonImages);
+		enabledButton = new GuiToggleButtonImage(x + offsetX, y + offsetY, sizeX, sizeY, buttonImages);
 		enabledButton.setState(currentState);
 
 		list.add(enabledButton);
@@ -70,7 +70,7 @@ public class ModuleToggleSwitch extends ModuleButton {
 	public void actionPerform(Button button) {
 		if(enabled && button == enabledButton) {
 			this.currentState = !this.currentState;
-			this.tile.onInventoryButtonPressed(buttonId);
+			this.tile.onInventoryButtonPressed(this);
 		}
 	}
 

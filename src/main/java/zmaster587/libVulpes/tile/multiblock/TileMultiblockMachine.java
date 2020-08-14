@@ -13,6 +13,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -591,12 +592,12 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
 		super.writeDataToNetwork(out, id);
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
 			CompoundNBT nbt) {
 		super.readDataFromNetwork(in, packetId, nbt);
 	}

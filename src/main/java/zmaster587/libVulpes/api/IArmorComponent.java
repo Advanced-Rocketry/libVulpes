@@ -1,14 +1,21 @@
 package zmaster587.libVulpes.api;
 
 import zmaster587.libVulpes.client.ResourceIcon;
+
+import java.util.List;
+
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.items.SlotItemHandler;
 
 public interface IArmorComponent {
@@ -36,11 +43,11 @@ public interface IArmorComponent {
 	
 	public void onArmorDamaged(LivingEntity entity, ItemStack armorStack, ItemStack componentStack, DamageSource source, int damage);
 
-	public boolean isAllowedInSlot(ItemStack componentStack, SlotItemHandler armorType);
+	public boolean isAllowedInSlot(ItemStack componentStack, EquipmentSlotType armorType);
 
-	/*@OnlyIn(value=Dist.CLIENT)
+	@OnlyIn(value=Dist.CLIENT)
 	public void renderScreen(ItemStack componentStack, List<ItemStack> modules,
-			RenderGameOverlayEvent event, Gui gui);*/
+			RenderGameOverlayEvent event, ContainerScreen<? extends Container> gui);
 	
 	/**
 	 * @param armorStack

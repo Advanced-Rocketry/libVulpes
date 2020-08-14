@@ -108,7 +108,7 @@ public class MaterialRegistry {
 				// Register item tags
 				for(int g = 0; g < mat.getOreDictNames().length; g++) {
 					String str = mat.getOreDictNames()[g];
-					ItemTags.getCollection().getOrCreate(new ResourceLocation("forge:" + productName +  "s/" + str)).func_230235_a_(item);
+					ItemTags.getCollection().func_241834_b(new ResourceLocation("forge:" + productName +  "s/" + str)).func_230235_a_(item);
 				}
 			}
 		}

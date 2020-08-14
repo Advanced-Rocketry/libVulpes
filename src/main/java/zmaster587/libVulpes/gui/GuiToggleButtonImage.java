@@ -24,8 +24,8 @@ public class GuiToggleButtonImage extends GuiImageButton {
 	 * @param height height of the button in pixels
 	 * @param location index 0: enabled, index 1: disabled
 	 */
-	public GuiToggleButtonImage(int id, int x, int y, int width, int height, ResourceLocation[] location) {
-		super(id, x, y, width, height, location);
+	public GuiToggleButtonImage(int x, int y, int width, int height, ResourceLocation[] location) {
+		super(x, y, width, height, location);
 		buttonTexture = location;
 		//TODO: add exception
 	}

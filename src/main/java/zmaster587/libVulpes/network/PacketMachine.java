@@ -3,6 +3,7 @@ package zmaster587.libVulpes.network;
 import java.util.function.Supplier;
 
 import zmaster587.libVulpes.util.INetworkMachine;
+import zmaster587.libVulpes.util.ZUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -65,7 +66,7 @@ public class PacketMachine {
 	public void write(PacketBuffer outline) {
 		// dimension
 		BasePacket.writeWorld(outline, ((TileEntity)machine).getWorld());
-		outline.writeInt(((TileEntity)machine).getWorld().func_230315_m_().func_241513_m_());
+		outline.writeInt(ZUtils.getDimensionId(((TileEntity)machine).getWorld()));
 		outline.writeInt(((TileEntity)machine).getPos().getX());
 		outline.writeInt(((TileEntity)machine).getPos().getY());
 		outline.writeInt(((TileEntity)machine).getPos().getZ());

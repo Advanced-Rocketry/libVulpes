@@ -133,20 +133,20 @@ public class ProgressBarImage {
 	public void renderProgressBar(int x, int zLevel, int y, float percent) {
 		Minecraft.getInstance().getTextureManager().bindTexture(image);
 		//backdrop
-		drawTexturedModalRect(x, zLevel, y, backOffsetX, backOffsetY, backWidth, backHeight);
+		func_238474_b_(x, zLevel, y, backOffsetX, backOffsetY, backWidth, backHeight);
 		
 		if(direction == Direction.EAST )//Left to right
-			drawTexturedModalRect(x + insetX,zLevel, y + insetY, foreOffsetX, foreOffsetY, (int)(percent*foreWidth), foreHeight);
+			func_238474_b_(x + insetX,zLevel, y + insetY, foreOffsetX, foreOffsetY, (int)(percent*foreWidth), foreHeight);
 		else if(direction == Direction.WEST ) 
-			drawTexturedModalRect(x + insetX + foreWidth - (int)(percent*foreWidth),zLevel, y + insetY, foreOffsetX + foreWidth - (int)(percent*foreWidth), foreOffsetY, (int)(percent*foreWidth), foreHeight);
+			func_238474_b_(x + insetX + foreWidth - (int)(percent*foreWidth),zLevel, y + insetY, foreOffsetX + foreWidth - (int)(percent*foreWidth), foreOffsetY, (int)(percent*foreWidth), foreHeight);
 		else if(direction == Direction.UP) // bottom to top
-			drawTexturedModalRect(x + insetX,zLevel, y + insetY + foreHeight - (int)(percent*foreHeight), foreOffsetX, foreOffsetY + foreHeight - (int)(percent*foreHeight), foreWidth, (int)(percent*foreHeight) );
+			func_238474_b_(x + insetX,zLevel, y + insetY + foreHeight - (int)(percent*foreHeight), foreOffsetX, foreOffsetY + foreHeight - (int)(percent*foreHeight), foreWidth, (int)(percent*foreHeight) );
 		else if(direction == Direction.DOWN)
-			drawTexturedModalRect(x + insetX,zLevel, y + insetY, foreOffsetX, foreOffsetY, foreWidth, (int)(percent*foreHeight) );
+			func_238474_b_(x + insetX,zLevel, y + insetY, foreOffsetX, foreOffsetY, foreWidth, (int)(percent*foreHeight) );
 	}
 	
 	@OnlyIn(value=Dist.CLIENT)
-    public void drawTexturedModalRect(int x, int zLevel, int y, int textureX, int textureY, int width, int height)
+    public void func_238474_b_(int x, int zLevel, int y, int textureX, int textureY, int width, int height)
     {
         float f = 0.00390625F;
         float f1 = 0.00390625F;

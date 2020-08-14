@@ -20,7 +20,7 @@ public class ModuleRedstoneOutputButton extends ModuleButton {
 
 	public ModuleRedstoneOutputButton(int offsetX, int offsetY, int buttonId,
 			String text, IButtonInventory tile) {
-		super(offsetX, offsetY, buttonId, text, tile, TextureResources.buttonRedstoneActive, 24 ,24);
+		super(offsetX, offsetY, text, tile, TextureResources.buttonRedstoneActive, 24 ,24);
 		sizeX=24;
 		sizeY=24;
 		state = RedstoneState.ON;
@@ -75,7 +75,7 @@ public class ModuleRedstoneOutputButton extends ModuleButton {
 			if(state == null)
 				state = RedstoneState.ON;
 			state = state.getNext();
-			tile.onInventoryButtonPressed(buttonId);
+			tile.onInventoryButtonPressed(this);
 		}
 	}
 }

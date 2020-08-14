@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.text.ITextComponent;
@@ -21,6 +22,7 @@ import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.IToggleButton;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleButton;
 import zmaster587.libVulpes.inventory.modules.ModulePower;
 import zmaster587.libVulpes.inventory.modules.ModuleToggleSwitch;
 import zmaster587.libVulpes.network.PacketHandler;
@@ -28,6 +30,7 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine.NetworkPackets;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.MultiBattery;
+import zmaster587.libVulpes.util.ZUtils;
 
 public class TileMultiPowerProducer extends TileMultiBlock implements IToggleButton, IModularInventory, INetworkMachine {
 
@@ -38,7 +41,7 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 	public TileMultiPowerProducer(TileEntityType<?> type) {
 		super(type);
 		enabled = false;
-		toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled());
+		toggleSwitch = new ModuleToggleSwitch(160, 5, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled());
 	}
 
 	public boolean getMachineEnabled() {
@@ -60,19 +63,19 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 
 			//Last ditch effort to update the toggle switch when it's flipped
 			if(!world.isRemote)
-				PacketHandler.sendToNearby(new PacketMachine(this, (byte)NetworkPackets.TOGGLE.ordinal()), world.func_230315_m_().func_241513_m_(), pos.getX(), pos.getY(), pos.getZ(), 64);
+				PacketHandler.sendToNearby(new PacketMachine(this, (byte)NetworkPackets.TOGGLE.ordinal()), ZUtils.getDimensionId(world), pos.getX(), pos.getY(), pos.getZ(), 64);
 		}
 	}
 	
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
 		if(id == NetworkPackets.TOGGLE.ordinal()) {
 			out.writeBoolean(enabled);
 		}
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
 			CompoundNBT nbt) {
 		if(packetId == NetworkPackets.TOGGLE.ordinal()) {
 			nbt.putBoolean("enabled", in.readBoolean());
@@ -80,9 +83,9 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 	}
 
 	@Override
-	public void onInventoryButtonPressed(int buttonId) {
+	public void onInventoryButtonPressed(ModuleButton buttonId) {
 
-		if(buttonId == 0) {
+		if(buttonId == toggleSwitch) {
 			this.setMachineEnabled(toggleSwitch.getState());
 			PacketHandler.sendToServer(new PacketMachine(this,(byte)TileMultiblockMachine.NetworkPackets.TOGGLE.ordinal()));
 		}
@@ -102,7 +105,7 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModulePower(18, 20, getBatteries()));
-		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
+		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
 
 		return modules;
 	}

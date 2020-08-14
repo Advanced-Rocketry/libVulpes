@@ -3,6 +3,7 @@ package zmaster587.libVulpes.util;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -12,11 +13,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Direction;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.registry.DynamicRegistries;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.Dimension;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class ZUtils {
 
@@ -360,5 +369,58 @@ public class ZUtils {
 		Collection<ResourceLocation> item2s = ItemTags.getCollection().getOwningTags(stack2.getItem());
 		
 		return item1s.stream().anyMatch(value -> item2s.contains(value));
+	}
+	
+	public static ResourceLocation getDimensionIdentifier(World world)
+	{
+		return DynamicRegistries.func_239770_b_().func_230520_a_().getKey(getDimensionType(world));
+	}
+	
+	public static Optional<DimensionType> getDimensionFromIdentifier(ResourceLocation location)
+	{
+		return DynamicRegistries.func_239770_b_().func_230520_a_().func_241873_b(location);
+	}
+	
+	public static DimensionType getDimensionType(World world)
+	{
+		return world.func_230315_m_();
+	}
+	
+	public static ServerWorld getWorld(ResourceLocation worldLoc)
+	{
+		RegistryKey<World> registrykey = RegistryKey.func_240903_a_(Registry.field_239699_ae_, worldLoc);
+		
+		return ServerLifecycleHooks.getCurrentServer().getWorld(registrykey);
+	}
+	
+	public static boolean isWorldLoaded(ResourceLocation worldLoc)
+	{
+		RegistryKey<World> registrykey = RegistryKey.func_240903_a_(Registry.field_239699_ae_, worldLoc);
+		
+		return registrykey != null;
+	}
+	
+	public static boolean isWorldRegistered(ResourceLocation worldLoc)
+	{
+		RegistryKey<World> registrykey = RegistryKey.func_240903_a_(Registry.field_239699_ae_, worldLoc);
+		
+		return registrykey != null;
+	}
+	
+	public static boolean unegisterWorld(ResourceLocation worldLoc)
+	{
+		//XXX
+		return false;
+	}
+	
+	
+	public static boolean RegisterWorld(ResourceLocation worldLoc, DimensionType type)
+	{
+		//XXX
+		return false;
+	}
+	public static int getDimensionId(World world)
+	{
+		return getDimensionType(world).func_241513_m_();
 	}
 }

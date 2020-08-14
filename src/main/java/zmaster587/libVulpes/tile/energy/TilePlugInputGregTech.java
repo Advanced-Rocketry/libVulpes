@@ -61,7 +61,7 @@ public class TilePlugInputGregTech /*extends TileForgePowerOutput*/ {
 	@Override
 	public void update() {
 		if(!world.isRemote) {
-			for(Direction facing : Direction.VALUES) {
+			for(Direction facing : Direction.values()) {
 				TileEntity tile = world.getTileEntity(this.getPos().offset(facing));
 
 				if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing.getOpposite())) {

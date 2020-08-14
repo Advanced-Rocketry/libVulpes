@@ -7,14 +7,17 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import zmaster587.libVulpes.util.ZUtils;
 
 public class PacketHandler {
 	
@@ -71,12 +74,34 @@ public class PacketHandler {
 		HANDLER.sendTo(msg, netman, NetworkDirection.PLAY_TO_CLIENT);
 	}
 
+	@Deprecated
 	public static final void sendToNearby(Object msg, int dimId, int x, int y, int z, double dist) {
 		List<ServerPlayerEntity> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
 		
 		for(ServerPlayerEntity player : players)
 		{
-			if(player.getEntityWorld().func_230315_m_().func_241513_m_() == dimId && player.getDistanceSq(x, y, z) <= dist*dist)
+			if(ZUtils.getDimensionId(player.getEntityWorld()) == dimId && player.getDistanceSq(x, y, z) <= dist*dist)
+				HANDLER.sendTo(msg, ((ServerPlayerEntity)player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+		}
+	}
+	
+	public static final void sendToNearby(Object msg, ResourceLocation dimId, int x, int y, int z, double dist) {
+		List<ServerPlayerEntity> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
+		
+		for(ServerPlayerEntity player : players)
+		{
+			if(ZUtils.getDimensionIdentifier(player.getEntityWorld()) == dimId && player.getDistanceSq(x, y, z) <= dist*dist)
+				HANDLER.sendTo(msg, ((ServerPlayerEntity)player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+		}
+	}
+	
+	public static final void sendToNearby(Object msg, World world, int x, int y, int z, double dist) {
+		ResourceLocation dimId = ZUtils.getDimensionIdentifier(world);
+		List<ServerPlayerEntity> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
+		
+		for(ServerPlayerEntity player : players)
+		{
+			if(ZUtils.getDimensionIdentifier(player.getEntityWorld()) == dimId && player.getDistanceSq(x, y, z) <= dist*dist)
 				HANDLER.sendTo(msg, ((ServerPlayerEntity)player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
 		}
 	}

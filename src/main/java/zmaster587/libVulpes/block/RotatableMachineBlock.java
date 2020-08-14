@@ -63,7 +63,8 @@ public class RotatableMachineBlock extends RotatableBlock {
      * metadata
      */
 	@Override
-	public void onPlayerDestroy(IWorld world, BlockPos pos, BlockState state) {
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) 
+	{
 		IInventory tileentitychest = (IInventory)world.getTileEntity(pos);
 
 		if (tileentitychest != null)
@@ -105,7 +106,7 @@ public class RotatableMachineBlock extends RotatableBlock {
 			}
 		}
 
-		super.onPlayerDestroy(world, pos, state);
+		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 	
 	@Override

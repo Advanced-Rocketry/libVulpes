@@ -11,6 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -39,6 +40,7 @@ import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.IProgressBar;
 import zmaster587.libVulpes.inventory.modules.IToggleButton;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import zmaster587.libVulpes.inventory.modules.ModuleButton;
 import zmaster587.libVulpes.inventory.modules.ModulePower;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.inventory.modules.ModuleToggleSwitch;
@@ -47,6 +49,7 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine.NetworkPackets;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.MultiBattery;
+import zmaster587.libVulpes.util.ZUtils;
 
 public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMachine, IModularInventory, IProgressBar, IToggleButton, ITickableTileEntity, IToggleableMachine {
 
@@ -69,7 +72,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		currentTime = -1;
 		hadPowerLastTick = true;
 		timeMultiplier = 1;
-		toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled());
+		toggleSwitch = new ModuleToggleSwitch(160, 5, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled());
 	}
 
 	//Needed for GUI stuff
@@ -326,7 +329,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id) {
+	public void writeDataToNetwork(PacketBuffer out, byte id) {
 
 		if(id == NetworkPackets.POWERERROR.ordinal()) {
 			out.writeBoolean(hadPowerLastTick);
@@ -337,7 +340,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
+	public void readDataFromNetwork(PacketBuffer in, byte packetId,
 			CompoundNBT nbt) {
 		if(packetId == NetworkPackets.POWERERROR.ordinal()) {
 			nbt.putBoolean("hadPowerLastTick", in.readBoolean());
@@ -358,7 +361,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 			toggleSwitch.setToggleState(getMachineEnabled());
 			//Last ditch effort to update the toggle switch when it's flipped
 			if(!world.isRemote)
-				PacketHandler.sendToNearby(new PacketMachine(this, (byte)NetworkPackets.TOGGLE.ordinal()), world.func_230315_m_().func_241513_m_() /* get dimension */, pos.getX(), pos.getY(), pos.getZ(), 64);
+				PacketHandler.sendToNearby(new PacketMachine(this, (byte)NetworkPackets.TOGGLE.ordinal()), ZUtils.getDimensionId(world) /* get dimension */, pos.getX(), pos.getY(), pos.getZ(), 64);
 		}
 	}
 
@@ -366,7 +369,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
 		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
 		modules.add(new ModulePower(18, 20, getBatteries()));
-		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
+		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
 		modules.add(new ModuleText(140, 40, String.format("Speed:\n%.2fx", 1/getTimeMultiplier()), 0x2d2d2d));
 		modules.add(new ModuleText(140, 60, String.format("Power:\n%.2fx", 1f), 0x2d2d2d));
 		
@@ -384,8 +387,8 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 	
 	@Override
-	public void onInventoryButtonPressed(int buttonId) {
-		if(buttonId == 0) {
+	public void onInventoryButtonPressed(ModuleButton buttonId) {
+		if(buttonId == toggleSwitch) {
 			this.setMachineEnabled(toggleSwitch.getState());
 			PacketHandler.sendToServer(new PacketMachine(this,(byte)TileMultiblockMachine.NetworkPackets.TOGGLE.ordinal()));
 		}

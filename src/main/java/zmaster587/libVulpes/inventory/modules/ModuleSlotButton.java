@@ -26,16 +26,16 @@ public class ModuleSlotButton extends ModuleButton {
 	ItemStack stack;
 	World worldObj;
 
-	public ModuleSlotButton(int offsetX, int offsetY, int buttonId, IButtonInventory tile, ItemStack slotDisplay,  World world ) {
+	public ModuleSlotButton(int offsetX, int offsetY, IButtonInventory tile, ItemStack slotDisplay,  World world ) {
 
-		super(offsetX, offsetY, buttonId , "", tile, TextureResources.buttonNull, slotDisplay.getDisplayName().getString() ,16,16);
+		super(offsetX, offsetY , "", tile, TextureResources.buttonNull, slotDisplay.getDisplayName().getString() ,16,16);
 		stack = slotDisplay;
 		this.worldObj = world;
 	}
 
-	public ModuleSlotButton(int offsetX, int offsetY, int buttonId, IButtonInventory tile, ItemStack slotDisplay, String extraDisplay,  World world ) {
+	public ModuleSlotButton(int offsetX, int offsetY, IButtonInventory tile, ItemStack slotDisplay, String extraDisplay,  World world ) {
 
-		super(offsetX, offsetY, buttonId , "", tile, TextureResources.buttonNull, slotDisplay.getDisplayName() + " \n" + extraDisplay,16,16);
+		super(offsetX, offsetY , "", tile, TextureResources.buttonNull, slotDisplay.getDisplayName() + " \n" + extraDisplay,16,16);
 		stack = slotDisplay;
 		this.worldObj = world;
 	}

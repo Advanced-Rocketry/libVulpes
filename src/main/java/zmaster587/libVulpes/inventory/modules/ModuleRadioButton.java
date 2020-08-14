@@ -116,7 +116,7 @@ public class ModuleRadioButton  extends ModuleBase {
 			for(ModuleToggleSwitch button : buttons) {
 				button.setToggleState(button.isButton(buttonObj));
 				if(button.isButton(buttonObj))
-					tile.onInventoryButtonPressed(button.buttonId);
+					tile.onInventoryButtonPressed(button);
 			}
 		}
 	}

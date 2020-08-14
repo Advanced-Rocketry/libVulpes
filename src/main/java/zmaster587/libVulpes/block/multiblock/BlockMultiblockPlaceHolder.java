@@ -76,7 +76,7 @@ public class BlockMultiblockPlaceHolder extends ContainerBlock {
 		}
 	}
 	@Override
-	public void onPlayerDestroy(IWorld world, BlockPos pos, BlockState state) {
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		TileEntity tile = world.getTileEntity(pos);
 
 		if(tile != null && tile instanceof TilePlaceholder) {
@@ -85,7 +85,7 @@ public class BlockMultiblockPlaceHolder extends ContainerBlock {
 				((TileMultiBlock)tile).deconstructMultiBlock((World)world, pos, true, world.getBlockState(tile.getPos()));
 		}
 		
-		super.onPlayerDestroy(world, pos, state);
+		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class BlockMultiblockMachine extends BlockTile {
 	}
 	
 	@Override
-	public void onPlayerDestroy(IWorld world, BlockPos pos, BlockState state)  {
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving)  {
 		
 
 		TileEntity tile = world.getTileEntity(pos);
@@ -53,7 +53,7 @@ public class BlockMultiblockMachine extends BlockTile {
 			if(tileMulti.isComplete())
 				tileMulti.deconstructMultiBlock((World)world, pos, false, state);
 		}
-		super.onPlayerDestroy(world, pos, state);
+		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 	
 	@Override

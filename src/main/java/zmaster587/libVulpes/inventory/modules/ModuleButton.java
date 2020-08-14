@@ -34,8 +34,9 @@ public class ModuleButton extends ModuleBase {
 
 	boolean enabled = true;
 	protected String sound;
+	Object additionalData;
 
-	public ModuleButton(int offsetX, int offsetY, int buttonId, String text, IButtonInventory tile, ResourceLocation buttonImages[]) {
+	public ModuleButton(int offsetX, int offsetY, String text, IButtonInventory tile, ResourceLocation buttonImages[]) {
 		super(offsetX, offsetY);
 		this.tile = tile;
 		this.buttonImages = buttonImages;
@@ -50,23 +51,33 @@ public class ModuleButton extends ModuleBase {
 		color = 0xFF22FF22; // Lime green
 	}
 
-	public ModuleButton(int offsetX, int offsetY, int buttonId, String text, IButtonInventory tile, ResourceLocation buttonImages[], String tooltipText) {
-		this(offsetX, offsetY, buttonId, text, tile, buttonImages);
+	public ModuleButton(int offsetX, int offsetY, String text, IButtonInventory tile, ResourceLocation buttonImages[], String tooltipText) {
+		this(offsetX, offsetY, text, tile, buttonImages);
 		this.tooltipText = tooltipText;
 	}
 
 
-	public ModuleButton(int offsetX, int offsetY, int buttonId, String text, IButtonInventory tile, ResourceLocation buttonImages[], int sizeX, int sizeY) {
-		this(offsetX, offsetY, buttonId, text, tile, buttonImages);
+	public ModuleButton(int offsetX, int offsetY, String text, IButtonInventory tile, ResourceLocation buttonImages[], int sizeX, int sizeY) {
+		this(offsetX, offsetY, text, tile, buttonImages);
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 	}
 
-	public ModuleButton(int offsetX, int offsetY, int buttonId, String text, IButtonInventory tile, ResourceLocation buttonImages[], String tooltipText, int sizeX, int sizeY) {
-		this(offsetX, offsetY, buttonId, text, tile, buttonImages,sizeX, sizeY);
+	public ModuleButton(int offsetX, int offsetY, String text, IButtonInventory tile, ResourceLocation buttonImages[], String tooltipText, int sizeX, int sizeY) {
+		this(offsetX, offsetY, text, tile, buttonImages,sizeX, sizeY);
 		this.tooltipText = tooltipText;
 	}
 
+	public void setAdditionalData(Object data)
+	{
+		additionalData = data;
+	}
+	
+	public Object getAdditionalData()
+	{
+		return additionalData;
+	}
+	
 	/*public ModuleButtton(int offsetX, int offsetY, int buttonId, String text, IButtonInventory tile, IconResource buttonImage) {
 
 		this(offsetX, offsetY, buttonId, text, tile, new Re);
@@ -169,7 +180,7 @@ public class ModuleButton extends ModuleBase {
 
 		List<Button> list = new LinkedList<Button>();
 
-		button = new GuiImageButton(buttonId, x + offsetX, y + offsetY, sizeX, sizeY, buttonImages);
+		button = new GuiImageButton(x + offsetX, y + offsetY, sizeX, sizeY, buttonImages);
 
 		button.visible = visible;
 
@@ -187,7 +198,7 @@ public class ModuleButton extends ModuleBase {
 	@OnlyIn(value=Dist.CLIENT)
 	public void actionPerform(Button button) {
 		if(enabled && button == this.button) {
-			tile.onInventoryButtonPressed(buttonId);
+			tile.onInventoryButtonPressed(this);
 		}
 	}
 

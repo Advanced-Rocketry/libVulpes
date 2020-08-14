@@ -38,7 +38,7 @@ public class GuiImageButton extends Button {
 	 * @param height height of the button in pixels
 	 * @param location index 0: default, index 1: hover, index 2: pressed, index 3: disabled
 	 */
-	public GuiImageButton(int id, int x, int y, int width, int height, ResourceLocation[] location) {
+	public GuiImageButton(int x, int y, int width, int height, ResourceLocation[] location) {
 		super(x, y, width, height, new StringTextComponent(""), null);
 		buttonTexture = location;
 		soundString = "";

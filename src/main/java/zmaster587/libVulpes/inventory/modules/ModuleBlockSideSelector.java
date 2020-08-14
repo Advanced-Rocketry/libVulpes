@@ -31,12 +31,12 @@ public class ModuleBlockSideSelector extends ModuleBase implements IButtonInvent
 		bdf = new BlockDirectionFunction(stateNames.length);
 		text = stateNames;
 
-		buttons = new ModuleButton[] {new ModuleButton(offsetX + 42, offsetY + 42, 0, "", this, TextureResources.buttonSquare, directions[0] + stateNames[0], 16, 16),
-				new ModuleButton(offsetX + 21, offsetY + 21, 1, "", this, TextureResources.buttonSquare, directions[1] + stateNames[0], 16, 16),
-				new ModuleButton(offsetX + 21, offsetY, 2, "", this, TextureResources.buttonSquare, directions[2] + stateNames[0], 16, 16),
-				new ModuleButton(offsetX + 21, offsetY + 42, 3, "", this, TextureResources.buttonSquare, directions[3] + stateNames[0], 16, 16),
-				new ModuleButton(offsetX, offsetY + 21, 4, "", this, TextureResources.buttonSquare, directions[4] + stateNames[0], 16, 16),
-				new ModuleButton(offsetX + 42, offsetY + 21, 5, "", this, TextureResources.buttonSquare, directions[5] + stateNames[0], 16, 16)};
+		buttons = new ModuleButton[] {new ModuleButton(offsetX + 42, offsetY + 42, "", this, TextureResources.buttonSquare, directions[0] + stateNames[0], 16, 16),
+				new ModuleButton(offsetX + 21, offsetY + 21, "", this, TextureResources.buttonSquare, directions[1] + stateNames[0], 16, 16),
+				new ModuleButton(offsetX + 21, offsetY, "", this, TextureResources.buttonSquare, directions[2] + stateNames[0], 16, 16),
+				new ModuleButton(offsetX + 21, offsetY + 42, "", this, TextureResources.buttonSquare, directions[3] + stateNames[0], 16, 16),
+				new ModuleButton(offsetX, offsetY + 21, "", this, TextureResources.buttonSquare, directions[4] + stateNames[0], 16, 16),
+				new ModuleButton(offsetX + 42, offsetY + 21, "", this, TextureResources.buttonSquare, directions[5] + stateNames[0], 16, 16)};
 
 		if(Thread.currentThread().getThreadGroup() == SidedThreadGroups.CLIENT)
 			for(ModuleButton button : buttons)
@@ -114,10 +114,19 @@ public class ModuleBlockSideSelector extends ModuleBase implements IButtonInvent
 	}
 
 	@Override
-	public void onInventoryButtonPressed(int buttonId) {
-		bdf.advanceState(buttonId);
-		buttons[buttonId].setBGColor(colors[bdf.getState(buttonId) % colors.length]);
-		buttons[buttonId].setToolTipText(directions[buttonId] + text[bdf.getState(buttonId)]);
+	public void onInventoryButtonPressed(ModuleButton buttonId) {
+		
+		int index = 0;
+		for(ModuleButton button : buttons)
+		{
+			if(button == buttonId)
+				break;
+			index++;
+		}
+		
+		bdf.advanceState(index);
+		buttons[index].setBGColor(colors[bdf.getState(index) % colors.length]);
+		buttons[index].setToolTipText(directions[index] + text[bdf.getState(index)]);
 
 		callback.onModuleUpdated(this);
 	}

@@ -2,6 +2,7 @@ package zmaster587.libVulpes.util;
 
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class HashedBlockPosition  {
 	public int x,z;
@@ -18,6 +19,12 @@ public class HashedBlockPosition  {
 		this.x = pos.getX();
 		this.y = (short)pos.getY();
 		this.z = pos.getZ();
+	}
+	
+	public HashedBlockPosition(Vector3d pos) {
+		this.x = (int) pos.getX();
+		this.y = (short) pos.getY();
+		this.z = (int) pos.getZ();
 	}
 	
 	public BlockPos getBlockPos() {

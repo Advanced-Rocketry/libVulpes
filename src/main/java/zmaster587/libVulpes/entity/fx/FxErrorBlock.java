@@ -95,7 +95,7 @@ public class FxErrorBlock extends SpriteTexturedParticle {
 		}
 	}
 	
-   @OnlyIn(Dist.CLIENT)
+   @OnlyIn(value=Dist.CLIENT)
    public static class Factory implements IParticleFactory<BasicParticleType> {
 
       
