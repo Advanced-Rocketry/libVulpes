@@ -87,6 +87,9 @@ public class BlockTile extends RotatableBlock {
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving)
 	{
+		if (state.isIn(newState.getBlock()))
+			return;
+		
 		TileEntity tile = world.getTileEntity(pos);
 
 		//This code could use some optimization -Dark

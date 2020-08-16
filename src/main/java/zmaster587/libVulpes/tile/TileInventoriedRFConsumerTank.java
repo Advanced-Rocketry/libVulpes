@@ -66,4 +66,24 @@ public abstract class TileInventoriedRFConsumerTank extends TileInventoriedRFCon
 	public FluidStack drain(int maxDrain, FluidAction doDrain) {
 		return tank.drain(maxDrain, doDrain);
 	}
+	
+	@Override
+	public int getTanks() {
+		return tank.getTanks();
+	}
+
+	@Override
+	public FluidStack getFluidInTank(int tank) {
+		return this.tank.getFluidInTank(tank);
+	}
+
+	@Override
+	public int getTankCapacity(int tank) {
+		return this.tank.getTankCapacity(tank);
+	}
+
+	@Override
+	public boolean isFluidValid(int tank, FluidStack stack) {
+		return this.tank.isFluidValid(tank, stack);
+	}
 }

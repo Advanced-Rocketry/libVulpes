@@ -18,7 +18,7 @@ public class ModuleRedstoneOutputButton extends ModuleButton {
 	
 	String suppText;
 
-	public ModuleRedstoneOutputButton(int offsetX, int offsetY, int buttonId,
+	public ModuleRedstoneOutputButton(int offsetX, int offsetY,
 			String text, IButtonInventory tile) {
 		super(offsetX, offsetY, text, tile, TextureResources.buttonRedstoneActive, 24 ,24);
 		sizeX=24;
@@ -27,9 +27,9 @@ public class ModuleRedstoneOutputButton extends ModuleButton {
 		suppText = "";
 	}
 	
-	public ModuleRedstoneOutputButton(int offsetX, int offsetY, int buttonId,
+	public ModuleRedstoneOutputButton(int offsetX, int offsetY, 
 			String text, IButtonInventory tile, String text2) {
-		this(offsetX, offsetY, buttonId,
+		this(offsetX, offsetY,
 			text, tile);
 		suppText = text2;
 	}

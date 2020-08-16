@@ -1,19 +1,24 @@
 package zmaster587.libVulpes.network;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -21,7 +26,6 @@ import zmaster587.libVulpes.util.ZUtils;
 
 public class PacketHandler {
 	
-	private static int discriminatorNumber = 0;
 	private static final String PROTOCOL_VERSION = Integer.toString(1);
 	private static final SimpleChannel HANDLER = NetworkRegistry.ChannelBuilder
 			.named(new ResourceLocation("libvulpes", "main_channel"))
@@ -36,47 +40,114 @@ public class PacketHandler {
 	public PacketHandler() {
 	}
 
+	static ArrayList<Class<? extends BasePacket>> packetList = new ArrayList<Class<? extends BasePacket>>();
+	public final void addDiscriminator(Class<? extends BasePacket> clazz) {
+		packetList.add(clazz);
+	}
 	
 
 	public static final void register() {
-		
-		HANDLER.registerMessage(discriminatorNumber++, PacketMachine.class, PacketMachine::encode, PacketMachine::decode, PacketMachine.Handler::handle);
-		HANDLER.registerMessage(discriminatorNumber++, PacketEntity.class, PacketEntity::encode, PacketEntity::decode, PacketEntity.Handler::handle);
-		HANDLER.registerMessage(discriminatorNumber++, PacketChangeKeyState.class, PacketChangeKeyState::encode, PacketChangeKeyState::decode, PacketChangeKeyState.Handler::handle);
-		HANDLER.registerMessage(discriminatorNumber++, PacketItemModifcation.class, PacketItemModifcation::encode, PacketItemModifcation::decode, PacketItemModifcation.Handler::handle);
+		HANDLER.registerMessage(0, EncapsulatingPacket.class, EncapsulatingPacket::encode, EncapsulatingPacket::decode, EncapsulatingPacket.Handler::handle);
+		INSTANCE.addDiscriminator(PacketChangeKeyState.class);
+		INSTANCE.addDiscriminator(PacketEntity.class);
+		INSTANCE.addDiscriminator(PacketItemModifcation.class);
+		INSTANCE.addDiscriminator(PacketMachine.class);
 	}
-    
+	
+	
+	public static class EncapsulatingPacket
+	{
+
+		BasePacket basePacket;
+		
+		EncapsulatingPacket(BasePacket pkt)
+		{
+			basePacket = pkt;
+		}
+		
+		public static void encode(EncapsulatingPacket pkt, PacketBuffer buf)
+		{
+			buf.writeInt(PacketHandler.getIdByClass(pkt.basePacket.getClass()));
+			pkt.basePacket.write(buf);
+		}
+
+		public static EncapsulatingPacket decode( PacketBuffer buf)
+		{
+			int index = buf.readInt();
+
+			Class<? extends BasePacket> clazz = PacketHandler.getClassById(index);
+
+			BasePacket pkt;
+			try {
+				pkt = clazz.newInstance();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+				return null;
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+				return null;
+			}
+			DistExecutor.runForDist(() -> () -> {pkt.readClient(buf); return 0;} , () -> () -> {pkt.read(buf); return 0;});
+
+			return new EncapsulatingPacket(pkt);
+		}
+
+		public static class Handler 
+		{
+			public static void handle(EncapsulatingPacket msg, Supplier<NetworkEvent.Context> ctx)
+			{
+				if(ctx.get().getDirection().getReceptionSide().isServer())
+					ctx.get().enqueueWork(() -> msg.basePacket.executeServer(ctx.get().getSender()));
+				else
+					ctx.get().enqueueWork(() -> msg.basePacket.executeClient(Minecraft.getInstance().player));
+
+				ctx.get().setPacketHandled(true);
+
+			}
+		}
+	}
+	
+	public static Class<? extends BasePacket> getClassById(int id)
+	{
+		return packetList.get(id);
+	}
+	public static int getIdByClass(Class<? extends BasePacket> id)
+	{
+		return packetList.indexOf(id);
+	}
     
     public static final void sendToServer(Object msg)
     {
     	HANDLER.sendToServer(msg);
     }
     
-    public static final void sendToPlayersTrackingEntity(Object msg, Entity entity)
+    public static final void sendToPlayersTrackingEntity(BasePacket pkt, Entity entity)
     {
+    	Object msg = new EncapsulatingPacket(pkt);
     	Stream<ServerPlayerEntity> players = ((ServerWorld)entity.world).getChunkProvider().chunkManager.getTrackingPlayers(new ChunkPos(new BlockPos(entity.getPosX(), entity.getPosY(), entity.getPosZ())), false);
 		
     	players.forEach(player -> HANDLER.sendTo(msg, player.connection.netManager, NetworkDirection.PLAY_TO_CLIENT));
     }
 
 
-	public static final void sendToAll(Object msg) {
-		
+	public static final void sendToAll(BasePacket pkt) {
+		Object msg = new EncapsulatingPacket(pkt);
 		List<ServerPlayerEntity> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
 		players.forEach(player -> HANDLER.sendTo(msg, player.connection.netManager, NetworkDirection.PLAY_TO_CLIENT));
 	}
 
-	public static final void sendToPlayer(Object msg, PlayerEntity player) {
-		HANDLER.sendTo(msg, ((ServerPlayerEntity)player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+	public static final void sendToPlayer(BasePacket pkt, PlayerEntity player) {
+		HANDLER.sendTo(pkt, ((ServerPlayerEntity)player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
 	}
 
-	public static final void sendToDispatcher(Object msg, NetworkManager netman) {
-		HANDLER.sendTo(msg, netman, NetworkDirection.PLAY_TO_CLIENT);
+	public static final void sendToDispatcher(BasePacket pkt, NetworkManager netman) {
+		HANDLER.sendTo(pkt, netman, NetworkDirection.PLAY_TO_CLIENT);
 	}
 
 	@Deprecated
-	public static final void sendToNearby(Object msg, int dimId, int x, int y, int z, double dist) {
+	public static final void sendToNearby(BasePacket pkt, int dimId, int x, int y, int z, double dist) {
 		List<ServerPlayerEntity> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
+		Object msg = new EncapsulatingPacket(pkt);
 		
 		for(ServerPlayerEntity player : players)
 		{
@@ -85,9 +156,13 @@ public class PacketHandler {
 		}
 	}
 	
-	public static final void sendToNearby(Object msg, ResourceLocation dimId, int x, int y, int z, double dist) {
+	public static final void sendToNearby(BasePacket pkt, ResourceLocation dimId, BlockPos pos, double dist) {
+		sendToNearby(pkt, dimId, pos.getX(), pos.getY(), pos.getZ(), dist);
+	}
+	
+	public static final void sendToNearby(BasePacket pkt, ResourceLocation dimId, int x, int y, int z, double dist) {
 		List<ServerPlayerEntity> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
-		
+		Object msg = new EncapsulatingPacket(pkt);
 		for(ServerPlayerEntity player : players)
 		{
 			if(ZUtils.getDimensionIdentifier(player.getEntityWorld()) == dimId && player.getDistanceSq(x, y, z) <= dist*dist)
@@ -95,9 +170,10 @@ public class PacketHandler {
 		}
 	}
 	
-	public static final void sendToNearby(Object msg, World world, int x, int y, int z, double dist) {
+	public static final void sendToNearby(BasePacket pkt, World world, int x, int y, int z, double dist) {
 		ResourceLocation dimId = ZUtils.getDimensionIdentifier(world);
 		List<ServerPlayerEntity> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
+		Object msg = new EncapsulatingPacket(pkt);
 		
 		for(ServerPlayerEntity player : players)
 		{
@@ -106,8 +182,13 @@ public class PacketHandler {
 		}
 	}
 
-	public static final void sendToNearby(Object packet,int dimId, BlockPos pos, double dist) {
-		sendToNearby(packet, dimId, pos.getX(), pos.getY(), pos.getZ(), dist);
+	@Deprecated
+	public static final void sendToNearby(BasePacket pkt,int dimId, BlockPos pos, double dist) {
+		sendToNearby(pkt, dimId, pos.getX(), pos.getY(), pos.getZ(), dist);
+	}
+	
+	public static final void sendToNearby(BasePacket pkt, World dimId, BlockPos pos, double dist) {
+		sendToNearby(pkt, dimId, pos.getX(), pos.getY(), pos.getZ(), dist);
 	}
 
 }

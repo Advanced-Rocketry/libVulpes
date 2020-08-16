@@ -10,6 +10,7 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -51,6 +52,18 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	
 	public TileFluidHatch(int capacity) {
 		super(LibVulpesTileEntityTypes.TILE_FLUIDHATCH);
+		fluidTank = new FluidTank(capacity);
+		inventory = new EmbeddedInventory(2);
+	}
+	
+	public TileFluidHatch(TileEntityType<?> type) {
+		super(type);
+		fluidTank = new FluidTank(16000);
+		inventory = new EmbeddedInventory(2);
+	}
+	
+	public TileFluidHatch(TileEntityType<?> type, int capacity) {
+		super(type);
 		fluidTank = new FluidTank(capacity);
 		inventory = new EmbeddedInventory(2);
 	}

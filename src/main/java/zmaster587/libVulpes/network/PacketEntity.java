@@ -15,34 +15,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 public class PacketEntity extends BasePacket {
-
-	
-	public static void encode(PacketEntity pkt, PacketBuffer buf)
-	{
-		pkt.write(buf);
-	}
-	
-	public static PacketEntity decode( PacketBuffer buf)
-	{
-		PacketEntity pkt = new PacketEntity();
-		 
-		pkt.read(buf);
-		return pkt;
-	}
-	
-	public static class Handler 
-	{
-		public static void handle(PacketEntity msg, Supplier<NetworkEvent.Context> ctx)
-		{
-			if(ctx.get().getDirection().getReceptionSide().isServer())
-				ctx.get().enqueueWork(() -> msg.executeServer(ctx.get().getSender()));
-			else
-				ctx.get().enqueueWork(() -> msg.executeClient(Minecraft.getInstance().player));
-			
-			ctx.get().setPacketHandled(true);
-			
-		}
-	}
 	
 	
 	INetworkEntity entity;
@@ -67,7 +39,8 @@ public class PacketEntity extends BasePacket {
 		this.nbt = nbt;
 	}
 
-	private void write(PacketBuffer out) {
+	@Override
+	public void write(PacketBuffer out) {
 		BasePacket.writeWorld(out, ((Entity)entity).world);
 		out.writeInt(((Entity)entity).getEntityId());
 		out.writeByte(packetId);
@@ -80,7 +53,8 @@ public class PacketEntity extends BasePacket {
 
 		entity.writeDataToNetwork(out, packetId);
 	}
-
+	
+	@Override
 	public void read(PacketBuffer in) {
 		//DEBUG:
 		World world = BasePacket.readWorld(in);
@@ -110,12 +84,12 @@ public class PacketEntity extends BasePacket {
 			entity.useNetworkData(player, side, packetId, nbt);
 	}
 
-	
+	@Override
 	public void executeServer(ServerPlayerEntity player) {
 		execute((PlayerEntity)player, Dist.DEDICATED_SERVER);
 	}
 
-	
+	@Override
 	public void executeClient(PlayerEntity player) {
 		execute((PlayerEntity)player, Dist.CLIENT);
 		if(entity == null) {

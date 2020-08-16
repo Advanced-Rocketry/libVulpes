@@ -15,34 +15,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-public class PacketItemModifcation {
-
-	public static void encode(PacketItemModifcation pkt, PacketBuffer buf)
-	{
-		pkt.write(buf);
-	}
-	
-	public static PacketItemModifcation decode( PacketBuffer buf)
-	{
-		PacketItemModifcation pkt = new PacketItemModifcation();
-		 
-		pkt.read(buf);
-		return pkt;
-	}
-	
-	public static class Handler 
-	{
-		public static void handle(PacketItemModifcation msg, Supplier<NetworkEvent.Context> ctx)
-		{
-			if(ctx.get().getDirection().getReceptionSide().isServer())
-				ctx.get().enqueueWork(() -> msg.executeServer(ctx.get().getSender()));
-			else
-				ctx.get().enqueueWork(() -> msg.executeClient(Minecraft.getInstance().player));
-			
-			ctx.get().setPacketHandled(true);
-			
-		}
-	}
+public class PacketItemModifcation extends BasePacket {
 	
 	CompoundNBT nbt;
 
@@ -69,8 +42,8 @@ public class PacketItemModifcation {
 		this.nbt = nbt;
 	}
 
-
-	private void write(PacketBuffer out) {
+	@Override
+	public void write(PacketBuffer out) {
 		BasePacket.writeWorld(out, entity.world);
 		out.writeInt(entity.getEntityId());
 		out.writeByte(packetId);
@@ -84,6 +57,7 @@ public class PacketItemModifcation {
 		machine.writeDataToNetwork(out, packetId, entity.getHeldItem(Hand.MAIN_HAND));
 	}
 
+	@Override
 	public void read(PacketBuffer in) {
 		//DEBUG:
 		World world = BasePacket.readWorld(in);
@@ -131,17 +105,18 @@ public class PacketItemModifcation {
 		}
 	}
 
-
+	@Override
 	public void executeServer(ServerPlayerEntity player) {
 		execute((PlayerEntity)player, Dist.DEDICATED_SERVER);
 	}
 
-
+	@Override
 	public void executeClient(PlayerEntity player) {
 		execute((PlayerEntity)player, Dist.CLIENT);
 	}
 
 	@OnlyIn(value=Dist.CLIENT)
+	@Override
 	public void readClient(PacketBuffer in) {
 		PacketBuffer buffer = new PacketBuffer(in);
 

@@ -36,7 +36,7 @@ public class TilePlugInputGregTech /*extends TileForgePowerOutput*/ {
 	}
 	
 	@Override
-	public <T> T getCapability(Capability<T> capability, Direction facing) {
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
 		if( capability == gregtech.api.capability.GregtechCapabilities.CAPABILITY_ENERGY_CONTAINER)
 			return (T) new GTEnergyCapability(storage);
 		return super.getCapability(capability, facing);

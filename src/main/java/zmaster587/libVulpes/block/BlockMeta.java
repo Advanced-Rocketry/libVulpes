@@ -6,7 +6,7 @@ import net.minecraft.block.BlockState;
 public class BlockMeta {
 	BlockState block;
 	boolean wildcard;
-	public static final int WILDCARD = -1;
+	public static final boolean WILDCARD = true;
 
 	public BlockMeta(BlockState block, boolean wildcard) {
 		this.block = block;
@@ -17,6 +17,16 @@ public class BlockMeta {
 	public BlockMeta(BlockState block) {
 		this.block = block;
 		this.wildcard = false;
+	}
+	
+	public BlockMeta(Block block) {
+		this.block = block.getDefaultState();
+		this.wildcard = false;
+	}
+	
+	public BlockMeta(Block block, boolean wildcard) {
+		this.block = block.getDefaultState();
+		this.wildcard = wildcard;
 	}
 	
 	@Override

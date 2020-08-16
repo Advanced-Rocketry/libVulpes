@@ -1,18 +1,20 @@
 package zmaster587.libVulpes.api;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.BlockItem;
 import net.minecraftforge.registries.GameData;
-import net.minecraftforge.registries.IForgeRegistry;
 
 public class LibVulpesBlocks {
 	public static final Set<Block> blocks = new HashSet<>();
 
 	public static Block blockHatch;
+	public static Block blockItemOutputHatch;
+	public static Block blockFluidOutputHatch;
+	public static Block blockItemInputHatch;
+	public static Block blockFluidInputHatch;
 	public static Block blockPhantom;
 	public static Block blockPlaceHolder;
 	public static Block blockRFBattery;

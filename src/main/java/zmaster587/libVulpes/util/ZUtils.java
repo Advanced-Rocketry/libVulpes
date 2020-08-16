@@ -18,6 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Dimension;
@@ -422,5 +423,18 @@ public class ZUtils {
 	public static int getDimensionId(World world)
 	{
 		return getDimensionType(world).func_241513_m_();
+	}
+
+	public static void initDimension(ResourceLocation dimid) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public static Direction rotateAround(Direction a, Direction b)
+	{
+		Vector3f newdir = new Vector3f(a.getDirectionVec().getX(), a.getDirectionVec().getY(), a.getDirectionVec().getZ());
+		newdir.transform(b.getRotation());
+		
+		return Direction.getFacingFromVector(newdir.getX(), newdir.getY(), newdir.getZ());
 	}
 }

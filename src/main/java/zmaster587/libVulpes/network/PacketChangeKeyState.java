@@ -10,34 +10,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraft.client.Minecraft;
 
-public class PacketChangeKeyState {
-
-	public static void encode(PacketChangeKeyState pkt, PacketBuffer buf)
-	{
-		pkt.write(buf);
-	}
-	
-	public static PacketChangeKeyState decode( PacketBuffer buf)
-	{
-		PacketChangeKeyState pkt = new PacketChangeKeyState();
-		 
-		pkt.read(buf);
-		return pkt;
-	}
-	
-	public static class Handler 
-	{
-		public static void handle(PacketChangeKeyState msg, Supplier<NetworkEvent.Context> ctx)
-		{
-			if(ctx.get().getDirection().getReceptionSide().isServer())
-				ctx.get().enqueueWork(() -> msg.executeServer(ctx.get().getSender()));
-			else
-				ctx.get().enqueueWork(() -> msg.executeClient(Minecraft.getInstance().player));
-			
-			ctx.get().setPacketHandled(true);
-			
-		}
-	}
+public class PacketChangeKeyState extends BasePacket {
 	
 	int key;
 	boolean state;
@@ -50,29 +23,30 @@ public class PacketChangeKeyState {
 	public PacketChangeKeyState() {};
 	
 
+	@Override
 	public void write(PacketBuffer out) {
 		out.writeInt(key);
 		out.writeBoolean(state);
 	}
 
-
+	@Override
 	public void readClient(PacketBuffer in) {
 		in.readInt();
 		in.readBoolean();
 	}
 
-	
+	@Override
 	public void read(PacketBuffer in) {
 		key = in.readInt();
 		state = in.readBoolean();
 	}
 
-	
+	@Override
 	public void executeClient(PlayerEntity thePlayer) {
 		
 	}
 
-	
+	@Override
 	public void executeServer(ServerPlayerEntity player) {
 		InputSyncHandler.updateKeyPress(player, key, state);
 	}

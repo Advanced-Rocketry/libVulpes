@@ -4,6 +4,8 @@ import zmaster587.libVulpes.client.ResourceIcon;
 
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -46,7 +48,7 @@ public interface IArmorComponent {
 	public boolean isAllowedInSlot(ItemStack componentStack, EquipmentSlotType armorType);
 
 	@OnlyIn(value=Dist.CLIENT)
-	public void renderScreen(ItemStack componentStack, List<ItemStack> modules,
+	public void renderScreen(MatrixStack mat, ItemStack componentStack, List<ItemStack> modules,
 			RenderGameOverlayEvent event, ContainerScreen<? extends Container> gui);
 	
 	/**

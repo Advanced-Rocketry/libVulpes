@@ -13,6 +13,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
@@ -42,9 +43,9 @@ public class ItemLinker extends Item {
 			par3List.add(new StringTextComponent("X: " + getMasterX(par1ItemStack)));
 			par3List.add(new StringTextComponent("Y: " + getMasterY(par1ItemStack)));
 			par3List.add(new StringTextComponent("Z: " + getMasterZ(par1ItemStack)));
-			int dimId = getDimId(par1ItemStack);
-			if(dimId != -1)
-				par3List.add(new StringTextComponent("Dim: " + dimId));
+			ResourceLocation dimId = getDimId(par1ItemStack);
+			if(dimId != null)
+				par3List.add(new StringTextComponent("Dim: " + dimId.getPath()));
 		}
 	}
 
@@ -78,7 +79,7 @@ public class ItemLinker extends Item {
 		return nbt.getInt("MasterZ");
 	}
 	
-	public static void setDimId(ItemStack itemStack, int id) {
+	public static void setDimId(ItemStack itemStack, ResourceLocation id) {
 		CompoundNBT nbt;
 		if(!itemStack.hasTag()) {
 			nbt = new CompoundNBT();
@@ -87,11 +88,11 @@ public class ItemLinker extends Item {
 		else
 			nbt = itemStack.getTag();
 		
-		nbt.putInt("dimId", id);
+		nbt.putString("dimId", id.toString());
 		
 	}
 	
-	public static int getDimId(ItemStack itemStack) {
+	public static ResourceLocation getDimId(ItemStack itemStack) {
 		CompoundNBT nbt;
 		if(!itemStack.hasTag()) {
 			nbt = new CompoundNBT();
@@ -99,7 +100,7 @@ public class ItemLinker extends Item {
 		else
 			nbt = itemStack.getTag();
 		
-		return nbt.hasUniqueId("dimId") ? nbt.getInt("dimId") : -1;
+		return nbt.hasUniqueId("dimId") ? new ResourceLocation(nbt.getString("dimId")) : null;
 		
 	}
 

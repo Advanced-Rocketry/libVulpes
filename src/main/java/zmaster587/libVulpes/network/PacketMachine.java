@@ -17,7 +17,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-public class PacketMachine {
+public class PacketMachine extends BasePacket {
 
 	INetworkMachine machine;
 
@@ -34,35 +34,8 @@ public class PacketMachine {
 		this.machine = machine;
 		this.packetId = packetId;
 	}
-
 	
-	public static void encode(PacketMachine pkt, PacketBuffer buf)
-	{
-		pkt.write(buf);
-	}
-	
-	public static PacketMachine decode( PacketBuffer buf)
-	{
-		PacketMachine pkt = new PacketMachine();
-		 
-		pkt.read(buf);
-		return pkt;
-	}
-	
-	public static class Handler 
-	{
-		public static void handle(PacketMachine msg, Supplier<NetworkEvent.Context> ctx)
-		{
-			if(ctx.get().getDirection().getReceptionSide().isServer())
-				ctx.get().enqueueWork(() -> msg.executeServer(ctx.get().getSender()));
-			else
-				ctx.get().enqueueWork(() -> msg.executeClient(Minecraft.getInstance().player));
-			
-			ctx.get().setPacketHandled(true);
-			
-		}
-	}
-	
+	@Override
 	public void write(PacketBuffer outline) {
 		// dimension
 		BasePacket.writeWorld(outline, ((TileEntity)machine).getWorld());
@@ -77,6 +50,7 @@ public class PacketMachine {
 	}
 
 	@OnlyIn(value=Dist.CLIENT)
+	@Override
 	public void readClient(PacketBuffer in) {
 		//DEBUG:
 		BasePacket.readWorld(in);
@@ -97,7 +71,7 @@ public class PacketMachine {
 		}
 	}
 
-	
+	@Override
 	public void read(PacketBuffer in) {
 		World world = BasePacket.readWorld(in);
 
@@ -121,13 +95,14 @@ public class PacketMachine {
 			}
 		}
 	}
-
+	@Override
 	public void executeClient(PlayerEntity player) {
 		//Machine can be null if not all chunks are loaded
 		if(machine != null)
 			machine.useNetworkData(player, Dist.CLIENT, packetId, nbt);
 	}
 
+	@Override
 	public void executeServer(ServerPlayerEntity player) {
 		if(machine != null)
 			machine.useNetworkData(player, Dist.DEDICATED_SERVER, packetId, nbt);

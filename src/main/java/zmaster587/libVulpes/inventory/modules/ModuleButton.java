@@ -68,9 +68,10 @@ public class ModuleButton extends ModuleBase {
 		this.tooltipText = tooltipText;
 	}
 
-	public void setAdditionalData(Object data)
+	public ModuleButton setAdditionalData(Object data)
 	{
 		additionalData = data;
+		return this;
 	}
 	
 	public Object getAdditionalData()

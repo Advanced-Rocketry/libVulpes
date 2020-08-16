@@ -32,15 +32,15 @@ import net.minecraftforge.common.MinecraftForge;
 	}
 
 	@Override
-	public void invalidate() {
-		super.invalidate();
+	public void remove() {
+		super.remove();
 		if(tickedOnce && !world.isRemote)
 			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 	}
 
 	@Override
-	public void onChunkUnload() {
-		super.onChunkUnload();
+	public void onChunkUnloaded() {
+		super.onChunkUnloaded();
 		if(tickedOnce && !world.isRemote)
 			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 	}
