@@ -9,48 +9,106 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.IVertexBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.RenderState.WriteMaskState;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(value=Dist.CLIENT)
 public class RenderHelper {
-	
-	   protected static final RenderState.TransparencyState LIGHTNING_TRANSPARENCY = new RenderState.TransparencyState("lightning_transparency", () -> {
-		      RenderSystem.enableBlend();
-		      RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-		   }, () -> {
-		      RenderSystem.disableBlend();
-		      RenderSystem.defaultBlendFunc();
-		   });
-	   
-	   protected static final RenderState.WriteMaskState COLOR_ONLY = new WriteMaskState(true, false);
-	   
-	   protected static final RenderState.TargetState TRANSLUCENT_TARGET = new RenderState.TargetState("translucent_target", () -> {
-		      if (Minecraft.func_238218_y_()) {
-		         Minecraft.getInstance().worldRenderer.func_239228_q_().bindFramebuffer(false);
-		      }
 
-		   }, () -> {
-		      if (Minecraft.func_238218_y_()) {
-		         Minecraft.getInstance().getFramebuffer().bindFramebuffer(false);
-		      }
+	protected static final RenderState.TransparencyState LIGHTNING_TRANSPARENCY = new RenderState.TransparencyState("lightning_transparency", () -> {
+		RenderSystem.enableBlend();
+		RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+	}, () -> {
+		RenderSystem.disableBlend();
+		RenderSystem.defaultBlendFunc();
+	});
 
-		   });
-	   
-	   protected static final RenderState.ShadeModelState SHADE_DISABLED = new RenderState.ShadeModelState(false);
-	   protected static final RenderState.ShadeModelState SHADE_ENABLED = new RenderState.ShadeModelState(true);
-	
-	public static final RenderType SEMI_TRANSLUCENT = RenderType.makeType("coloredTranslucent", DefaultVertexFormats.POSITION_COLOR, 7, 256, false, true, RenderType.State.getBuilder().writeMask(COLOR_ONLY).transparency(LIGHTNING_TRANSPARENCY).target(TRANSLUCENT_TARGET).shadeModel(SHADE_DISABLED).build(false));
-	   
+	protected static final RenderState.WriteMaskState COLOR_ONLY = new WriteMaskState(true, false);
 
-	   
+	protected static final RenderState.TargetState TRANSLUCENT_TARGET = new RenderState.TargetState("translucent_target", () -> {
+		if (Minecraft.func_238218_y_()) {
+			Minecraft.getInstance().worldRenderer.func_239228_q_().bindFramebuffer(false);
+		}
+
+	}, () -> {
+		if (Minecraft.func_238218_y_()) {
+			Minecraft.getInstance().getFramebuffer().bindFramebuffer(false);
+		}
+
+	});
+
+	protected static final RenderState.ShadeModelState SHADE_DISABLED = new RenderState.ShadeModelState(false);
+	protected static final RenderState.ShadeModelState SHADE_ENABLED = new RenderState.ShadeModelState(true);
+
+	private static final RenderType SEMI_TRANSLUCENT = RenderType.makeType("coloredTranslucent", DefaultVertexFormats.POSITION_COLOR, 7, 256, false, true, RenderType.State.getBuilder().writeMask(COLOR_ONLY).transparency(LIGHTNING_TRANSPARENCY).target(TRANSLUCENT_TARGET).shadeModel(SHADE_DISABLED).build(false));
+
+
+	public static final RenderType getSolidEntityModelRenderType(ResourceLocation tex)
+	{
+		return RenderType.getEntitySolid(tex);
+	}
+
+	public static final RenderType getTranslucentEntityModelRenderType(ResourceLocation tex)
+	{
+		return RenderType.getEntityTranslucent(tex);
+	}
+
+	public static final RenderType getTranslucentManualRenderType()
+	{
+		return SEMI_TRANSLUCENT;
+	}
+
+	public static final RenderType getSolidManualRenderType()
+	{
+		return SEMI_TRANSLUCENT;
+	}
+
+	public static RenderType getTranslucentTexturedManualRenderType(ResourceLocation location) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static RenderType getSolidTexturedManualRenderType(ResourceLocation location) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static RenderType getTranslucentColoredManualRenderType(ResourceLocation location, float r, float g, float b, float a) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static RenderType getLaserBeamType() {
+		//pos_col
+		/*GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_FOG);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glDepthMask(false);
+
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+		matrix.push();
+		GlStateManager.color4f(0.2F, 0.2F, 0.2F, 0.3F);
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);*/
+		return null;
+	}
+
+	public static RenderType getTranslucentBlock()
+	{
+		return RenderType.getTranslucent();
+	}
+
 	/**
 	 * 
 	 * @param text text to render
@@ -209,52 +267,30 @@ public class RenderHelper {
         return flag;
     }*/
 
-	public static void renderTag(MatrixStack mat, double distanceSq, String displayString, double x, double y, double z, int sizeOnScreen) {
-		renderTag(mat, distanceSq, displayString, x,y,z, 6, 1);
+	public static void renderTag(MatrixStack mat, IRenderTypeBuffer buffer, double distanceSq, String displayString, int packedLightIn, int sizeOnScreen) {
+		renderTag(mat, buffer, distanceSq, displayString, packedLightIn, 1);
 	}
-	
-	public static void renderTag(MatrixStack mat, double distanceSq, String displayString, double x, double y, double z, int sizeOnScreen, float scale) {
+
+	public static void renderTag(MatrixStack matrix, IRenderTypeBuffer buffer, double distanceSq, String displayString, int packedLightIn, float scale) {
 		double d3 = distanceSq;
 
 		Minecraft mc = Minecraft.getInstance();
 		EntityRendererManager renderManager = mc.getRenderManager();
-		if (d3 <= (double)(sizeOnScreen * sizeOnScreen))
-		{
-			FontRenderer fontrenderer = mc.fontRenderer;
+
+		if (!(distanceSq > 4096.0D)) {
+			matrix.push();
+			matrix.rotate(renderManager.getCameraOrientation());
 			float f = 1.6F*scale;
-			float f1 = 0.016666668F * f;
-			GL11.glPushMatrix();
-			GL11.glTranslatef((float)x + 0.0F, (float)y + 0.5F, (float)z);
-			GL11.glRotatef(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-			GL11.glRotatef(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
-			GL11.glScalef(-f1, -f1, f1);
-			GlStateManager.disableLighting();
-			GlStateManager.depthMask(false);
-			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(770, 771);
-			Tessellator tessellator = Tessellator.getInstance();
-			byte b0 = 0;
+			float f2 = 0.016666668F * f;
+			matrix.scale(-f2, -f2, f2);
+			Matrix4f matrix4f = matrix.getLast().getMatrix();
+			float f1 = Minecraft.getInstance().gameSettings.getTextBackgroundOpacity(0.25F);
+			int j = (int)(f1 * 255.0F) << 24;
+			FontRenderer fontrenderer = Minecraft.getInstance().fontRenderer;
+			float f3 = (float)(-fontrenderer.func_238414_a_(new StringTextComponent(displayString)) / 2);
+			fontrenderer.func_243247_a(new StringTextComponent(displayString), f3, (float)0, 553648127, false, matrix4f, buffer, false, j, packedLightIn);
 
-			IVertexBuilder buffer = tessellator.getBuffer();
-
-			GlStateManager.disableTexture();
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-			int j = fontrenderer.getStringWidth(displayString) / 2;
-			GlStateManager.color4f(0.0F, 0.0F, 0.0F, 0.25F);
-			buffer.pos((double)(-j - 1), (double)(-1 + b0), 0.0D).endVertex();
-			buffer.pos((double)(-j - 1), (double)(8 + b0), 0.0D).endVertex();
-			buffer.pos((double)(j + 1), (double)(8 + b0), 0.0D).endVertex();
-			buffer.pos((double)(j + 1), (double)(-1 + b0), 0.0D).endVertex();
-			tessellator.draw();
-			GlStateManager.enableTexture();
-			fontrenderer.drawString(displayString, -fontrenderer.getStringWidth(displayString) / 2, b0, 553648127);
-
-			GlStateManager.depthMask(true);
-			fontrenderer.drawString(displayString, -fontrenderer.getStringWidth(displayString) / 2, b0, -1);
-			GlStateManager.enableLighting();
-			GlStateManager.disableBlend();
-			GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-			GL11.glPopMatrix();
+			matrix.pop();
 		}
 	}
 
@@ -270,7 +306,7 @@ public class RenderHelper {
 		GL11.glRotatef(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
 		GL11.glScalef(-f1, -f1, f1);
 	}*/
-	
+
 	public static void cleanupPlayerFacingMatrix() {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glPopMatrix();
@@ -293,7 +329,10 @@ public class RenderHelper {
 		renderSouthFaceEndpoints(buff, width, xMin, yMin, zMin, xMax, yMax, zMax, r,g,b,a);
 	}
 
-
+	public static void renderTopFace(IVertexBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax) 
+	{
+		renderTopFace(buff, yMax, xMin, zMin, xMax, zMax,1,1,1,1);
+	}
 	public static void renderTopFace(IVertexBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, float r, float g, float b, float a) {
 		//top
 		buff.pos(xMin, yMax, zMin).color(a,g,b,a).endVertex();
@@ -393,7 +432,11 @@ public class RenderHelper {
 		buff.pos(xMin, yMax + width, zMin).color(a,g,b,a).endVertex();
 	}
 
-	public static void renderTopFaceWithUV(IVertexBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, float uMin, float uMax, float vMin, float vMax) {
+	public static void renderTopFaceWithUV(IVertexBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, float uMin, float uMax, float vMin, float vMax)
+	{
+		renderTopFaceWithUV(buff, yMax, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax, 1,1,1,1);
+	}
+	public static void renderTopFaceWithUV(IVertexBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
 		//top
 		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
 		buff.pos(xMin, yMax, zMax).tex(uMin, vMax).endVertex();
@@ -403,7 +446,7 @@ public class RenderHelper {
 
 	}
 
-	public static void renderBottomFaceWithUV(IVertexBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, float uMin, float uMax, float vMin, float vMax) {
+	public static void renderBottomFaceWithUV(IVertexBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
 		//bottom
 
 		buff.pos(xMax, yMax, zMax).tex(uMax, vMax).endVertex();
@@ -413,7 +456,12 @@ public class RenderHelper {
 
 	}
 
-	public static void renderNorthFaceWithUV(IVertexBuilder buff, double zMin, double xMin, double yMin, double xMax, double yMax, float uMin, float uMax, float vMin, float vMax) {
+	public static void renderNorthFaceWithUV(IVertexBuilder buff, double zMin, double xMin, double yMin, double xMax, double yMax, float uMin, float uMax, float vMin, float vMax)
+	{
+		renderNorthFaceWithUV(buff, zMin, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax,1,1,1,1);
+	}
+	
+	public static void renderNorthFaceWithUV(IVertexBuilder buff, double zMin, double xMin, double yMin, double xMax, double yMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
 		//north
 		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
 		buff.pos(xMax, yMax, zMin).tex(uMax, vMin).endVertex();
@@ -421,7 +469,7 @@ public class RenderHelper {
 		buff.pos(xMin, yMin, zMin).tex(uMin, vMax).endVertex();
 	}
 
-	public static void renderNorthFaceWithUVNoNormal(IVertexBuilder buff, double zMin, double xMin, double yMin, double xMax, double yMax, float uMin, float uMax, float vMin, float vMax) {
+	public static void renderNorthFaceWithUVNoNormal(IVertexBuilder buff, double zMin, double xMin, double yMin, double xMax, double yMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
 		//north
 		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
 		buff.pos(xMax, yMax, zMin).tex(uMax, vMin).endVertex();
@@ -429,7 +477,7 @@ public class RenderHelper {
 		buff.pos(xMin, yMin, zMin).tex(uMin, vMax).endVertex();
 	}
 
-	public static void renderSouthFaceWithUV(IVertexBuilder buff, double zMax, double xMin, double yMin, double xMax, double yMax, float uMin, float uMax, float vMin, float vMax) {
+	public static void renderSouthFaceWithUV(IVertexBuilder buff, double zMax, double xMin, double yMin, double xMax, double yMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
 		//south
 		buff.pos(xMin, yMax, zMax).tex(uMin, vMin).endVertex();
 		buff.pos(xMin, yMin, zMax).tex(uMin, vMax).endVertex();
@@ -437,7 +485,7 @@ public class RenderHelper {
 		buff.pos(xMax, yMax, zMax).tex(uMax, vMin).endVertex();
 	}
 
-	public static void renderEastFaceWithUV(IVertexBuilder buff, double xMax, double yMin, double zMin, double yMax, double zMax, float uMin, float uMax, float vMin, float vMax) {
+	public static void renderEastFaceWithUV(IVertexBuilder buff, double xMax, double yMin, double zMin, double yMax, double zMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
 		//east
 		buff.pos(xMax, yMax, zMin).tex(uMin, vMin).endVertex();
 		buff.pos(xMax, yMax, zMax).tex(uMax, vMin).endVertex();
@@ -446,7 +494,7 @@ public class RenderHelper {
 	}
 
 
-	public static void renderWestFaceWithUV(IVertexBuilder buff, double xMin, double yMin, double zMin, double yMax, double zMax, float uMin, float uMax, float vMin, float vMax) {
+	public static void renderWestFaceWithUV(IVertexBuilder buff, double xMin, double yMin, double zMin, double yMax, double zMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
 		//west
 		buff.pos(xMin, yMin, zMin).tex(uMin, vMax).endVertex();
 		buff.pos(xMin, yMin, zMax).tex(uMax, vMax).endVertex();
@@ -454,20 +502,18 @@ public class RenderHelper {
 		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
 	}
 
-	public static void renderCubeWithUV(IVertexBuilder buff, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float uMin, float uMax, float vMin, float vMax) {
+	public static void renderCubeWithUV(IVertexBuilder buff, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
 
 
-		renderTopFaceWithUV(buff, yMax, xMin, zMin, xMax, zMax, uMin, uMax,vMin, vMax);
-		renderNorthFaceWithUV(buff, zMin, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax);
-		renderSouthFaceWithUV(buff, zMax, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax);
-		renderEastFaceWithUV(buff, xMax, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax);
-		renderWestFaceWithUV(buff, xMin, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax);
-		renderBottomFaceWithUV(buff, yMin, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax);
+		renderTopFaceWithUV(buff, yMax, xMin, zMin, xMax, zMax, uMin, uMax,vMin, vMax, r,g,b,a);
+		renderNorthFaceWithUV(buff, zMin, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax, r,g,b,a);
+		renderSouthFaceWithUV(buff, zMax, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax, r,g,b,a);
+		renderEastFaceWithUV(buff, xMax, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax, r,g,b,a);
+		renderWestFaceWithUV(buff, xMin, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax, r,g,b,a);
+		renderBottomFaceWithUV(buff, yMin, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax, r,g,b,a);
 	}
 
 	public static void renderCube(IVertexBuilder buff, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float r, float g, float b, float a) {
-
-
 		renderTopFace(buff, yMax, xMin, zMin, xMax, zMax,r,g,b,a);
 		renderNorthFace(buff, zMin, xMin, yMin, xMax, yMax,r,g,b,a);
 		renderSouthFace(buff, zMax, xMin, yMin, xMax, yMax,r,g,b,a);

@@ -48,8 +48,8 @@ public class ModuleImage extends ModuleBase {
 			GL11.glEnable(GL11.GL_BLEND);
 			Minecraft.getInstance().getTextureManager().bindTexture(icon.getResourceLocation());
 			if(icon.getxLoc() == -1) {
-				Tessellator.getInstance().getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-				RenderHelper.renderNorthFaceWithUV(Tessellator.getInstance().getBuffer(), 0, x + offsetX, y + offsetY, x + offsetX + icon.getxSize(), y + offsetY + icon.getySize(), 0, 1, 0, 1);
+				Tessellator.getInstance().getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+				RenderHelper.renderNorthFaceWithUV(Tessellator.getInstance().getBuffer(), 0, x + offsetX, y + offsetY, x + offsetX + icon.getxSize(), y + offsetY + icon.getySize(), 0, 1, 0, 1, 1,1,1,1);
 				Tessellator.getInstance().draw();
 			} else
 				gui.func_238474_b_(mat, x + offsetX, y + offsetY, icon.getxLoc(), icon.getyLoc(), icon.getxSize(), icon.getySize());

@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -49,7 +50,7 @@ public interface IArmorComponent {
 
 	@OnlyIn(value=Dist.CLIENT)
 	public void renderScreen(MatrixStack mat, ItemStack componentStack, List<ItemStack> modules,
-			RenderGameOverlayEvent event, ContainerScreen<? extends Container> gui);
+			RenderGameOverlayEvent event, Screen gui);
 	
 	/**
 	 * @param armorStack

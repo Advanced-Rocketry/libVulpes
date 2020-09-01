@@ -1,12 +1,17 @@
 package zmaster587.libVulpes.util;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.Random;
 
+import com.mojang.serialization.Lifecycle;
+
 import net.minecraft.block.Block;
+import net.minecraft.client.world.DimensionRenderInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -20,7 +25,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.registry.DynamicRegistries;
+import net.minecraft.util.registry.MutableRegistry;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.SimpleRegistry;
 import net.minecraft.world.Dimension;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
@@ -50,11 +57,11 @@ public class ZUtils {
 			else
 				return RedstoneState.values()[i];
 		}
-		
+
 		public void write(CompoundNBT tag) {
 			tag.putByte("redstoneState", (byte)this.ordinal());
 		}
-		
+
 		public static RedstoneState createFromNBT(CompoundNBT tag) {
 			return RedstoneState.values()[tag.getByte("redstoneState")];
 		}
@@ -90,7 +97,7 @@ public class ZUtils {
 		}
 		return returnList;
 	}
-	
+
 	/**
 	 * @param axis Axis Aligned Bounding box to rotate
 	 * @param angleDeg amount to rotate the bounding box in radians
@@ -342,7 +349,7 @@ public class ZUtils {
 
 		return dist;
 	}
-	
+
 	public static int getContinuousBlockLength(World world, Direction direction, BlockPos pos, int maxDist, Block[] blocks) {
 		int dist = 0;
 		for(int i = 0; i < maxDist; i++) {
@@ -354,7 +361,7 @@ public class ZUtils {
 					break;
 				}
 			}
-			
+
 			if(!exists) 
 				break;
 
@@ -365,60 +372,99 @@ public class ZUtils {
 	}
 
 	public static boolean areOresSameTypeOreDict(ItemStack stack1, ItemStack stack2) {
-		
+
 		Collection<ResourceLocation> item1s = ItemTags.getCollection().getOwningTags(stack1.getItem());
 		Collection<ResourceLocation> item2s = ItemTags.getCollection().getOwningTags(stack2.getItem());
-		
+
 		return item1s.stream().anyMatch(value -> item2s.contains(value));
 	}
-	
+
+	// Dimension stuff
+
+	// public static final RegistryKey<Registry<DimensionType>> field_239698_ad_ = func_239741_a_("dimension_type");
+	// public static final RegistryKey<Registry<World>> field_239699_ae_ = func_239741_a_("dimension");
+	// public static final RegistryKey<Registry<Dimension>> field_239700_af_ = func_239741_a_("dimension");
+
 	public static ResourceLocation getDimensionIdentifier(World world)
 	{
 		return DynamicRegistries.func_239770_b_().func_230520_a_().getKey(getDimensionType(world));
 	}
-	
+
 	public static Optional<DimensionType> getDimensionFromIdentifier(ResourceLocation location)
 	{
 		return DynamicRegistries.func_239770_b_().func_230520_a_().func_241873_b(location);
 	}
-	
+
 	public static DimensionType getDimensionType(World world)
 	{
 		return world.func_230315_m_();
 	}
-	
+
 	public static ServerWorld getWorld(ResourceLocation worldLoc)
 	{
 		RegistryKey<World> registrykey = RegistryKey.func_240903_a_(Registry.field_239699_ae_, worldLoc);
-		
+
 		return ServerLifecycleHooks.getCurrentServer().getWorld(registrykey);
 	}
-	
+
 	public static boolean isWorldLoaded(ResourceLocation worldLoc)
 	{
 		RegistryKey<World> registrykey = RegistryKey.func_240903_a_(Registry.field_239699_ae_, worldLoc);
-		
-		return registrykey != null;
+
+		return registrykey != null && ServerLifecycleHooks.getCurrentServer().getWorld(registrykey) != null;
 	}
-	
+
 	public static boolean isWorldRegistered(ResourceLocation worldLoc)
 	{
 		RegistryKey<World> registrykey = RegistryKey.func_240903_a_(Registry.field_239699_ae_, worldLoc);
-		
+
 		return registrykey != null;
 	}
-	
-	public static boolean unegisterWorld(ResourceLocation worldLoc)
-	{
-		//XXX
-		return false;
+
+	public static void unloadWorld(ResourceLocation dimId) {
+		// I don't think worlds can be unloaded anymore
+		
+		//minecraftServer.worlds
+		
+		
+		if(isWorldLoaded(dimId))
+		{
+			
+			ServerWorld world = getWorld(dimId);
+			try {
+				world.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			// I'm fully aware I can screw up a lot of things by modifying this mapping
+			ServerLifecycleHooks.getCurrentServer().forgeGetWorldMap().remove(RegistryKey.func_240903_a_(Registry.field_239699_ae_, dimId));
+		}
 	}
 	
-	
-	public static boolean RegisterWorld(ResourceLocation worldLoc, DimensionType type)
+	public static boolean unregisterDimension(ResourceLocation worldLoc)
 	{
-		//XXX
+		// I don't think you can
 		return false;
+	}
+
+
+	public static boolean registerDimension(ResourceLocation worldLoc, DimensionType type, Dimension dim)
+	{
+		
+		if(getDimensionFromIdentifier(worldLoc).isPresent())
+			return false;
+		
+		RegistryKey<DimensionType> dimRegistryKey = RegistryKey.func_240903_a_(Registry.field_239698_ad_, worldLoc);
+		MutableRegistry<DimensionType> mutableregistry = DynamicRegistries.func_239770_b_().func_243612_b(Registry.field_239698_ad_);
+		mutableregistry.register(dimRegistryKey, type, Lifecycle.stable());
+		
+		RegistryKey<Dimension> dimension = RegistryKey.func_240903_a_(Registry.field_239700_af_, worldLoc);
+		
+		SimpleRegistry<Dimension> simpleregistry = ServerLifecycleHooks.getCurrentServer().func_240793_aU_().func_230418_z_().func_236224_e_();
+		
+		simpleregistry.register(dimension, dim, Lifecycle.stable());
+		return true;
 	}
 	public static int getDimensionId(World world)
 	{
@@ -427,14 +473,19 @@ public class ZUtils {
 
 	public static void initDimension(ResourceLocation dimid) {
 		// TODO Auto-generated method stub
-		
+		if(isWorldRegistered(dimid))
+		{
+			RegistryKey<World> registrykey = RegistryKey.func_240903_a_(Registry.field_239699_ae_, dimid);
+			
+			ServerLifecycleHooks.getCurrentServer().forgeGetWorldMap().put(registrykey,getWorld(dimid));
+		}
 	}
-	
+
 	public static Direction rotateAround(Direction a, Direction b)
 	{
 		Vector3f newdir = new Vector3f(a.getDirectionVec().getX(), a.getDirectionVec().getY(), a.getDirectionVec().getZ());
 		newdir.transform(b.getRotation());
-		
+
 		return Direction.getFacingFromVector(newdir.getX(), newdir.getY(), newdir.getZ());
 	}
 }

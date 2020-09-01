@@ -72,7 +72,7 @@ public class ModuleTextBox extends ModuleBase {
 	public void onMouseClicked(GuiModular gui, double x, double y, int button) {
 
 		//Make sure we can focus the textboxes
-		if(offsetX < x && offsetY < y && offsetX + textBox.getAdjustedWidth() > x  && offsetY + textBox.getHeight() > y )
+		if(offsetX < x && offsetY < y && offsetX + textBox.getAdjustedWidth() > x  && offsetY + textBox.func_238483_d_() > y )
 			textBox.setFocused2(true);
 		else
 			textBox.setFocused2(false);
