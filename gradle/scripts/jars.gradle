@@ -32,7 +32,7 @@ ext.sharedManifest = manifest {
                "Git-Hash": gitHash)
 }
 
-task deobfJar(type: Jar) {
+/*task deobfJar(type: Jar) {
      from sourceSets.main.output
      //if project name is BBM-Dev it makes the deobf jar deobf-dev if not its just deobf
      if (project.hasProperty("bambooshortPlanName") && project.getProperty("bambooshortPlanName") == "BBM-Dev") classifier = "deobf-dev"
@@ -43,7 +43,7 @@ task deobfJar(type: Jar) {
         from sharedManifest
     }
      mustRunAfter "jar" 
-}
+}*/
 
 jar {
      //if project has the property BBM-Dev then it appends dev to indicate the dev branch
@@ -57,4 +57,4 @@ jar {
      }
 }
 
-tasks.build.dependsOn deobfJar
+//tasks.build.dependsOn deobfJar

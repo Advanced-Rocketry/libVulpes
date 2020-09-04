@@ -30,9 +30,9 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
-//apply from: "gradle/scripts/getbuildnumber.gradle"
-//apply from: "gradle/scripts/jars.gradle"
-//apply from: "gradle/scripts/version.gradle"
+apply from: "gradle/scripts/getbuildnumber.gradle"
+apply from: "gradle/scripts/jars.gradle"
+apply from: "gradle/scripts/version.gradle"
 
 sourceCompatibility = 8
 targetCompatibility = 8
@@ -48,6 +48,10 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 
 
 def mcversion = '1.16.2'
+
+apply from: "gradle/scripts/getbuildnumber.gradle"
+apply from: "gradle/scripts/jars.gradle"
+apply from: "gradle/scripts/version.gradle"
 minecraft {
 	
         runs {
