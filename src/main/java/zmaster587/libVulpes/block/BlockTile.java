@@ -39,9 +39,10 @@ public class BlockTile extends RotatableBlock {
 	}
 	
 	//MUST be called after construction.  The Tile type doesn't yet exist when the block is contructed
-	public void _setTile(TileEntityType<?> tileClass)
+	public BlockTile _setTile(TileEntityType<?> tileClass)
 	{
 		this.tileClass = tileClass;
+		return this;
 	}
 
 	@Override

@@ -38,7 +38,7 @@ public class BlockMultiblockMachine extends BlockTile {
 
 	
 	
-	public BlockMultiblockMachine(AbstractBlock.Properties property, TileEntityType<?> tileClass,
+	public BlockMultiblockMachine(AbstractBlock.Properties property,
 			int guiId) {
 		super(property, guiId);
 	}

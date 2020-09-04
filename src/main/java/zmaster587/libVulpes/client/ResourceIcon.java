@@ -22,6 +22,26 @@ public class ResourceIcon { //extends TextureAtlasSprite {
 		initSprite( 1, 1, 0, 0, false);*/
 	}
 	
+	public float getMinU()
+	{
+		return 0;
+	}
+	
+	public float getMaxU()
+	{
+		return 1;
+	}
+	
+	public float getMinV()
+	{
+		return 0;
+	}
+	
+	public float getMaxV()
+	{
+		return 1;
+	}
+	
 	public ResourceLocation getResourceLocation() {
 		return location;
 	}
