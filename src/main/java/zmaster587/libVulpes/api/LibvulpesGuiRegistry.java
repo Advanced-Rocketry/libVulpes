@@ -19,11 +19,11 @@ public class LibvulpesGuiRegistry {
 	{
     	CONTAINER_MODULAR_HELD_ITEM = IForgeContainerType.create(ContainerModular::createFromNetworkItem);
     	CONTAINER_MODULAR_TILE = IForgeContainerType.create(ContainerModular::createFromNetworkBlock);
-    	CONTAINER_MODULAR_TILE = IForgeContainerType.create(ContainerModular::createFromEntity);
+    	CONTAINER_MODULAR_ENTITY = IForgeContainerType.create(ContainerModular::createFromEntity);
     	evt.getRegistry().registerAll(
     			CONTAINER_MODULAR_HELD_ITEM.setRegistryName("modular_held_item"), 
     			CONTAINER_MODULAR_TILE.setRegistryName("modular_tile"),
-    			CONTAINER_MODULAR_TILE.setRegistryName("modular_entity"));
+    			CONTAINER_MODULAR_ENTITY.setRegistryName("modular_entity"));
     	
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 			ScreenManager.registerFactory(CONTAINER_MODULAR_HELD_ITEM, GuiModular::new);

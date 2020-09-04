@@ -408,9 +408,9 @@ public class LibVulpes {
 
 	}
 
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public void tick(TickEvent.ServerTickEvent event) {
 		time++;
-	}
+	}*/
 }
 
