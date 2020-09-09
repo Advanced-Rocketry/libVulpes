@@ -1,21 +1,17 @@
 package zmaster587.libVulpes.tile.energy;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.texture.ITickable;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import zmaster587.libVulpes.api.LibVulpesTileEntityTypes;
 import zmaster587.libVulpes.energy.IPower;
 import zmaster587.libVulpes.util.CreativeBattery;
 
-public class TileCreativePowerInput extends TilePlugBase implements IPower, ITickable {
+public class TileCreativePowerInput extends TilePlugBase implements IPower, ITickableTileEntity {
 
 	public TileCreativePowerInput() {
 		super(LibVulpesTileEntityTypes.TILE_CREATIVE_BATTERY);

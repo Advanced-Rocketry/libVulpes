@@ -25,7 +25,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class FxErrorBlock extends SpriteTexturedParticle {
 
 	public static final ResourceLocation icon = new ResourceLocation("libvulpes:textures/fx/x.png");
-	private static final RenderType XRENDER = RenderType.makeType("xRender", DefaultVertexFormats.POSITION_COLOR_TEX_LIGHTMAP, 7, 256, RenderType.State.getBuilder().writeMask(new RenderState.WriteMaskState(true, true)).build(false));
+	private static final RenderType XRENDER = RenderType.makeType("xRender", DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP, 7, 256, RenderType.State.getBuilder().texture(new RenderState.TextureState(icon, false, false)).writeMask(new RenderState.WriteMaskState(true, true)).build(false));
 	   
 
 	public FxErrorBlock(ClientWorld world, double x, double y, double z) {
@@ -71,10 +71,10 @@ public class FxErrorBlock extends SpriteTexturedParticle {
 	      }
 
 	      
-	      float f7 = this.getMinU();
-	      float f8 = this.getMaxU();
-	      float f5 = this.getMinV();
-	      float f6 = this.getMaxV();
+	      float f7 = 0;//this.getMinU();
+	      float f8 = 1;//this.getMaxU();
+	      float f5 = 0;//this.getMinV();
+	      float f6 = 1;//this.getMaxV();
 	      int j = this.getBrightnessForRender(partialTicks);
 	      IRenderTypeBuffer.Impl irendertypebuffer$impl = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
 	      

@@ -27,7 +27,7 @@ public class GuiImageButton extends Button {
 	public boolean visible;
 	public boolean hovered;
 	public boolean enabled;
-	public int x,y, width, height;
+	public int width, height;
 	
 	/**
 	 * 
@@ -43,8 +43,8 @@ public class GuiImageButton extends Button {
 		buttonTexture = location;
 		soundString = "";
 		bgColor = 0xFFFFFFFF;
-		this.x = x;
-		this.y = y;
+		this.field_230690_l_ = x;
+		this.field_230691_m_ = y;
 		this.width = width;
 		this.height = height;
 		//TODO: add exception
@@ -72,13 +72,13 @@ public class GuiImageButton extends Button {
 			sound.play(SimpleSound.master(new SoundEvent(new ResourceLocation("advancedrocketry:" + soundString)), 1.0F));
 	}
 
-	//DrawButton
+	//DrawButtonFG
 	@Override
-	public void func_230431_b_(MatrixStack matrix, int par2, int par3, float p_230431_4_) {
+	public void func_230430_a_(MatrixStack matrix, int par2, int par3, float p_230431_4_) {
 		if (this.visible)
 		{
 			//
-			this.hovered = par2 >= this.x && par3 >= this.y && par2 < this.x + this.width && par3 < this.y + this.height;
+			this.hovered = par2 >= this.field_230690_l_ && par3 >= this.field_230691_m_ && par2 < this.field_230690_l_ + this.width && par3 < this.field_230691_m_ + this.height;
 			// get hover state
 			int hoverState = this.func_230989_a_(this.hovered);
 
@@ -110,17 +110,17 @@ public class GuiImageButton extends Button {
 	        BufferBuilder vertexbuffer = tessellator.getBuffer();
 	        // field_230689_k_ == zlevel
 	        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-	        vertexbuffer.pos(x, y + height, (double)this.field_230689_k_).tex(0, 1).endVertex();
-	        vertexbuffer.pos(x + width, y + height, (double)this.field_230689_k_).tex( 1, 1).endVertex();
-	        vertexbuffer.pos(x + width, y, (double)this.field_230689_k_).tex(1, 0).endVertex();
-	        vertexbuffer.pos(x, y, (double)this.field_230689_k_).tex(0, 0).endVertex();
+	        vertexbuffer.pos(field_230690_l_, field_230691_m_ + height, (double)this.field_230689_k_).tex(0, 1).endVertex();
+	        vertexbuffer.pos(field_230690_l_ + width, field_230691_m_ + height, (double)this.field_230689_k_).tex( 1, 1).endVertex();
+	        vertexbuffer.pos(field_230690_l_ + width, field_230691_m_, (double)this.field_230689_k_).tex(1, 0).endVertex();
+	        vertexbuffer.pos(field_230690_l_, field_230691_m_, (double)this.field_230689_k_).tex(0, 0).endVertex();
 	        tessellator.draw();
 			
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 			GlStateManager.disableBlend();
 			// mousedragged
-			this.func_230430_a_(matrix, (int) par2, (int) par3, 0);
+			//super.func_230430_a_(matrix, (int) par2, (int) par3, 0);
 		}
 	}
 }

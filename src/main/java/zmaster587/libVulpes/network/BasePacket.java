@@ -13,6 +13,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import zmaster587.libVulpes.util.ZUtils;
 
 public abstract class BasePacket {
 
@@ -26,25 +27,14 @@ public abstract class BasePacket {
 
 	public static void writeWorld(PacketBuffer out, World world)
 	{
-		out.writeResourceLocation(world.func_234923_W_().getRegistryName());
+		out.writeResourceLocation(world.func_234923_W_().func_240901_a_());
 	}
 
 	public static World readWorld(PacketBuffer in)
 	{
+		
 		ResourceLocation worldRegisteryResourceLocation = in.readResourceLocation();
-		RegistryKey<World> worldReg = null;
-		for(RegistryKey<World> key : ServerLifecycleHooks.getCurrentServer().func_240770_D_())
-		{
-			if(key.getRegistryName() == worldRegisteryResourceLocation)
-			{
-				worldReg = key;
-				break;
-			}
-		}
-
-		World world = ServerLifecycleHooks.getCurrentServer().getWorld(worldReg);
-
-		return world;
+		return ZUtils.getWorld(worldRegisteryResourceLocation);
 	}
 
 	protected abstract void write(PacketBuffer out);

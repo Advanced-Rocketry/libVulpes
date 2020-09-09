@@ -5,6 +5,7 @@ import zmaster587.libVulpes.api.LibVulpesItems;
 import zmaster587.libVulpes.common.CommonProxy;
 import zmaster587.libVulpes.entity.fx.FxErrorBlock;
 import zmaster587.libVulpes.network.BasePacket;
+import zmaster587.libVulpes.util.ScrollHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ITickableSound;
 import net.minecraft.client.resources.I18n;
@@ -17,6 +18,12 @@ import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
+	ScrollHelper scrollHelper;
+	
+	public ClientProxy() {
+		scrollHelper = new ScrollHelper();
+	}
+	
 	@Override
 	public String getLocalizedString(String str) {
 		return I18n.format(str);
@@ -35,6 +42,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerEventHandlers() {
 		MinecraftForge.EVENT_BUS.register(LibVulpesItems.itemHoloProjector);
+		MinecraftForge.EVENT_BUS.register(scrollHelper);
 	}
 	
 	@Override
@@ -99,5 +107,11 @@ public class ClientProxy extends CommonProxy {
 	public void playSound(World worldObj, BlockPos pos, SoundEvent event, SoundCategory cat, float volume, float pitch) {
 		worldObj.playSound(Minecraft.getInstance().player, pos, event, SoundCategory.BLOCKS, Minecraft.getInstance().gameSettings.getSoundLevel(cat)*volume,  0.975f + worldObj.rand.nextFloat()*0.05f);
 		
+	}
+	
+	@Override
+	public double getScrollDelta()
+	{
+		return scrollHelper.getScrollDelta();
 	}
 }

@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.api;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 
 public class LibVulpesItems {
@@ -9,7 +10,10 @@ public class LibVulpesItems {
 	public static Item itemHoloProjector;
 	public static Item itemLinker;
 	public static Item[] itemOreProduct;
-	public static Item itemHatch;
+	public static Item itemItemOutputHatch;
+	public static Item itemFluidOutputHatch;
+	public static Item itemItemInputHatch;
+	public static Item itemFluidInputHatch;
 	public static Item itemAdvStructureBlock;
 	public static Item itemStructureBlock;
 	public static Item itemCreativeInputPlug;

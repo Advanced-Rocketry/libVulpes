@@ -13,6 +13,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
@@ -162,8 +163,8 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 						int globalX = basepos.x - x*direction.getZOffset() + z*direction.getXOffset();
 						int globalZ = basepos.z + (x* direction.getXOffset()) + (z*direction.getZOffset());
 						BlockPos pos = new BlockPos(globalX, basepos.y + y, globalZ);
-						if(world.getBlockState(pos).getBlock() == LibVulpesBlocks.blockPhantom) 
-							world.setBlockState(pos, Blocks.AIR.getDefaultState());
+						if(world.getBlockState(pos).getBlock() == LibVulpesBlocks.blockPhantom)
+							world.removeBlock(pos, false);
 					}
 				}
 			}
@@ -212,9 +213,9 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 					int globalY = -y + structure.length + posY - 1;
 					BlockPos pos = new BlockPos(globalX, globalY, globalZ);
 
-					if((world.isAirBlock(pos) /*|| world.getBlockState(pos).getBlock().isReplaceable(world, pos)*/) &&  block.get(0).getBlock() != Blocks.AIR) {
+					if((world.isAirBlock(pos) || world.getBlockState(pos).isReplaceable(Fluids.WATER))  &&  block.get(0).getBlock() != Blocks.AIR) {
 
-						world.setBlockState(pos, block.get(0).getBlockState());
+						world.setBlockState(pos, LibVulpesBlocks.blockPhantom.getDefaultState());
 						TileEntity newTile = world.getTileEntity(pos);
 
 						//TODO: compatibility fixes with the tile entity not reflecting current block
@@ -328,6 +329,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<ModuleBase>(), TextureResources.starryBG, 160, 100, 0, 500);
 		modules.add(panningContainer);
+		//modules.addAll(btns);
 		return modules;
 	}
 

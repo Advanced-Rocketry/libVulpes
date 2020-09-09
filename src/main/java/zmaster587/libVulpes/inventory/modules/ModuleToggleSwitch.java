@@ -18,7 +18,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class ModuleToggleSwitch extends ModuleButton {
 
 
-	GuiToggleButtonImage enabledButton;
 	boolean currentState, prevState;
 	IToggleButton tile;
 	boolean enabled = true;
@@ -58,17 +57,20 @@ public class ModuleToggleSwitch extends ModuleButton {
 
 		List<Button> list = new LinkedList<Button>();
 
-		enabledButton = new GuiToggleButtonImage(x + offsetX, y + offsetY, sizeX, sizeY, buttonImages);
-		enabledButton.setState(currentState);
+		button = new GuiToggleButtonImage(x + offsetX, y + offsetY, sizeX, sizeY, buttonImages);
+		((GuiToggleButtonImage)button).setState(currentState);
+		
+		button.visible = visible;
+		button.enabled = enabled;
 
-		list.add(enabledButton);
+		list.add(button);
 
 		return list;
 	}
 
 	@OnlyIn(value=Dist.CLIENT)
 	public void actionPerform(Button button) {
-		if(enabled && button == enabledButton) {
+		if(enabled && button == this.button) {
 			this.currentState = !this.currentState;
 			this.tile.onInventoryButtonPressed(this);
 		}
@@ -105,13 +107,13 @@ public class ModuleToggleSwitch extends ModuleButton {
 	}
 	
 	public boolean isButton(Button button) {
-		return button == this.enabledButton;
+		return button == this.button;
 	}
 
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
 	public void renderBackground(ContainerScreen<? extends Container> gui, MatrixStack mat, int x, int y, int mouseX, int mouseY, FontRenderer font) {
 		super.renderBackground(gui, mat, x, y, mouseX, mouseY, font);
-		enabledButton.setState(currentState);
+		((GuiToggleButtonImage)button).setState(currentState);
 	}
 }

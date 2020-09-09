@@ -13,6 +13,7 @@ import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisible;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockStructure;
+import zmaster587.libVulpes.block.multiblock.IHidableBlock;
 import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.tile.TileSchematic;
@@ -232,7 +233,11 @@ public class TileMultiBlock extends TileEntity {
 		if(block instanceof BlockMultiblockStructure) {
 			((BlockMultiblockStructure)block).destroyStructure(world, destroyedPos, world.getBlockState(destroyedPos));
 		}
-
+		
+		if(block instanceof IHidableBlock) {
+			((IHidableBlock)block).showBlock(world, destroyedPos, world.getBlockState(destroyedPos));
+		}
+		
 		//If the the tile is a placeholder then make sure to replace it with its original block and tile
 		if(tile instanceof TilePlaceholder && !(tile instanceof TileSchematic)) {
 			TilePlaceholder placeholder = (TilePlaceholder)tile;
@@ -402,9 +407,9 @@ public class TileMultiBlock extends TileEntity {
 						if(tile instanceof IMultiblock)
 							((IMultiblock)tile).setComplete(globalPos);
 					}
-					else if(block instanceof BlockMultiblockStructure) {
+					else if(block instanceof IHidableBlock) {
 						if(shouldHideBlock(world, globalPos, blockState))
-							((BlockMultiblockStructure)block).hideBlock(world, globalPos, blockState);
+							((IHidableBlock)block).hideBlock(world, globalPos, blockState);
 					}
 
 					if(structure[y][z][x] != null && !block.isAir(blockState, world, globalPos) && !(tile instanceof IMultiblock) && !(tile instanceof TileMultiBlock)) {
@@ -438,7 +443,14 @@ public class TileMultiBlock extends TileEntity {
 			return charMapping.get((Character)input);
 		}
 		else if(input instanceof String) { //OreDict entry
-			return BlockTags.getCollection().get(new ResourceLocation((String)input)).func_230236_b_().stream().map(value -> new BlockMeta(value.getDefaultState())).collect(Collectors.toList());
+			if(BlockTags.getCollection().getRegisteredTags().contains(new ResourceLocation((String)input)))
+				return BlockTags.getCollection().get(new ResourceLocation((String)input)).func_230236_b_().stream().map(value -> new BlockMeta(value.getDefaultState())).collect(Collectors.toList());
+			LibVulpes.logger.warn(String.format("No ore dictionary entry for '%s' in machine %s", input, getMachineName()));
+		}
+		else if(input instanceof ResourceLocation) { //OreDict entry
+			if(BlockTags.getCollection().getRegisteredTags().contains((ResourceLocation)input))
+				return BlockTags.getCollection().get((ResourceLocation)input).func_230236_b_().stream().map(value -> new BlockMeta(value.getDefaultState())).collect(Collectors.toList());
+			LibVulpes.logger.warn(String.format("No ore dictionary entry for '%s' in machine %s", input,  getMachineName()));
 		}
 		else if(input instanceof Block) {
 			List<BlockMeta> list = new ArrayList<BlockMeta>();

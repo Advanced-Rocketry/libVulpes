@@ -11,6 +11,7 @@ import java.util.Random;
 import com.mojang.serialization.Lifecycle;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.DimensionRenderInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
@@ -30,8 +31,12 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.SimpleRegistry;
 import net.minecraft.world.Dimension;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -385,9 +390,10 @@ public class ZUtils {
 	// public static final RegistryKey<Registry<World>> field_239699_ae_ = func_239741_a_("dimension");
 	// public static final RegistryKey<Registry<Dimension>> field_239700_af_ = func_239741_a_("dimension");
 
-	public static ResourceLocation getDimensionIdentifier(World world)
+	public static ResourceLocation getDimensionIdentifier(IWorld world)
 	{
-		return DynamicRegistries.func_239770_b_().func_230520_a_().getKey(getDimensionType(world));
+		return getDimensionType(world).func_242725_p();
+
 	}
 
 	public static Optional<DimensionType> getDimensionFromIdentifier(ResourceLocation location)
@@ -395,7 +401,7 @@ public class ZUtils {
 		return DynamicRegistries.func_239770_b_().func_230520_a_().func_241873_b(location);
 	}
 
-	public static DimensionType getDimensionType(World world)
+	public static DimensionType getDimensionType(IWorld world)
 	{
 		return world.func_230315_m_();
 	}
@@ -416,32 +422,34 @@ public class ZUtils {
 
 	public static boolean isWorldRegistered(ResourceLocation worldLoc)
 	{
-		RegistryKey<World> registrykey = RegistryKey.func_240903_a_(Registry.field_239699_ae_, worldLoc);
+		// TODO: be more robust
+		MutableRegistry<DimensionType> mutableregistry = DynamicRegistries.func_239770_b_().func_243612_b(Registry.field_239698_ad_);
 
-		return registrykey != null;
+
+		return mutableregistry.containsKey(worldLoc);
 	}
 
 	public static void unloadWorld(ResourceLocation dimId) {
 		// I don't think worlds can be unloaded anymore
-		
+
 		//minecraftServer.worlds
-		
-		
+
+
 		if(isWorldLoaded(dimId))
 		{
-			
+
 			ServerWorld world = getWorld(dimId);
 			try {
 				world.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
+
 			// I'm fully aware I can screw up a lot of things by modifying this mapping
-			ServerLifecycleHooks.getCurrentServer().forgeGetWorldMap().remove(RegistryKey.func_240903_a_(Registry.field_239699_ae_, dimId));
+			//ServerLifecycleHooks.getCurrentServer().forgeGetWorldMap().remove(RegistryKey.func_240903_a_(Registry.field_239699_ae_, dimId));
 		}
 	}
-	
+
 	public static boolean unregisterDimension(ResourceLocation worldLoc)
 	{
 		// I don't think you can
@@ -451,19 +459,36 @@ public class ZUtils {
 
 	public static boolean registerDimension(ResourceLocation worldLoc, DimensionType type, Dimension dim)
 	{
-		
+
 		if(getDimensionFromIdentifier(worldLoc).isPresent())
 			return false;
-		
+
 		RegistryKey<DimensionType> dimRegistryKey = RegistryKey.func_240903_a_(Registry.field_239698_ad_, worldLoc);
 		MutableRegistry<DimensionType> mutableregistry = DynamicRegistries.func_239770_b_().func_243612_b(Registry.field_239698_ad_);
 		mutableregistry.register(dimRegistryKey, type, Lifecycle.stable());
+
+		//RegistryKey<Dimension> dimension = RegistryKey.func_240903_a_(Registry.field_239700_af_, worldLoc);
+		//SimpleRegistry<Dimension> simpleregistry = ServerLifecycleHooks.getCurrentServer().func_240793_aU_().func_230418_z_().func_236224_e_();
+		//simpleregistry.register(dimension, dim, Lifecycle.stable());
 		
-		RegistryKey<Dimension> dimension = RegistryKey.func_240903_a_(Registry.field_239700_af_, worldLoc);
 		
-		SimpleRegistry<Dimension> simpleregistry = ServerLifecycleHooks.getCurrentServer().func_240793_aU_().func_230418_z_().func_236224_e_();
 		
-		simpleregistry.register(dimension, dim, Lifecycle.stable());
+		// register the world
+		/*RegistryKey<World> registrykey = RegistryKey.func_240903_a_(Registry.field_239699_ae_, worldLoc);
+		
+		if(EffectiveSide.get().isClient())
+			DistExecutor.runWhenOn(Dist.CLIENT,() -> () -> 
+			{
+				if(Minecraft.getInstance().player ==null) return;
+				
+				Minecraft.getInstance().player.connection.func_239164_m_().add(registrykey);
+			});
+		else
+		{
+			new ServerWorld(p_i241885_1_, p_i241885_2_, p_i241885_3_, p_i241885_4_, p_i241885_5_, p_i241885_6_, p_i241885_7_, p_i241885_8_, p_i241885_9_, p_i241885_10_, p_i241885_12_, p_i241885_13_)
+			ServerLifecycleHooks.getCurrentServer().forgeGetWorldMap().put(registrykey,getWorld(worldLoc));
+		}*/
+
 		return true;
 	}
 	public static int getDimensionId(World world)
@@ -472,13 +497,12 @@ public class ZUtils {
 	}
 
 	public static void initDimension(ResourceLocation dimid) {
-		// TODO Auto-generated method stub
-		if(isWorldRegistered(dimid))
+		/*if(isWorldRegistered(dimid))
 		{
 			RegistryKey<World> registrykey = RegistryKey.func_240903_a_(Registry.field_239699_ae_, dimid);
-			
+
 			ServerLifecycleHooks.getCurrentServer().forgeGetWorldMap().put(registrykey,getWorld(dimid));
-		}
+		}*/
 	}
 
 	public static Direction rotateAround(Direction a, Direction b)

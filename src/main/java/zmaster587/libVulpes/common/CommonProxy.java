@@ -55,4 +55,8 @@ public class CommonProxy {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public double getScrollDelta() {
+		return 0;
+	}
 }

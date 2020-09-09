@@ -17,6 +17,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -27,6 +30,8 @@ import net.minecraft.world.World;
  */
 public class BlockMultiblockPlaceHolder extends ContainerBlock {
 
+	VoxelShape almostFull = VoxelShapes.create(0.0001, 0.0001, 0.0001, 0.9999, 0.9999, 0.9999);
+	
 	public BlockMultiblockPlaceHolder() {
 		super(Properties.create(Material.IRON).hardnessAndResistance(1f));
 	}
@@ -36,6 +41,16 @@ public class BlockMultiblockPlaceHolder extends ContainerBlock {
 		return true;
 	}
 	
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+		return almostFull;
+	}
+	
+	@Override
+		public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
+				ISelectionContext context) {
+			return VoxelShapes.fullCube();
+		}
 
 	@Override
 	public boolean hasTileEntity(BlockState state) {

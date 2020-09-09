@@ -23,12 +23,12 @@ public class GuiItemToggleButton extends GuiToggleButtonImage {
 	}
 	
 	@Override
-	public void func_230431_b_(MatrixStack matrix, int par2, int par3, float p_230431_4_)
+	public void func_230430_a_(MatrixStack matrix, int par2, int par3, float p_230431_4_)
 	{
 		if (this.visible)
 		{
 			//
-			this.hovered = par2 >= this.x && par3 >= this.y && par2 < this.x + this.width && par3 < this.y + this.height;
+			this.hovered = par2 >= this.field_230690_l_ && par3 >= this.field_230691_m_ && par2 < this.field_230690_l_ + this.width && par3 < this.field_230691_m_ + this.height;
 			
 			//Only display the hover icon if a pressed icon is found and the mouse is hovered
 			if(hovered && (buttonTexture.length > 2 && buttonTexture[2] != null ))
@@ -54,14 +54,14 @@ public class GuiItemToggleButton extends GuiToggleButtonImage {
 	        BufferBuilder vertexbuffer = tessellator.getBuffer();
 	        // field_230689_k_ == zlevel
 	        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-	        vertexbuffer.pos(x, y + height, (double)this.field_230689_k_).tex(0, 1).endVertex();
-	        vertexbuffer.pos(x + width, y + height, (double)this.field_230689_k_).tex( 1, 1).endVertex();
-	        vertexbuffer.pos(x + width, y, (double)this.field_230689_k_).tex(1, 0).endVertex();
-	        vertexbuffer.pos(x, y, (double)this.field_230689_k_).tex(0, 0).endVertex();
+	        vertexbuffer.pos(field_230690_l_, field_230691_m_ + height, (double)this.field_230689_k_).tex(0, 1).endVertex();
+	        vertexbuffer.pos(field_230690_l_ + width, field_230691_m_ + height, (double)this.field_230689_k_).tex( 1, 1).endVertex();
+	        vertexbuffer.pos(field_230690_l_ + width, field_230691_m_, (double)this.field_230689_k_).tex(1, 0).endVertex();
+	        vertexbuffer.pos(field_230690_l_, field_230691_m_, (double)this.field_230689_k_).tex(0, 0).endVertex();
 	        tessellator.draw();
 			
 			// mousedragged
-			this.func_230430_a_(matrix, (int) par2, (int) par3, 0);
+			//this.func_230430_a_(matrix, (int) par2, (int) par3, 0);
 		}
 	}
 }

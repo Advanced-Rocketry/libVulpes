@@ -1,16 +1,18 @@
 package zmaster587.libVulpes.recipe;
 
+import net.minecraft.util.ResourceLocation;
+
 public class NumberedOreDictStack {
 
-	String ore;
+	ResourceLocation ore;
 	int number;
 	
-	public NumberedOreDictStack(String ore, int number) {
+	public NumberedOreDictStack(ResourceLocation ore, int number) {
 		this.ore = ore;
 		this.number = number;
 	}
 	
-	public String getOre() {
+	public ResourceLocation getOre() {
 		return ore;
 	}
 	
@@ -20,6 +22,6 @@ public class NumberedOreDictStack {
 	
 	@Override
 	public String toString() {
-		return ore + "x" + number;
+		return ore.toString() + "x" + number;
 	}
 }

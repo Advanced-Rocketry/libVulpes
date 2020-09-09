@@ -68,7 +68,7 @@ public class TileSchematic extends TilePlaceholder implements ITickableTileEntit
 		if(!blockIds.isEmpty()) {
 			Integer[] bufferSpace1 = new Integer[blockIds.size()];
 			nbt.putIntArray("blockIds", ArrayUtils.toPrimitive(blockIds.toArray(bufferSpace1)));
-			nbt.putIntArray("blockWild", ArrayUtils.toPrimitive(blockIds.toArray(bufferSpace1)));
+			nbt.putIntArray("blockWild", ArrayUtils.toPrimitive(wildCard.toArray(bufferSpace1)));
 		}
 
 		return nbt;
@@ -81,7 +81,7 @@ public class TileSchematic extends TilePlaceholder implements ITickableTileEntit
 
 		if(nbt.contains("blockIds")) {
 			int[] block = nbt.getIntArray("blockIds");
-			int[] metas = nbt.getIntArray("blockMetas");
+			int[] metas = nbt.getIntArray("blockWild");
 			possibleBlocks.clear();
 
 			for(int i = 0; i < block.length; i++) {

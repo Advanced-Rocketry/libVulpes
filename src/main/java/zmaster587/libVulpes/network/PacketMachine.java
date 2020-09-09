@@ -39,7 +39,6 @@ public class PacketMachine extends BasePacket {
 	public void write(PacketBuffer outline) {
 		// dimension
 		BasePacket.writeWorld(outline, ((TileEntity)machine).getWorld());
-		outline.writeInt(ZUtils.getDimensionId(((TileEntity)machine).getWorld()));
 		outline.writeInt(((TileEntity)machine).getPos().getX());
 		outline.writeInt(((TileEntity)machine).getPos().getY());
 		outline.writeInt(((TileEntity)machine).getPos().getZ());

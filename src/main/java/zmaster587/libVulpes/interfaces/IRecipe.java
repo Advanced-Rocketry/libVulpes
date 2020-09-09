@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import zmaster587.libVulpes.recipe.RecipesMachine.ChanceFluidStack;
 import zmaster587.libVulpes.recipe.RecipesMachine.ChanceItemStack;
@@ -21,7 +22,7 @@ public interface IRecipe extends net.minecraft.item.crafting.IRecipe<IInventory>
 	
 	public int getPower();
 	
-	public String getOreDictString(int slot);
+	public ResourceLocation getOreDictString(int slot);
 
 	List<ChanceItemStack> _getRawOutput();
 	List<ChanceFluidStack> _getRawFluidOutput();

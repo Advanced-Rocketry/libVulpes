@@ -105,7 +105,7 @@ public class PacketEntity extends BasePacket {
 		//DEBUG:
 		World world;
 
-		buffer.readInt();
+		readWorld(in);
 		world = Minecraft.getInstance().world;
 
 

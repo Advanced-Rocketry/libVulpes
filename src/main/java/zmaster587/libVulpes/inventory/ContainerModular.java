@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -52,8 +53,15 @@ public class ContainerModular extends Container {
 	
 	public static ContainerModular createFromEntity(int windowId, PlayerInventory invPlayer, PacketBuffer buf)
 	{
-		//TODO:
-		return null;
+		Entity tile = GuiHandler.getEntityFromBuf(buf);
+		IModularInventory modularItem = (IModularInventory)tile;
+		int ID = modularItem.getModularInvType();
+		
+		boolean includePlayerInv = GuiHandler.doesIncludePlayerInv(ID);
+		boolean includeHotBar = GuiHandler.doesIncludeHotBar(ID);
+		
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, windowId, invPlayer.player, modularItem.getModules(ID, invPlayer.player), modularItem, includePlayerInv, includeHotBar);
+	
 	}
 	
 	public ContainerModular(@Nullable ContainerType<?> type, int id, PlayerEntity playerInv, List<ModuleBase> modules, IModularInventory modulularInv)

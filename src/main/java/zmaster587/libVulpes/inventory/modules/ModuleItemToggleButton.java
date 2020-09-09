@@ -31,10 +31,10 @@ public class ModuleItemToggleButton extends ModuleToggleSwitch {
 
 		List<Button> list = new LinkedList<Button>();
 
-		enabledButton = new GuiToggleButtonImage(x + offsetX, y + offsetY, sizeX, sizeY, buttonImages);
-		enabledButton.setState(currentState);
+		button = new GuiToggleButtonImage(x + offsetX, y + offsetY, sizeX, sizeY, buttonImages);
+		((GuiToggleButtonImage)button).setState(currentState);
 
-		list.add(enabledButton);
+		list.add(button);
 
 		return list;
 	}

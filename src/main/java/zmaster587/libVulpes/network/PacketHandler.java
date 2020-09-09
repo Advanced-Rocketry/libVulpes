@@ -17,11 +17,14 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import zmaster587.libVulpes.network.PacketHandler.EncapsulatingPacket;
 import zmaster587.libVulpes.util.ZUtils;
 
 public class PacketHandler {
@@ -52,6 +55,7 @@ public class PacketHandler {
 		INSTANCE.addDiscriminator(PacketEntity.class);
 		INSTANCE.addDiscriminator(PacketItemModifcation.class);
 		INSTANCE.addDiscriminator(PacketMachine.class);
+		INSTANCE.addDiscriminator(PacketSpawnEntity.class);
 	}
 	
 	
@@ -87,7 +91,11 @@ public class PacketHandler {
 				e.printStackTrace();
 				return null;
 			}
-			DistExecutor.runForDist(() -> () -> {pkt.readClient(buf); return 0;} , () -> () -> {pkt.read(buf); return 0;});
+			
+			if(EffectiveSide.get() == LogicalSide.CLIENT)
+				pkt.readClient(buf);
+			else
+				pkt.read(buf);
 
 			return new EncapsulatingPacket(pkt);
 		}
@@ -96,10 +104,10 @@ public class PacketHandler {
 		{
 			public static void handle(EncapsulatingPacket msg, Supplier<NetworkEvent.Context> ctx)
 			{
-				if(ctx.get().getDirection().getReceptionSide().isServer())
-					ctx.get().enqueueWork(() -> msg.basePacket.executeServer(ctx.get().getSender()));
-				else
+				if(EffectiveSide.get() == LogicalSide.CLIENT)
 					ctx.get().enqueueWork(() -> msg.basePacket.executeClient(Minecraft.getInstance().player));
+				else
+					ctx.get().enqueueWork(() -> msg.basePacket.executeServer(ctx.get().getSender()));
 
 				ctx.get().setPacketHandled(true);
 
@@ -116,8 +124,9 @@ public class PacketHandler {
 		return packetList.indexOf(id);
 	}
     
-    public static final void sendToServer(Object msg)
+    public static final void sendToServer(BasePacket pkt)
     {
+    	Object msg = new EncapsulatingPacket(pkt);
     	HANDLER.sendToServer(msg);
     }
     
@@ -137,11 +146,13 @@ public class PacketHandler {
 	}
 
 	public static final void sendToPlayer(BasePacket pkt, PlayerEntity player) {
-		HANDLER.sendTo(pkt, ((ServerPlayerEntity)player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+		Object msg = new EncapsulatingPacket(pkt);
+		HANDLER.sendTo(msg, ((ServerPlayerEntity)player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
 	}
 
 	public static final void sendToDispatcher(BasePacket pkt, NetworkManager netman) {
-		HANDLER.sendTo(pkt, netman, NetworkDirection.PLAY_TO_CLIENT);
+		Object msg = new EncapsulatingPacket(pkt);
+		HANDLER.sendTo(msg, netman, NetworkDirection.PLAY_TO_CLIENT);
 	}
 
 	@Deprecated

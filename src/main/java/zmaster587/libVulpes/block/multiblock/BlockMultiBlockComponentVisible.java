@@ -17,12 +17,12 @@ public class BlockMultiBlockComponentVisible extends BlockMultiblockStructure {
 
 	@Override
 	public boolean hasTileEntity(BlockState state) {
-		return state.get(VARIANT) > 7;
+		return state.get(VISIBLE);
 	}
 	
 	@Override
 	public void completeStructure(World world, BlockPos pos, BlockState state) {
-		world.setBlockState(pos, state.with(VARIANT, state.get(VARIANT) | 8));
+		world.setBlockState(pos, state.with(VISIBLE, true));
 	}
 	
 	@Override

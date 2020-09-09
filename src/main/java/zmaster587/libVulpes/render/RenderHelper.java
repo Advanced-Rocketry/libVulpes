@@ -2,6 +2,7 @@ package zmaster587.libVulpes.render;
 
 import org.lwjgl.opengl.GL11;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -12,13 +13,18 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderState;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderType.State;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.RenderState.WriteMaskState;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector4f;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -34,6 +40,47 @@ public class RenderHelper {
 		RenderSystem.defaultBlendFunc();
 	});
 
+	protected static final RenderState.TransparencyState NO_TRANSPARENCY = new RenderState.TransparencyState("no_transparency", () -> {
+		RenderSystem.disableBlend();
+	}, () -> {
+	});
+
+	protected static final RenderState.TransparencyState TRANSLUCENT_TRANSPARENCY = new RenderState.TransparencyState("translucent_transparency", () -> {
+		RenderSystem.enableBlend();
+		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+	}, () -> {
+		RenderSystem.disableBlend();
+		RenderSystem.defaultBlendFunc();
+	});
+
+	protected static final RenderState.TransparencyState TRANSPARENT_TRANSPARENCY = new RenderState.TransparencyState("translucent_transparency", () -> {
+		RenderSystem.enableBlend();
+		RenderSystem.color4f(1, 1, 1, 0.5f);
+		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+	}, () -> {
+		RenderSystem.disableBlend();
+		RenderSystem.defaultBlendFunc();
+		RenderSystem.color4f(1, 1, 1, 1f);
+	});
+
+	protected static final RenderState.AlphaState DEFAULT_ALPHA = new RenderState.AlphaState(0.003921569F);
+	protected static final RenderState.LightmapState LIGHTMAP_ENABLED = new RenderState.LightmapState(true);
+	protected static final RenderState.LightmapState LIGHTMAP_DISABLED = new RenderState.LightmapState(false);
+	protected static final RenderState.OverlayState OVERLAY_ENABLED = new RenderState.OverlayState(true);
+	protected static final RenderState.OverlayState OVERLAY_DISABLED = new RenderState.OverlayState(false);
+	protected static final RenderState.DiffuseLightingState DIFFUSE_LIGHTING_ENABLED = new RenderState.DiffuseLightingState(true);
+	protected static final RenderState.DiffuseLightingState DIFFUSE_LIGHTING_DISABLED = new RenderState.DiffuseLightingState(false);
+	protected static final RenderState.CullState CULL_ENABLED = new RenderState.CullState(true);
+	protected static final RenderState.CullState CULL_DISABLED = new RenderState.CullState(false);
+	protected static final RenderState.DepthTestState DEPTH_ALWAYS = new RenderState.DepthTestState("always", 519);
+	protected static final RenderState.DepthTestState DEPTH_EQUAL = new RenderState.DepthTestState("==", 514);
+	protected static final RenderState.DepthTestState DEPTH_LEQUAL = new RenderState.DepthTestState("<=", 515);
+	protected static final RenderState.WriteMaskState COLOR_DEPTH_WRITE = new RenderState.WriteMaskState(true, true);
+	protected static final RenderState.WriteMaskState COLOR_WRITE = new RenderState.WriteMaskState(true, false);
+	protected static final RenderState.WriteMaskState DEPTH_WRITE = new RenderState.WriteMaskState(false, true);
+	protected static final RenderState.LayerState NO_LAYERING = new RenderState.LayerState("no_layering", () -> {
+	}, () -> {
+	});
 	protected static final RenderState.WriteMaskState COLOR_ONLY = new WriteMaskState(true, false);
 
 	protected static final RenderState.TargetState TRANSLUCENT_TARGET = new RenderState.TargetState("translucent_target", () -> {
@@ -48,45 +95,61 @@ public class RenderHelper {
 
 	});
 
+
 	protected static final RenderState.ShadeModelState SHADE_DISABLED = new RenderState.ShadeModelState(false);
 	protected static final RenderState.ShadeModelState SHADE_ENABLED = new RenderState.ShadeModelState(true);
 
-	private static final RenderType SEMI_TRANSLUCENT = RenderType.makeType("coloredTranslucent", DefaultVertexFormats.POSITION_COLOR, 7, 256, false, true, RenderType.State.getBuilder().writeMask(COLOR_ONLY).transparency(LIGHTNING_TRANSPARENCY).target(TRANSLUCENT_TARGET).shadeModel(SHADE_DISABLED).build(false));
+	private static final RenderType SEMI_TRANSLUCENT = RenderType.makeType("coloredTranslucent", DefaultVertexFormats.POSITION_COLOR, GL11.GL_TRIANGLES, 256, false, true, RenderType.State.getBuilder().writeMask(COLOR_ONLY).transparency(LIGHTNING_TRANSPARENCY).target(TRANSLUCENT_TARGET).shadeModel(SHADE_DISABLED).build(true));
 
+
+	private static final VertexFormat POS_TEX_NORMAL = new VertexFormat(ImmutableList.<VertexFormatElement>builder().add(DefaultVertexFormats.POSITION_3F).add(DefaultVertexFormats.TEX_2F).add(DefaultVertexFormats.NORMAL_3B).add(DefaultVertexFormats.PADDING_1B).build());
+	private static final VertexFormat POS_NORMAL = new VertexFormat(ImmutableList.<VertexFormatElement>builder().add(DefaultVertexFormats.POSITION_3F).add(DefaultVertexFormats.NORMAL_3B).add(DefaultVertexFormats.PADDING_1B).build());
+
+	protected static final RenderState.TextureState BLOCK_SHEET_MIPPED = new RenderState.TextureState(AtlasTexture.LOCATION_BLOCKS_TEXTURE, false, true);
+	private static final RenderType TRANSLUCENTBLOCK = RenderType.makeType("translucent_custom", DefaultVertexFormats.BLOCK, 7, 262144, true, true, getTranslucentState());
+
+
+	private static RenderType.State getTranslucentState()
+	{
+		return RenderType.State.getBuilder().shadeModel(SHADE_ENABLED).lightmap(LIGHTMAP_ENABLED).texture(BLOCK_SHEET_MIPPED).transparency(LIGHTNING_TRANSPARENCY).target(TRANSLUCENT_TARGET).build(true);
+	}
 
 	public static final RenderType getSolidEntityModelRenderType(ResourceLocation tex)
 	{
-		return RenderType.getEntitySolid(tex);
+		RenderType.State rendertype$state = RenderType.State.getBuilder().texture(new RenderState.TextureState(tex, false, false)).transparency(NO_TRANSPARENCY).diffuseLighting(DIFFUSE_LIGHTING_ENABLED).lightmap(LIGHTMAP_ENABLED).overlay(OVERLAY_ENABLED).build(true);
+		return RenderType.makeType("entity_custom_solid",  DefaultVertexFormats.ENTITY, GL11.GL_TRIANGLES, 256, true, false, rendertype$state);
 	}
 
 	public static final RenderType getTranslucentEntityModelRenderType(ResourceLocation tex)
 	{
-		return RenderType.getEntityTranslucent(tex);
+		RenderType.State rendertype$state = RenderType.State.getBuilder().texture(new RenderState.TextureState(tex, false, false)).transparency(TRANSLUCENT_TRANSPARENCY).diffuseLighting(DIFFUSE_LIGHTING_ENABLED).alpha(DEFAULT_ALPHA).cull(CULL_DISABLED).lightmap(LIGHTMAP_ENABLED).overlay(OVERLAY_ENABLED).build(true);
+		return RenderType.makeType("entity_custom_translucent", DefaultVertexFormats.ENTITY, GL11.GL_TRIANGLES, 256, true, true, rendertype$state);
 	}
 
 	public static final RenderType getTranslucentManualRenderType()
 	{
-		return SEMI_TRANSLUCENT;
+		RenderType.State rendertype$state = RenderType.State.getBuilder().transparency(TRANSLUCENT_TRANSPARENCY).diffuseLighting(DIFFUSE_LIGHTING_ENABLED).alpha(DEFAULT_ALPHA).cull(CULL_DISABLED).lightmap(LIGHTMAP_ENABLED).overlay(OVERLAY_ENABLED).build(true);
+		return RenderType.makeType("coloredTranslucent", DefaultVertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, true, true, rendertype$state);
 	}
 
 	public static final RenderType getSolidManualRenderType()
 	{
-		return SEMI_TRANSLUCENT;
+		return RenderType.makeType("coloredTranslucent", DefaultVertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, true, true, RenderType.State.getBuilder().transparency(LIGHTNING_TRANSPARENCY).target(TRANSLUCENT_TARGET).shadeModel(SHADE_DISABLED).build(true));
 	}
 
 	public static RenderType getTranslucentTexturedManualRenderType(ResourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		RenderType.State rendertype$state = RenderType.State.getBuilder().texture(new RenderState.TextureState(location, false, false)).alpha(DEFAULT_ALPHA).transparency(LIGHTNING_TRANSPARENCY).diffuseLighting(DIFFUSE_LIGHTING_ENABLED).lightmap(LIGHTMAP_ENABLED).overlay(OVERLAY_DISABLED).build(true);
+		return RenderType.makeType("manual_tex_translucent", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, true, false, rendertype$state);
 	}
 
 	public static RenderType getSolidTexturedManualRenderType(ResourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		RenderType.State rendertype$state = RenderType.State.getBuilder().texture(new RenderState.TextureState(location, false, false)).transparency(NO_TRANSPARENCY).diffuseLighting(DIFFUSE_LIGHTING_ENABLED).lightmap(LIGHTMAP_ENABLED).overlay(OVERLAY_DISABLED).build(true);
+		return RenderType.makeType("manual_tex_solid", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, true, false, rendertype$state);
 	}
 
 	public static RenderType getTranslucentColoredManualRenderType(ResourceLocation location, float r, float g, float b, float a) {
-		// TODO Auto-generated method stub
-		return null;
+		RenderType.State rendertype$state = RenderType.State.getBuilder().texture(new RenderState.TextureState(location, false, false)).transparency(LIGHTNING_TRANSPARENCY).diffuseLighting(DIFFUSE_LIGHTING_ENABLED).lightmap(LIGHTMAP_ENABLED).overlay(OVERLAY_ENABLED).build(true);
+		return RenderType.makeType("manual_col_translucent", DefaultVertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, true, false, rendertype$state);
 	}
 
 	public static RenderType getLaserBeamType() {
@@ -106,7 +169,7 @@ public class RenderHelper {
 
 	public static RenderType getTranslucentBlock()
 	{
-		return RenderType.getTranslucent();
+		return TRANSLUCENTBLOCK;
 	}
 
 	/**
@@ -267,9 +330,6 @@ public class RenderHelper {
         return flag;
     }*/
 
-	public static void renderTag(MatrixStack mat, IRenderTypeBuffer buffer, double distanceSq, String displayString, int packedLightIn, int sizeOnScreen) {
-		renderTag(mat, buffer, distanceSq, displayString, packedLightIn, 1);
-	}
 
 	public static void renderTag(MatrixStack matrix, IRenderTypeBuffer buffer, double distanceSq, String displayString, int packedLightIn, float scale) {
 		double d3 = distanceSq;
@@ -288,7 +348,7 @@ public class RenderHelper {
 			int j = (int)(f1 * 255.0F) << 24;
 			FontRenderer fontrenderer = Minecraft.getInstance().fontRenderer;
 			float f3 = (float)(-fontrenderer.func_238414_a_(new StringTextComponent(displayString)) / 2);
-			fontrenderer.func_243247_a(new StringTextComponent(displayString), f3, (float)0, 553648127, false, matrix4f, buffer, false, j, packedLightIn);
+			fontrenderer.func_243247_a(new StringTextComponent(displayString), f3, (float)0, 0x20ffffff, false, matrix4f, buffer, false, j, packedLightIn);
 
 			matrix.pop();
 		}
@@ -312,214 +372,499 @@ public class RenderHelper {
 		GL11.glPopMatrix();
 	}
 
-	public static void renderBlockWithEndPointers(IVertexBuilder buff, double radius, double x1, double y1, double z1, double x2, double y2, double z2, float r, float g, float b, float a) {
+	public static void renderBlockWithEndPointers(MatrixStack matrix, IVertexBuilder buff, double radius, double x1, double y1, double z1, double x2, double y2, double z2, float r, float g, float b, float a) {
 		double buffer;
-		renderBottomFaceEndpoints(buff, radius, x1, y1 - radius/2d, z1, x2, y2 - radius/2d, z2, r,g,b,a);
-		renderTopFaceEndpoints(buff, radius, x1, y1 + radius/2d, z1, x2, y2 + radius/2d, z2, r,g,b,a);
-		renderNorthFaceEndpoints(buff, radius, x1, y1, z1 + radius/2d, x2, y2, z2 + radius/2d, r,g,b,a);
-		renderSouthFaceEndpoints(buff, radius, x1, y1, z1 - radius/2d, x2, y2, z2 - radius/2d, r,g,b,a);
-		renderEastFaceEndpoints(buff, radius, x1 + radius/2d, y1, z1, x2 + radius/2d, y2, z2, r,g,b,a);
-		renderWestFaceEndpoints(buff, radius, x1 - radius/2d, y1, z1, x2 - radius/2d, y2, z2, r,g,b,a);
+		renderBottomFaceEndpoints(matrix, buff, radius, x1, y1 - radius/2d, z1, x2, y2 - radius/2d, z2, r,g,b,a);
+		renderTopFaceEndpoints(matrix, buff, radius, x1, y1 + radius/2d, z1, x2, y2 + radius/2d, z2, r,g,b,a);
+		renderNorthFaceEndpoints(matrix, buff, radius, x1, y1, z1 + radius/2d, x2, y2, z2 + radius/2d, r,g,b,a);
+		renderSouthFaceEndpoints(matrix, buff, radius, x1, y1, z1 - radius/2d, x2, y2, z2 - radius/2d, r,g,b,a);
+		renderEastFaceEndpoints(matrix, buff, radius, x1 + radius/2d, y1, z1, x2 + radius/2d, y2, z2, r,g,b,a);
+		renderWestFaceEndpoints(matrix, buff, radius, x1 - radius/2d, y1, z1, x2 - radius/2d, y2, z2, r,g,b,a);
 	}
 
-	public static void renderCrossXZ(IVertexBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float r, float g, float b, float a) {
-		renderTopFaceEndpoints(buff, width, xMin, yMin, zMin, xMax, yMax, zMax, r,g,b,a);
-		renderBottomFaceEndpoints(buff, width, xMin, yMin, zMin, xMax, yMax, zMax, r,g,b,a);
-		renderNorthFaceEndpoints(buff, width, xMin, yMin, zMin, xMax, yMax, zMax, r,g,b,a);
-		renderSouthFaceEndpoints(buff, width, xMin, yMin, zMin, xMax, yMax, zMax, r,g,b,a);
+	public static void renderCrossXZ(MatrixStack matrix, IVertexBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float r, float g, float b, float a) {
+		renderTopFaceEndpoints(matrix, buff, width, xMin, yMin, zMin, xMax, yMax, zMax, r,g,b,a);
+		renderBottomFaceEndpoints(matrix, buff, width, xMin, yMin, zMin, xMax, yMax, zMax, r,g,b,a);
+		renderNorthFaceEndpoints(matrix, buff, width, xMin, yMin, zMin, xMax, yMax, zMax, r,g,b,a);
+		renderSouthFaceEndpoints(matrix, buff, width, xMin, yMin, zMin, xMax, yMax, zMax, r,g,b,a);
 	}
 
-	public static void renderTopFace(IVertexBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax) 
+	public static void renderTopFace(MatrixStack matrix, IVertexBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax) 
 	{
-		renderTopFace(buff, yMax, xMin, zMin, xMax, zMax,1,1,1,1);
+		renderTopFace(matrix, buff, yMax, xMin, zMin, xMax, zMax,1,1,1,1);
 	}
-	public static void renderTopFace(IVertexBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, float r, float g, float b, float a) {
+	public static void renderTopFace(MatrixStack matrix, IVertexBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, float r, float g, float b, float a) {
+		Matrix4f matrix4f = matrix.getLast().getMatrix();
+		Vector4f vector4f;
+		vector4f = new Vector4f((float)xMin, (float)yMax, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+
 		//top
-		buff.pos(xMin, yMax, zMin).color(a,g,b,a).endVertex();
-		buff.pos(xMin, yMax, zMax).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMax, zMax).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMax, zMin).color(a,g,b,a).endVertex();
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+
+		vector4f = new Vector4f((float)xMin, (float)yMax, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
 
 	}
 
-	public static void renderTopFaceEndpoints(IVertexBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float r, float g, float b, float a) {
+	public static void renderTopFaceEndpoints(MatrixStack matrix, IVertexBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float r, float g, float b, float a) {
+		Matrix4f matrix4f = matrix.getLast().getMatrix();
+		Vector4f vector4f;
+		vector4f = new Vector4f((float)xMin, (float)yMin, (float)(zMin - width), 1.0F);
+		vector4f.transform(matrix4f);
+
 		//top
-		buff.pos(xMin, yMin, zMin - width).color(a,g,b,a).endVertex();
-		buff.pos(xMin, yMin, zMin + width).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMax, zMax + width).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMax, zMax - width).color(a,g,b,a).endVertex();
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)yMin, (float)(zMin + width), 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)(zMax + width), 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)(zMax - width), 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
 
 	}
 
-	public static void renderBottomFace(IVertexBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, float r, float g, float b, float a) {
-		//bottom
-		buff.pos(xMax, yMax, zMin).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMax, zMax).color(a,g,b,a).endVertex();
-		buff.pos(xMin, yMax, zMax).color(a,g,b,a).endVertex();
-		buff.pos(xMin, yMax, zMin).color(a,g,b,a).endVertex();
+	public static void renderBottomFace(MatrixStack matrix, IVertexBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, float r, float g, float b, float a) {
+		Matrix4f matrix4f = matrix.getLast().getMatrix();                                                                                                                                                              
+		Vector4f vector4f;                                                                                                                                                                                             
+		                                                                                                                                                                                                               
+		//bottom                                                                                                                                                                                                       
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)zMin, 1.0F);                                                                                                                                          
+		vector4f.transform(matrix4f);                                                                                                                                                                                  
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();                                                                                                                        
+		                                                                                                                                                                                                               
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)zMax, 1.0F);                                                                                                                                          
+		vector4f.transform(matrix4f);                                                                                                                                                                                  
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();                                                                                                                        
+
+		vector4f = new Vector4f((float)xMin, (float)yMax, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)yMax, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+
+
 	}
 
-	public static void renderBottomFaceEndpoints(IVertexBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float r, float g, float b, float a) {
+	public static void renderBottomFaceEndpoints(MatrixStack matrix, IVertexBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float r, float g, float b, float a) {
+		Matrix4f matrix4f = matrix.getLast().getMatrix();
+		Vector4f vector4f;
+
 		//top
-		buff.pos(xMin, yMin, zMin + width).color(a,g,b,a).endVertex();
-		buff.pos(xMin, yMin, zMin - width).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMax, zMax - width).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMax, zMax + width).color(a,g,b,a).endVertex();
+		vector4f = new Vector4f((float)xMin, (float)yMin, (float)(zMin + width), 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)yMin, (float)(zMin - width), 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)(zMax - width), 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)(zMax + width), 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
 	}	
 
-	public static void renderNorthFace(IVertexBuilder buff, double zMin, double xMin, double yMin, double xMax, double yMax, float r, float g, float b, float a) {
+	public static void renderNorthFace(MatrixStack matrix, IVertexBuilder buff, double zMin, double xMin, double yMin, double xMax, double yMax, float r, float g, float b, float a) {
+		Matrix4f matrix4f = matrix.getLast().getMatrix();
+		Vector4f vector4f;
+
 		//north
-		buff.pos(xMin, yMax, zMin).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMax, zMin).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMin, zMin).color(a,g,b,a).endVertex();
-		buff.pos(xMin, yMin, zMin).color(a,g,b,a).endVertex();
+		vector4f = new Vector4f((float)xMin, (float)yMax, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMin, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)yMin, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
 	}
 
-	public static void renderNorthFaceEndpoints(IVertexBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float r, float g, float b, float a) {
+	public static void renderNorthFaceEndpoints(MatrixStack matrix, IVertexBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float r, float g, float b, float a) {
+		Matrix4f matrix4f = matrix.getLast().getMatrix();
+		Vector4f vector4f;
+
 		//north
-		buff.pos(xMin, yMin + width, zMin).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMax + width, zMax).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMax - width, zMax).color(a,g,b,a).endVertex();
-		buff.pos(xMin, yMin - width, zMin).color(a,g,b,a).endVertex();
+		vector4f = new Vector4f((float)xMin, (float)(yMin + width), (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)(yMax + width), (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)(yMax - width), (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)(yMin - width), (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
 	}
 
-	public static void renderSouthFace(IVertexBuilder buff, double zMax, double xMin, double yMin, double xMax, double yMax, float r, float g, float b, float a) {
+	public static void renderSouthFace(MatrixStack matrix, IVertexBuilder buff, double zMax, double xMin, double yMin, double xMax, double yMax, float r, float g, float b, float a) {
+		Matrix4f matrix4f = matrix.getLast().getMatrix();
+		Vector4f vector4f;
+
 		//south
-		buff.pos(xMin, yMax, zMax).color(a,g,b,a).endVertex();
-		buff.pos(xMin, yMin, zMax).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMin, zMax).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMax, zMax).color(a,g,b,a).endVertex();
+		vector4f = new Vector4f((float)xMin, (float)yMax, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)yMin, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMin, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
 	}
 
-	public static void renderSouthFaceEndpoints(IVertexBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float r, float g, float b, float a) {
+	public static void renderSouthFaceEndpoints(MatrixStack matrix, IVertexBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float r, float g, float b, float a) {
+		Matrix4f matrix4f = matrix.getLast().getMatrix();
+		Vector4f vector4f;
+
 		//south
-		buff.pos(xMin, yMin + width, zMin).color(a,g,b,a).endVertex();
-		buff.pos(xMin, yMin - width, zMin).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMax - width, zMax).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMax + width, zMax).color(a,g,b,a).endVertex();
+		vector4f = new Vector4f((float)xMin, (float)(yMin + width), (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)(yMin - width), (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)(yMax - width), (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)(yMax + width), (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
 	}
 
-	public static void renderEastFace(IVertexBuilder buff, double xMax, double yMin, double zMin, double yMax, double zMax, float r, float g, float b, float a) {
+	public static void renderEastFace(MatrixStack matrix, IVertexBuilder buff, double xMax, double yMin, double zMin, double yMax, double zMax, float r, float g, float b, float a) {
+		Matrix4f matrix4f = matrix.getLast().getMatrix();
+		Vector4f vector4f;
+
 		//east
-		buff.pos(xMax, yMax, zMin).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMax, zMax).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMin, zMax).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMin, zMin).color(a,g,b,a).endVertex();
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMin, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMin, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
 	}
 
 
-	public static void renderEastFaceEndpoints(IVertexBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float r, float g, float b, float a) {
+	public static void renderEastFaceEndpoints(MatrixStack matrix, IVertexBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float r, float g, float b, float a) {
+		Matrix4f matrix4f = matrix.getLast().getMatrix();
+		Vector4f vector4f;
+
 		//east
-		buff.pos(xMax, yMax + width, zMin).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMax - width, zMax).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMin - width, zMax).color(a,g,b,a).endVertex();
-		buff.pos(xMax, yMin + width, zMin).color(a,g,b,a).endVertex();
+		vector4f = new Vector4f((float)xMax, (float)(yMax + width), (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)(yMax - width), (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)(yMin - width), (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)(yMin + width), (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
 	}
 
-	public static void renderWestFace(IVertexBuilder buff, double xMin, double yMin, double zMin, double yMax, double zMax, float r, float g, float b, float a) {
+	public static void renderWestFace(MatrixStack matrix, IVertexBuilder buff, double xMin, double yMin, double zMin, double yMax, double zMax, float r, float g, float b, float a) {
+		Matrix4f matrix4f = matrix.getLast().getMatrix();
+		Vector4f vector4f;
+
 		//west
-		buff.pos(xMin, yMin, zMin).color(a,g,b,a).endVertex();
-		buff.pos(xMin, yMin, zMax).color(a,g,b,a).endVertex();
-		buff.pos(xMin, yMax, zMax).color(a,g,b,a).endVertex();
-		buff.pos(xMin, yMax, zMin).color(a,g,b,a).endVertex();
+		vector4f = new Vector4f((float)xMin, (float)yMin, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)yMin, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)yMax, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)yMax, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
 	}
 
-	public static void renderWestFaceEndpoints(IVertexBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float r, float g, float b, float a) {
+	public static void renderWestFaceEndpoints(MatrixStack matrix, IVertexBuilder buff, double width, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float r, float g, float b, float a) {
+		Matrix4f matrix4f = matrix.getLast().getMatrix();
+		Vector4f vector4f;
+
 		//west
-		buff.pos(xMin, yMin + width, zMin).color(a,g,b,a).endVertex();
-		buff.pos(xMin, yMin - width, zMax).color(a,g,b,a).endVertex();
-		buff.pos(xMin, yMax - width, zMax).color(a,g,b,a).endVertex();
-		buff.pos(xMin, yMax + width, zMin).color(a,g,b,a).endVertex();
+		vector4f = new Vector4f((float)xMin, (float)(yMin + width), (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)(yMin - width), (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)(yMax - width), (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)(yMax + width), (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r,g,b,a).endVertex();
+
 	}
 
-	public static void renderTopFaceWithUV(IVertexBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, float uMin, float uMax, float vMin, float vMax)
+	public static void renderTopFaceWithUV(MatrixStack matrix, IVertexBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, float uMin, float uMax, float vMin, float vMax)
 	{
-		renderTopFaceWithUV(buff, yMax, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax, 1,1,1,1);
+		renderTopFaceWithUV(matrix, buff, yMax, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax, 1,1,1,1);
 	}
-	public static void renderTopFaceWithUV(IVertexBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
+	public static void renderTopFaceWithUV(MatrixStack matrix, IVertexBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
+		Matrix4f matrix4f = matrix.getLast().getMatrix();
+		Vector4f vector4f;
+
 		//top
-		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
-		buff.pos(xMin, yMax, zMax).tex(uMin, vMax).endVertex();
-		buff.pos(xMax, yMax, zMax).tex(uMax, vMax).endVertex();
-		buff.pos(xMax, yMax, zMin).tex(uMax, vMin).endVertex();
+		vector4f = new Vector4f((float)xMin, (float)yMax, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMin, vMin).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)yMax, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMin, vMax).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMax, vMax).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMax, vMin).endVertex();
+
 
 
 	}
 
-	public static void renderBottomFaceWithUV(IVertexBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
+	public static void renderBottomFaceWithUV(MatrixStack matrix, IVertexBuilder buff, double yMax, double xMin, double zMin, double xMax, double zMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
+		Matrix4f matrix4f = matrix.getLast().getMatrix();
+		Vector4f vector4f;
+
 		//bottom
 
-		buff.pos(xMax, yMax, zMax).tex(uMax, vMax).endVertex();
-		buff.pos(xMin, yMax, zMax).tex(uMin, vMax).endVertex();
-		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
-		buff.pos(xMax, yMax, zMin).tex(uMax, vMin).endVertex();
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMax, vMax).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)yMax, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMin, vMax).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)yMax, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMin, vMin).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMax, vMin).endVertex();
+
 
 	}
 
-	public static void renderNorthFaceWithUV(IVertexBuilder buff, double zMin, double xMin, double yMin, double xMax, double yMax, float uMin, float uMax, float vMin, float vMax)
+	public static void renderNorthFaceWithUV(MatrixStack matrix, IVertexBuilder buff, double zMin, double xMin, double yMin, double xMax, double yMax, float uMin, float uMax, float vMin, float vMax)
 	{
-		renderNorthFaceWithUV(buff, zMin, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax,1,1,1,1);
-	}
-	
-	public static void renderNorthFaceWithUV(IVertexBuilder buff, double zMin, double xMin, double yMin, double xMax, double yMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
-		//north
-		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
-		buff.pos(xMax, yMax, zMin).tex(uMax, vMin).endVertex();
-		buff.pos(xMax, yMin, zMin).tex(uMax, vMax).endVertex();
-		buff.pos(xMin, yMin, zMin).tex(uMin, vMax).endVertex();
+		renderNorthFaceWithUV(matrix, buff, zMin, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax,1,1,1,1);
 	}
 
-	public static void renderNorthFaceWithUVNoNormal(IVertexBuilder buff, double zMin, double xMin, double yMin, double xMax, double yMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
+	public static void renderNorthFaceWithUV(MatrixStack matrix, IVertexBuilder buff, double zMin, double xMin, double yMin, double xMax, double yMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
+		Matrix4f matrix4f = matrix.getLast().getMatrix();
+		Vector4f vector4f;
+
 		//north
-		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
-		buff.pos(xMax, yMax, zMin).tex(uMax, vMin).endVertex();
-		buff.pos(xMax, yMin, zMin).tex(uMax, vMax).endVertex();
-		buff.pos(xMin, yMin, zMin).tex(uMin, vMax).endVertex();
+		vector4f = new Vector4f((float)xMin, (float)yMax, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMin, vMin).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMax, vMin).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMin, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMax, vMax).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)yMin, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMin, vMax).endVertex();
+
 	}
 
-	public static void renderSouthFaceWithUV(IVertexBuilder buff, double zMax, double xMin, double yMin, double xMax, double yMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
+	public static void renderNorthFaceWithUVNoNormal(MatrixStack matrix, IVertexBuilder buff, double zMin, double xMin, double yMin, double xMax, double yMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
+		Matrix4f matrix4f = matrix.getLast().getMatrix();
+		Vector4f vector4f;
+
+		//north
+		vector4f = new Vector4f((float)xMin, (float)yMax, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMin, vMin).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMax, vMin).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMin, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMax, vMax).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)yMin, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMin, vMax).endVertex();
+
+	}
+
+	public static void renderSouthFaceWithUV(MatrixStack matrix, IVertexBuilder buff, double zMax, double xMin, double yMin, double xMax, double yMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
+		Matrix4f matrix4f = matrix.getLast().getMatrix();
+		Vector4f vector4f;
+
 		//south
-		buff.pos(xMin, yMax, zMax).tex(uMin, vMin).endVertex();
-		buff.pos(xMin, yMin, zMax).tex(uMin, vMax).endVertex();
-		buff.pos(xMax, yMin, zMax).tex(uMax, vMax).endVertex();
-		buff.pos(xMax, yMax, zMax).tex(uMax, vMin).endVertex();
+		vector4f = new Vector4f((float)xMin, (float)yMax, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMin, vMin).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)yMin, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMin, vMax).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMin, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMax, vMax).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMax, vMin).endVertex();
+
 	}
 
-	public static void renderEastFaceWithUV(IVertexBuilder buff, double xMax, double yMin, double zMin, double yMax, double zMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
+	public static void renderEastFaceWithUV(MatrixStack matrix, IVertexBuilder buff, double xMax, double yMin, double zMin, double yMax, double zMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
+		Matrix4f matrix4f = matrix.getLast().getMatrix();
+		Vector4f vector4f;
+
 		//east
-		buff.pos(xMax, yMax, zMin).tex(uMin, vMin).endVertex();
-		buff.pos(xMax, yMax, zMax).tex(uMax, vMin).endVertex();
-		buff.pos(xMax, yMin, zMax).tex(uMax, vMax).endVertex();
-		buff.pos(xMax, yMin, zMin).tex(uMin, vMax).endVertex();
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMin, vMin).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMax, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMax, vMin).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMin, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMax, vMax).endVertex();
+
+		vector4f = new Vector4f((float)xMax, (float)yMin, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMin, vMax).endVertex();
 	}
 
 
-	public static void renderWestFaceWithUV(IVertexBuilder buff, double xMin, double yMin, double zMin, double yMax, double zMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
+	public static void renderWestFaceWithUV(MatrixStack matrix, IVertexBuilder buff, double xMin, double yMin, double zMin, double yMax, double zMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
+		Matrix4f matrix4f = matrix.getLast().getMatrix();
+		Vector4f vector4f;
+
 		//west
-		buff.pos(xMin, yMin, zMin).tex(uMin, vMax).endVertex();
-		buff.pos(xMin, yMin, zMax).tex(uMax, vMax).endVertex();
-		buff.pos(xMin, yMax, zMax).tex(uMax, vMin).endVertex();
-		buff.pos(xMin, yMax, zMin).tex(uMin, vMin).endVertex();
+		vector4f = new Vector4f((float)xMin, (float)yMin, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMin, vMax).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)yMin, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMax, vMax).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)yMax, (float)zMax, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMax, vMin).endVertex();
+
+		vector4f = new Vector4f((float)xMin, (float)yMax, (float)zMin, 1.0F);
+		vector4f.transform(matrix4f);
+		buff.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).color(r, g, b, a).tex(uMin, vMin).endVertex();
+
 	}
 
-	public static void renderCubeWithUV(IVertexBuilder buff, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
+	public static void renderCubeWithUV(MatrixStack matrix, IVertexBuilder buff, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float uMin, float uMax, float vMin, float vMax, float r, float g, float b, float a) {
 
 
-		renderTopFaceWithUV(buff, yMax, xMin, zMin, xMax, zMax, uMin, uMax,vMin, vMax, r,g,b,a);
-		renderNorthFaceWithUV(buff, zMin, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax, r,g,b,a);
-		renderSouthFaceWithUV(buff, zMax, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax, r,g,b,a);
-		renderEastFaceWithUV(buff, xMax, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax, r,g,b,a);
-		renderWestFaceWithUV(buff, xMin, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax, r,g,b,a);
-		renderBottomFaceWithUV(buff, yMin, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax, r,g,b,a);
+		renderTopFaceWithUV(matrix, buff, yMax, xMin, zMin, xMax, zMax, uMin, uMax,vMin, vMax, r,g,b,a);
+		renderNorthFaceWithUV(matrix, buff, zMin, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax, r,g,b,a);
+		renderSouthFaceWithUV(matrix, buff, zMax, xMin, yMin, xMax, yMax, uMin, uMax, vMin, vMax, r,g,b,a);
+		renderEastFaceWithUV(matrix, buff, xMax, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax, r,g,b,a);
+		renderWestFaceWithUV(matrix, buff, xMin, yMin, zMin, yMax, zMax, uMin, uMax, vMin, vMax, r,g,b,a);
+		renderBottomFaceWithUV(matrix, buff, yMin, xMin, zMin, xMax, zMax, uMin, uMax, vMin, vMax, r,g,b,a);
 	}
 
-	public static void renderCube(IVertexBuilder buff, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float r, float g, float b, float a) {
-		renderTopFace(buff, yMax, xMin, zMin, xMax, zMax,r,g,b,a);
-		renderNorthFace(buff, zMin, xMin, yMin, xMax, yMax,r,g,b,a);
-		renderSouthFace(buff, zMax, xMin, yMin, xMax, yMax,r,g,b,a);
-		renderEastFace(buff, xMax, yMin, zMin, yMax, zMax,r,g,b,a);
-		renderWestFace(buff, xMin, yMin, zMin, yMax, zMax,r,g,b,a);
-		renderBottomFace(buff, yMin, xMin, zMin, xMax, zMax,r,g,b,a);
+	public static void renderCube(MatrixStack matrix, IVertexBuilder buff, double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, float r, float g, float b, float a) {
+		renderTopFace(matrix, buff, yMax, xMin, zMin, xMax, zMax,r,g,b,a);
+		renderNorthFace(matrix, buff, zMin, xMin, yMin, xMax, yMax,r,g,b,a);
+		renderSouthFace(matrix, buff, zMax, xMin, yMin, xMax, yMax,r,g,b,a);
+		renderEastFace(matrix, buff, xMax, yMin, zMin, yMax, zMax,r,g,b,a);
+		renderWestFace(matrix, buff, xMin, yMin, zMin, yMax, zMax,r,g,b,a);
+		renderBottomFace(matrix, buff, yMin, xMin, zMin, xMax, zMax,r,g,b,a);
 	}
 
 	/*public static void renderItem(TileEntity tile, ItemStack itemstack, ItemRenderer dummyItem)

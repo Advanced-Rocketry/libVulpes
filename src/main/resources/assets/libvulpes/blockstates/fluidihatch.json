@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "visible=true": { "model": "libvulpes:block/fluidinputhatch" },
+        "visible=false": { "model": "libvulpes:block/fluidinputhatch" }
+    }
+}

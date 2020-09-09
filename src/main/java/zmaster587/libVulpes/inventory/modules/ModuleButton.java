@@ -15,6 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 import zmaster587.libVulpes.gui.GuiImageButton;
 import zmaster587.libVulpes.inventory.ContainerModular;
+import zmaster587.libVulpes.inventory.GuiModular;
 
 public class ModuleButton extends ModuleBase {
 
@@ -73,12 +74,12 @@ public class ModuleButton extends ModuleBase {
 		additionalData = data;
 		return this;
 	}
-	
+
 	public Object getAdditionalData()
 	{
 		return additionalData;
 	}
-	
+
 	/*public ModuleButtton(int offsetX, int offsetY, int buttonId, String text, IButtonInventory tile, IconResource buttonImage) {
 
 		this(offsetX, offsetY, buttonId, text, tile, new Re);
@@ -106,7 +107,7 @@ public class ModuleButton extends ModuleBase {
 	public void setText(String text) {
 		this.text = text;
 	}
-	
+
 	public void setToolTipText(String text){
 		tooltipText = text;
 	}
@@ -134,9 +135,9 @@ public class ModuleButton extends ModuleBase {
 	}
 
 	public void setBGColor(int color) {
-		
-			this.bgColor = color;
-			if(button != null)
+
+		this.bgColor = color;
+		if(button != null)
 			button.setBackgroundColor(this.bgColor);
 	}
 
@@ -184,6 +185,7 @@ public class ModuleButton extends ModuleBase {
 		button = new GuiImageButton(x + offsetX, y + offsetY, sizeX, sizeY, buttonImages);
 
 		button.visible = visible;
+		button.enabled = enabled;
 
 		if(!sound.isEmpty()) {
 			button.setSound(sound);
@@ -198,7 +200,7 @@ public class ModuleButton extends ModuleBase {
 
 	@OnlyIn(value=Dist.CLIENT)
 	public void actionPerform(Button button) {
-		if(enabled && button == this.button) {
+		if(enabled && button != null && button == this.button) {
 			tile.onInventoryButtonPressed(this);
 		}
 	}
@@ -215,23 +217,25 @@ public class ModuleButton extends ModuleBase {
 	public void renderForeground(MatrixStack mat, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel,
 			ContainerScreen<? extends Container> gui, FontRenderer font) {
 
-		//if(visible) {
-		
-		// RenderCenteredString
-		gui.func_238476_c_(mat, font, text, offsetX + sizeX / 2, offsetY + sizeY / 2  - font.FONT_HEIGHT/2, color);
-		
-		if(tooltipText != null) {
+		if(visible) {
 
-			if( isMouseOver(mouseX, mouseY) ) {
-				List<String> list = new LinkedList<String>();
-				for(String str : tooltipText.split("\n")) {
+			// RenderCenteredString
+			gui.func_238476_c_(mat, font, text, offsetX + sizeX / 2, offsetY + sizeY / 2  - font.FONT_HEIGHT/2, color);
 
-					list.add(str);
+			if(tooltipText != null) {
 
+				if( isMouseOver(mouseX, mouseY) ) {
+					List<String> list = new LinkedList<String>();
+					for(String str : tooltipText.split("\n")) {
+
+						list.add(str);
+
+					}
+					this.drawTooltip((ContainerScreen<Container>) gui, mat, list, mouseX, mouseY, zLevel, font);
 				}
-				this.drawTooltip((ContainerScreen<Container>) gui, mat, list, mouseX, mouseY, zLevel, font);
 			}
-			//}
 		}
+
+
 	}
 }

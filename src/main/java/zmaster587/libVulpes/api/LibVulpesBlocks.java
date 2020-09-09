@@ -10,7 +10,6 @@ import net.minecraftforge.registries.GameData;
 public class LibVulpesBlocks {
 	public static final Set<Block> blocks = new HashSet<>();
 
-	public static Block blockHatch;
 	public static Block blockItemOutputHatch;
 	public static Block blockFluidOutputHatch;
 	public static Block blockItemInputHatch;

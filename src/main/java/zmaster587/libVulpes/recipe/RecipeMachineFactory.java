@@ -82,7 +82,7 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		timeTaken = buffer.readInt();
 		maxOutput = buffer.readInt();
 		
-		RecipesMachine.Recipe recipe = new RecipesMachine.Recipe(this, context, outputs, inputs, outputFluids, inputFluids, timeTaken, energy, new HashMap<Integer, String>());
+		RecipesMachine.Recipe recipe = new RecipesMachine.Recipe(this, context, outputs, inputs, outputFluids, inputFluids, timeTaken, energy, new HashMap<Integer, ResourceLocation>());
 		
 		if(maxOutput > 0)
 			recipe.setMaxOutputSize(maxOutput);
@@ -193,7 +193,7 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 			throw new JsonParseException("Missing parameters");
 		}
 		
-		RecipesMachine.Recipe recipe = new RecipesMachine.Recipe(this, context, outputs, inputs, outputFluids, inputFluids, timeTaken, energy, new HashMap<Integer, String>());
+		RecipesMachine.Recipe recipe = new RecipesMachine.Recipe(this, context, outputs, inputs, outputFluids, inputFluids, timeTaken, energy, new HashMap<Integer, ResourceLocation>());
 		
 		if(maxOutput > 0)
 			recipe.setMaxOutputSize(maxOutput);

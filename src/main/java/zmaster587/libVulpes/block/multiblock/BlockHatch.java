@@ -2,9 +2,6 @@ package zmaster587.libVulpes.block.multiblock;
 
 import java.util.Random;
 
-import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
-import zmaster587.libVulpes.tile.multiblock.hatch.TileInputHatch;
-import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,20 +10,20 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class BlockHatch extends BlockMultiblockStructure {
 
+	protected TileEntityType<?> tileClass;
 	private final Random random = new Random();
-
 	public BlockHatch(Properties properties) {
 		super(properties);
 	}
@@ -37,23 +34,18 @@ public class BlockHatch extends BlockMultiblockStructure {
 		return true;
 	}
 	
+	//MUST be called after construction.  The Tile type doesn't yet exist when the block is contructed
+	public BlockHatch _setTile(TileEntityType<?> tileClass)
+	{
+		this.tileClass = tileClass;
+		return this;
+	}
 
+	
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		//TODO: multiple sized Hatches
-		int metadata = state.get(VARIANT);
-		if((metadata & 7) == 0)
-			return new TileInputHatch(4);
-		else if((metadata & 7) == 1)
-			return new TileOutputHatch(4);
-		else if((metadata & 7) == 2)
-			return new TileFluidHatch(false);	
-		else if((metadata & 7) == 3)
-			return new TileFluidHatch(true);	
-
-		return null;
+		return tileClass.create();
 	}
-	
 	
 
 	@Override
@@ -88,15 +80,14 @@ public class BlockHatch extends BlockMultiblockStructure {
 	public boolean isSideInvisible(BlockState blockState, BlockState adjacentBlockState,
 			Direction direction) {
 
-		return (blockState.get(VARIANT) >= 8);
+		return (!blockState.get(VISIBLE));
 
 	}
 	
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,
 			Hand handIn, BlockRayTraceResult hit) {
-		int meta = world.getBlockState(pos).get(VARIANT);
-		if((meta & 7) < 8  && !world.isRemote)
+		if(!world.isRemote)
 		{
 			
 			TileEntity te = world.getTileEntity(pos);

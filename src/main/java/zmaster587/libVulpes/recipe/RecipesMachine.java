@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.annotation.Resource;
+
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.tile.TileEntityMachine;
@@ -51,7 +53,7 @@ public class RecipesMachine {
 	public static class Recipe implements IRecipe {
 
 		private List<List<ItemStack>> input;
-		private Map<Integer, String> inputOreDict;
+		private Map<Integer, ResourceLocation> inputOreDict;
 		private LinkedList<FluidStack> fluidInput;
 		private LinkedList<ChanceItemStack> output;
 		private LinkedList<ChanceFluidStack> fluidOutput;
@@ -62,7 +64,7 @@ public class RecipesMachine {
 
 		public Recipe() {}
 
-		public Recipe(IRecipeSerializer<?> serializer, ResourceLocation name, List<ChanceItemStack> output, List<List<ItemStack>> input, int completionTime, int powerReq, Map<Integer, String> oreDict) {
+		public Recipe(IRecipeSerializer<?> serializer, ResourceLocation name, List<ChanceItemStack> output, List<List<ItemStack>> input, int completionTime, int powerReq, Map<Integer, ResourceLocation> oreDict) {
 			this.output = new LinkedList<ChanceItemStack>();
 			this.output.addAll(output);
 
@@ -83,7 +85,7 @@ public class RecipesMachine {
 			this.name = name;
 		}
 
-		public Recipe(IRecipeSerializer<?> serializer, ResourceLocation name, List<ChanceItemStack> output, List<List<ItemStack>> input, List<ChanceFluidStack> fluidOutput, List<FluidStack> fluidInput, int completionTime, int powerReq, Map<Integer, String> oreDict) {
+		public Recipe(IRecipeSerializer<?> serializer, ResourceLocation name, List<ChanceItemStack> output, List<List<ItemStack>> input, List<ChanceFluidStack> fluidOutput, List<FluidStack> fluidInput, int completionTime, int powerReq, Map<Integer, ResourceLocation> oreDict) {
 			this(serializer, name, output, input, completionTime, powerReq, oreDict);
 
 			this.fluidInput.addAll(fluidInput);
@@ -104,7 +106,7 @@ public class RecipesMachine {
 			return input;
 		}
 		
-		public String getOreDictString(int slot) { return inputOreDict == null ? null : inputOreDict.get(slot); }
+		public ResourceLocation getOreDictString(int slot) { return inputOreDict == null ? null : inputOreDict.get(slot); }
 
 		@Override
 		public List<FluidStack> getFluidIngredients() {
@@ -281,7 +283,7 @@ public class RecipesMachine {
 			recipeList.put(clazz,recipes);
 		}
 
-		Map<Integer, String> oreDict = new HashMap<Integer, String>();
+		Map<Integer, ResourceLocation> oreDict = new HashMap<Integer, ResourceLocation>();
 		LinkedList<List<ItemStack>> stack = new LinkedList<List<ItemStack>>();
 
 		ArrayList<FluidStack> inputFluidStacks = new ArrayList<FluidStack>();
@@ -291,8 +293,18 @@ public class RecipesMachine {
 				LinkedList<ItemStack> innerList = new LinkedList<ItemStack>();
 				if(inputs[i] != null) {
 					if(inputs[i] instanceof String) {
-						oreDict.put(i, ((String)inputs[i]));
-						for (Item item : ItemTags.getCollection().get(new ResourceLocation((String)inputs[i])).func_230236_b_() ) {
+						ResourceLocation res = new ResourceLocation((String)inputs[i]);
+						oreDict.put(i, res);
+						for (Item item : ItemTags.getCollection().get(res).func_230236_b_() ) {
+							innerList.add(new ItemStack(item));
+						}
+					}
+					else if(inputs[i] instanceof ResourceLocation) {
+						oreDict.put(i, ((ResourceLocation)inputs[i]));
+						if(!ItemTags.getCollection().getRegisteredTags().contains((ResourceLocation)inputs[i]))
+							throw new  NullPointerException("No such item tag registered: " + ((ResourceLocation)inputs[i]).toString());
+						
+						for (Item item : ItemTags.getCollection().get((ResourceLocation)inputs[i]).func_230236_b_() ) {
 							innerList.add(new ItemStack(item));
 						}
 					}
@@ -351,6 +363,18 @@ public class RecipesMachine {
 			LibVulpes.logger.warn("Cannot add recipe!");
 			LibVulpes.logger.warn(message);
 
+		}
+		catch(NullPointerException e)
+		{
+			//Custom handling to make sure it logs and can be suppressed by user
+			String message = e.getLocalizedMessage();
+
+			for(StackTraceElement element : e.getStackTrace()) {
+				message += "\n\t" + element.toString();
+			}
+
+			LibVulpes.logger.warn("Cannot add recipe!");
+			LibVulpes.logger.warn(message);
 		}
 	}
 

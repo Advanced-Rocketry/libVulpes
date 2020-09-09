@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.GuiModular;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHelper;
@@ -96,7 +97,7 @@ public class ModuleContainerPan extends ModuleBase {
 		staticButtonList.clear();
 
 		for(ModuleBase module : this.moduleList) {
-			buttonList.addAll(module.addButtons(x, y));
+			buttonList.addAll(module.addButtons(0, 0));
 		}
 
 		for(ModuleBase module : this.staticModuleList) {
@@ -210,7 +211,7 @@ public class ModuleContainerPan extends ModuleBase {
 			ContainerScreen<? extends Container>  gui, FontRenderer font) {
 
 		//Handle scrolling
-		double scrollDelta = ObfuscationReflectionHelper.getPrivateValue( MouseHelper.class, Minecraft.getInstance().mouseHelper, "accumulatedScrollDelta");
+		double scrollDelta = LibVulpes.proxy.getScrollDelta(); //ObfuscationReflectionHelper.getPrivateValue( MouseHelper.class, Minecraft.getInstance().mouseHelper, "accumulatedScrollDelta");
 		if(isMouseInBounds(0, 0, mouseX, mouseY) && scrollDelta != 0 )
 			onScroll(scrollDelta);
 
@@ -218,11 +219,17 @@ public class ModuleContainerPan extends ModuleBase {
 
 		setUpScissor((ContainerScreen<Container>) gui, offsetX + guiOffsetX, guiOffsetY + offsetY, offsetX + screenSizeX, offsetY + screenSizeY);
 
+		for(Button btn : buttonList)
+		{
+			btn.func_230430_a_(mat, mouseX, mouseY, zLevel);
+		}
+		
 		for(ModuleBase module : moduleList)
 			module.renderForeground(mat, guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
 
 		for(ModuleBase module : staticModuleList)
 			module.renderForeground(mat, guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
+	
 
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 	}
@@ -354,8 +361,8 @@ public class ModuleContainerPan extends ModuleBase {
 
 				moveContainerInterior(deltaX, deltaY);
 
-				mouseLastX = y;
-				mouseLastY = x;
+				mouseLastX = x;
+				mouseLastY = y;
 			}
 		}
 		else {

@@ -23,7 +23,7 @@ public class FluidUtils {
 	private static Map<ResourceLocation, List<ResourceLocation>> fluidEquivilentMapping = new HashMap<ResourceLocation, List<ResourceLocation>>();
 
 	public static boolean containsFluid(ItemStack stack) {
-		return stack != null && stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, Direction.UP).isPresent();
+		return CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY != null && stack != null && stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, Direction.UP).isPresent();
 	}
 
 	public static boolean containsFluid(ItemStack stack, Fluid fluid) {

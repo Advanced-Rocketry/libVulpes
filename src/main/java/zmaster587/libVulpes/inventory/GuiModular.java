@@ -15,6 +15,7 @@ import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
@@ -98,7 +99,7 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 		//super.func_230451_b_(matrix, a, b);
 
 		//renderString
-		this.field_230712_o_.func_243246_a(matrix, field_230704_d_, 8, 6, 4210752);
+		this.field_230712_o_.func_243246_a(matrix, field_230704_d_, 8, 6, 0xffffff);
 
 		for(ModuleBase module : modules)
 			if(module.getVisible())
@@ -111,6 +112,22 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 	public boolean func_231048_c_(double x, double y, int button) {
 
 		boolean handled = super.func_231048_c_(x, y, button);
+		
+		//Handles buttons (mostly vanilla copy)
+		if(button == 0) {
+
+			List<Widget> fullButtonList = new LinkedList<Widget>();
+			fullButtonList.addAll(this.field_230710_m_);
+
+			
+			for(IGuiEventListener iguieventlistener : fullButtonList) {
+				if (iguieventlistener.func_231047_b_(x, y)) {
+					Button button2 = (Button)iguieventlistener;
+					button2.func_230988_a_(this.getMinecraft().getSoundHandler());
+					this.func_231035_a_(button2);
+				}
+			}
+		}
 
 		for(ModuleBase module : modules)
 			module.onMouseClicked(this, x - (field_230708_k_ - xSize) / 2, y - (field_230709_l_ - ySize) / 2, button);

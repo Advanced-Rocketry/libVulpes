@@ -88,7 +88,6 @@ public class ModuleSlotButton extends ModuleButton {
 		if(itemBlock != null) {
 			BlockState block = itemBlock.getDefaultState();
 			Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(block, mat, Minecraft.getInstance().getRenderTypeBuffers().getBufferSource(), 255, 255);
-			Tessellator.getInstance().draw();
 		}
 
 		GL11.glPopMatrix();

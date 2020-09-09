@@ -1,6 +1,7 @@
 package zmaster587.libVulpes.inventory;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
@@ -16,6 +17,15 @@ public class GuiHandler {
 		MODULARNOINV,
 		MODULARCENTEREDFULLSCREEN,
 		MODULARFULLSCREEN
+	}
+	
+	public static Entity getEntityFromBuf(PacketBuffer buf) {
+		return DistExecutor.runForDist(() -> () -> {
+			int id = buf.readInt();
+			return Minecraft.getInstance().world.getEntityByID(id);
+		}, () -> () -> {
+			throw new RuntimeException("This should not be called on a server!");
+		});
 	}
 
 	

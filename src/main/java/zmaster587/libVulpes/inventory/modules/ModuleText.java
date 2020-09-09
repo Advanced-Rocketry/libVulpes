@@ -85,9 +85,9 @@ public class ModuleText extends ModuleBase {
 		GL11.glScalef(scale, scale, scale);
 		for(int i = 0; i < text.size(); i++) {
 			if(centered)
-				font.func_238405_a_(mat, text.get(i), (x + offsetX - (font.getStringWidth(text.get(i))/2)), y + offsetY + i*font.FONT_HEIGHT, color);
+				font.func_238421_b_(mat, text.get(i), (x + offsetX - (font.getStringWidth(text.get(i))/2)), y + offsetY + i*font.FONT_HEIGHT, color);
 			else
-				font.func_238405_a_(mat, text.get(i),(int)((x + offsetX)/scale), (int)((y + offsetY + i*font.FONT_HEIGHT)/scale), color);
+				font.func_238421_b_(mat, text.get(i),(int)((x + offsetX)/scale), (int)((y + offsetY + i*font.FONT_HEIGHT)/scale), color);
 		}
 		GlStateManager.color4f(1f, 1f, 1f, 1f);
 		
