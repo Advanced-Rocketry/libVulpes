@@ -390,9 +390,9 @@ public class ZUtils {
 	// public static final RegistryKey<Registry<World>> field_239699_ae_ = func_239741_a_("dimension");
 	// public static final RegistryKey<Registry<Dimension>> field_239700_af_ = func_239741_a_("dimension");
 
-	public static ResourceLocation getDimensionIdentifier(IWorld world)
+	public static ResourceLocation getDimensionIdentifier(World world)
 	{
-		return getDimensionType(world).func_242725_p();
+		return world.func_234923_W_().func_240901_a_();
 
 	}
 
@@ -422,11 +422,8 @@ public class ZUtils {
 
 	public static boolean isWorldRegistered(ResourceLocation worldLoc)
 	{
-		// TODO: be more robust
-		MutableRegistry<DimensionType> mutableregistry = DynamicRegistries.func_239770_b_().func_243612_b(Registry.field_239698_ad_);
-
-
-		return mutableregistry.containsKey(worldLoc);
+		// They're now one in the same
+		return isWorldLoaded(worldLoc);
 	}
 
 	public static void unloadWorld(ResourceLocation dimId) {

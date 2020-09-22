@@ -30,6 +30,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
 
 public class RotatableMachineBlock extends RotatableBlock {
 	protected final Random random = new Random();
@@ -114,7 +115,7 @@ public class RotatableMachineBlock extends RotatableBlock {
 			Hand handIn, BlockRayTraceResult hit) {
 		TileEntity tile = worldIn.getTileEntity(pos);
 			if(tile != null && !worldIn.isRemote) {
-				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)tile, pos);
+				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)tile, buf -> {buf.writeInt(((IModularInventory)tile).getModularInvType().ordinal()); buf.writeBlockPos(pos); });
 			}
 			return ActionResultType.SUCCESS;
 	}

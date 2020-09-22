@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [    "libvulpes:plateiron",
+    "libvulpes:plategold",
+    "libvulpes:platesilicon",
+    "libvulpes:platecopper",
+    "libvulpes:platetin",
+    "libvulpes:platesteel",
+    "libvulpes:platetitanium",
+    "libvulpes:platealuminum",
+    "libvulpes:plateiridium"]
+}

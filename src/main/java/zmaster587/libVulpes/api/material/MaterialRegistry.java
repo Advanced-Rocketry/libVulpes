@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockOre;
 import zmaster587.libVulpes.items.ItemMaterialBlock;
@@ -17,6 +18,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -61,24 +63,24 @@ public class MaterialRegistry {
 		oreProducts = new HashMap<AllowedProducts, HashMap<zmaster587.libVulpes.api.material.Material, Item>> ();
 
 		for(int i = 0; i < allAllowedProducts.size(); i++) {
-			
+
 			HashMap<zmaster587.libVulpes.api.material.Material, Item> productToItem = new HashMap<zmaster587.libVulpes.api.material.Material, Item>();
 			oreProducts.put(AllowedProducts.getAllAllowedProducts().get(i), productToItem);
-			
+
 			AllowedProducts product = allAllowedProducts.get(i);
 			for( int j = 0; j < materialList.size(); j++)
 			{
 				zmaster587.libVulpes.api.material.Material mat = materialList.get(j);
-				
+
 				if(!product.isOfType(mat.getAllowedProducts()))
 					continue;
-				
-				
+
+
 				String productName = product.name().toLowerCase(Locale.ENGLISH);
 				Item.Properties itemProps = new Item.Properties();
 				itemProps.group(tab);
 				Item item;
-				
+
 				// if it's a block, register the block
 				if(allAllowedProducts.get(i).isBlock())
 				{
@@ -87,24 +89,30 @@ public class MaterialRegistry {
 					oreProperties.harvestLevel(mat.getHarvestLevel());
 					metalBlocks = new BlockOre(oreProperties, product, mat);
 					metalBlocks.setRegistryName(productName + mat.unlocalizedName);
-					
+
 					LibVulpesBlocks.registerBlock(metalBlocks);
-					
+
 					getBlockListForProduct(allAllowedProducts.get(i)).add(metalBlocks);
-					
+
 					item = new ItemMaterialBlock(metalBlocks, itemProps, mat);
-					
+
 					productToItem.put(mat, item);
 					LibVulpesBlocks.registerItem(item.setRegistryName(productName + mat.unlocalizedName));
+					// Register block tags
+					for(int g = 0; g < mat.getOreDictNames().length; g++) {
+						String str = mat.getOreDictNames()[g];
+						BlockTags.getCollection().func_241834_b(new ResourceLocation("forge:" + productName +  "s/" + str)).func_230235_a_(metalBlocks);
+					}
+					BlockTags.getCollection().func_241834_b(new ResourceLocation(LibVulpes.MODID,"block" + productName)).func_230235_a_(metalBlocks);
 				}
 				else
 				{
 					item = new ItemOreProduct(itemProps, mat);
-					
+
 					productToItem.put(mat, item);
 					LibVulpesBlocks.registerItem(item.setRegistryName(productName + mat.unlocalizedName));
 				}
-				
+
 				// Register item tags
 				for(int g = 0; g < mat.getOreDictNames().length; g++) {
 					String str = mat.getOreDictNames()[g];
@@ -119,7 +127,7 @@ public class MaterialRegistry {
 	}
 
 	public Block getBlockForProduct(AllowedProducts product, zmaster587.libVulpes.api.material.Material material, int index) {
-		
+
 		for(Block block : productBlockListMapping.get(product))
 		{
 			if(((BlockOre)block).material == material)
@@ -145,7 +153,7 @@ public class MaterialRegistry {
 			for(zmaster587.libVulpes.api.material.Material ore : registry.materialList) {
 				for(String str : ore.getOreDictNames()) {
 					for(ResourceLocation i : tags) {
-						
+
 						if(i.getPath().contains(str)) 
 							return ore;
 					}

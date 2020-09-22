@@ -72,6 +72,10 @@ public class GuiImageButton extends Button {
 			sound.play(SimpleSound.master(new SoundEvent(new ResourceLocation("advancedrocketry:" + soundString)), 1.0F));
 	}
 
+	public void func_230431_b_(MatrixStack p_230431_1_, int p_230431_2_, int p_230431_3_, float p_230431_4_) {
+		//super.func_230431_b_(p_230431_1_, p_230431_2_, p_230431_3_, p_230431_4_);
+	}
+	
 	//DrawButtonFG
 	@Override
 	public void func_230430_a_(MatrixStack matrix, int par2, int par3, float p_230431_4_) {
@@ -116,9 +120,9 @@ public class GuiImageButton extends Button {
 	        vertexbuffer.pos(field_230690_l_, field_230691_m_, (double)this.field_230689_k_).tex(0, 0).endVertex();
 	        tessellator.draw();
 			
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-			GlStateManager.disableBlend();
+			RenderSystem.disableBlend();
 			// mousedragged
 			//super.func_230430_a_(matrix, (int) par2, (int) par3, 0);
 		}

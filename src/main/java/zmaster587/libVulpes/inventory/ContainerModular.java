@@ -26,53 +26,58 @@ public class ContainerModular extends Container {
 	int numSlots, numTrackers;
 	IModularInventory modularInventory;
 	public boolean includePlayerInv;
+	public GuiHandler.guiId guid;
 
 	public static ContainerModular createFromNetworkItem(int windowId, PlayerInventory invPlayer, PacketBuffer buf)
 	{
+		GuiHandler.guiId guid = GuiHandler.guiId.values()[buf.readInt()];
+		int ID = guid.ordinal();
 		ItemStack stack = GuiHandler.getHeldFromBuf(buf);
 		IModularInventory modularItem = (IModularInventory)stack.getItem();
-		int ID = modularItem.getModularInvType();
 		
 		boolean includePlayerInv = GuiHandler.doesIncludePlayerInv(ID);
 		boolean includeHotBar = GuiHandler.doesIncludeHotBar(ID);
 		
-		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_HELD_ITEM, windowId, invPlayer.player, modularItem.getModules(ID, invPlayer.player), modularItem, includePlayerInv, includeHotBar);
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_HELD_ITEM, windowId, invPlayer.player, modularItem.getModules(ID, invPlayer.player), modularItem, guid, includePlayerInv, includeHotBar);
 	}
 	
 	public static ContainerModular createFromNetworkBlock(int windowId, PlayerInventory invPlayer, PacketBuffer buf)
 	{
+		GuiHandler.guiId guid = GuiHandler.guiId.values()[buf.readInt()];
+		int ID = guid.ordinal();
 		TileEntity tile = GuiHandler.getTeFromBuf(buf);
 		IModularInventory modularItem = (IModularInventory)tile;
-		int ID = modularItem.getModularInvType();
 		
 		boolean includePlayerInv = GuiHandler.doesIncludePlayerInv(ID);
 		boolean includeHotBar = GuiHandler.doesIncludeHotBar(ID);
 		
-		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, windowId, invPlayer.player, modularItem.getModules(ID, invPlayer.player), modularItem, includePlayerInv, includeHotBar);
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, windowId, invPlayer.player, modularItem.getModules(ID, invPlayer.player), modularItem, guid, includePlayerInv, includeHotBar);
 	}
 	
 	public static ContainerModular createFromEntity(int windowId, PlayerInventory invPlayer, PacketBuffer buf)
 	{
+		GuiHandler.guiId guid = GuiHandler.guiId.values()[buf.readInt()];
+		int ID = guid.ordinal();
 		Entity tile = GuiHandler.getEntityFromBuf(buf);
 		IModularInventory modularItem = (IModularInventory)tile;
-		int ID = modularItem.getModularInvType();
 		
 		boolean includePlayerInv = GuiHandler.doesIncludePlayerInv(ID);
 		boolean includeHotBar = GuiHandler.doesIncludeHotBar(ID);
 		
-		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, windowId, invPlayer.player, modularItem.getModules(ID, invPlayer.player), modularItem, includePlayerInv, includeHotBar);
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, windowId, invPlayer.player, modularItem.getModules(ID, invPlayer.player), modularItem, guid, includePlayerInv, includeHotBar);
 	
 	}
 	
-	public ContainerModular(@Nullable ContainerType<?> type, int id, PlayerEntity playerInv, List<ModuleBase> modules, IModularInventory modulularInv)
+	public ContainerModular(@Nullable ContainerType<?> type, int id, PlayerEntity playerInv, List<ModuleBase> modules, IModularInventory modulularInv, GuiHandler.guiId guid)
 	{
-		this(type, id, playerInv, modules, modulularInv, GuiHandler.doesIncludePlayerInv(modulularInv.getModularInvType()), GuiHandler.doesIncludeHotBar(modulularInv.getModularInvType()));
+		this(type, id, playerInv, modules, modulularInv, guid, GuiHandler.doesIncludePlayerInv(guid.ordinal()), GuiHandler.doesIncludeHotBar(guid.ordinal()));
 	}
 	
-	public ContainerModular(@Nullable ContainerType<?> type, int id, PlayerEntity playerInv, List<ModuleBase> modules, IModularInventory modulularInv, boolean includePlayerInv, boolean includeHotBar) {
+	public ContainerModular(@Nullable ContainerType<?> type, int id, PlayerEntity playerInv, List<ModuleBase> modules, IModularInventory modulularInv,  GuiHandler.guiId guid, boolean includePlayerInv, boolean includeHotBar) {
 		super(type,  id);
 		this.modularInventory = modulularInv;
 		this.modules = modules;
+		this.guid = guid;
 		numSlots = 0;
 		numTrackers = 0;
 		this.includePlayerInv = includePlayerInv;

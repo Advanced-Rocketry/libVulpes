@@ -177,7 +177,7 @@ public class TileMultiBlock extends TileEntity {
 	 */
 	public void deconstructMultiBlock(World world, BlockPos destroyedPos, boolean blockBroken, BlockState state) {
 		canRender = completeStructure = false;
-		if(this.pos.compareTo(destroyedPos) != 0) 
+		if(this.pos.compareTo(destroyedPos) != 0 && world.getBlockState(pos).getBlock() instanceof BlockTile) 
 			world.setBlockState(this.pos, world.getBlockState(pos).with(BlockTile.STATE, false));
 
 

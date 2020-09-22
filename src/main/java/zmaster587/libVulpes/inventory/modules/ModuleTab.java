@@ -36,7 +36,7 @@ public class ModuleTab extends ModuleBase implements IButtonInventory {
 	
 	public void setTab(int tabNum) { tab = buttons[tabNum]; }
 	
-	public int getTab() { return (int)tab.getAdditionalData(); }
+	public int getTab() { return tab == null ? 0 : (int)tab.getAdditionalData(); }
 	
 	@Override
 	public void onMouseClicked(GuiModular gui, double x, double y, int button) {

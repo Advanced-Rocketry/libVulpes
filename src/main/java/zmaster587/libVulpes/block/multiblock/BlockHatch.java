@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
 
 public class BlockHatch extends BlockMultiblockStructure {
 
@@ -74,15 +75,6 @@ public class BlockHatch extends BlockMultiblockStructure {
 
 		super.onReplaced(state, world, pos, newState, isMoving);
 	}
-
-
-	@Override
-	public boolean isSideInvisible(BlockState blockState, BlockState adjacentBlockState,
-			Direction direction) {
-
-		return (!blockState.get(VISIBLE));
-
-	}
 	
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,
@@ -92,7 +84,7 @@ public class BlockHatch extends BlockMultiblockStructure {
 			
 			TileEntity te = world.getTileEntity(pos);
 			if(te != null)
-				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)te, pos);
+				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)te, buf -> {buf.writeInt(((IModularInventory)te).getModularInvType().ordinal()); buf.writeBlockPos(pos); });
 		}
 		return ActionResultType.SUCCESS;
 	}

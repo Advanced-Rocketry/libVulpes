@@ -63,6 +63,8 @@ public class RenderHelper {
 		RenderSystem.color4f(1, 1, 1, 1f);
 	});
 
+	public static final VertexFormat POSITION_COLOR_LIGHTMAP_NORMAL = new VertexFormat(ImmutableList.<VertexFormatElement>builder().add(DefaultVertexFormats.POSITION_3F).add(DefaultVertexFormats.COLOR_4UB).add(DefaultVertexFormats.TEX_2SB).add(DefaultVertexFormats.NORMAL_3B).add(DefaultVertexFormats.PADDING_1B).build());
+	
 	protected static final RenderState.AlphaState DEFAULT_ALPHA = new RenderState.AlphaState(0.003921569F);
 	protected static final RenderState.LightmapState LIGHTMAP_ENABLED = new RenderState.LightmapState(true);
 	protected static final RenderState.LightmapState LIGHTMAP_DISABLED = new RenderState.LightmapState(false);
@@ -123,7 +125,13 @@ public class RenderHelper {
 	public static final RenderType getTranslucentEntityModelRenderType(ResourceLocation tex)
 	{
 		RenderType.State rendertype$state = RenderType.State.getBuilder().texture(new RenderState.TextureState(tex, false, false)).transparency(TRANSLUCENT_TRANSPARENCY).diffuseLighting(DIFFUSE_LIGHTING_ENABLED).alpha(DEFAULT_ALPHA).cull(CULL_DISABLED).lightmap(LIGHTMAP_ENABLED).overlay(OVERLAY_ENABLED).build(true);
-		return RenderType.makeType("entity_custom_translucent", DefaultVertexFormats.ENTITY, GL11.GL_TRIANGLES, 256, true, true, rendertype$state);
+		return RenderType.makeType("entity_custom_translucent", DefaultVertexFormats.ENTITY, GL11.GL_TRIANGLES, 256, true, false, rendertype$state);
+	}
+	
+	public static final RenderType getTranslucentNoTexEntityModelRenderType()
+	{
+		RenderType.State rendertype$state = RenderType.State.getBuilder().transparency(TRANSLUCENT_TRANSPARENCY).diffuseLighting(DIFFUSE_LIGHTING_ENABLED).alpha(DEFAULT_ALPHA).cull(CULL_DISABLED).lightmap(LIGHTMAP_ENABLED).overlay(OVERLAY_ENABLED).build(true);
+		return RenderType.makeType("entity_custom_translucent_notex", POSITION_COLOR_LIGHTMAP_NORMAL, GL11.GL_TRIANGLES, 256, true, false, rendertype$state);
 	}
 
 	public static final RenderType getTranslucentManualRenderType()
@@ -151,6 +159,11 @@ public class RenderHelper {
 		RenderType.State rendertype$state = RenderType.State.getBuilder().texture(new RenderState.TextureState(location, false, false)).transparency(LIGHTNING_TRANSPARENCY).diffuseLighting(DIFFUSE_LIGHTING_ENABLED).lightmap(LIGHTMAP_ENABLED).overlay(OVERLAY_ENABLED).build(true);
 		return RenderType.makeType("manual_col_translucent", DefaultVertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, true, false, rendertype$state);
 	}
+	
+	public static RenderType getParticleType(ResourceLocation icon) {
+		RenderType.State rendertype$state = RenderType.State.getBuilder().texture(new RenderState.TextureState(icon, false, false)).writeMask(new RenderState.WriteMaskState(true, true)).transparency(LIGHTNING_TRANSPARENCY).diffuseLighting(DIFFUSE_LIGHTING_DISABLED).build(false);
+		return RenderType.makeType("manual_col_translucent", DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP, GL11.GL_QUADS, 256, true, false, rendertype$state);
+	}
 
 	public static RenderType getLaserBeamType() {
 		//pos_col
@@ -164,7 +177,9 @@ public class RenderHelper {
 		matrix.push();
 		GlStateManager.color4f(0.2F, 0.2F, 0.2F, 0.3F);
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);*/
-		return null;
+		
+		RenderType.State rendertype$state = RenderType.State.getBuilder().transparency(LIGHTNING_TRANSPARENCY).diffuseLighting(DIFFUSE_LIGHTING_DISABLED).alpha(DEFAULT_ALPHA).cull(CULL_DISABLED).lightmap(LIGHTMAP_DISABLED).overlay(OVERLAY_DISABLED).build(true);
+		return RenderType.makeType("coloredTranslucent", DefaultVertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, true, true, rendertype$state);
 	}
 
 	public static RenderType getTranslucentBlock()
@@ -348,7 +363,7 @@ public class RenderHelper {
 			int j = (int)(f1 * 255.0F) << 24;
 			FontRenderer fontrenderer = Minecraft.getInstance().fontRenderer;
 			float f3 = (float)(-fontrenderer.func_238414_a_(new StringTextComponent(displayString)) / 2);
-			fontrenderer.func_243247_a(new StringTextComponent(displayString), f3, (float)0, 0x20ffffff, false, matrix4f, buffer, false, j, packedLightIn);
+			fontrenderer.func_243247_a(new StringTextComponent(displayString), f3, (float)0, 553648127, false, matrix4f, buffer, true, j, packedLightIn);
 
 			matrix.pop();
 		}
@@ -367,6 +382,15 @@ public class RenderHelper {
 		GL11.glScalef(-f1, -f1, f1);
 	}*/
 
+	public static IVertexBuilder vertexPos(MatrixStack matrix, IVertexBuilder builder, double x, double y, double z)
+	{
+		Matrix4f matrix4f = matrix.getLast().getMatrix();
+        Vector4f vector4f = new Vector4f((float)x, (float)y, (float)z, 1.0F);
+        vector4f.transform(matrix4f);
+        
+        return builder.pos(vector4f.getX(),vector4f.getY(), vector4f.getZ());
+	}
+	
 	public static void cleanupPlayerFacingMatrix() {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glPopMatrix();

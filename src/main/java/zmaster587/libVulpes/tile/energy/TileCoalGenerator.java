@@ -85,8 +85,8 @@ public class TileCoalGenerator extends TileInventoriedForgePowerMachine {
 	}
 
 	@Override
-	public int getModularInvType() {
-		return GuiHandler.guiId.MODULAR.ordinal();
+	public GuiHandler.guiId getModularInvType() {
+		return GuiHandler.guiId.MODULAR;
 	}
 	
 	@Override
@@ -96,6 +96,7 @@ public class TileCoalGenerator extends TileInventoriedForgePowerMachine {
 
 	@Override
 	public Container createMenu(int ID, PlayerInventory playerInv, PlayerEntity playerEntity) {
-		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, ID, playerEntity, getModules(GuiHandler.guiId.MODULARNOINV.ordinal(), playerEntity), this);
+		GuiHandler.guiId guid = getModularInvType();
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, ID, playerEntity, getModules(guid.ordinal(), playerEntity), this, guid);
 	}
 }

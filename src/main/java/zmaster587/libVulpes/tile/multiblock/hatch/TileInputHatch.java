@@ -8,7 +8,7 @@ public class TileInputHatch extends TileInventoryHatch   {
 
 
 	public TileInputHatch() {
-		super();
+		super(4);
 	}
 
 	public TileInputHatch(int size) {

@@ -49,7 +49,7 @@ public class ClientProxy extends CommonProxy {
 	public void spawnParticle(String particle, World world, double x, double y, double z, double motionX, double motionY, double motionZ) {
 
 		
-		if(particle == "errorBox") {
+		if(particle == "errorBox" && world.isRemote) {
 			FxErrorBlock fx = new FxErrorBlock((ClientWorld) world, x, y, z);
 			Minecraft.getInstance().particles.addEffect(fx);
 		}

@@ -74,6 +74,11 @@ public class BlockPhantom extends Block {
 	}
 	
 	@Override
+	public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+		return VoxelShapes.empty();
+	}
+	
+	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
 			ISelectionContext context) {
 		return VoxelShapes.empty();

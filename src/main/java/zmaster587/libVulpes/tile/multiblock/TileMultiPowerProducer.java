@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -17,6 +18,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
@@ -123,8 +125,9 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 	}
 	
 	@Override
-	public int getModularInvType() {
-		return GuiHandler.guiId.MODULAR.ordinal();
+	public GuiHandler.guiId getModularInvType() {
+		Block block = getBlockState().getBlock();
+		return block instanceof BlockTile ? ((BlockTile)block).getGuid() : GuiHandler.guiId.MODULAR;
 	}
 	
 	@Override
@@ -165,6 +168,6 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 
 	@Override
 	public Container createMenu(int ID, PlayerInventory playerInv, PlayerEntity playerEntity) {
-		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, ID, playerEntity, getModules(getModularInvType(), playerEntity), this);
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, ID, playerEntity, getModules(getModularInvType().ordinal(), playerEntity), this, getModularInvType());
 	}
 }

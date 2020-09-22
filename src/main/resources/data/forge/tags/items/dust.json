@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [    "libvulpes:dustdilithium",
+    "libvulpes:dustiron",
+    "libvulpes:dustgold",
+    "libvulpes:dustsilicon",
+    "libvulpes:dustcopper",
+    "libvulpes:dusttin",
+    "libvulpes:duststeel",
+    "libvulpes:dusttitanium",
+    "libvulpes:dustaluminum",
+    "libvulpes:dustiridium"]
+}

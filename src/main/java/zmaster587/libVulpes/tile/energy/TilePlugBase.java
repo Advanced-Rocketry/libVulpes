@@ -192,8 +192,8 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	}
 	
 	@Override
-	public int getModularInvType() {
-		return GuiHandler.guiId.MODULAR.ordinal();
+	public GuiHandler.guiId getModularInvType() {
+		return GuiHandler.guiId.MODULAR;
 	}
 	
 	@Override
@@ -203,6 +203,6 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 
 	@Override
 	public Container createMenu(int ID, PlayerInventory playerInv, PlayerEntity playerEntity) {
-		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, ID, playerEntity, getModules(getModularInvType(), playerEntity), this);
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, ID, playerEntity, getModules(getModularInvType().ordinal(), playerEntity), this, getModularInvType());
 	}
 }

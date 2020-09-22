@@ -39,6 +39,7 @@ public class ModuleContainerPan extends ModuleBase {
 	ResourceLocation backdrop;
 	protected int internalOffsetX;
 	protected int internalOffsetY;
+	protected boolean mouseFirstDown = true;
 
 	public ModuleContainerPan(int offsetX, int offsetY, List<ModuleBase> moduleList, List<ModuleBase> staticModules, ResourceLocation backdrop, int screenSizeX, int screenSizeY) {
 		this(offsetX, offsetY, moduleList, staticModules, backdrop, screenSizeX, screenSizeY, 16, 16, 0, 0);
@@ -251,8 +252,8 @@ public class ModuleContainerPan extends ModuleBase {
 		double scaledX = x;
 		double scaledY = y;
 
-		mouseLastX = scaledX;
-		mouseLastY = scaledY;
+		//mouseLastX = scaledX;
+		//mouseLastY = scaledY;
 
 		//Handles buttons (mostly vanilla copy)
 		if(button == 0 && isMouseInBounds(0, 0, x, y)) {
@@ -270,6 +271,7 @@ public class ModuleContainerPan extends ModuleBase {
 				}
 			}
 		}
+		mouseFirstDown = true;
 	}
 
 	@OnlyIn(value=Dist.CLIENT)
@@ -349,10 +351,11 @@ public class ModuleContainerPan extends ModuleBase {
 
 		if(isMouseInBounds(0, 0, x, y) ) {
 
-			if(outofBounds) {
+			if(outofBounds || mouseFirstDown) {
 				mouseLastX = x;
 				mouseLastY = y;
 				outofBounds = false;
+				mouseFirstDown = false;
 			}
 			else if(mouseLastX != x && mouseLastY != y) {
 

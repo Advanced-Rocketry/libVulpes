@@ -54,6 +54,7 @@ public class LibVulpesTileEntityTypes {
 		r.register(LibVulpesTileEntityTypes.TILE_FORGE_POWER_INPUT);
 		r.register(LibVulpesTileEntityTypes.TILE_FORGE_POWER_OUTPUT);
 		r.register(LibVulpesTileEntityTypes.TILE_COAL_GENERATOR);
+		r.register(LibVulpesTileEntityTypes.TILE_POINTER);
 		
 		assignTileTypesToBlock();
 	}

@@ -14,6 +14,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 
 public class ModuleTextBox extends ModuleBase {
@@ -28,7 +29,7 @@ public class ModuleTextBox extends ModuleBase {
 	public ModuleTextBox(IGuiCallback tile, int offsetX, int offsetY, int sizeX, int sizeY, int maxStrLen) {
 		super(offsetX, offsetY);
 		this.tile = tile;
-		if((Thread.currentThread().getThreadGroup() == SidedThreadGroups.CLIENT)) {
+		if(EffectiveSide.get().isClient()) {
 			textBox =  new TextFieldWidget(Minecraft.getInstance().fontRenderer, offsetX, offsetY, sizeX, sizeY, new StringTextComponent(""));
 			textBox.setCanLoseFocus(true);
 			textBox.setFocused2(false);
@@ -56,6 +57,7 @@ public class ModuleTextBox extends ModuleBase {
 			}
 			else {
 				textBox.func_231042_a_((char) chr, t);
+				textBox.func_231046_a_((char) chr, t, 0);
 
 				//Make callback to calling tile
 				tile.onModuleUpdated(this);

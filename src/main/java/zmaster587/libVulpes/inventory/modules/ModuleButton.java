@@ -12,6 +12,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 import zmaster587.libVulpes.gui.GuiImageButton;
 import zmaster587.libVulpes.inventory.ContainerModular;
@@ -93,7 +94,7 @@ public class ModuleButton extends ModuleBase {
 
 
 	public void setSound(String str) {
-		if(Thread.currentThread().getThreadGroup() == SidedThreadGroups.CLIENT)
+		if(EffectiveSide.get().isClient())
 			if(button == null)
 				sound = str;
 			else
@@ -220,7 +221,7 @@ public class ModuleButton extends ModuleBase {
 		if(visible) {
 
 			// RenderCenteredString
-			gui.func_238476_c_(mat, font, text, offsetX + sizeX / 2, offsetY + sizeY / 2  - font.FONT_HEIGHT/2, color);
+			gui.func_238471_a_(mat, font, text, offsetX + sizeX / 2, offsetY + sizeY / 2  - font.FONT_HEIGHT/2, color);
 
 			if(tooltipText != null) {
 

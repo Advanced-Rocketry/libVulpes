@@ -15,7 +15,7 @@ public class TileOutputHatch extends TileInventoryHatch {
 	
 
 	public TileOutputHatch() {
-		super(LibVulpesTileEntityTypes.TILE_OUTPUT_HATCH);
+		super(LibVulpesTileEntityTypes.TILE_OUTPUT_HATCH, 4);
 	}
 
 	public TileOutputHatch(int size) {

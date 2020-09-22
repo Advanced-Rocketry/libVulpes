@@ -21,19 +21,18 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import zmaster587.libVulpes.render.RenderHelper;
 
 public class FxErrorBlock extends SpriteTexturedParticle {
 
 	public static final ResourceLocation icon = new ResourceLocation("libvulpes:textures/fx/x.png");
-	private static final RenderType XRENDER = RenderType.makeType("xRender", DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP, 7, 256, RenderType.State.getBuilder().texture(new RenderState.TextureState(icon, false, false)).writeMask(new RenderState.WriteMaskState(true, true)).build(false));
-	   
+	private static final RenderType XRENDER = RenderHelper.getParticleType(icon);
 
 	public FxErrorBlock(ClientWorld world, double x, double y, double z) {
 		super(world, x, y, z);
 		this.prevPosX = this.posX = x + 0.5;
 		this.prevPosY = this.posY = y + 0.5;
 		this.prevPosZ = this.posZ = z + 0.5;
-
 		this.maxAge = 100;
 	}
 

@@ -25,15 +25,16 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.util.IAdjBlockUpdate;
 
 public class BlockTile extends RotatableBlock {
 
 	protected TileEntityType<?> tileClass;
-	protected int guiId;
+	protected zmaster587.libVulpes.inventory.GuiHandler.guiId guiId;
 	public static final BooleanProperty STATE = BooleanProperty.create("state");
 
-	public BlockTile(Properties properties, int guiId) {
+	public BlockTile(Properties properties, zmaster587.libVulpes.inventory.GuiHandler.guiId guiId) {
 		super(properties);
 		
 		this.guiId = guiId;
@@ -72,7 +73,7 @@ public class BlockTile extends RotatableBlock {
 		{
 			TileEntity te = world.getTileEntity(pos);
 			if(te != null)
-				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)te, pos);
+				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)te, buf -> {buf.writeInt(((IModularInventory)te).getModularInvType().ordinal()); buf.writeBlockPos(pos); });
 		}
 		return ActionResultType.SUCCESS;
 	}
@@ -138,5 +139,10 @@ public class BlockTile extends RotatableBlock {
 		}
 
 		super.onReplaced(state, world, pos, newState, isMoving);
+	}
+	
+	public zmaster587.libVulpes.inventory.GuiHandler.guiId getGuid()
+	{
+		return guiId;
 	}
 }

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [    "libvulpes:sheetiron",
+    "libvulpes:sheetcopper",
+    "libvulpes:sheetsteel",
+    "libvulpes:sheettitanium",
+    "libvulpes:sheetaluminum",
+    "libvulpes:sheetaluminum"]
+}

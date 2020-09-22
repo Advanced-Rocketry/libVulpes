@@ -75,7 +75,7 @@ public class BlockMultiblockStructure extends Block implements IHidableBlock {
 	public boolean isSideInvisible(net.minecraft.block.BlockState state,
 			net.minecraft.block.BlockState adjacentBlockState, Direction side) {
 		
-		return super.isSideInvisible(state, adjacentBlockState, side) && !state.get(VISIBLE);
+		return super.isSideInvisible(state, adjacentBlockState, side) || !state.get(VISIBLE);
 	}
 	
 	@Override

@@ -32,7 +32,7 @@ public class GuiHandler {
 	public static TileEntity getTeFromBuf(PacketBuffer buf) {
 		return DistExecutor.runForDist(() -> () -> {
 			BlockPos pos = buf.readBlockPos();
-			return Minecraft.getInstance().world.getTileEntity(pos);
+			return Minecraft.getInstance().player.world.getTileEntity(pos);
 		}, () -> () -> {
 			throw new RuntimeException("This should not be called on a server!");
 		});
@@ -80,8 +80,8 @@ public class GuiHandler {
 		else
 			tile = world.getEntityByID(x);
 
-		if(ID == guiId.MODULAR.ordinal() || ID == guiId.MODULARNOINV.ordinal() || ID == guiId.MODULARFULLSCREEN.ordinal() || ID == guiId.MODULARCENTEREDFULLSCREEN.ordinal()) {
-			return new ContainerModular(player, ((IModularInventory)tile).getModules(ID, player), ((IModularInventory)tile), ID == guiId.MODULAR.ordinal(), ID != guiId.MODULARFULLSCREEN.ordinal() && ID != guiId.MODULARCENTEREDFULLSCREEN.ordinal());
+		if(ID == guiId.MODULAR || ID == guiId.MODULARNOINV || ID == guiId.MODULARFULLSCREEN || ID == guiId.MODULARCENTEREDFULLSCREEN.ordinal()) {
+			return new ContainerModular(player, ((IModularInventory)tile).getModules(ID, player), ((IModularInventory)tile), ID == guiId.MODULAR, ID != guiId.MODULARFULLSCREEN && ID != guiId.MODULARCENTEREDFULLSCREEN.ordinal());
 		}
 		return null;
 	}
@@ -108,13 +108,13 @@ public class GuiHandler {
 		else
 			tile = world.getEntityByID(x);
 
-		if(ID == guiId.MODULAR.ordinal() || ID == guiId.MODULARNOINV.ordinal() || ID == guiId.MODULARCENTEREDFULLSCREEN.ordinal()) {
+		if(ID == guiId.MODULAR || ID == guiId.MODULARNOINV || ID == guiId.MODULARCENTEREDFULLSCREEN.ordinal()) {
 			IModularInventory modularTile = ((IModularInventory)tile);
-			return new GuiModular(player, modularTile.getModules(ID, player), modularTile, ID == guiId.MODULAR.ordinal(), ID != guiId.MODULARCENTEREDFULLSCREEN.ordinal(), modularTile.getModularInventoryName());
+			return new GuiModular(player, modularTile.getModules(ID, player), modularTile, ID == guiId.MODULAR, ID != guiId.MODULARCENTEREDFULLSCREEN.ordinal(), modularTile.getModularInventoryName());
 		}
-		else if(ID == guiId.MODULARFULLSCREEN.ordinal()) {
+		else if(ID == guiId.MODULARFULLSCREEN) {
 			IModularInventory modularTile = ((IModularInventory)tile);
-			return new GuiModularFullScreen(player,modularTile.getModules(ID, player), modularTile, ID == guiId.MODULAR.ordinal(), false, modularTile.getModularInventoryName());
+			return new GuiModularFullScreen(player,modularTile.getModules(ID, player), modularTile, ID == guiId.MODULAR, false, modularTile.getModularInventoryName());
 		}
 		return null;
 	}*/

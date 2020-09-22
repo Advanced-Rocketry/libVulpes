@@ -117,12 +117,12 @@ public class LibVulpes {
 		LibVulpesBlocks.blockPlaceHolder = new BlockMultiblockPlaceHolder().setRegistryName("place_holder");
 		LibVulpesBlocks.blockAdvStructureBlock = new BlockAlphaTexture(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3)).setRegistryName("adv_structure_machine");
 		LibVulpesBlocks.blockStructureBlock = new BlockAlphaTexture(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3)).setRegistryName("structure_machine");
-		LibVulpesBlocks.blockCreativeInputPlug = new BlockMultiMachineBattery(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3), TileCreativePowerInput.class, GuiHandler.guiId.MODULAR.ordinal()).setRegistryName("creative_power_battery");
-		LibVulpesBlocks.blockForgeInputPlug = new BlockMultiMachineBattery(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f), TileForgePowerInput.class, GuiHandler.guiId.MODULAR.ordinal()).setRegistryName("forge_power_input"); 
-		LibVulpesBlocks.blockForgeOutputPlug = new BlockMultiMachineBattery(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f), TileForgePowerOutput.class, GuiHandler.guiId.MODULAR.ordinal()).setRegistryName("forge_power_output");
-		LibVulpesBlocks.blockCoalGenerator = new BlockTile(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f), GuiHandler.guiId.MODULAR.ordinal()).setRegistryName("coal_generator");
-		//LibVulpesBlocks.blockRFBattery = new BlockMultiMachineBattery(Material.ROCK, TilePlugInputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setRegistryName("rfBattery").setCreativeTab(tabMultiblock).setHardness(3f);
-		//LibVulpesBlocks.blockRFOutput = new BlockMultiMachineBattery(Material.ROCK, TilePlugOutputRF.class, GuiHandler.guiId.MODULAR.ordinal()).setRegistryName("rfOutput").setCreativeTab(tabMultiblock).setHardness(3f);
+		LibVulpesBlocks.blockCreativeInputPlug = new BlockMultiMachineBattery(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3), TileCreativePowerInput.class, GuiHandler.guiId.MODULAR).setRegistryName("creative_power_battery");
+		LibVulpesBlocks.blockForgeInputPlug = new BlockMultiMachineBattery(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f), TileForgePowerInput.class, GuiHandler.guiId.MODULAR).setRegistryName("forge_power_input"); 
+		LibVulpesBlocks.blockForgeOutputPlug = new BlockMultiMachineBattery(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f), TileForgePowerOutput.class, GuiHandler.guiId.MODULAR).setRegistryName("forge_power_output");
+		LibVulpesBlocks.blockCoalGenerator = new BlockTile(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f), GuiHandler.guiId.MODULAR).setRegistryName("coal_generator");
+		//LibVulpesBlocks.blockRFBattery = new BlockMultiMachineBattery(Material.ROCK, TilePlugInputRF.class, GuiHandler.guiId.MODULAR).setRegistryName("rfBattery").setCreativeTab(tabMultiblock).setHardness(3f);
+		//LibVulpesBlocks.blockRFOutput = new BlockMultiMachineBattery(Material.ROCK, TilePlugOutputRF.class, GuiHandler.guiId.MODULAR).setRegistryName("rfOutput").setCreativeTab(tabMultiblock).setHardness(3f);
 
 		net.minecraft.block.AbstractBlock.Properties motorProperties = net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(2);
 		LibVulpesBlocks.blockMotor = new BlockMotor(motorProperties, 1f).setRegistryName("motor");
@@ -131,10 +131,10 @@ public class LibVulpes {
 		LibVulpesBlocks.blockEliteMotor = new BlockMotor(motorProperties, 1/4f).setRegistryName("elite_motor");
 
 		//if(Loader.isModLoaded("ic2"))
-		//	LibVulpesBlocks.blockIC2Plug = new BlockMultiMachineBattery(Material.ROCK, TilePlugInputIC2.class, GuiHandler.guiId.MODULAR.ordinal()).setRegistryName("forgePowerInput").setCreativeTab(tabMultiblock).setHardness(3f);
+		//	LibVulpesBlocks.blockIC2Plug = new BlockMultiMachineBattery(Material.ROCK, TilePlugInputIC2.class, GuiHandler.guiId.MODULAR).setRegistryName("forgePowerInput").setCreativeTab(tabMultiblock).setHardness(3f);
 
 		//if(Loader.isModLoaded("gregtech"))
-		//	LibVulpesBlocks.blockGTPlug = new BlockMultiMachineBattery(Material.ROCK, TilePlugInputGregTech.class, GuiHandler.guiId.MODULAR.ordinal()).setRegistryName("gregPowerInput").setCreativeTab(tabMultiblock).setHardness(3f);
+		//	LibVulpesBlocks.blockGTPlug = new BlockMultiMachineBattery(Material.ROCK, TilePlugInputGregTech.class, GuiHandler.guiId.MODULAR).setRegistryName("gregPowerInput").setCreativeTab(tabMultiblock).setHardness(3f);
 
 
 		//Initialize Items
@@ -322,13 +322,13 @@ public class LibVulpes {
 		//MOD-SPECIFIC ENTRIES --------------------------------------------------------------------------------------------------------------------------
 		//Items dependant on IC2
 		/*if(Loader.isModLoaded("ic2")) {
-            LibVulpesBlocks.blockIC2Plug = new BlockMultiMachineBattery(Material.ROCK ,TilePlugInputIC2.class, GuiHandler.guiId.MODULAR.ordinal()).setRegistryName("IC2Plug").setCreativeTab(tabMultiblock).setHardness(3f);
+            LibVulpesBlocks.blockIC2Plug = new BlockMultiMachineBattery(Material.ROCK ,TilePlugInputIC2.class, GuiHandler.guiId.MODULAR).setRegistryName("IC2Plug").setCreativeTab(tabMultiblock).setHardness(3f);
             LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockIC2Plug.setRegistryName( LibVulpesBlocks.blockIC2Plug.getUnlocalizedName().substring(5)));
             GameRegistry.registerTileEntity(TilePlugInputIC2.class, "ARIC2Plug");
         }
 
         if(Loader.isModLoaded("gregtech")) {
-            LibVulpesBlocks.blockGTPlug = new BlockMultiMachineBattery(Material.ROCK ,TilePlugInputGregTech.class, GuiHandler.guiId.MODULAR.ordinal()).setRegistryName("GTPlug").setCreativeTab(tabMultiblock).setHardness(3f);
+            LibVulpesBlocks.blockGTPlug = new BlockMultiMachineBattery(Material.ROCK ,TilePlugInputGregTech.class, GuiHandler.guiId.MODULAR).setRegistryName("GTPlug").setCreativeTab(tabMultiblock).setHardness(3f);
             LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockGTPlug.setRegistryName( LibVulpesBlocks.blockGTPlug.getUnlocalizedName().substring(5)));
             GameRegistry.registerTileEntity(TilePlugInputGregTech.class, "ARGTPlug");
         }

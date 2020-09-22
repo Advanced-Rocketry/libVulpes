@@ -13,6 +13,7 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 
 public class ModuleBlockSideSelector extends ModuleBase implements IButtonInventory {
@@ -38,7 +39,7 @@ public class ModuleBlockSideSelector extends ModuleBase implements IButtonInvent
 				new ModuleButton(offsetX, offsetY + 21, "", this, TextureResources.buttonSquare, directions[4] + stateNames[0], 16, 16),
 				new ModuleButton(offsetX + 42, offsetY + 21, "", this, TextureResources.buttonSquare, directions[5] + stateNames[0], 16, 16)};
 
-		if(Thread.currentThread().getThreadGroup() == SidedThreadGroups.CLIENT)
+		if(EffectiveSide.get().isClient())
 			for(ModuleButton button : buttons)
 				button.setBGColor(colors[0]);
 	}
@@ -92,7 +93,7 @@ public class ModuleBlockSideSelector extends ModuleBase implements IButtonInvent
 
 	public void setStateForSide(int sideNum, int state) {
 		bdf.setState(sideNum, state);
-		if(Thread.currentThread().getThreadGroup() == SidedThreadGroups.CLIENT) {
+		if(EffectiveSide.get().isClient()) {
 			buttons[sideNum].setBGColor(colors[bdf.getState(sideNum) % colors.length]);
 			buttons[sideNum].setToolTipText(directions[sideNum] + text[bdf.getState(sideNum)]);
 		}
@@ -105,7 +106,7 @@ public class ModuleBlockSideSelector extends ModuleBase implements IButtonInvent
 
 	public void readFromNBT(CompoundNBT nbt) {
 		bdf.readFromNBT(nbt);
-		if(Thread.currentThread().getThreadGroup() == SidedThreadGroups.CLIENT) 
+		if(EffectiveSide.get().isClient()) 
 			for(int i = 0 ; i < buttons.length; i++) {
 				buttons[i].setBGColor(colors[bdf.getState(i) % colors.length]);
 				buttons[i].setToolTipText(directions[i] + text[bdf.getState(i)]);

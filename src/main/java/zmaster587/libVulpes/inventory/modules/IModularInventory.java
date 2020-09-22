@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import zmaster587.libVulpes.inventory.GuiHandler;
 
 public interface IModularInventory extends INamedContainerProvider {
 	
@@ -16,6 +17,6 @@ public interface IModularInventory extends INamedContainerProvider {
 	
 	public boolean canInteractWithContainer(PlayerEntity entity);
 	
-	public int getModularInvType();
+	public GuiHandler.guiId getModularInvType();
 	
 }

@@ -3,6 +3,7 @@ package zmaster587.libVulpes.block.multiblock;
 import java.util.List;
 
 import zmaster587.libVulpes.block.BlockTile;
+import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import net.minecraft.block.AbstractBlock;
@@ -45,7 +46,7 @@ public class BlockMultiblockMachine extends BlockTile implements IHidableBlock {
 	public static final BooleanProperty VISIBLE = BooleanProperty.create("visible");
 	
 	public BlockMultiblockMachine(AbstractBlock.Properties property,
-			int guiId) {
+			GuiHandler.guiId guiId) {
 		super(property, guiId);
 	}
 
@@ -108,9 +109,10 @@ public class BlockMultiblockMachine extends BlockTile implements IHidableBlock {
 			TileMultiBlock tileMulti = (TileMultiBlock)tile;
 			if(tileMulti.isComplete() && !worldIn.isRemote) {
 				if(tile instanceof IModularInventory)
-					NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)tileMulti, pos);
+					NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)tileMulti, buf -> {buf.writeInt(((IModularInventory)tile).getModularInvType().ordinal()); buf.writeBlockPos(pos); });
 			}
 			else
+				// Needs to run on client to integrate tiles
 				return tileMulti.attemptCompleteStructure(state) ? ActionResultType.SUCCESS : ActionResultType.FAIL;
 		}
 		return ActionResultType.SUCCESS;

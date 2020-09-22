@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.block.multiblock;
 
+import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.tile.energy.TilePlugBase;
 import net.minecraft.block.BlockState;
@@ -18,9 +19,9 @@ import net.minecraftforge.fml.network.NetworkHooks;
 public class BlockMultiMachineBattery extends BlockMultiblockStructure {
 
 	protected Class<? extends TileEntity> tileClass;
-	protected int guiId;
+	protected GuiHandler.guiId guiId;
 	
-	public BlockMultiMachineBattery(Properties properties, Class<? extends TilePlugBase> tileClass, int guiId) {
+	public BlockMultiMachineBattery(Properties properties, Class<? extends TilePlugBase> tileClass, GuiHandler.guiId guiId) {
 		super(properties);
 		this.tileClass = tileClass;
 		this.guiId = guiId;
@@ -37,7 +38,7 @@ public class BlockMultiMachineBattery extends BlockMultiblockStructure {
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if(tile != null && !worldIn.isRemote) {
 			if(tile instanceof IModularInventory)
-				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)tile, pos);
+				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)tile, buf -> {buf.writeInt(((IModularInventory)tile).getModularInvType().ordinal()); buf.writeBlockPos(pos); });
 		}
 		return ActionResultType.SUCCESS;
 	}

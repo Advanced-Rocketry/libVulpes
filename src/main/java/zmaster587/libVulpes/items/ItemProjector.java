@@ -66,7 +66,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 	ArrayList<TileMultiBlock> machineList;
 	ArrayList<BlockTile> blockList;
-	ArrayList<String> descriptionList;
+	HashMap<Integer,String> descriptionList;
 
 	private static final String IDNAME = "machineId";
 
@@ -74,12 +74,11 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		super(properties);
 		machineList = new ArrayList<TileMultiBlock>();
 		blockList = new ArrayList<BlockTile>();
-		descriptionList = new ArrayList<String>();
+		descriptionList = new HashMap<Integer,String>();
 	}
 
-	public void registerMachine(TileMultiBlock multiblock, BlockTile mainBlock) {
-		machineList.add(multiblock);
-		blockList.add(mainBlock);
+	private String buildMachineBlocks(TileMultiBlock multiblock, BlockTile mainBlock)
+	{
 		HashMap<Object, Integer> map = new HashMap<Object, Integer>();
 
 		Object structure[][][] = multiblock.getStructure();
@@ -97,7 +96,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			}
 		}
 
-		String str = Item.getItemFromBlock(mainBlock).getDisplayName(new ItemStack(mainBlock)) + " x1\n";
+		String str = Item.getItemFromBlock(mainBlock).getDisplayName(new ItemStack(mainBlock)).getString() + " x1\n";
 
 		for(Entry<Object, Integer> entry : map.entrySet()) {
 
@@ -107,7 +106,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 				continue;
 			for(int i = 0; i < blockMeta.size(); i++) {
 				String itemStr  = Item.getItemFromBlock(blockMeta.get(i).getBlock()).getDisplayName(new ItemStack(blockMeta.get(i).getBlock(), 1)).getString();
-				if(!itemStr.contains("tile.")) {
+				if(!itemStr.contains("block.")) {
 					str = str + itemStr;
 					str = str + " or ";
 				}
@@ -119,7 +118,12 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			str = str + " x" + entry.getValue() + "\n";
 		}
 
-		descriptionList.add(str);
+		return str;
+	}
+
+	public void registerMachine(TileMultiBlock multiblock, BlockTile mainBlock) {
+		machineList.add(multiblock);
+		blockList.add(mainBlock);
 	}
 
 
@@ -171,7 +175,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		}
 	}
 
-	private void RebuildStructure(World world, TileMultiBlock tile, ItemStack stack, int posX, int posY, int posZ, Direction orientation) {
+	private void RebuildStructure(World world, TileMultiBlock tile, ItemStack stack, int posX, int posY, int posZ, Direction orientation, boolean hologram) {
 
 		int id = getMachineId(stack);
 		Direction direction = Direction.byIndex(getDirection(stack));
@@ -215,14 +219,21 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 					if((world.isAirBlock(pos) || world.getBlockState(pos).isReplaceable(Fluids.WATER))  &&  block.get(0).getBlock() != Blocks.AIR) {
 
-						world.setBlockState(pos, LibVulpesBlocks.blockPhantom.getDefaultState());
-						TileEntity newTile = world.getTileEntity(pos);
+						if(hologram)
+						{
+							world.setBlockState(pos, LibVulpesBlocks.blockPhantom.getDefaultState());
+							TileEntity newTile = world.getTileEntity(pos);
 
-						//TODO: compatibility fixes with the tile entity not reflecting current block
-						if(newTile instanceof TilePlaceholder) {
-							((TileSchematic)newTile).setReplacedBlock(block);
+							//TODO: compatibility fixes with the tile entity not reflecting current block
+							if(newTile instanceof TilePlaceholder) {
+								((TileSchematic)newTile).setReplacedBlock(block);
 
-							((TilePlaceholder)newTile).setReplacedTileEntity(block.get(0).getBlock().createTileEntity(block.get(0).getBlock().getDefaultState(), world));
+								((TilePlaceholder)newTile).setReplacedTileEntity(block.get(0).getBlock().createTileEntity(block.get(0).getBlock().getDefaultState(), world));
+							}
+						}
+						else
+						{
+							world.setBlockState(pos, block.get(0).getBlockState());
 						}
 					}
 				}
@@ -239,7 +250,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		if(!world.isRemote && player.isSneaking())
 		{
 			INamedContainerProvider stack = (INamedContainerProvider)player.getHeldItem(hand).getItem();
-			NetworkHooks.openGui((ServerPlayerEntity)player, stack, packetBuffer -> packetBuffer.writeBoolean(hand == Hand.MAIN_HAND));
+			NetworkHooks.openGui((ServerPlayerEntity)player, stack, packetBuffer -> {packetBuffer.writeInt(getModularInvType().ordinal()); packetBuffer.writeBoolean(hand == Hand.MAIN_HAND);});
 			return super.onItemRightClick(world, player, hand);
 		}
 		return super.onItemRightClick(world, player, hand);
@@ -253,6 +264,15 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		World world = context.getWorld();
 
 		int id = getMachineId(stack);
+
+		if(player.abilities.isCreativeMode && !player.isSneaking() && id != -1 && !world.isRemote && blockList.get(id) == context.getWorld().getBlockState(context.getPos()).getBlock()) {
+
+			Vector3F<Integer> pos = getBasePosition(stack);
+			Direction direction = Direction.values()[getDirection(stack)];
+			setYLevel(stack, -1);
+			RebuildStructure(context.getWorld(), machineList.get(id), stack, pos.x, pos.y, pos.z, direction, false);
+
+		}
 		if(!player.isSneaking() && id != -1 && world.isRemote) {
 			Direction dir = Direction.byIndex(ZUtils.getDirectionFacing(player.rotationYaw - 180));
 			TileMultiBlock tile = machineList.get(getMachineId(stack));
@@ -466,6 +486,16 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		stack.setTag(nbt);
 	}
 
+	private String getDescription(int id)
+	{
+		if(descriptionList.containsKey(id))
+			descriptionList.get(id);
+
+		String builtList = buildMachineBlocks(this.machineList.get(id), this.blockList.get(id));
+		descriptionList.put(id, builtList);
+		return builtList;
+	}
+
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
 	public void addInformation(ItemStack stack, World player,
@@ -479,7 +509,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		if(id != -1) {
 			list.add(new StringTextComponent(""));
 			list.add(new StringTextComponent(TextFormatting.GREEN + LibVulpes.proxy.getLocalizedString(machineList.get(id).getMachineName())));
-			String str = descriptionList.get(id);
+			String str = getDescription(id);
 
 			String strList[] = str.split("\n");
 
@@ -533,7 +563,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		else if(id == 1) {
 			setYLevel(stack, nbt.getInt("yLevel"));
 			Vector3F<Integer> vec = getBasePosition(stack);
-			RebuildStructure(player.world, this.machineList.get(getMachineId(stack)), stack, vec.x, vec.y, vec.z, Direction.byIndex(getDirection(stack)));
+			RebuildStructure(player.world, this.machineList.get(getMachineId(stack)), stack, vec.x, vec.y, vec.z, Direction.byIndex(getDirection(stack)), true);
 		}
 		else if(id == 2) {
 			int x = nbt.getInt("x");
@@ -542,14 +572,14 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			int dir = nbt.getInt("dir");
 
 			if(getMachineId(stack) != -1)
-				RebuildStructure(player.world, this.machineList.get(getMachineId(stack)), stack, x, y, z, Direction.byIndex(dir));
+				RebuildStructure(player.world, this.machineList.get(getMachineId(stack)), stack, x, y, z, Direction.byIndex(dir), true);
 		}
 	}
 
 	@Override
 	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player) {
-		int ID = getModularInvType();
-		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_HELD_ITEM, id, player, this.getModules(getModularInvType(), player), this, GuiHandler.doesIncludePlayerInv(ID), GuiHandler.doesIncludeHotBar(ID));
+		GuiHandler.guiId ID = getModularInvType();
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_HELD_ITEM, id, player, this.getModules(getModularInvType().ordinal(), player), this, ID);
 	}
 
 	@Override
@@ -558,7 +588,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	}
 
 	@Override
-	public int getModularInvType() {
-		return guiId.MODULARNOINV.ordinal();
+	public GuiHandler.guiId getModularInvType() {
+		return guiId.MODULARNOINV;
 	}
 }

@@ -46,7 +46,7 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	
 	public TileInventoryHatch() {
 		super(LibVulpesTileEntityTypes.TILE_INPUT_HATCH);
-		inventory = new EmbeddedInventory(0, this);
+		inventory = new EmbeddedInventory(4, this);
 	}
 
 	public TileInventoryHatch(int invSize) {
@@ -166,8 +166,8 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	}
 	
 	@Override
-	public int getModularInvType() {
-		return GuiHandler.guiId.MODULAR.ordinal();
+	public GuiHandler.guiId getModularInvType() {
+		return GuiHandler.guiId.MODULAR;
 	}
 
 	@Override
@@ -209,7 +209,7 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 
 	@Override
 	public Container createMenu(int ID, PlayerInventory playerInv, PlayerEntity playerEntity) {
-		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, ID, playerEntity, getModules(getModularInvType(), playerEntity), this);
+		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, ID, playerEntity, getModules(getModularInvType().ordinal(), playerEntity), this, getModularInvType());
 	}
 
 }
