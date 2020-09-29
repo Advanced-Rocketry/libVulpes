@@ -100,7 +100,7 @@ public class ItemLinker extends Item {
 		else
 			nbt = itemStack.getTag();
 		
-		return nbt.hasUniqueId("dimId") ? new ResourceLocation(nbt.getString("dimId")) : null;
+		return nbt.contains("dimId") ? new ResourceLocation(nbt.getString("dimId")) : null;
 		
 	}
 

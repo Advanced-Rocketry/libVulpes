@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -67,10 +68,10 @@ public class ModuleScaledImage extends ModuleBase {
 		super.renderBackground(gui, mat, x, y, mouseX, mouseY, font);
 		
 		if(alpha < 1f) {
-			GL11.glColor4d(alpha, alpha, alpha, alpha);
-			GL11.glDisable(GL11.GL_ALPHA_TEST);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			RenderSystem.color4f(alpha, alpha, alpha, alpha);
+			RenderSystem.disableAlphaTest();
+			RenderSystem.enableBlend();
+			RenderSystem.blendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		}
 			
 		gui.getMinecraft().getTextureManager().bindTexture(icon);
@@ -83,9 +84,9 @@ public class ModuleScaledImage extends ModuleBase {
         buff.pos((double)(x + this.offsetX), (double)(y + this.offsetY), (double)0).tex(minX, minY).endVertex();
         Tessellator.getInstance().draw();
         if(alpha < 1f) {
-			GL11.glColor4d(1f, 1f, 1f, 1f);
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glEnable(GL11.GL_ALPHA_TEST);
+        	RenderSystem.color4f(1, 1, 1, 1);
+        	RenderSystem.disableBlend();
+			RenderSystem.enableAlphaTest();
         }
 	}
 }

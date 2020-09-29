@@ -3,6 +3,7 @@ package zmaster587.libVulpes.inventory.modules;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -45,7 +46,7 @@ public class ModuleImage extends ModuleBase {
 		super.renderBackground(gui, mat, x, y, mouseX, mouseY, font);
 
 		if(isEnabled()) {
-			GL11.glEnable(GL11.GL_BLEND);
+			RenderSystem.enableBlend();
 			Minecraft.getInstance().getTextureManager().bindTexture(icon.getResourceLocation());
 			if(icon.getxLoc() == -1) {
 				Tessellator.getInstance().getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
@@ -53,7 +54,7 @@ public class ModuleImage extends ModuleBase {
 				Tessellator.getInstance().draw();
 			} else
 				gui.func_238474_b_(mat, x + offsetX, y + offsetY, icon.getxLoc(), icon.getyLoc(), icon.getxSize(), icon.getySize());
-			GL11.glDisable(GL11.GL_BLEND);
+			RenderSystem.disableBlend();
 		}
 	}
 }

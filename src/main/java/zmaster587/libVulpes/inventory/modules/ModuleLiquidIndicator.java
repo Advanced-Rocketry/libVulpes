@@ -30,7 +30,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 	IFluidHandlerInternal tile2;
 
 	ResourceLocation fluidIcon = new ResourceLocation("advancedrocketry:textures/blocks/fluid/oxygen_flow.png");
-	
+
 	int prevLiquidUUID;
 	int prevLiquidAmt;
 	private static final int invalidFluid = -1;
@@ -50,7 +50,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 
 	private Fluid getFluid(int id)
 	{
-		
+
 		for(Fluid fluid : ForgeRegistries.FLUIDS.getValues())
 		{
 			if(ForgeRegistries.FLUIDS.getKey(fluid).hashCode() == id)
@@ -58,12 +58,12 @@ public class ModuleLiquidIndicator extends ModuleBase {
 		}
 		return Fluids.WATER;
 	}
-	
+
 	private int getFluidID(Fluid fluid)
 	{
 		return ForgeRegistries.FLUIDS.getKey(fluid).hashCode();
 	}
-	
+
 	@Override
 	public void sendChanges(Container container, IContainerListener crafter,
 			int variableId, int localId) {
@@ -136,7 +136,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 	@Override
 	public boolean needsUpdate(int localId) {
 		FluidStack info = tile.getFluidInTank(0);
-		
+
 
 		if(localId == 0 || localId == 1) {
 			return (info != null && prevLiquidAmt != info.getAmount());
@@ -214,32 +214,34 @@ public class ModuleLiquidIndicator extends ModuleBase {
 		//Draw Fluid
 		FluidStack info = tile.getFluidInTank(0);
 
-		if(info != null) {
+		if(info == null)
+			return;
 
+		if(info.getFluid().getAttributes().getStillTexture(info) == null)
+			return;
 
-			gui.getMinecraft().getTextureManager().bindTexture(fluidIcon);
+		gui.getMinecraft().getTextureManager().bindTexture(fluidIcon);
 
-			TextureAtlasSprite sprite = gui.getMinecraft().getAtlasSpriteGetter(info.getFluid().getAttributes().getStillTexture(info)).apply(info.getFluid().getAttributes().getStillTexture(info));
-			
-			int color = info.getFluid().getAttributes().getColor(info);
+		TextureAtlasSprite sprite = gui.getMinecraft().getAtlasSpriteGetter(info.getFluid().getAttributes().getStillTexture(info)).apply(info.getFluid().getAttributes().getStillTexture(info));
 
-			GL11.glColor3b((byte)((color >>> 16) & 127), (byte)((color >>> 8) & 127), (byte)(color & 127));
-			//GL11.glColor3b((byte)127, (byte)127, (byte)127);
+		int color = info.getFluid().getAttributes().getColor(info);
 
-			float percent = getProgress();
-			int ySize = 52;
-			int xSize = 12;
+		GL11.glColor3b((byte)((color >>> 16) & 127), (byte)((color >>> 8) & 127), (byte)(color & 127));
+		//GL11.glColor3b((byte)127, (byte)127, (byte)127);
 
-			if(sprite == null)
-				gui.func_238474_b_(mat, offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), 0, 0, xSize, (int)(percent*ySize));
-			else {
-				gui.getMinecraft().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-				gui.func_238470_a_(mat, offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), 0 /* zlevel */, xSize, (int)(percent*ySize), sprite);
-			}
-			//gui.drawTexturedModelRectFrom(offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), fluidIcon, xSize, (int)(percent*ySize));
+		float percent = getProgress();
+		int ySize = 52;
+		int xSize = 12;
 
-			//this.drawProgressBarIconVertical(x + 27, y + 18,, 12, 52, getProgress());
+		if(sprite == null)
+			gui.func_238474_b_(mat, offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), 0, 0, xSize, (int)(percent*ySize));
+		else {
+			gui.getMinecraft().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+			gui.func_238470_a_(mat, offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), 0 /* zlevel */, xSize, (int)(percent*ySize), sprite);
 		}
+		//gui.drawTexturedModelRectFrom(offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), fluidIcon, xSize, (int)(percent*ySize));
+
+		//this.drawProgressBarIconVertical(x + 27, y + 18,, 12, 52, getProgress());
 	}
 
 }

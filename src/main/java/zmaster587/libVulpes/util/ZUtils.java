@@ -392,6 +392,10 @@ public class ZUtils {
 
 	public static ResourceLocation getDimensionIdentifier(World world)
 	{
+		if(world == null)
+			return null;
+		if(world.func_234923_W_() == null)
+			return null;
 		return world.func_234923_W_().func_240901_a_();
 
 	}

@@ -199,10 +199,10 @@ public class ModuleContainerPan extends ModuleBase {
 
 	public void onScroll(double dwheel) {
 		if(dwheel < 0) {
-			moveContainerInterior(0, -20);
+			moveContainerInterior(0, -3);
 		}
 		else if(dwheel > 0) {
-			moveContainerInterior(0, 20);
+			moveContainerInterior(0, 3);
 		}
 	}
 
@@ -221,6 +221,11 @@ public class ModuleContainerPan extends ModuleBase {
 		setUpScissor((ContainerScreen<Container>) gui, offsetX + guiOffsetX, guiOffsetY + offsetY, offsetX + screenSizeX, offsetY + screenSizeY);
 
 		for(Button btn : buttonList)
+		{
+			btn.func_230430_a_(mat, mouseX, mouseY, zLevel);
+		}
+		
+		for(Button btn : staticButtonList)
 		{
 			btn.func_230430_a_(mat, mouseX, mouseY, zLevel);
 		}
@@ -305,8 +310,8 @@ public class ModuleContainerPan extends ModuleBase {
 		try
 		{
 			// Need write access to the field!
-			Field xPos = ObfuscationReflectionHelper.findField(Slot.class, "xPos");
-			Field yPos = ObfuscationReflectionHelper.findField(Slot.class, "yPos");
+			Field xPos = ObfuscationReflectionHelper.findField(Slot.class, "field_75223_e");
+			Field yPos = ObfuscationReflectionHelper.findField(Slot.class, "field_75221_f");
 
 			xPos.setAccessible(true);
 			Field modifiersField = Field.class.getDeclaredField("modifiers");

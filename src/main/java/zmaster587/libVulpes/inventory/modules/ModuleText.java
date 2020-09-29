@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -78,11 +79,10 @@ public class ModuleText extends ModuleBase {
 	@Override
 	public void renderBackground(ContainerScreen<? extends Container> gui, MatrixStack mat, int x, int y, int mouseX, int mouseY, FontRenderer font) {
 
-		GL11.glPushMatrix();
+		mat.push();
 		if(alwaysOnTop)
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
-		
-		GL11.glScalef(scale, scale, scale);
+			RenderSystem.disableDepthTest();
+		mat.scale(scale, scale, scale);
 		for(int i = 0; i < text.size(); i++) {
 			if(centered)
 				font.func_238421_b_(mat, text.get(i), (x + offsetX - (font.getStringWidth(text.get(i))/2)), y + offsetY + i*font.FONT_HEIGHT, color);
@@ -92,7 +92,7 @@ public class ModuleText extends ModuleBase {
 		GlStateManager.color4f(1f, 1f, 1f, 1f);
 		
 		if(alwaysOnTop)
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glPopMatrix();
+			RenderSystem.enableDepthTest();
+		mat.pop();
 	}
 }

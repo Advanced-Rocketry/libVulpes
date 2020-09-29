@@ -19,7 +19,7 @@ public class LibVulpesConfig {
 	}
 	
 	public static void register() {
-		registerConfig(ModConfig.Type.COMMON, commonSpec, "common.toml");
+		registerConfig(ModConfig.Type.COMMON, commonSpec, "libvulpes.toml");
 	}
 
 	private static void registerConfig(ModConfig.Type type, ForgeConfigSpec spec, String fileName) {

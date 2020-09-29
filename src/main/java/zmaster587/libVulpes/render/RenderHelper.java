@@ -130,7 +130,7 @@ public class RenderHelper {
 	
 	public static final RenderType getTranslucentNoTexEntityModelRenderType()
 	{
-		RenderType.State rendertype$state = RenderType.State.getBuilder().transparency(TRANSLUCENT_TRANSPARENCY).diffuseLighting(DIFFUSE_LIGHTING_ENABLED).alpha(DEFAULT_ALPHA).cull(CULL_DISABLED).lightmap(LIGHTMAP_ENABLED).overlay(OVERLAY_ENABLED).build(true);
+		RenderType.State rendertype$state = RenderType.State.getBuilder().transparency(TRANSLUCENT_TRANSPARENCY).alpha(DEFAULT_ALPHA).transparency(LIGHTNING_TRANSPARENCY).diffuseLighting(DIFFUSE_LIGHTING_ENABLED).lightmap(LIGHTMAP_ENABLED).overlay(OVERLAY_DISABLED).build(true);
 		return RenderType.makeType("entity_custom_translucent_notex", POSITION_COLOR_LIGHTMAP_NORMAL, GL11.GL_TRIANGLES, 256, true, false, rendertype$state);
 	}
 

@@ -320,7 +320,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		powerPerTick = nbt.getInt("powerPerTick");
 		enabled = nbt.getBoolean("enabled");
 
-		if(nbt.hasUniqueId("timeMult"))
+		if(nbt.contains("timeMult"))
 			timeMultiplier = nbt.getFloat("timeMult");
 
 		if(world != null && world.isRemote && isRunning()) {
