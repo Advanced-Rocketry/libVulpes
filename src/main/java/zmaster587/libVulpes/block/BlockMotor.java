@@ -42,6 +42,11 @@ public class BlockMotor extends RotatableBlock implements ITimeModifier {
 	}
 	
 	@Override
+	public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+		return VoxelShapes.empty();
+	}
+	
+	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return HOLLOW_CUBE;
 	}

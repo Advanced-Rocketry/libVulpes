@@ -24,7 +24,7 @@ public class TileOutputHatch extends TileInventoryHatch {
 
 	@Override
 	public String getModularInventoryName() {
-		return "block.libvulpes.hatch.1";
+		return "block.libvulpes.itemohatch";
 	}
 
 	@Override

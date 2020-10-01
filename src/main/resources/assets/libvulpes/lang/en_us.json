@@ -2,10 +2,10 @@
     "itemGroup.multiBlock": "Multi Block Machine Parts",
     "item.libvulpes.linker": "Linker",
 
-    "block.libvulpes.hatch.0": "Input Hatch",
-    "block.libvulpes.hatch.1": "Output Hatch",
-    "block.libvulpes.hatch.2": "Fluid Input Hatch",
-    "block.libvulpes.hatch.3": "Fluid Output Hatch",
+    "block.libvulpes.itemihatch": "Input Hatch",
+    "block.libvulpes.itemohatch": "Output Hatch",
+    "block.libvulpes.fluidihatch": "Fluid Input Hatch",
+    "block.libvulpes.fluidohatch": "Fluid Output Hatch",
 
     "block.libvulpes.forge_power_input": "Power Input Plug",
     "block.libvulpes.forge_power_output": "Power Output Plug",
