@@ -170,7 +170,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 
 	@Override
 	public String getModularInventoryName() {
-		return outputOnly ? "block.libvulpes.fluidohatch" : "block.libvulpes.fluidihat";
+		return outputOnly ? "block.libvulpes.fluidohatch" : "block.libvulpes.fluidihatch";
 	}
 
 	@Override

@@ -19,6 +19,8 @@ import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
@@ -216,14 +218,13 @@ public class ModuleLiquidIndicator extends ModuleBase {
 
 		if(info == null)
 			return;
-
-		if(info.getFluid().getAttributes().getStillTexture(info) == null)
+		
+		if(info.getFluid() == null)
 			return;
 
-		gui.getMinecraft().getTextureManager().bindTexture(fluidIcon);
 
-		TextureAtlasSprite sprite = gui.getMinecraft().getAtlasSpriteGetter(info.getFluid().getAttributes().getStillTexture(info)).apply(info.getFluid().getAttributes().getStillTexture(info));
-
+		TextureAtlasSprite sprite = info.getFluid() != Fluids.EMPTY ? ModelLoader.defaultTextureGetter().apply(ForgeHooksClient.getBlockMaterial(info.getFluid().getAttributes().getStillTexture())) : null;
+		sprite.getAtlasTexture().bindTexture();
 		int color = info.getFluid().getAttributes().getColor(info);
 
 		GL11.glColor3b((byte)((color >>> 16) & 127), (byte)((color >>> 8) & 127), (byte)(color & 127));

@@ -10,17 +10,16 @@
     {
         "x":
         {
-            "item": "libvulpes:battery",
-            "data": 0
+            "item": "libvulpes:smallbattery"
         },
         "m":
         {
-            "item": "libvulpes:structuremachine"
+            "item": "libvulpes:structure_machine"
 	}
     },
     "result":
     {
-        "item": "libvulpes:forgePowerInput",
+        "item": "libvulpes:forge_power_input",
         "count": 1
     }
 }

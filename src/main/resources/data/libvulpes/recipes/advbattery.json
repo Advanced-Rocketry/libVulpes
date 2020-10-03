@@ -10,19 +10,16 @@
     {
         "b":
         {
-            "item": "libvulpes:battery",
-            "data": 0
+            "item": "libvulpes:smallbattery"
         },
 	"p":
         {
-            "type": "forge:ore_dict",
-            "ore": "plateCopper"
+            "tag": "forge:plates/copper"
         }
     },
     "result":
     {
-        "item": "libvulpes:battery",
-        "data": 1,
+        "item": "libvulpes:small2xbattery",
         "count": 1
     }
 }

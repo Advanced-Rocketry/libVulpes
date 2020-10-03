@@ -173,7 +173,7 @@ public class LibVulpes {
         GEM,
         BOULE,
         NUGGET,
-        COIL(true, AdvancedRocketryBlocks.blockCoil),
+        COIL(true, AdvancedRocketryBlocks.coils),
         PLATE,
         STICK,
         BLOCK(true, LibVulpesBlocks.blockMetal),

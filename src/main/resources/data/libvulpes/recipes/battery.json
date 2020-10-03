@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+	" c ",
+	"prp",
+	"prp"
+    ],
+    "key":
+    {
+        "c":
+        {
+            "tag": "forge:sticks/iron"
+        },
+	"p":
+        {
+            "tag": "forge:plates/tin"
+        },
+	"r":
+        {
+            "tag": "forge:dusts/redstone"
+        }
+    },
+    "result":
+    {
+        "item": "libvulpes:smallbattery",
+        "count": 4
+    }
+}

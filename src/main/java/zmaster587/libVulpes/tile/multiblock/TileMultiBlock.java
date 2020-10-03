@@ -400,7 +400,8 @@ public class TileMultiBlock extends TileEntity {
 					int meta = block.getStateId(blockState);
 
 					if(block instanceof BlockMultiBlockComponentVisible) {
-						((BlockMultiBlockComponentVisible)block).hideBlock(world, globalPos, blockState);
+						if(shouldHideBlock(world, globalPos, blockState))
+							((BlockMultiBlockComponentVisible)block).hideBlock(world, globalPos, blockState);
 
 						tile = world.getTileEntity(globalPos);
 

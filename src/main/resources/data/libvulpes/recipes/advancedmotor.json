@@ -10,23 +10,20 @@
     {
         "c":
         {
-	    "type": "forge:ore_dict",
-            "ore": "coilGold"
+            "tag": "forge:coils/gold"
         },
         "p":
         {
-	    "type": "forge:ore_dict",
-            "ore": "plateSteel"
+            "tag": "forge:plates/steel"
 	},
         "r":
         {
-	    "type": "forge:ore_dict",
-            "ore": "stickSteel"
+            "tag": "forge:sticks/steel"
 	}
     },
     "result":
     {
-        "item": "libvulpes:advancedMotor",
+        "item": "libvulpes:advanced_motor",
         "count": 1
     }
 }

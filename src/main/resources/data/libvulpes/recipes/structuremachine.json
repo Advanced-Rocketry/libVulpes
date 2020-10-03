@@ -10,18 +10,16 @@
     {
         "x":
         {
-            "type": "forge:ore_dict",
-            "ore": "stickIron"
+            "tag": "forge:sticks/iron"
         },
 	"p":
         {
-            "type": "forge:ore_dict",
-            "ore": "plateIron"
+            "tag": "forge:plates/iron"
         }
     },
     "result":
     {
-        "item": "libvulpes:structuremachine",
+        "item": "libvulpes:structure_machine",
         "count": 16
     }
 }

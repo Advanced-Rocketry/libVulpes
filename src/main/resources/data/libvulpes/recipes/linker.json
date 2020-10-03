@@ -10,18 +10,15 @@
     {
         "x":
         {
-            "type": "forge:ore_dict",
-            "ore": "dustRedstone"
+            "tag": "forge:dusts/redstone"
         },
         "y":
         {
-            "type": "forge:ore_dict",
-            "ore": "ingotGold"
+            "tag": "forge:ingots/gold"
         },
 	"z":
         {
-            "type": "forge:ore_dict",
-            "ore": "ingotIron"
+            "tag": "forge:ingots/iron"
         }
     },
     "result":

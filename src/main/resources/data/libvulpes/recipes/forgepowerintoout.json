@@ -3,12 +3,12 @@
     "ingredients":
     [
         {
-            "item": "libvulpes:forgePowerInput"
+            "item": "libvulpes:forge_power_input"
 	}
     ],
     "result":
     {
-        "item": "libvulpes:forgePowerOutput",
+        "item": "libvulpes:forge_power_output",
         "count": 1
     }
 }

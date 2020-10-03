@@ -10,23 +10,20 @@
     {
         "c":
         {
-	    "type": "forge:ore_dict",
-            "ore": "coilAluminum"
+            "tag": "forge:coils/aluminum"
         },
         "p":
         {
-	    "type": "forge:ore_dict",
-            "ore": "plateTitanium"
+            "tag": "forge:plates/titanium"
 	},
         "r":
         {
-	    "type": "forge:ore_dict",
-            "ore": "stickTitanium"
+            "tag": "forge:sticks/titanium"
 	}
     },
     "result":
     {
-        "item": "libvulpes:enhancedMotor",
+        "item": "libvulpes:enhanced_motor",
         "count": 1
     }
 }

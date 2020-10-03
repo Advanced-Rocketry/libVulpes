@@ -10,23 +10,20 @@
     {
         "c":
         {
-	    "type": "forge:ore_dict",
-            "ore": "coilTitanium"
+            "tag": "forge:coils/titanium"
         },
         "p":
         {
-	    "type": "forge:ore_dict",
-            "ore": "plateIridium"
+            "tag": "forge:plates/iridium"
 	},
         "r":
         {
-	    "type": "forge:ore_dict",
-            "ore": "stickIridium"
+            "tag": "forge:sticks/iridium"
 	}
     },
     "result":
     {
-        "item": "libvulpes:eliteMotor",
+        "item": "libvulpes:elite_motor",
         "count": 1
     }
 }

@@ -50,7 +50,7 @@ public class AllowedProducts {
 	GEM,
 	BOULE,
 	NUGGET,
-	COIL(true, AdvancedRocketryBlocks.blockCoil),
+	COIL(true, AdvancedRocketryBlocks.coils),
 	PLATE,
 	STICK,
 	BLOCK(true, LibVulpesBlocks.blockMetal),

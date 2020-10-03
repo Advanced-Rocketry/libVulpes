@@ -262,12 +262,12 @@ public class RecipesMachine {
 		}
 	}
 
-	public HashMap<Class<? extends TileMultiblockMachine>, List<IRecipe>> recipeList;
+	public HashMap<Class<?>, List<IRecipe>> recipeList;
 
 	private static RecipesMachine instance = new RecipesMachine();
 
 	public RecipesMachine() {
-		recipeList = new HashMap<Class<? extends TileMultiblockMachine>, List<IRecipe>>();
+		recipeList = new HashMap<Class<?>, List<IRecipe>>();
 	}
 
 	public static RecipesMachine getInstance() { return instance; }

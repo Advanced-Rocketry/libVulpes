@@ -10,18 +10,16 @@
     {
         "x":
         {
-            "type": "forge:ore_dict",
-            "ore": "stickTitanium"
+            "tag": "forge:sticks/titanium"
         },
 	"p":
         {
-            "type": "forge:ore_dict",
-            "ore": "plateTitanium"
+            "tag": "forge:plates/titanium"
         }
     },
     "result":
     {
-        "item": "libvulpes:advstructuremachine",
+        "item": "libvulpes:adv_structure_machine",
         "count": 16
     }
 }

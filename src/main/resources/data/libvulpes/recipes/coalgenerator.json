@@ -9,8 +9,7 @@
     {
         "a":
         {
-            "type": "forge:ore_dict",
-            "ore": "itemBattery"
+            "item": "libvulpes:smallbattery"
         },
 	"b":
         {
@@ -19,7 +18,7 @@
     },
     "result":
     {
-        "item": "libvulpes:coalGenerator",
+        "item": "libvulpes:coal_generator",
         "count": 1
     }
 }

@@ -13,14 +13,13 @@
         },
         "y":
         {
-            "item": "libvulpes:structuremachine"
+            "item": "libvulpes:structure_machine"
 	}
     },
     "result":
     {
-        "item": "libvulpes:hatch",
-        "count": 1,
-        "data": 1
+        "item": "libvulpes:itemohatch",
+        "count": 1
     }
 }
 {
@@ -28,14 +27,12 @@
     "ingredients":
     [
         {
-	    "item": "libvulpes:hatch",
-	    "data": 0
+	    "item": "libvulpes:itemihatch"
         }
     ],
     "result":
     {
-        "item": "libvulpes:hatch",
-        "count": 1,
-        "data": 1
+        "item": "libvulpes:itemohatch",
+        "count": 1
     }
 }

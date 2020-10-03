@@ -10,24 +10,20 @@
     {
         "c":
         {
-	    "type": "forge:ore_dict",
-            "ore": "coilCopper"
+            "tag": "forge:coils/copper"
         },
         "p":
         {
-	    "type": "forge:ore_dict",
-            "ore": "plateSteel"
+            "tag": "forge:plates/steel"
 	},
         "r":
         {
-	    "type": "forge:ore_dict",
-            "ore": "stickSteel"
+            "tag": "forge:sticks/steel"
 	}
     },
     "result":
     {
         "item": "libvulpes:motor",
-        "count": 1,
-        "data": 0
+        "count": 1
     }
 }

@@ -130,8 +130,14 @@ public class RenderHelper {
 	
 	public static final RenderType getTranslucentNoTexEntityModelRenderType()
 	{
-		RenderType.State rendertype$state = RenderType.State.getBuilder().transparency(TRANSLUCENT_TRANSPARENCY).alpha(DEFAULT_ALPHA).transparency(LIGHTNING_TRANSPARENCY).diffuseLighting(DIFFUSE_LIGHTING_ENABLED).lightmap(LIGHTMAP_ENABLED).overlay(OVERLAY_DISABLED).build(true);
-		return RenderType.makeType("entity_custom_translucent_notex", POSITION_COLOR_LIGHTMAP_NORMAL, GL11.GL_TRIANGLES, 256, true, false, rendertype$state);
+		RenderType.State rendertype$state = RenderType.State.getBuilder().texture(new RenderState.TextureState()).transparency(TRANSLUCENT_TRANSPARENCY).diffuseLighting(DIFFUSE_LIGHTING_ENABLED).alpha(DEFAULT_ALPHA).cull(CULL_DISABLED).lightmap(LIGHTMAP_ENABLED).overlay(OVERLAY_ENABLED).build(true);
+		return RenderType.makeType("entity_custom_translucent", DefaultVertexFormats.ENTITY, GL11.GL_TRIANGLES, 256, true, false, rendertype$state);
+	}
+	
+	public static final RenderType getLightningTranslucencyNoTexEntityModelRenderType()
+	{
+		RenderType.State rendertype$state = RenderType.State.getBuilder().texture(new RenderState.TextureState()).transparency(TRANSLUCENT_TRANSPARENCY).alpha(DEFAULT_ALPHA).transparency(LIGHTNING_TRANSPARENCY).diffuseLighting(DIFFUSE_LIGHTING_ENABLED).lightmap(LIGHTMAP_ENABLED).overlay(OVERLAY_DISABLED).build(true);
+		return RenderType.makeType("entity_custom_translucent_notex", DefaultVertexFormats.ENTITY, GL11.GL_TRIANGLES, 256, true, false, rendertype$state);
 	}
 
 	public static final RenderType getTranslucentManualRenderType()

@@ -1,0 +1,4 @@
+{
+  "replace": false,
+  "values": [    "libvulpes:motor", "libvulpes:advanced_motor", "libvulpes:enhanced_motor", "libvulpes:elite_motor"]
+}

@@ -19,6 +19,11 @@ Material("rutile", 0xbf936a, ("ORE",)),
 Material("aluminum", 0xb3e4dc, ("ORE", "COIL", "BLOCK", "INGOT", "PLATE", "SHEET", "DUST", "NUGGET", "SHEET")),
 Material("iridium", 0xdedcce, ("ORE", "COIL", "BLOCK", "DUST", "INGOT", "NUGGET", "PLATE", "STICK"))]
 
+materials = [Material("dilithium", 0xddcecb, ("DUST", "GEM")),
+Material("titaniumaluminide", 0xaec2de, ("GEAR", "COIL", "BLOCK", "INGOT", "PLATE", "SHEET", "DUST", "NUGGET", "SHEET")),
+Material("titaniumiridium", 0xd7dfe4, ("GEAR", "COIL", "BLOCK", "INGOT", "PLATE", "SHEET", "DUST", "NUGGET", "SHEET"))]
+
+
 blockTypes = ['COIL', 'BLOCK', 'ORE']
 coilTypes = ['COIL']
 noIconGenTypes = ['ORE']
@@ -38,6 +43,11 @@ blockStateDir = 'src/main/resources/assets/libvulpes/blockstates/'
 
 itemIconDir = 'src/main/resources/assets/libvulpes/textures/items/'
 blockIconDir = 'src/main/resources/assets/libvulpes/textures/blocks/'
+
+blockTagPath = "src/main/resources/data/forge/tags/blocks/"
+itemTagPath = "src/main/resources/data/forge/tags/items/"
+
+blockTagSample = '{\n  "replace": false,\n  "values": [@BLOCKLIST@]\n}'
 
 
 def getMatrix(color):
@@ -110,10 +120,50 @@ def printEnLang(mat, objType, block):
     else:
         print('    "item.libvulpes.{}{}": "{} {}",'.format(objType.lower(),mat.name, human_mat, human_type))
 
+def generateTag(tagPath, mat, objType):
+    if not os.path.exists(tagPath + objType.lower()):
+        os.makedirs(tagPath + objType.lower())
+    filename = tagPath + objType.lower() + '/' + mat.name + '.json'
+    
+    contents = blockTagSample.replace('@BLOCKLIST@', '    "libvulpes:' + objType.lower() + mat.name + '"')
+    
+    f = open(filename, 'w')
+    f.write(contents)
+    f.close()
+
+objTypeToMaterialMap = {}
+
 for mat in materials:
     for objType in mat.outputs:
-        genItem(mat, objType)
+        if objType not in objTypeToMaterialMap:
+            objTypeToMaterialMap[objType] = []
+        #objTypeToMaterialMap[objType].append(mat)
+        
+        #genItem(mat, objType)
         
         if objType in blockTypes:
-            genBlock(mat, objType)
-        printEnLang(mat, objType, objType in blockTypes)
+        #    genBlock(mat, objType)
+            generateTag(blockTagPath, mat, objType)
+        generateTag(itemTagPath, mat, objType)
+        #printEnLang(mat, objType, objType in blockTypes)
+
+
+for objType in objTypeToMaterialMap.keys():
+    
+    contentString = []
+    for mat in objTypeToMaterialMap[objType]:
+        contentString.append('    "libvulpes:' + objType.lower() + mat.name + '"')
+    
+    contents = blockTagSample.replace('@BLOCKLIST@', ',\n'.join(contentString))
+    f = None
+    try:
+        if objType in blockTypes:
+            f = open(blockTagPath + objType.lower() + '.json', 'w')
+        else:
+            f = open(itemTagPath + objType.lower() + '.json', 'w')
+        f.write(contents)
+        f.close()
+    except FileNotFoundError:
+        pass
+
+    
