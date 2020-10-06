@@ -17,4 +17,9 @@ jobs:
     - name: Chmod gradlew
       run: chmod a+x ./gradlew
     - name: Build with Gradle
-      run: ./gradlew clean build 
+      run: ./gradlew clean build publishToMavenLocal
+
+    - uses: actions/upload-artifact@v2
+  with:
+    name: libVulpes
+    path: output/
