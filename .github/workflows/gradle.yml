@@ -19,7 +19,10 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew clean build publishToMavenLocal
 
-    - uses: actions/upload-artifact@v2
-  with:
-    name: libVulpes
-    path: output/
+    - name: Upload a Build Artifact
+      uses: 'actions/upload-artifact@v2'
+          with:
+              name: LibVulpes
+              path: ${{ github.workspace }}/output/**
+
+

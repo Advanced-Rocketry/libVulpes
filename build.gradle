@@ -210,7 +210,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId = 'zmaster587.libVulpes'
             artifactId = 'libVulpes'
-            from components.java
+            //from components.java
              artifact deobfJar
             }
         }
