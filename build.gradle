@@ -30,10 +30,6 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
-apply from: "gradle/scripts/getbuildnumber.gradle"
-apply from: "gradle/scripts/jars.gradle"
-apply from: "gradle/scripts/version.gradle"
-
 sourceCompatibility = 8
 targetCompatibility = 8
 
@@ -45,7 +41,6 @@ group= "zmaster587.libVulpes" // http://maven.apache.org/guides/mini/guide-namin
 archivesBaseName = 'LibVulpes'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-
 
 def mcversion = '1.16.2'
 
@@ -109,12 +104,6 @@ minecraft {
     mappings channel: 'snapshot', version: '20200514-1.16'
 }
 
-
-
-
-
-
-
 clean {
     delete 'output'
 }
@@ -136,7 +125,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.2-33.0.21'
+    minecraft 'net.minecraftforge:forge:1.16.3-34.1.1'
       
     compile name: 'industrialcraft-2', version: '2.8.96-ex112-api', ext: 'jar'
     //You'll need to download Tesla Tesla-1.12.2-1.0.63-deobf.jar and put it into the libs folder
