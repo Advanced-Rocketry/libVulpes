@@ -42,7 +42,7 @@ archivesBaseName = 'LibVulpes'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
-def mcversion = '1.16.2'
+def mcversion = '1.16.3'
 
 apply from: "gradle/scripts/getbuildnumber.gradle"
 apply from: "gradle/scripts/jars.gradle"
