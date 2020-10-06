@@ -138,7 +138,7 @@ dependencies {
 
 }
 
-/*processResources
+processResources
 {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
@@ -147,20 +147,18 @@ dependencies {
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
+        include 'META-INF/mods.toml'
                 
         // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.mcversion
     }
-    replace "@MAJOR@", version_major
-    replace "@MINOR@", version_minor
-    replace "@REVIS@", version_revis
-    replace "@BUILD@", project.getBuildNumber()
         
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+        exclude 'META-INF/mods.toml'
     }
-}*/
+}
 
 task deobfJar(type: Jar) {
      from sourceSets.main.output
