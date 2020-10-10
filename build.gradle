@@ -21,8 +21,7 @@ buildscript {
 }
 
 plugins {
-  id "com.gradle.build-scan" version "1.9"
-  id "com.matthewprenger.cursegradle" version "1.0.9"
+  id "com.matthewprenger.cursegradle" version "1.4.0"
   id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.64"
 }
 
@@ -205,6 +204,18 @@ curseforge{
    }
 }
 */
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'zmaster587.libVulpes'
+            artifactId = 'libVulpes'
+            //from components.java
+             artifact deobfJar
+            }
+        }
+    }
+
 task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     file = new File ("changelog.html")
     untaggedName = "Current release ${project.version}"
@@ -224,5 +235,5 @@ task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
 """
 }
 
-tasks.build.dependsOn makeChangelog
+tasks.build.dependsOn makeChangelog, deobfJar 
 

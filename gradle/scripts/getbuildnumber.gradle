@@ -23,6 +23,10 @@ ext.getBuildNumber = {
     {
         return "-" + project.sbmBuild
     }
+    else if (System.getenv("GITHUB_RUN_NUMBER") != null) 
+    {
+        return "-${System.getenv("GITHUB_RUN_NUMBER")}"
+    }
     return getDate()
 }
 
