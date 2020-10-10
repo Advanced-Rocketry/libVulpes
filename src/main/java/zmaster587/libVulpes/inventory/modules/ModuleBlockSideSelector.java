@@ -13,6 +13,8 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 
@@ -39,9 +41,7 @@ public class ModuleBlockSideSelector extends ModuleBase implements IButtonInvent
 				new ModuleButton(offsetX, offsetY + 21, "", this, TextureResources.buttonSquare, directions[4] + stateNames[0], 16, 16),
 				new ModuleButton(offsetX + 42, offsetY + 21, "", this, TextureResources.buttonSquare, directions[5] + stateNames[0], 16, 16)};
 
-		if(EffectiveSide.get().isClient())
-			for(ModuleButton button : buttons)
-				button.setBGColor(colors[0]);
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {for(ModuleButton button : buttons) button.setBGColor(colors[0]);});
 	}
 
 	@Override

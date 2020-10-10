@@ -16,6 +16,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
@@ -100,12 +102,19 @@ public class PacketHandler {
 			return new EncapsulatingPacket(pkt);
 		}
 
-		public static class Handler 
+		public static class Handler
 		{
+			
+			@OnlyIn(Dist.CLIENT)
+			private static void CallClient(EncapsulatingPacket msg, Supplier<NetworkEvent.Context> ctx)
+			{
+				ctx.get().enqueueWork(() -> msg.basePacket.executeClient(Minecraft.getInstance().player));
+			}
+			
 			public static void handle(EncapsulatingPacket msg, Supplier<NetworkEvent.Context> ctx)
 			{
 				if(EffectiveSide.get() == LogicalSide.CLIENT)
-					ctx.get().enqueueWork(() -> msg.basePacket.executeClient(Minecraft.getInstance().player));
+					CallClient(msg, ctx);
 				else
 					ctx.get().enqueueWork(() -> msg.basePacket.executeServer(ctx.get().getSender()));
 
