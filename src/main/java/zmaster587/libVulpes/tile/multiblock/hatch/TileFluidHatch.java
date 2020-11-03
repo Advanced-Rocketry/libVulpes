@@ -229,8 +229,8 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	}
 
 	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
-		super.func_230337_a_(state, nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 
 		outputOnly = nbt.getBoolean("outputOnly");
 		inventory.readFromNBT(nbt);

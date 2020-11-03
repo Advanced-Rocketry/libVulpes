@@ -221,7 +221,7 @@ public class ModuleButton extends ModuleBase {
 		if(visible) {
 
 			// RenderCenteredString
-			gui.func_238471_a_(mat, font, text, offsetX + sizeX / 2, offsetY + sizeY / 2  - font.FONT_HEIGHT/2, color);
+			gui.drawCenteredString(mat, font, text, offsetX + sizeX / 2, offsetY + sizeY / 2  - font.FONT_HEIGHT/2, color);
 
 			if(tooltipText != null) {
 

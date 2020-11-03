@@ -43,8 +43,8 @@ public class GuiImageButton extends Button {
 		buttonTexture = location;
 		soundString = "";
 		bgColor = 0xFFFFFFFF;
-		this.field_230690_l_ = x;
-		this.field_230691_m_ = y;
+		this.x = x;
+		this.y = y;
 		this.width = width;
 		this.height = height;
 		//TODO: add exception
@@ -65,26 +65,26 @@ public class GuiImageButton extends Button {
 	
 	// playPressSound
 	@Override
-	public void func_230988_a_(SoundHandler sound) {
+	public void playDownSound(SoundHandler sound) {
 		if(soundString.isEmpty())
-			super.func_230988_a_(sound);
+			super.playDownSound(sound);
 		else
 			sound.play(SimpleSound.master(new SoundEvent(new ResourceLocation("advancedrocketry:" + soundString)), 1.0F));
 	}
 
-	public void func_230431_b_(MatrixStack p_230431_1_, int p_230431_2_, int p_230431_3_, float p_230431_4_) {
-		//super.func_230431_b_(p_230431_1_, p_230431_2_, p_230431_3_, p_230431_4_);
+	public void renderButton(MatrixStack p_230431_1_, int p_230431_2_, int p_230431_3_, float p_230431_4_) {
+		//super.renderButton(p_230431_1_, p_230431_2_, p_230431_3_, p_230431_4_);
 	}
 	
 	//DrawButtonFG
 	@Override
-	public void func_230430_a_(MatrixStack matrix, int par2, int par3, float p_230431_4_) {
+	public void render(MatrixStack matrix, int par2, int par3, float p_230431_4_) {
 		if (this.visible)
 		{
 			//
-			this.hovered = par2 >= this.field_230690_l_ && par3 >= this.field_230691_m_ && par2 < this.field_230690_l_ + this.width && par3 < this.field_230691_m_ + this.height;
+			this.hovered = par2 >= this.x && par3 >= this.y && par2 < this.x + this.width && par3 < this.y + this.height;
 			// get hover state
-			int hoverState = this.func_230989_a_(this.hovered);
+			int hoverState = this.getYImage(this.hovered);
 
 			/*if(mousePressed(minecraft, par2, par3) && buttonTexture[2] != null)
 				minecraft.getTextureManager().bindTexture(buttonTexture[2]);*/
@@ -112,19 +112,19 @@ public class GuiImageButton extends Button {
 			
 	        Tessellator tessellator = Tessellator.getInstance();
 	        BufferBuilder vertexbuffer = tessellator.getBuffer();
-	        // field_230689_k_ == zlevel
+	        // height == zlevel
 	        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-	        vertexbuffer.pos(field_230690_l_, field_230691_m_ + height, (double)this.field_230689_k_).tex(0, 1).endVertex();
-	        vertexbuffer.pos(field_230690_l_ + width, field_230691_m_ + height, (double)this.field_230689_k_).tex( 1, 1).endVertex();
-	        vertexbuffer.pos(field_230690_l_ + width, field_230691_m_, (double)this.field_230689_k_).tex(1, 0).endVertex();
-	        vertexbuffer.pos(field_230690_l_, field_230691_m_, (double)this.field_230689_k_).tex(0, 0).endVertex();
+	        vertexbuffer.pos(x, y + height, (double)this.height).tex(0, 1).endVertex();
+	        vertexbuffer.pos(x + width, y + height, (double)this.height).tex( 1, 1).endVertex();
+	        vertexbuffer.pos(x + width, y, (double)this.height).tex(1, 0).endVertex();
+	        vertexbuffer.pos(x, y, (double)this.height).tex(0, 0).endVertex();
 	        tessellator.draw();
 			
 			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 			RenderSystem.disableBlend();
 			// mousedragged
-			//super.func_230430_a_(matrix, (int) par2, (int) par3, 0);
+			//super.render(matrix, (int) par2, (int) par3, 0);
 		}
 	}
 }

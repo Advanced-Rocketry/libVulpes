@@ -28,7 +28,7 @@ public class IndicatorBarImage extends ProgressBarImage {
 		
 		Minecraft.getInstance().getTextureManager().bindTexture(image);
 		
-		gui.func_238474_b_(mat, x, y, backOffsetX, backOffsetY, backWidth, backHeight);
+		gui.blit(mat, x, y, backOffsetX, backOffsetY, backWidth, backHeight);
 		
 		int xProgress = 0, yProgress = 0;
 		
@@ -46,6 +46,6 @@ public class IndicatorBarImage extends ProgressBarImage {
 		else
 			yProgress = insetY;
 		
-		gui.func_238474_b_(mat, x + xProgress, y + yProgress, foreOffsetX, foreOffsetY, foreWidth, foreHeight);
+		gui.blit(mat, x + xProgress, y + yProgress, foreOffsetX, foreOffsetY, foreWidth, foreHeight);
 	}
 }

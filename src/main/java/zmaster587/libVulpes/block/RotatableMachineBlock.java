@@ -53,9 +53,9 @@ public class RotatableMachineBlock extends RotatableBlock {
 			ITooltipFlag flagIn) {
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		
-		Style style = Style.field_240709_b_.func_240712_a_(TextFormatting.ITALIC);
+		Style style = Style.EMPTY.setFormatting(TextFormatting.ITALIC);
 		
-		tooltip.add( new TranslationTextComponent("machine.tooltip.multiblock").func_240703_c_(style));
+		tooltip.add( new TranslationTextComponent("machine.tooltip.multiblock").mergeStyle(style));
 	}
 
     /**

@@ -238,12 +238,12 @@ public class LibVulpes {
 				LibVulpesItems.itemEnhancedMotor,
 				LibVulpesItems.itemEliteMotor);
 
-		//ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "itemsilicon")).func_230235_a_(MaterialRegistry.getItemStackFromMaterialAndType("Silicon", AllowedProducts.getProductByName("INGOT")).getItem());
-		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge", "itembattery")).func_230235_a_(LibVulpesItems.itemBattery);
-		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge","motor")).func_230235_a_(LibVulpesItems.itemMotor);
-		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge","motor")).func_230235_a_(LibVulpesItems.itemAdvancedMotor);
-		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge","motor")).func_230235_a_(LibVulpesItems.itemEnhancedMotor);
-		ItemTags.getCollection().func_241834_b(new ResourceLocation("forge","motor")).func_230235_a_(LibVulpesItems.itemEliteMotor);
+		//ItemTags.getCollection().getTagByID(new ResourceLocation("forge", "itemsilicon")).contains(MaterialRegistry.getItemStackFromMaterialAndType("Silicon", AllowedProducts.getProductByName("INGOT")).getItem());
+		ItemTags.getCollection().getTagByID(new ResourceLocation("forge", "itembattery")).contains(LibVulpesItems.itemBattery);
+		ItemTags.getCollection().getTagByID(new ResourceLocation("forge","motor")).contains(LibVulpesItems.itemMotor);
+		ItemTags.getCollection().getTagByID(new ResourceLocation("forge","motor")).contains(LibVulpesItems.itemAdvancedMotor);
+		ItemTags.getCollection().getTagByID(new ResourceLocation("forge","motor")).contains(LibVulpesItems.itemEnhancedMotor);
+		ItemTags.getCollection().getTagByID(new ResourceLocation("forge","motor")).contains(LibVulpesItems.itemEliteMotor);
 	}
 
 	@SubscribeEvent
@@ -346,10 +346,10 @@ public class LibVulpes {
 		materialRegistry.registerOres(tabLibVulpesOres);
 
 		//Ore dict stuff
-		BlockTags.getCollection().func_241834_b(new ResourceLocation("forge","motor")).func_230235_a_(LibVulpesBlocks.blockMotor);
-		BlockTags.getCollection().func_241834_b(new ResourceLocation("forge","motor")).func_230235_a_(LibVulpesBlocks.blockAdvancedMotor);
-		BlockTags.getCollection().func_241834_b(new ResourceLocation("forge","motor")).func_230235_a_(LibVulpesBlocks.blockEnhancedMotor);
-		BlockTags.getCollection().func_241834_b(new ResourceLocation("forge","motor")).func_230235_a_(LibVulpesBlocks.blockEliteMotor);
+		BlockTags.getCollection().getTagByID(new ResourceLocation("forge","motor")).contains(LibVulpesBlocks.blockMotor);
+		BlockTags.getCollection().getTagByID(new ResourceLocation("forge","motor")).contains(LibVulpesBlocks.blockAdvancedMotor);
+		BlockTags.getCollection().getTagByID(new ResourceLocation("forge","motor")).contains(LibVulpesBlocks.blockEnhancedMotor);
+		BlockTags.getCollection().getTagByID(new ResourceLocation("forge","motor")).contains(LibVulpesBlocks.blockEliteMotor);
 	}
 
 	@SubscribeEvent(priority=EventPriority.HIGH)

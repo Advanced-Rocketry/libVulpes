@@ -80,7 +80,7 @@ public class ProgressBarImage {
 	public void renderProgressBarPartial(MatrixStack mat, int x, int y, float center, float variation, ContainerScreen<?> gui) {
 		
 		Minecraft.getInstance().getTextureManager().bindTexture(image);
-		gui.func_238474_b_(mat, x, y, backOffsetX, backOffsetY, backWidth, backHeight);
+		gui.blit(mat, x, y, backOffsetX, backOffsetY, backWidth, backHeight);
 		
 		if(center - variation/2 < 0) {
 			float change = center - (variation/2f);
@@ -98,12 +98,12 @@ public class ProgressBarImage {
 		
 		
 		if(direction == Direction.EAST )//Left to right
-			gui.func_238474_b_(mat, x + insetX + (int)(foreWidth*(1 - center - variation/2f)), y + insetY, foreOffsetX + (int)((1-variation/2-center)*foreWidth), foreOffsetY, (int)(variation*foreWidth), foreHeight);
+			gui.blit(mat, x + insetX + (int)(foreWidth*(1 - center - variation/2f)), y + insetY, foreOffsetX + (int)((1-variation/2-center)*foreWidth), foreOffsetY, (int)(variation*foreWidth), foreHeight);
 		//else if(direction == ForgeDirection.WEST)
 		else if(direction == Direction.UP) // bottom to top
-			gui.func_238474_b_(mat, x + insetX, y + insetY + foreHeight - (int)(variation*foreHeight), foreOffsetX, foreOffsetY + foreHeight - (int)(variation*foreHeight), foreWidth, (int)(variation*foreHeight) );
+			gui.blit(mat, x + insetX, y + insetY + foreHeight - (int)(variation*foreHeight), foreOffsetX, foreOffsetY + foreHeight - (int)(variation*foreHeight), foreWidth, (int)(variation*foreHeight) );
 		else if(direction == Direction.DOWN)
-			gui.func_238474_b_(mat, x + insetX, y + insetY, foreOffsetX, foreOffsetY, foreWidth, (int)(variation*foreHeight) );
+			gui.blit(mat, x + insetX, y + insetY, foreOffsetX, foreOffsetY, foreWidth, (int)(variation*foreHeight) );
 	
 	}
 	
@@ -117,36 +117,36 @@ public class ProgressBarImage {
 	public void renderProgressBar(MatrixStack mat, int x, int y, float percent, net.minecraft.client.gui.AbstractGui gui) {
 		Minecraft.getInstance().getTextureManager().bindTexture(image);
 		//backdrop
-		gui.func_238474_b_(mat, x, y, backOffsetX, backOffsetY, backWidth, backHeight);
+		gui.blit(mat, x, y, backOffsetX, backOffsetY, backWidth, backHeight);
 		
 		if(direction == Direction.EAST )//Left to right
-			gui.func_238474_b_(mat, x + insetX, y + insetY, foreOffsetX, foreOffsetY, (int)(percent*foreWidth), foreHeight);
+			gui.blit(mat, x + insetX, y + insetY, foreOffsetX, foreOffsetY, (int)(percent*foreWidth), foreHeight);
 		else if(direction == Direction.WEST ) 
-			gui.func_238474_b_(mat, x + insetX + foreWidth - (int)(percent*foreWidth), y + insetY, foreOffsetX + foreWidth - (int)(percent*foreWidth), foreOffsetY, (int)(percent*foreWidth), foreHeight);
+			gui.blit(mat, x + insetX + foreWidth - (int)(percent*foreWidth), y + insetY, foreOffsetX + foreWidth - (int)(percent*foreWidth), foreOffsetY, (int)(percent*foreWidth), foreHeight);
 		else if(direction == Direction.UP) // bottom to top
-			gui.func_238474_b_(mat, x + insetX, y + insetY + foreHeight - (int)(percent*foreHeight), foreOffsetX, foreOffsetY + foreHeight - (int)(percent*foreHeight), foreWidth, (int)(percent*foreHeight) );
+			gui.blit(mat, x + insetX, y + insetY + foreHeight - (int)(percent*foreHeight), foreOffsetX, foreOffsetY + foreHeight - (int)(percent*foreHeight), foreWidth, (int)(percent*foreHeight) );
 		else if(direction == Direction.DOWN)
-			gui.func_238474_b_(mat, x + insetX, y + insetY, foreOffsetX, foreOffsetY, foreWidth, (int)(percent*foreHeight) );
+			gui.blit(mat, x + insetX, y + insetY, foreOffsetX, foreOffsetY, foreWidth, (int)(percent*foreHeight) );
 	}
 	
 	@OnlyIn(value=Dist.CLIENT)
 	public void renderProgressBar(int x, int zLevel, int y, float percent) {
 		Minecraft.getInstance().getTextureManager().bindTexture(image);
 		//backdrop
-		func_238474_b_(x, zLevel, y, backOffsetX, backOffsetY, backWidth, backHeight);
+		blit(x, zLevel, y, backOffsetX, backOffsetY, backWidth, backHeight);
 		
 		if(direction == Direction.EAST )//Left to right
-			func_238474_b_(x + insetX,zLevel, y + insetY, foreOffsetX, foreOffsetY, (int)(percent*foreWidth), foreHeight);
+			blit(x + insetX,zLevel, y + insetY, foreOffsetX, foreOffsetY, (int)(percent*foreWidth), foreHeight);
 		else if(direction == Direction.WEST ) 
-			func_238474_b_(x + insetX + foreWidth - (int)(percent*foreWidth),zLevel, y + insetY, foreOffsetX + foreWidth - (int)(percent*foreWidth), foreOffsetY, (int)(percent*foreWidth), foreHeight);
+			blit(x + insetX + foreWidth - (int)(percent*foreWidth),zLevel, y + insetY, foreOffsetX + foreWidth - (int)(percent*foreWidth), foreOffsetY, (int)(percent*foreWidth), foreHeight);
 		else if(direction == Direction.UP) // bottom to top
-			func_238474_b_(x + insetX,zLevel, y + insetY + foreHeight - (int)(percent*foreHeight), foreOffsetX, foreOffsetY + foreHeight - (int)(percent*foreHeight), foreWidth, (int)(percent*foreHeight) );
+			blit(x + insetX,zLevel, y + insetY + foreHeight - (int)(percent*foreHeight), foreOffsetX, foreOffsetY + foreHeight - (int)(percent*foreHeight), foreWidth, (int)(percent*foreHeight) );
 		else if(direction == Direction.DOWN)
-			func_238474_b_(x + insetX,zLevel, y + insetY, foreOffsetX, foreOffsetY, foreWidth, (int)(percent*foreHeight) );
+			blit(x + insetX,zLevel, y + insetY, foreOffsetX, foreOffsetY, foreWidth, (int)(percent*foreHeight) );
 	}
 	
 	@OnlyIn(value=Dist.CLIENT)
-    public void func_238474_b_(int x, int zLevel, int y, int textureX, int textureY, int width, int height)
+    public void blit(int x, int zLevel, int y, int textureX, int textureY, int width, int height)
     {
         float f = 0.00390625F;
         float f1 = 0.00390625F;

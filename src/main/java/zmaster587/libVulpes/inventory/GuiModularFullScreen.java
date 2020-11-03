@@ -21,37 +21,37 @@ public class GuiModularFullScreen extends GuiModular {
 		
 		this.xSize = Minecraft.getInstance().getMainWindow().getWidth();
 		this.ySize = Minecraft.getInstance().getMainWindow().getHeight();
-		this.field_230708_k_ = Minecraft.getInstance().getMainWindow().getWidth();
-		this.field_230709_l_ = Minecraft.getInstance().getMainWindow().getHeight();
+		this.width = Minecraft.getInstance().getMainWindow().getWidth();
+		this.height = Minecraft.getInstance().getMainWindow().getHeight();
 	}
 	
 	   public void func_231158_b_(Minecraft p_231158_1_, int p_231158_2_, int p_231158_3_) {
-		      this.field_230706_i_ = p_231158_1_;
-		      this.field_230707_j_ = p_231158_1_.getItemRenderer();
-		      this.field_230712_o_ = p_231158_1_.fontRenderer;
-		      //this.field_230708_k_ = p_231158_2_;
-		      //this.field_230709_l_ = p_231158_3_;
+		      this.minecraft = p_231158_1_;
+		      this.itemRenderer = p_231158_1_.getItemRenderer();
+		      this.font = p_231158_1_.fontRenderer;
+		      //this.width = p_231158_2_;
+		      //this.height = p_231158_3_;
 		      java.util.function.Consumer<Widget> remove = (b) -> {
-		         field_230710_m_.remove(b);
-		         field_230705_e_.remove(b);
+		         buttons.remove(b);
+		         children.remove(b);
 		      };
-		      if (!net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Pre(this, this.field_230710_m_, this::func_230480_a_, remove))) {
-		      this.field_230710_m_.clear();
-		      this.field_230705_e_.clear();
-		      this.func_231035_a_((IGuiEventListener)null);
-		      this.func_231160_c_();
+		      if (!net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Pre(this, this.buttons, this::addButton, remove))) {
+		      this.buttons.clear();
+		      this.children.clear();
+		      this.setListener((IGuiEventListener)null);
+		      this.init();
 		      }
-		      net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Post(this, this.field_230710_m_, this::func_230480_a_, remove));
+		      net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Post(this, this.buttons, this::addButton, remove));
 		   }
 	
 	// initgui
 	@Override
-	public void func_231160_c_() {
+	public void init() {
 		this.xSize = Minecraft.getInstance().getMainWindow().getWidth();
 		this.ySize = Minecraft.getInstance().getMainWindow().getHeight();
-		this.field_230708_k_ = Minecraft.getInstance().getMainWindow().getWidth();
-		this.field_230709_l_ = Minecraft.getInstance().getMainWindow().getHeight();
+		this.width = Minecraft.getInstance().getMainWindow().getWidth();
+		this.height = Minecraft.getInstance().getMainWindow().getHeight();
 		
-		super.func_231160_c_();
+		super.init();
 	}
 }

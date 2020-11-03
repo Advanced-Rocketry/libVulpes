@@ -81,15 +81,15 @@ public class TilePlaceholder extends TilePointer {
 	}
 	
 	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
-		super.func_230337_a_(state, nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 		
 		//TODO: perform sanity check
 		replacedState = Block.getStateById(nbt.getInt("ID"));
 		
 		if(nbt.contains("tile")) {
 			CompoundNBT tile = nbt.getCompound("tile");
-			replacedTile = TileEntity.func_235657_b_(replacedState, tile);
+			replacedTile = TileEntity.readTileEntity(replacedState, tile);
 		}
 	}
 }

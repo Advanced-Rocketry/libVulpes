@@ -19,8 +19,8 @@ import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 
 public class ModuleTextBox extends ModuleBase {
 
-	// func_230431_b_ drawTextBox
-	// func_231042_a_ textboxKeyTyped
+	// renderButton drawTextBox
+	// charTyped textboxKeyTyped
 	@OnlyIn(value=Dist.CLIENT)
 	TextFieldWidget textBox;
 	String currentText;
@@ -50,14 +50,14 @@ public class ModuleTextBox extends ModuleBase {
 	@Override
 	public boolean keyTyped(int chr, int t) {
 		// Isfocused
-		if(textBox.func_230999_j_()) {
+		if(textBox.isFocused()) {
 
 			if(GLFW.GLFW_KEY_ESCAPE == t) {
 				textBox.setFocused2(false);
 			}
 			else {
-				textBox.func_231042_a_((char) chr, t);
-				textBox.func_231046_a_((char) chr, t, 0);
+				textBox.charTyped((char) chr, t);
+				textBox.keyPressed((char) chr, t, 0);
 
 				//Make callback to calling tile
 				tile.onModuleUpdated(this);
@@ -74,7 +74,7 @@ public class ModuleTextBox extends ModuleBase {
 	public void onMouseClicked(GuiModular gui, double x, double y, int button) {
 
 		//Make sure we can focus the textboxes
-		if(offsetX < x && offsetY < y && offsetX + textBox.getAdjustedWidth() > x  && offsetY + textBox.func_238483_d_() > y )
+		if(offsetX < x && offsetY < y && offsetX + textBox.getAdjustedWidth() > x  && offsetY + textBox.getHeightRealms() > y )
 			textBox.setFocused2(true);
 		else
 			textBox.setFocused2(false);
@@ -88,7 +88,7 @@ public class ModuleTextBox extends ModuleBase {
 		super.renderForeground(mat, guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui,
 				font);
 
-		textBox.func_230431_b_(mat, guiOffsetX, guiOffsetY, zLevel);
+		textBox.renderButton(mat, guiOffsetX, guiOffsetY, zLevel);
 	}
 
 	public void setText(String str) {

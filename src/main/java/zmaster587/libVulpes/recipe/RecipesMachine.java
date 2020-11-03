@@ -295,7 +295,7 @@ public class RecipesMachine {
 					if(inputs[i] instanceof String) {
 						ResourceLocation res = new ResourceLocation((String)inputs[i]);
 						oreDict.put(i, res);
-						for (Item item : ItemTags.getCollection().get(res).func_230236_b_() ) {
+						for (Item item : ItemTags.getCollection().get(res).getAllElements() ) {
 							innerList.add(new ItemStack(item));
 						}
 					}
@@ -304,13 +304,13 @@ public class RecipesMachine {
 						if(!ItemTags.getCollection().getRegisteredTags().contains((ResourceLocation)inputs[i]))
 							throw new  NullPointerException("No such item tag registered: " + ((ResourceLocation)inputs[i]).toString());
 						
-						for (Item item : ItemTags.getCollection().get((ResourceLocation)inputs[i]).func_230236_b_() ) {
+						for (Item item : ItemTags.getCollection().get((ResourceLocation)inputs[i]).getAllElements() ) {
 							innerList.add(new ItemStack(item));
 						}
 					}
 					else if(inputs[i] instanceof NumberedOreDictStack) {
 						oreDict.put(i, ((NumberedOreDictStack)inputs[i]).ore);
-						for (Item item : ItemTags.getCollection().get(new ResourceLocation((String)inputs[i])).func_230236_b_()) {
+						for (Item item : ItemTags.getCollection().get(new ResourceLocation((String)inputs[i])).getAllElements()) {
 							int number  = ((NumberedOreDictStack)inputs[i]).getNumber();
 							ItemStack stack2 = new ItemStack(item, number);
 							stack2.setCount(number);

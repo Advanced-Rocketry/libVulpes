@@ -211,7 +211,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 	public void renderBackground(ContainerScreen<? extends Container> gui, MatrixStack mat, int x, int y, int mouseX, int mouseY,
 			FontRenderer font) {
 		super.renderBackground(gui, mat, x, y, mouseX, mouseY,  font);
-		gui.func_238474_b_(mat, x + offsetX, y + offsetY, 176, 58, 14, 54);
+		gui.blit(mat, x + offsetX, y + offsetY, 176, 58, 14, 54);
 
 		//Draw Fluid
 		FluidStack info = tile.getFluidInTank(0);
@@ -235,10 +235,10 @@ public class ModuleLiquidIndicator extends ModuleBase {
 		int xSize = 12;
 
 		if(sprite == null)
-			gui.func_238474_b_(mat, offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), 0, 0, xSize, (int)(percent*ySize));
+			gui.blit(mat, offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), 0, 0, xSize, (int)(percent*ySize));
 		else {
 			gui.getMinecraft().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-			gui.func_238470_a_(mat, offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), 0 /* zlevel */, xSize, (int)(percent*ySize), sprite);
+			gui.blit(mat, offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), 0 /* zlevel */, xSize, (int)(percent*ySize), sprite);
 		}
 		//gui.drawTexturedModelRectFrom(offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), fluidIcon, xSize, (int)(percent*ySize));
 

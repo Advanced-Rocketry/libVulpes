@@ -51,7 +51,7 @@ public class ModuleSlotButton extends ModuleButton {
 
 
 		textureManager.bindTexture(CommonResources.genericBackground);
-		gui.func_238474_b_(mat, x + offsetX - 1, y + offsetY - 1, 176, 0, 18, 18);
+		gui.blit(mat, x + offsetX - 1, y + offsetY - 1, 176, 0, 18, 18);
 
 		int p_77015_4_ = x + offsetX;
 		int p_77015_5_ = y + offsetY;

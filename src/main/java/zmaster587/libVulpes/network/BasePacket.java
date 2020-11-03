@@ -27,7 +27,7 @@ public abstract class BasePacket {
 
 	public static void writeWorld(PacketBuffer out, World world)
 	{
-		out.writeResourceLocation(world.func_234923_W_().func_240901_a_());
+		out.writeResourceLocation(world.getDimensionKey().getLocation());
 	}
 
 	public static World readWorld(PacketBuffer in)

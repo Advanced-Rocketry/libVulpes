@@ -108,7 +108,7 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 
 	@Override
 	public void handleUpdateTag(BlockState state, CompoundNBT tag) {
-		this.func_230337_a_(state, tag);
+		this.read(state, tag);
 	}
 	
 	@Override
@@ -156,9 +156,9 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 	}
 
 	
-	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT nbtTagCompound) {
-		super.func_230337_a_(state, nbtTagCompound);
+	//@Override
+	public void read(BlockState state, CompoundNBT nbtTagCompound) {
+		super.read(state, nbtTagCompound);
 
 		readFromNBTHelper(nbtTagCompound);
 	}
