@@ -156,7 +156,7 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 	}
 
 	
-	//@Override
+	@Override
 	public void read(BlockState state, CompoundNBT nbtTagCompound) {
 		super.read(state, nbtTagCompound);
 

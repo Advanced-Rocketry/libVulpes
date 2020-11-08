@@ -46,24 +46,24 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 		hasSlots = container.includePlayerInv;
 	}
 
-	@Override
+	/*@Override
 	protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
 
-	}
+	}*/
 
-	//@Override
-	public void func_231158_b_(Minecraft p_231158_1_, int p_231158_2_, int p_231158_3_) {
+	@Override
+	public void init(Minecraft minecraft, int width, int height) {
 		if(((ContainerModular)container).guid != guiId.MODULARFULLSCREEN)
 		{
-			super.init(p_231158_1_, p_231158_2_, p_231158_3_);
+			super.init(minecraft, width, height);
 			return;
 		}
 
-		this.minecraft = p_231158_1_;
-		this.itemRenderer = p_231158_1_.getItemRenderer();
-		this.font = p_231158_1_.fontRenderer;
-		//this.width = p_231158_2_;
-		//this.height = p_231158_3_;
+		this.minecraft = minecraft;
+		this.itemRenderer = minecraft.getItemRenderer();
+		this.font = minecraft.fontRenderer;
+		//this.width = width;
+		//this.height = height;
 		java.util.function.Consumer<Widget> remove = (b) -> {
 			buttons.remove(b);
 			children.remove(b);
@@ -136,9 +136,9 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 
 
 	// Draw foreground
-	//@Override
-	protected void func_230451_b_(MatrixStack matrix, int a, int b)  {
-		//super.func_230451_b_(matrix, a, b);
+	@Override
+	protected void drawGuiContainerForegroundLayer(MatrixStack matrix, int a, int b)  {
+		super.drawGuiContainerForegroundLayer(matrix, a, b);
 
 		//renderString
 		this.font.func_243246_a(matrix, title, 8, 6, 0xffffff);
@@ -178,7 +178,7 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 	}
 
 	// mouse click drag
-	//@Override
+	@Override
 	public boolean mouseDragged(double x, double y, int button, double x2, double y2) {
 		boolean handled = super.mouseDragged(x, y, button, x2, y2);
 
@@ -189,8 +189,8 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 	}
 
 	// Draw background
-	//@Override
-	protected void func_230450_a_(MatrixStack matrix, float f1, int i2, int i3) 
+	@Override
+	protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float f1, int i2, int i3)
 	{
 		//Guarantee proper color
 		GlStateManager.color4f(1, 1, 1, 1);
@@ -224,7 +224,7 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 	 * Draws the screen and all the components in it.
 	 */
 	//drawScreen
-	//@Override
+	@Override
 	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTicks)
 	{
 		this.renderBackground(matrix); // DrawDefaultWorldBackground

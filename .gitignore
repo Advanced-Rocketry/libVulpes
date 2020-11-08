@@ -22,3 +22,5 @@ screenshots
 changelog.html
 run/
 .idea/
+out/
+.run/

@@ -25,12 +25,12 @@ public class GuiModularFullScreen extends GuiModular {
 		this.height = Minecraft.getInstance().getMainWindow().getHeight();
 	}
 	
-	   public void func_231158_b_(Minecraft p_231158_1_, int p_231158_2_, int p_231158_3_) {
-		      this.minecraft = p_231158_1_;
-		      this.itemRenderer = p_231158_1_.getItemRenderer();
-		      this.font = p_231158_1_.fontRenderer;
-		      //this.width = p_231158_2_;
-		      //this.height = p_231158_3_;
+	   public void init(Minecraft minecraft, int width, int height) {
+		      this.minecraft = minecraft;
+		      this.itemRenderer = minecraft.getItemRenderer();
+		      this.font = minecraft.fontRenderer;
+		      //this.width = width;
+		      //this.height = height;
 		      java.util.function.Consumer<Widget> remove = (b) -> {
 		         buttons.remove(b);
 		         children.remove(b);
