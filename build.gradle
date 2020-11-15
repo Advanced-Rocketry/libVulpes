@@ -124,7 +124,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.4-35.0.1'
+    minecraft 'net.minecraftforge:forge:1.16.4-35.0.15'
       
     compile name: 'industrialcraft-2', version: '2.8.96-ex112-api', ext: 'jar'
     //You'll need to download Tesla Tesla-1.12.2-1.0.63-deobf.jar and put it into the libs folder

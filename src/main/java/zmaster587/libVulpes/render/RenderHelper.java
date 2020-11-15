@@ -227,8 +227,8 @@ public class RenderHelper {
 
     /**
 	 * Renders a standard cube block at the given coordinates, with a given color ratio.  Args: block, x, y, z, r, g, b, a
-	 * /
-    public static boolean renderStandardBlockWithColorMultiplier(Block p_147736_1_, int p_147736_2_, int p_147736_3_, int p_147736_4_, float p_147736_5_, float p_147736_6_, float p_147736_7_, float alpha)
+	 * */
+    /*public static boolean renderStandardBlockWithColorMultiplier(Block p_147736_1_, int p_147736_2_, int p_147736_3_, int p_147736_4_, float p_147736_5_, float p_147736_6_, float p_147736_7_, float alpha)
     {
     	RenderBlocks renderBlocks = RenderBlocks.getInstance();
     	renderBlocks.enableAO = false;
