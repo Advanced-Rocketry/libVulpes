@@ -16,6 +16,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class BlockMultiMachineBattery extends BlockMultiblockStructure {
 
 	protected Class<? extends TileEntity> tileClass;

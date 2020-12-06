@@ -32,7 +32,7 @@ public class ModuleTexturedLimitedSlotArray extends ModuleLimitedSlotArray {
 				gui.getMinecraft().getTextureManager().bindTexture(iconResource.getResourceLocation());
 			for(Slot slot : slotList) {
 				
-				gui.func_238474_b_(mat, x + slot.xPos - 1, y + slot.yPos - 1, iconResource.getxLoc(), iconResource.getyLoc(), iconResource.getxSize(), iconResource.getySize());
+				gui.blit(mat, x + slot.xPos - 1, y + slot.yPos - 1, iconResource.getxLoc(), iconResource.getyLoc(), iconResource.getxSize(), iconResource.getySize());
 			}
 		}
 		else

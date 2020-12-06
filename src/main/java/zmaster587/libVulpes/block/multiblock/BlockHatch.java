@@ -21,6 +21,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class BlockHatch extends BlockMultiblockStructure {
 
 	protected TileEntityType<?> tileClass;

@@ -72,7 +72,7 @@ public class MultiInventory implements IInventory {
 	}
 
 	@Override
-	public boolean isUsableByPlayer(PlayerEntity p_70300_1_) {
+	public boolean isUsableByPlayer(PlayerEntity player) {
 		return true;
 	}
 	

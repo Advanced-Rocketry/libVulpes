@@ -28,6 +28,8 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.util.IAdjBlockUpdate;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class BlockTile extends RotatableBlock {
 
 	protected TileEntityType<?> tileClass;

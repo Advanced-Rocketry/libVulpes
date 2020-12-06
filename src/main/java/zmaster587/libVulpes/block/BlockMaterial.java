@@ -2,6 +2,8 @@ package zmaster587.libVulpes.block;
 
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockStructure;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class BlockMaterial extends BlockMultiblockStructure {
 
 	public zmaster587.libVulpes.api.material.Material[] ores = new zmaster587.libVulpes.api.material.Material[16];

@@ -29,7 +29,7 @@ public class RepeatingSound extends TickableSound {
 	public void tick() {
 		if(tile.isRemoved())
 			// done playing
-			this.func_239509_o_();
+			this.finishPlaying();
 		if(toggle != null)
 			this.volume = toggle.isRunning() ? 1f : 0f;
 	}

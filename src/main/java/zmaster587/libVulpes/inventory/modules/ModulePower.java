@@ -33,15 +33,15 @@ public class ModulePower extends ModuleBase {
 		super.renderBackground(gui, mat, x, y, mouseX, mouseY, font);
 
 		//Power bar background
-		gui.func_238474_b_(mat, x + offsetX, y + offsetY, 176, 18, 8, 40);
+		gui.blit(mat, x + offsetX, y + offsetY, 176, 18, 8, 40);
 
 		//Battery Icon
-		gui.func_238474_b_(mat, x + offsetX + 2, y + offsetY + barYSize + 5, 15, 171, 4, 9);
+		gui.blit(mat, x + offsetX + 2, y + offsetY + barYSize + 5, 15, 171, 4, 9);
 
 		//Power Bar
 		float percent = tile.getUniversalEnergyStored()/(float)tile.getMaxEnergyStored();
 
-		gui.func_238474_b_(mat, offsetX + x + 1, 1 + offsetY + y + (barYSize-(int)(percent*barYSize)), textureOffsetX, barYSize- (int)(percent*barYSize) + textureOffsetY, barXSize, (int)(percent*barYSize));
+		gui.blit(mat, offsetX + x + 1, 1 + offsetY + y + (barYSize-(int)(percent*barYSize)), textureOffsetX, barYSize- (int)(percent*barYSize) + textureOffsetY, barXSize, (int)(percent*barYSize));
 	}
 
 	@OnlyIn(value=Dist.CLIENT)

@@ -38,6 +38,8 @@ import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.IFluidHandlerInternal;
 import zmaster587.libVulpes.util.IconResource;
 
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+
 public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal, IModularInventory, ISidedInventory {
 
 	protected FluidTank fluidTank;
@@ -229,8 +231,8 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	}
 
 	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
-		super.func_230337_a_(state, nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 
 		outputOnly = nbt.getBoolean("outputOnly");
 		inventory.readFromNBT(nbt);

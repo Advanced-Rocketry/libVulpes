@@ -53,7 +53,7 @@ public class ModuleImage extends ModuleBase {
 				RenderHelper.renderNorthFaceWithUV(mat, Tessellator.getInstance().getBuffer(), 0, x + offsetX, y + offsetY, x + offsetX + icon.getxSize(), y + offsetY + icon.getySize(), 0, 1, 0, 1, 1,1,1,1);
 				Tessellator.getInstance().draw();
 			} else
-				gui.func_238474_b_(mat, x + offsetX, y + offsetY, icon.getxLoc(), icon.getyLoc(), icon.getxSize(), icon.getySize());
+				gui.blit(mat, x + offsetX, y + offsetY, icon.getxLoc(), icon.getyLoc(), icon.getxSize(), icon.getySize());
 			RenderSystem.disableBlend();
 		}
 	}

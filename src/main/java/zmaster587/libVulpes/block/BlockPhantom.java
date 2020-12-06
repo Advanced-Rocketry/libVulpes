@@ -21,6 +21,8 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class BlockPhantom extends Block {
 
 	public BlockPhantom(Properties mat) {
@@ -69,7 +71,7 @@ public class BlockPhantom extends Block {
 	}
 	
 	@Override
-	public boolean isReplaceable(BlockState p_225541_1_, Fluid p_225541_2_) {
+	public boolean isReplaceable(BlockState state, Fluid fluid) {
 		return true;
 	}
 	

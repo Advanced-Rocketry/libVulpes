@@ -101,9 +101,9 @@ public class MaterialRegistry {
 					// Register block tags
 					for(int g = 0; g < mat.getOreDictNames().length; g++) {
 						String str = mat.getOreDictNames()[g];
-						BlockTags.getCollection().func_241834_b(new ResourceLocation("forge:" + productName +  "s/" + str)).func_230235_a_(metalBlocks);
+						BlockTags.getCollection().getTagByID(new ResourceLocation("forge:" + productName +  "s/" + str)).contains(metalBlocks);
 					}
-					BlockTags.getCollection().func_241834_b(new ResourceLocation(LibVulpes.MODID,"block" + productName)).func_230235_a_(metalBlocks);
+					BlockTags.getCollection().getTagByID(new ResourceLocation(LibVulpes.MODID,"block" + productName)).contains(metalBlocks);
 				}
 				else
 				{
@@ -116,7 +116,7 @@ public class MaterialRegistry {
 				// Register item tags
 				for(int g = 0; g < mat.getOreDictNames().length; g++) {
 					String str = mat.getOreDictNames()[g];
-					ItemTags.getCollection().func_241834_b(new ResourceLocation("forge:" + productName +  "s/" + str)).func_230235_a_(item);
+					ItemTags.getCollection().getTagByID(new ResourceLocation("forge:" + productName +  "s/" + str)).contains(item);
 				}
 			}
 		}

@@ -386,40 +386,40 @@ public class ZUtils {
 
 	// Dimension stuff
 
-	// public static final RegistryKey<Registry<DimensionType>> field_239698_ad_ = func_239741_a_("dimension_type");
-	// public static final RegistryKey<Registry<World>> field_239699_ae_ = func_239741_a_("dimension");
-	// public static final RegistryKey<Registry<Dimension>> field_239700_af_ = func_239741_a_("dimension");
+	// public static final RegistryKey<Registry<DimensionType>> DIMENSION_TYPE_KEY = createKey("dimension_type");
+	// public static final RegistryKey<Registry<World>> WORLD_KEY = createKey("dimension");
+	// public static final RegistryKey<Registry<Dimension>> DIMENSION_KEY = createKey("dimension");
 
 	public static ResourceLocation getDimensionIdentifier(World world)
 	{
 		if(world == null)
 			return null;
-		if(world.func_234923_W_() == null)
+		if(world.getDimensionKey() == null)
 			return null;
-		return world.func_234923_W_().func_240901_a_();
+		return world.getDimensionKey().getLocation();
 
 	}
 
 	public static Optional<DimensionType> getDimensionFromIdentifier(ResourceLocation location)
 	{
-		return DynamicRegistries.func_239770_b_().func_230520_a_().func_241873_b(location);
+		return DynamicRegistries.func_239770_b_().func_230520_a_().getOptional(location);
 	}
 
 	public static DimensionType getDimensionType(IWorld world)
 	{
-		return world.func_230315_m_();
+		return world.getDimensionType();
 	}
 
 	public static ServerWorld getWorld(ResourceLocation worldLoc)
 	{
-		RegistryKey<World> registrykey = RegistryKey.func_240903_a_(Registry.field_239699_ae_, worldLoc);
+		RegistryKey<World> registrykey = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, worldLoc);
 
 		return ServerLifecycleHooks.getCurrentServer().getWorld(registrykey);
 	}
 
 	public static boolean isWorldLoaded(ResourceLocation worldLoc)
 	{
-		RegistryKey<World> registrykey = RegistryKey.func_240903_a_(Registry.field_239699_ae_, worldLoc);
+		RegistryKey<World> registrykey = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, worldLoc);
 
 		return registrykey != null && ServerLifecycleHooks.getCurrentServer().getWorld(registrykey) != null;
 	}
@@ -447,7 +447,7 @@ public class ZUtils {
 			}
 
 			// I'm fully aware I can screw up a lot of things by modifying this mapping
-			//ServerLifecycleHooks.getCurrentServer().forgeGetWorldMap().remove(RegistryKey.func_240903_a_(Registry.field_239699_ae_, dimId));
+			//ServerLifecycleHooks.getCurrentServer().forgeGetWorldMap().remove(RegistryKey.getOrCreateKey(Registry.WORLD_KEY, dimId));
 		}
 	}
 
@@ -464,18 +464,18 @@ public class ZUtils {
 		if(getDimensionFromIdentifier(worldLoc).isPresent())
 			return false;
 
-		RegistryKey<DimensionType> dimRegistryKey = RegistryKey.func_240903_a_(Registry.field_239698_ad_, worldLoc);
-		MutableRegistry<DimensionType> mutableregistry = DynamicRegistries.func_239770_b_().func_243612_b(Registry.field_239698_ad_);
+		RegistryKey<DimensionType> dimRegistryKey = RegistryKey.getOrCreateKey(Registry.DIMENSION_TYPE_KEY, worldLoc);
+		MutableRegistry<DimensionType> mutableregistry = DynamicRegistries.func_239770_b_().getRegistry(Registry.DIMENSION_TYPE_KEY);
 		mutableregistry.register(dimRegistryKey, type, Lifecycle.stable());
 
-		//RegistryKey<Dimension> dimension = RegistryKey.func_240903_a_(Registry.field_239700_af_, worldLoc);
-		//SimpleRegistry<Dimension> simpleregistry = ServerLifecycleHooks.getCurrentServer().func_240793_aU_().func_230418_z_().func_236224_e_();
+		//RegistryKey<Dimension> dimension = RegistryKey.getOrCreateKey(Registry.DIMENSION_KEY, worldLoc);
+		//SimpleRegistry<Dimension> simpleregistry = ServerLifecycleHooks.getCurrentServer().getServerConfiguration().getDimensionGeneratorSettings().func_236224_e_();
 		//simpleregistry.register(dimension, dim, Lifecycle.stable());
 		
 		
 		
 		// register the world
-		/*RegistryKey<World> registrykey = RegistryKey.func_240903_a_(Registry.field_239699_ae_, worldLoc);
+		/*RegistryKey<World> registrykey = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, worldLoc);
 		
 		if(EffectiveSide.get().isClient())
 			DistExecutor.runWhenOn(Dist.CLIENT,() -> () -> 
@@ -494,13 +494,13 @@ public class ZUtils {
 	}
 	public static int getDimensionId(World world)
 	{
-		return getDimensionType(world).func_241513_m_();
+		return getDimensionType(world).getLogicalHeight();
 	}
 
 	public static void initDimension(ResourceLocation dimid) {
 		/*if(isWorldRegistered(dimid))
 		{
-			RegistryKey<World> registrykey = RegistryKey.func_240903_a_(Registry.field_239699_ae_, dimid);
+			RegistryKey<World> registrykey = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, dimid);
 
 			ServerLifecycleHooks.getCurrentServer().forgeGetWorldMap().put(registrykey,getWorld(dimid));
 		}*/

@@ -3,6 +3,8 @@ package zmaster587.libVulpes.cap;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+
 public class FluidCapability implements IFluidHandler{
 
 	IFluidHandler tile;

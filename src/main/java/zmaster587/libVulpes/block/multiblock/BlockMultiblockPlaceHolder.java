@@ -24,6 +24,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 /**
  * Invisible block used to store blocks that are part of a completed multi-block structure
  * 

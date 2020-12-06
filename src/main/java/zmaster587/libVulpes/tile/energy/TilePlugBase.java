@@ -84,8 +84,8 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	}
 	
 	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
-		super.func_230337_a_(state, nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 		
 		teir = nbt.getInt("teir");
 		
@@ -104,17 +104,17 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int p_70301_1_) {
+	public ItemStack getStackInSlot(int index) {
 		return null;
 	}
 
 	@Override
-	public ItemStack decrStackSize(int p_70298_1_, int p_70298_2_) {
+	public ItemStack decrStackSize(int index, int count) {
 		return null;
 	}
 
 	@Override
-	public void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_) {
+	public void setInventorySlotContents(int index, ItemStack stack) {
 		
 	}
 

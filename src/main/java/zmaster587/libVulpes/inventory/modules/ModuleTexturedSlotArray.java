@@ -27,7 +27,7 @@ public class ModuleTexturedSlotArray extends ModuleSlotArray {
 	public void renderBackground(ContainerScreen<? extends Container> gui, MatrixStack mat, int x, int y, int mouseX, int mouseY,
 			FontRenderer font) {
 		for(Slot slot : slotList) {
-			gui.func_238474_b_(mat, x + slot.xPos - 1, y + slot.yPos - 1, iconResource.getxLoc(), iconResource.getyLoc(), iconResource.getxSize(), iconResource.getySize());
+			gui.blit(mat, x + slot.xPos - 1, y + slot.yPos - 1, iconResource.getxLoc(), iconResource.getyLoc(), iconResource.getxSize(), iconResource.getySize());
 		}
 	}
 }

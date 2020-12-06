@@ -62,6 +62,8 @@ import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 import zmaster587.libVulpes.util.ZUtils;
 
+import net.minecraft.item.Item.Properties;
+
 public class ItemProjector extends Item implements IModularInventory, IButtonInventory, INetworkItem, INamedContainerProvider {
 
 	ArrayList<TileMultiBlock> machineList;

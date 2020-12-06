@@ -5,6 +5,8 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import zmaster587.libVulpes.api.material.Material;
 
+import net.minecraft.item.Item.Properties;
+
 public class ItemMaterialBlock extends BlockItem {
 
 	Material mat;

@@ -16,6 +16,8 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 /**
  * Block which is integrated into the multiblock structure.  When a structure is formed the block
  * continues to render and when broken will alert the master block

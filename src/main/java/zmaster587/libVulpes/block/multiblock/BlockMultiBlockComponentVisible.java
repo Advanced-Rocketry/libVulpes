@@ -7,6 +7,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import zmaster587.libVulpes.tile.TilePointer;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class BlockMultiBlockComponentVisible extends BlockMultiblockStructure {
 
 	public BlockMultiBlockComponentVisible(Properties property) {

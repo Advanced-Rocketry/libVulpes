@@ -5,6 +5,8 @@ import zmaster587.libVulpes.api.material.Material;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class BlockOre extends Block {
 	public AllowedProducts product;
 	public Material material;

@@ -35,28 +35,28 @@ public class PacketSpawnEntity extends BasePacket implements IPacket<INetHandler
 	public PacketSpawnEntity() {
 	}
 
-	public PacketSpawnEntity(int p_i50777_1_, UUID p_i50777_2_, double p_i50777_3_, double p_i50777_5_, double p_i50777_7_, float p_i50777_9_, float p_i50777_10_, EntityType<?> p_i50777_11_, int p_i50777_12_, Vector3d p_i50777_13_) {
-		this.entityId = p_i50777_1_;
-		this.uniqueId = p_i50777_2_;
-		this.x = p_i50777_3_;
-		this.y = p_i50777_5_;
-		this.z = p_i50777_7_;
-		this.pitch = MathHelper.floor(p_i50777_9_ * 256.0F / 360.0F);
-		this.yaw = MathHelper.floor(p_i50777_10_ * 256.0F / 360.0F);
-		this.type = p_i50777_11_;
-		this.data = p_i50777_12_;
-		this.speedX = (int)(MathHelper.clamp(p_i50777_13_.x, -3.9D, 3.9D) * 8000.0D);
-		this.speedY = (int)(MathHelper.clamp(p_i50777_13_.y, -3.9D, 3.9D) * 8000.0D);
-		this.speedZ = (int)(MathHelper.clamp(p_i50777_13_.z, -3.9D, 3.9D) * 8000.0D);
+	public PacketSpawnEntity(int entityId, UUID uuid, double xPos, double yPos, double zPos, float pitch, float yaw, EntityType<?> entityType, int entityData, Vector3d speedVector) {
+		this.entityId = entityId;
+		this.uniqueId = uuid;
+		this.x = xPos;
+		this.y = yPos;
+		this.z = zPos;
+		this.pitch = MathHelper.floor(pitch * 256.0F / 360.0F);
+		this.yaw = MathHelper.floor(yaw * 256.0F / 360.0F);
+		this.type = entityType;
+		this.data = entityData;
+		this.speedX = (int)(MathHelper.clamp(speedVector.x, -3.9D, 3.9D) * 8000.0D);
+		this.speedY = (int)(MathHelper.clamp(speedVector.y, -3.9D, 3.9D) * 8000.0D);
+		this.speedZ = (int)(MathHelper.clamp(speedVector.z, -3.9D, 3.9D) * 8000.0D);
 	}
 
-	public PacketSpawnEntity(Entity p_i50778_1_) {
-		this(p_i50778_1_, 0);
+	public PacketSpawnEntity(Entity entity) {
+		this(entity, 0);
 
 	}
 
-	public PacketSpawnEntity(Entity p_i50778_1_, CompoundNBT nbt) {
-		this(p_i50778_1_, 0);
+	public PacketSpawnEntity(Entity entity, CompoundNBT nbt) {
+		this(entity, 0);
 
 		this.nbt = nbt;
 	}
@@ -65,8 +65,8 @@ public class PacketSpawnEntity extends BasePacket implements IPacket<INetHandler
 		this(entityIn.getEntityId(), entityIn.getUniqueID(), entityIn.getPosX(), entityIn.getPosY(), entityIn.getPosZ(), entityIn.rotationPitch, entityIn.rotationYaw, entityIn.getType(), typeIn, entityIn.getMotion());
 	}
 
-	public PacketSpawnEntity(Entity p_i50779_1_, EntityType<?> p_i50779_2_, int p_i50779_3_, BlockPos p_i50779_4_) {
-		this(p_i50779_1_.getEntityId(), p_i50779_1_.getUniqueID(), (double)p_i50779_4_.getX(), (double)p_i50779_4_.getY(), (double)p_i50779_4_.getZ(), p_i50779_1_.rotationPitch, p_i50779_1_.rotationYaw, p_i50779_2_, p_i50779_3_, p_i50779_1_.getMotion());
+	public PacketSpawnEntity(Entity entity, EntityType<?> entityType, int entityData, BlockPos pos) {
+		this(entity.getEntityId(), entity.getUniqueID(), (double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), entity.rotationPitch, entity.rotationYaw, entityType, entityData, entity.getMotion());
 	}
 
 

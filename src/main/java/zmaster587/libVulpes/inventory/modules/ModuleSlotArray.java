@@ -47,7 +47,7 @@ public class ModuleSlotArray extends ModuleBase {
 		if(!isEnabled()) {
 			gui.getMinecraft().getTextureManager().bindTexture(TextureResources.slotDisabled.getResourceLocation());
 			for(Slot slot : slotList) {
-				gui.func_238474_b_(mat, x + slot.xPos - 1, y + slot.yPos - 1, TextureResources.slotDisabled.getxLoc(), TextureResources.slotDisabled.getyLoc(), TextureResources.slotDisabled.getxSize(), TextureResources.slotDisabled.getySize());
+				gui.blit(mat, x + slot.xPos - 1, y + slot.yPos - 1, TextureResources.slotDisabled.getxLoc(), TextureResources.slotDisabled.getyLoc(), TextureResources.slotDisabled.getxSize(), TextureResources.slotDisabled.getySize());
 			}
 		}
 	}

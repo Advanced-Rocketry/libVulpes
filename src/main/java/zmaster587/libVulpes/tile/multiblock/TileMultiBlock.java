@@ -445,12 +445,12 @@ public class TileMultiBlock extends TileEntity {
 		}
 		else if(input instanceof String) { //OreDict entry
 			if(BlockTags.getCollection().getRegisteredTags().contains(new ResourceLocation((String)input)))
-				return BlockTags.getCollection().get(new ResourceLocation((String)input)).func_230236_b_().stream().map(value -> new BlockMeta(value.getDefaultState())).collect(Collectors.toList());
+				return BlockTags.getCollection().get(new ResourceLocation((String)input)).getAllElements().stream().map(value -> new BlockMeta(value.getDefaultState())).collect(Collectors.toList());
 			LibVulpes.logger.warn(String.format("No ore dictionary entry for '%s' in machine %s", input, getMachineName()));
 		}
 		else if(input instanceof ResourceLocation) { //OreDict entry
 			if(BlockTags.getCollection().getRegisteredTags().contains((ResourceLocation)input))
-				return BlockTags.getCollection().get((ResourceLocation)input).func_230236_b_().stream().map(value -> new BlockMeta(value.getDefaultState())).collect(Collectors.toList());
+				return BlockTags.getCollection().get((ResourceLocation)input).getAllElements().stream().map(value -> new BlockMeta(value.getDefaultState())).collect(Collectors.toList());
 			LibVulpes.logger.warn(String.format("No ore dictionary entry for '%s' in machine %s", input,  getMachineName()));
 		}
 		else if(input instanceof Block) {
@@ -545,8 +545,8 @@ public class TileMultiBlock extends TileEntity {
 	}
 	
 	@Override
-	public void func_230337_a_(BlockState state, CompoundNBT nbt) {
-		super.func_230337_a_(state, nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 		readNetworkData(nbt);
 		completeStructure = nbt.getBoolean("completeStructure");
 		canRender = nbt.getBoolean("canRender");

@@ -18,6 +18,8 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class BlockMotor extends RotatableBlock implements ITimeModifier {
 	
 	float timeModifier;

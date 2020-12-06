@@ -151,7 +151,7 @@ public abstract class ModuleBase {
 	public void renderBackground(ContainerScreen<? extends Container>  gui, MatrixStack matrix, int x, int y, int mouseX, int mouseY, FontRenderer font) {
 		gui.getMinecraft().getTextureManager().bindTexture(CommonResources.genericBackground);
 		for(Slot slot : slotList) {
-			gui.func_238474_b_(matrix, x + slot.xPos - 1, y + slot.yPos - 1, 176, 0, 18, 18);
+			gui.blit(matrix, x + slot.xPos - 1, y + slot.yPos - 1, 176, 0, 18, 18);
 		}
 	}
 
@@ -286,7 +286,7 @@ public abstract class ModuleBase {
 		for (int i2 = 0; i2 < textList.size(); ++i2)
 		{
 			String s1 = (String)textList.get(i2);
-			font.func_238405_a_(matrix, s1, j2, k2, -1);
+			font.drawStringWithShadow(matrix, s1, j2, k2, -1);
 
 			if (i2 == 0)
 			{
