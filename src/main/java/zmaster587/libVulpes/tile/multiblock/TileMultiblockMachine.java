@@ -34,6 +34,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		POWERERROR
 	}
 
+	private List<ItemStack> inputItemStacks;
 	private List<ItemStack> outputItemStacks;
 	private List<FluidStack> outputFluidStacks;
 
@@ -45,6 +46,10 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	public TileMultiblockMachine() {
 		super();
 		outputItemStacks = null;
+	}
+
+	public List<ItemStack> getInputs() {
+		return inputItemStacks;
 	}
 
 	public List<ItemStack> getOutputs() {
@@ -178,6 +183,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		if(!world.isRemote)
 			dumpOutputToInventory();
 
+		inputItemStacks = null;
 		outputItemStacks = null;
 		outputFluidStacks = null;
 
@@ -503,6 +509,17 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 				outputItemStacks = recipe.getOutput();
 				outputFluidStacks = recipe.getFluidOutputs();
 
+				List<List<ItemStack>> ingredients = recipe.getIngredients();
+				for(int ingredientNum = 0;ingredientNum < ingredients.size(); ingredientNum++) {
+					if (inputItemStacks == null)
+						inputItemStacks = ingredients.get(ingredientNum);
+					else
+					    inputItemStacks.addAll(ingredients.get(ingredientNum));
+				}
+
+
+
+
 				markDirty();
 				world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 
@@ -540,6 +557,19 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 			nbt.setTag("outputItems", list);
 		}
 
+		//Save input items if applicable
+		if(inputItemStacks != null) {
+			NBTTagList list = new NBTTagList();
+			for(ItemStack stack : inputItemStacks) {
+				if(stack != null) {
+					NBTTagCompound tag = new NBTTagCompound();
+					stack.writeToNBT(tag);
+					list.appendTag(tag);
+				}
+			}
+			nbt.setTag("inputItems", list);
+		}
+
 		if(outputFluidStacks != null) {
 			NBTTagList list = new NBTTagList();
 			for(FluidStack stack : outputFluidStacks) {
@@ -567,6 +597,18 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 				NBTTagCompound tag = list.getCompoundTagAt(i);
 
 				outputItemStacks.add(new ItemStack(tag));
+			}
+		}
+
+		//Load input items being processed if applicable
+		if(nbt.hasKey("inputItems")) {
+			inputItemStacks = new LinkedList<ItemStack>();
+			NBTTagList list = nbt.getTagList("inputItems", 10);
+
+			for(int i = 0; i < list.tagCount(); i++) {
+				NBTTagCompound tag = list.getCompoundTagAt(i);
+
+				inputItemStacks.add(new ItemStack(tag));
 			}
 		}
 
