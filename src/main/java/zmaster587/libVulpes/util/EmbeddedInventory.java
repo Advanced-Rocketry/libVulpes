@@ -1,10 +1,7 @@
 package zmaster587.libVulpes.util;
 
 import javax.annotation.Nonnull;
-import javax.swing.plaf.basic.BasicComboBoxUI.ItemHandler;
-
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagByte;
@@ -14,14 +11,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.items.ItemStackHandler;
 import zmaster587.libVulpes.interfaces.IInventoryUpdateCallback;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 public class EmbeddedInventory extends ItemStackHandler implements ISidedInventory {
 
@@ -98,13 +90,15 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 				this.stacks.set(slot, new ItemStack(tag));
 			}
 		}
-		NBTTagList list2 = nbt.getTagList("slotInsert", 7);
-		this.slotInsert = NonNullList.withSize(this.slotInsert.size(), false);
+		
+		
+		NBTTagList list2 = nbt.getTagList("slotInsert", NBT.TAG_BYTE);
+		this.slotInsert = NonNullList.withSize(list2.tagCount(), false);
 		for (int i = 0; i < list2.tagCount(); i++) {
 			this.slotInsert.set(i, (list2.getIntAt(i) == 1) ? true : false);
 		}
-		NBTTagList list3 = nbt.getTagList("slotExtract", 7);
-		this.slotInsert = NonNullList.withSize(this.slotExtract.size(), false);
+		NBTTagList list3 = nbt.getTagList("slotExtract", NBT.TAG_BYTE);
+		this.slotExtract = NonNullList.withSize(list3.tagCount(), false);
 		for (int i = 0; i < list3.tagCount(); i++) {
 			this.slotExtract.set(i, (list3.getIntAt(i) == 1) ? true : false);
 		}
