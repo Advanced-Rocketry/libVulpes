@@ -45,11 +45,20 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	public TileFluidHatch() {
 		fluidTank = new FluidTank(16000);
 		inventory = new EmbeddedInventory(2);
+		inventory.setCanInsertSlot(0, true);
+		inventory.setCanInsertSlot(1, false);
+		inventory.setCanExtractSlot(0, false);
+		inventory.setCanExtractSlot(1, true);
+
 	}
 	
 	public TileFluidHatch(int capacity) {
 		fluidTank = new FluidTank(capacity);
 		inventory = new EmbeddedInventory(2);
+		inventory.setCanInsertSlot(0, true);
+		inventory.setCanInsertSlot(1, false);
+		inventory.setCanExtractSlot(0, false);
+		inventory.setCanExtractSlot(1, true);
 	}
 	
 	@Override
