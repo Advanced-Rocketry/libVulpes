@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.util;
 
+import javax.annotation.Nonnull;
 import javax.swing.plaf.basic.BasicComboBoxUI.ItemHandler;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -208,6 +209,21 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 		return this.slotExtract.get(index);
 	}
 
+	@Override
+	public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+		if (!slotInsert.isEmpty() && slotInsert.get(slot) == true ){
+			return super.insertItem(slot, stack, simulate);
+		}
+		return ItemStack.EMPTY;
+	}
+
+	@Override
+	public ItemStack extractItem(int slot, int amount, boolean simulate) {
+		if (!slotExtract.isEmpty() && slotExtract.get(slot) == true ){
+			return super.extractItem(slot, amount, simulate);
+		}
+		return ItemStack.EMPTY;
+	}
 
 	public String getName() {
 		return "";

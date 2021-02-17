@@ -512,7 +512,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 				List<List<ItemStack>> ingredients = recipe.getIngredients();
 				for(int ingredientNum = 0;ingredientNum < ingredients.size(); ingredientNum++) {
 					if (inputItemStacks == null)
-						inputItemStacks = ingredients.get(ingredientNum);
+						inputItemStacks = new LinkedList<>(ingredients.get(ingredientNum));
 					else
 					    inputItemStacks.addAll(ingredients.get(ingredientNum));
 				}
