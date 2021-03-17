@@ -293,6 +293,7 @@ public class LibVulpes {
         materialRegistry.registerOres(tabLibVulpesOres);
         
         //Ore dict stuff
+		//Motors
         OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockMotor);
         OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockAdvancedMotor);
         OreDictionary.registerOre("blockMotor", LibVulpesBlocks.blockEnhancedMotor);

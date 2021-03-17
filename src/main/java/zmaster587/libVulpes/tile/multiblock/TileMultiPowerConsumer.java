@@ -2,12 +2,15 @@ package zmaster587.libVulpes.tile.multiblock;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
@@ -16,12 +19,14 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.libVulpes.Configuration;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.ITimeModifier;
 import zmaster587.libVulpes.api.IToggleableMachine;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.api.material.MaterialRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.client.RepeatingSound;
@@ -37,6 +42,7 @@ import zmaster587.libVulpes.network.PacketMachine;
 import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine.NetworkPackets;
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.MultiBattery;
+import zmaster587.libVulpes.util.ZUtils;
 
 public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMachine, IModularInventory, IProgressBar, IToggleButton, ITickable, IToggleableMachine {
 
@@ -113,10 +119,22 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	 * @return
 	 */
 	public float getTimeMultiplierForBlock(IBlockState state, TileEntity tile) {
-		
+
+		ItemStack droppedItem = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
+
+		//Check for motors & such
 		if(state.getBlock() instanceof ITimeModifier)
 			return ((ITimeModifier)state.getBlock()).getTimeMult();
-		
+		//Check coils, but with compat so people can add IE coils if wanted
+		else if(ZUtils.isItemInOreDict(droppedItem, "coilGold") || ZUtils.isItemInOreDict(droppedItem, "coilElectrum"))
+			return 0.9f;
+		else if(ZUtils.isItemInOreDict(droppedItem, "coilAluminum") || ZUtils.isItemInOreDict(droppedItem, "coilHighVoltage"))
+			return 0.8f;
+		else if(ZUtils.isItemInOreDict(droppedItem, "coilTitanium"))
+			return 0.75f;
+		else if(ZUtils.isItemInOreDict(droppedItem, "coilIridium"))
+			return 0.5f;
+		//Everything else is default
 		return 1f;
 	}
 

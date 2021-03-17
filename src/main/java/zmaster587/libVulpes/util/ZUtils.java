@@ -416,4 +416,12 @@ public class ZUtils {
 
 		return false;
 	}
+
+	public static boolean isItemInOreDict(ItemStack stack, String oreDictEntry) {
+		List<ItemStack> itemStacks = OreDictionary.getOres(oreDictEntry);
+		for(ItemStack stack1 : itemStacks)
+			if(OreDictionary.itemMatches(stack1, stack, false))
+				return true;
+		return false;
+	}
 }
