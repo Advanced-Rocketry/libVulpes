@@ -1,9 +1,5 @@
 package zmaster587.libVulpes.tile.energy;
 
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergyEmitter;
-import ic2.api.energy.tile.IEnergySink;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.MinecraftForge;
 
