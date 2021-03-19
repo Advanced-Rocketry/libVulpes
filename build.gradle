@@ -180,7 +180,7 @@ task deobfJar(type: Jar) {
     }
      mustRunAfter "jar" 
 }
-/*
+
 curseforge{
   if (project.hasProperty("thecursedkey")) {
         apiKey = project.thecursedkey
@@ -203,7 +203,7 @@ curseforge{
     }
    }
 }
-*/
+
 
 publishing {
     publications {
