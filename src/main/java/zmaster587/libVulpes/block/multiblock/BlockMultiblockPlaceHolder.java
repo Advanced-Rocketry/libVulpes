@@ -32,15 +32,12 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 	
 	//Make invisible
 	@Override
-	public boolean shouldSideBeRendered(IBlockState blockState,
-			IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+	public boolean doesSideBlockRendering(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
 		return false;
 	}
-	
+
 	@Override
-	public boolean isBlockNormalCube(IBlockState state) {
-		return false;
-	}
+	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) { return false; }
 	
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {

@@ -31,9 +31,7 @@ public class BlockPhantom extends Block {
 	}
 
 	@Override
-	protected boolean canSilkHarvest() {
-		return false;
-	}
+	public boolean canSilkHarvest(World world, BlockPos pos, IBlockState state, EntityPlayer player) { return false; }
 	
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos,
@@ -74,8 +72,7 @@ public class BlockPhantom extends Block {
 	}
 	
 	@Override
-	public boolean shouldSideBeRendered(IBlockState blockState,
-			IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+	public boolean doesSideBlockRendering(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
 		return false;
 	}
 	
@@ -91,8 +88,7 @@ public class BlockPhantom extends Block {
 	}
 	
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState,
-			IBlockAccess worldIn, BlockPos pos) {
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
 		// TODO Auto-generated method stub
 		return null;
 	}
