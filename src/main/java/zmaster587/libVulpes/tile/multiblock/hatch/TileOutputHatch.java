@@ -19,17 +19,20 @@ public class TileOutputHatch extends TileInventoryHatch {
 
 	public TileOutputHatch(int size) {
 		super(size);
+		inventory.setCanInsertSlot(0, false);
+		inventory.setCanInsertSlot(1, false);
+		inventory.setCanInsertSlot(2, false);
+		inventory.setCanInsertSlot(3, false);
+		inventory.setCanExtractSlot(0, true);
+		inventory.setCanExtractSlot(1, true);
+		inventory.setCanExtractSlot(2, true);
+		inventory.setCanExtractSlot(3, true);
+
 	}
 
 	@Override
 	public String getModularInventoryName() {
 		return "tile.hatch.1.name";
-	}
-
-	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn,
-			EnumFacing direction) {
-		return false;
 	}
 
 	@Override
