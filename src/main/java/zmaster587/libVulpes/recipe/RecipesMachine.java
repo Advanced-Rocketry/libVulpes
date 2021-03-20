@@ -17,6 +17,7 @@ import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.tags.ItemTags;
@@ -179,6 +180,13 @@ public class RecipesMachine {
 				}
 			}
 
+			if(stack.contains(null))
+			{
+				while(stack.remove(null));
+				
+				LibVulpes.logger.warn("Recipe " + this.getId().toString() + " has null item output, this should NOT happen!!");
+			}
+			
 			return stack;
 		}
 		
@@ -242,8 +250,8 @@ public class RecipesMachine {
 
 		@Override
 		public ItemStack getRecipeOutput() {
-			// do not use
-			return null;
+			// used by vanilla :/
+			return ItemStack.EMPTY;
 		}
 
 		@Override
