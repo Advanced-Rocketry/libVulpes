@@ -219,11 +219,12 @@ public class ModuleLiquidIndicator extends ModuleBase {
 		if(info == null)
 			return;
 		
-		if(info.getFluid() == null)
+		if(info.getFluid() == Fluids.EMPTY)
 			return;
 
 
 		TextureAtlasSprite sprite = info.getFluid() != Fluids.EMPTY ? ModelLoader.defaultTextureGetter().apply(ForgeHooksClient.getBlockMaterial(info.getFluid().getAttributes().getStillTexture())) : null;
+		
 		sprite.getAtlasTexture().bindTexture();
 		int color = info.getFluid().getAttributes().getColor(info);
 
