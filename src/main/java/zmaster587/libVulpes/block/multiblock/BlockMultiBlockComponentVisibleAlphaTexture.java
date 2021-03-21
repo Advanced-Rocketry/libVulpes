@@ -10,37 +10,15 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import zmaster587.libVulpes.tile.TilePointer;
 
-public class BlockMultiBlockComponentVisibleAlphaTexture extends BlockMultiblockStructure {
+public class BlockMultiBlockComponentVisibleAlphaTexture extends BlockMultiBlockComponentVisible {
 
 	public BlockMultiBlockComponentVisibleAlphaTexture(Material material) {
 		super(material);
-	}
-
-	@Override
-	public boolean hasTileEntity(IBlockState state) {
-		return state.getValue(VARIANT) > 7;
-	}
-	
-	@Override
-	public void completeStructure(World world, BlockPos pos, IBlockState state) {
-		world.setBlockState(pos, state.withProperty(VARIANT, state.getValue(VARIANT) | 8));
 	}
 	
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
-	}
-	
-	@Override
-	public boolean shouldSideBeRendered(IBlockState blockState,
-			IBlockAccess blockAccess, BlockPos pos, EnumFacing direction) {
-		
-		return true;//blockAccess.getBlockState(pos.offset(direction)).isOpaqueCube();
-	}
-	
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
-		return new TilePointer();
 	}
 
 	@Override

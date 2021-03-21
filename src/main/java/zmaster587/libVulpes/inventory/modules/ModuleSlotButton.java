@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.inventory.modules;
 
+import net.minecraft.init.Blocks;
 import org.lwjgl.opengl.GL11;
 
 import zmaster587.libVulpes.gui.CommonResources;
@@ -57,13 +58,6 @@ public class ModuleSlotButton extends ModuleButton {
 		int zLevel = 500;
 
 
-		int k = stack.getItemDamage();
-		int l;
-		float f;
-		float f3;
-		float f4;
-
-
 		textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 
@@ -85,14 +79,13 @@ public class ModuleSlotButton extends ModuleButton {
 		GL11.glDepthMask(false);
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		Block itemBlock = Block.getBlockFromItem(stack.getItem());
-		if(itemBlock != null) {
+		if(itemBlock != Blocks.AIR) {
 			IBlockState block =  itemBlock.getStateFromMeta(stack.getItemDamage());
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 			//Requires world OBJ for some stupid reason involving DEBUG WORLD check... why not idk... have a var for that?
 			Minecraft.getMinecraft().getBlockRendererDispatcher().renderBlock(block, new BlockPos(0, 255, 0), worldObj, buffer);
 			Tessellator.getInstance().draw();
 		}
-
 		GL11.glPopMatrix();
 
 	}
