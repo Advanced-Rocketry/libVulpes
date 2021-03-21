@@ -29,10 +29,10 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 	public BlockMultiblockPlaceHolder() {
 		super(Material.IRON);
 	}
-	
+
 	//Make invisible
 	@Override
-	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+	public boolean doesSideBlockRendering(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
 		return false;
 	}
 
