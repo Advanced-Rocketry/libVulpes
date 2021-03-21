@@ -224,6 +224,7 @@ task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     gitHubIssuePattern = "nonada123";
     templateContent = """
 {{#tags}}
+    <h1>This build is a very early alpha. it may break your world. Post issues on the Advanced Rocketry issue tracker. Future changes may break your world!</h1>
   <h3>{{name}}</h3>
   <ul>
     {{#commits}}
