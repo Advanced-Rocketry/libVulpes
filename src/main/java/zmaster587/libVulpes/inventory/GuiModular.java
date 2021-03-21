@@ -138,7 +138,7 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 	// Draw foreground
 	@Override
 	protected void drawGuiContainerForegroundLayer(MatrixStack matrix, int a, int b)  {
-		super.drawGuiContainerForegroundLayer(matrix, a, b);
+		//super.drawGuiContainerForegroundLayer(matrix, a, b);
 
 		//renderString
 		this.font.func_243246_a(matrix, title, 8, 6, 0xffffff);
