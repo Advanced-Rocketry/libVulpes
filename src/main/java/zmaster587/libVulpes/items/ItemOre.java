@@ -1,13 +1,13 @@
 package zmaster587.libVulpes.items;
 
-import java.util.Locale;
-
-import zmaster587.libVulpes.block.BlockOre;
-import zmaster587.libVulpes.block.INamedMetaBlock;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
+import zmaster587.libVulpes.block.BlockOre;
+import zmaster587.libVulpes.block.INamedMetaBlock;
+
+import java.util.Locale;
 
 public class ItemOre extends ItemBlock {
 

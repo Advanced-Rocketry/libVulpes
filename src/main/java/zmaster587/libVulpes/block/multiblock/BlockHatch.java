@@ -1,25 +1,13 @@
 package zmaster587.libVulpes.block.multiblock;
 
-import java.util.List;
-import java.util.Random;
-
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.inventory.GuiHandler;
-import zmaster587.libVulpes.tile.TilePointer;
-import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
-import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
-import zmaster587.libVulpes.tile.multiblock.hatch.TileInputHatch;
-import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -28,6 +16,15 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.inventory.GuiHandler;
+import zmaster587.libVulpes.tile.TilePointer;
+import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileInputHatch;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
+
+import java.util.Random;
 
 public class BlockHatch extends BlockMultiblockStructure {
 

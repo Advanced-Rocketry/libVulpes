@@ -1,17 +1,5 @@
 package zmaster587.libVulpes.api.material;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-
-import zmaster587.libVulpes.api.LibVulpesBlocks;
-import zmaster587.libVulpes.block.BlockOre;
-import zmaster587.libVulpes.items.ItemOre;
-import zmaster587.libVulpes.items.ItemOreProduct;
-import zmaster587.libVulpes.util.ItemStackMapping;
-import zmaster587.libVulpes.util.OreProductColorizer;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -27,6 +15,14 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.block.BlockOre;
+import zmaster587.libVulpes.items.ItemOre;
+import zmaster587.libVulpes.items.ItemOreProduct;
+import zmaster587.libVulpes.util.ItemStackMapping;
+import zmaster587.libVulpes.util.OreProductColorizer;
+
+import java.util.*;
 
 public class MaterialRegistry {
 

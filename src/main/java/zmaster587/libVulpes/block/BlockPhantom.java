@@ -1,10 +1,5 @@
 package zmaster587.libVulpes.block;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import zmaster587.libVulpes.tile.TileSchematic;
-import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -18,6 +13,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import zmaster587.libVulpes.tile.TileSchematic;
+import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlockPhantom extends Block {
 

@@ -1,12 +1,6 @@
 package zmaster587.libVulpes.util;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 public class AdjacencyGraph<T> {
 	private HashMap<T, HashSet<T>> adjacencyMatrix;

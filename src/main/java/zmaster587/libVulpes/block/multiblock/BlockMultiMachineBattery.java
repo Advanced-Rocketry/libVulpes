@@ -1,16 +1,15 @@
 package zmaster587.libVulpes.block.multiblock;
 
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.tile.energy.TilePlugBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.tile.energy.TilePlugBase;
 
 public class BlockMultiMachineBattery extends BlockMultiblockStructure {
 

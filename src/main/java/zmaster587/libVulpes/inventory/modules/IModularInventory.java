@@ -1,8 +1,8 @@
 package zmaster587.libVulpes.inventory.modules;
 
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
+
+import java.util.List;
 
 public interface IModularInventory {
 	

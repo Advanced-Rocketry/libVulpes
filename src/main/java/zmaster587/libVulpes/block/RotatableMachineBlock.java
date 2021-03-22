@@ -1,12 +1,6 @@
 package zmaster587.libVulpes.block;
 
-import java.util.List;
-import java.util.Random;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.inventory.GuiHandler;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -24,6 +18,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.inventory.GuiHandler;
+
+import java.util.List;
+import java.util.Random;
 
 public class RotatableMachineBlock extends RotatableBlock {
 	protected final Random random = new Random();

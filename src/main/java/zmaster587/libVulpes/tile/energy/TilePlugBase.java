@@ -1,8 +1,5 @@
 package zmaster587.libVulpes.tile.energy;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -19,6 +16,9 @@ import zmaster587.libVulpes.inventory.modules.ModulePower;
 import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.util.UniversalBattery;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public abstract class TilePlugBase extends TilePointer implements IModularInventory, IUniversalEnergy, IMultiblock, IInventory {
 

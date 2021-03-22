@@ -1,8 +1,5 @@
 package zmaster587.libVulpes.tile.multiblock.hatch;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-
 public class TileInputHatch extends TileInventoryHatch   {
 
 

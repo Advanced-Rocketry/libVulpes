@@ -1,11 +1,5 @@
 package zmaster587.libVulpes.util;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import zmaster587.libVulpes.LibVulpes;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
@@ -21,6 +15,10 @@ import net.minecraft.util.registry.RegistryNamespaced;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 public class ZUtils {
 

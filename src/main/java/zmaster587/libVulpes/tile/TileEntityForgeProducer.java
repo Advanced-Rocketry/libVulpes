@@ -1,8 +1,5 @@
 package zmaster587.libVulpes.tile;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,6 +19,9 @@ import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModulePower;
 import zmaster587.libVulpes.util.UniversalBattery;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public abstract class TileEntityForgeProducer extends TileEntity implements IModularInventory, IEnergyStorage,  IPower, IUniversalEnergy, ITickable {
 	protected UniversalBattery energy;

@@ -1,13 +1,11 @@
 package zmaster587.libVulpes.tile.multiblock.hatch;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleOutputSlotArray;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class TileOutputHatch extends TileInventoryHatch {
 

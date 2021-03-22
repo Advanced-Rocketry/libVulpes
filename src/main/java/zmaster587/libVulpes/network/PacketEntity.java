@@ -1,9 +1,6 @@
 package zmaster587.libVulpes.network;
 
-import java.io.IOException;
-
 import io.netty.buffer.ByteBuf;
-import zmaster587.libVulpes.interfaces.INetworkEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +11,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import zmaster587.libVulpes.interfaces.INetworkEntity;
+
+import java.io.IOException;
 
 public class PacketEntity extends BasePacket {
 

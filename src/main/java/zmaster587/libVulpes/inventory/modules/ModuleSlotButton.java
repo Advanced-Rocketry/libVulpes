@@ -1,26 +1,24 @@
 package zmaster587.libVulpes.inventory.modules;
 
-import net.minecraft.init.Blocks;
-import org.lwjgl.opengl.GL11;
-
-import zmaster587.libVulpes.gui.CommonResources;
-import zmaster587.libVulpes.inventory.TextureResources;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
+import zmaster587.libVulpes.gui.CommonResources;
+import zmaster587.libVulpes.inventory.TextureResources;
 
 public class ModuleSlotButton extends ModuleButton {
 

@@ -1,15 +1,9 @@
 package zmaster587.libVulpes.recipe;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -20,7 +14,10 @@ import net.minecraftforge.fluids.FluidStack;
 import zmaster587.libVulpes.recipe.RecipesMachine.ChanceFluidStack;
 import zmaster587.libVulpes.recipe.RecipesMachine.ChanceItemStack;
 import zmaster587.libVulpes.recipe.RecipesMachine.DummyRecipe;
-import zmaster587.libVulpes.recipe.RecipesMachine.Recipe;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public abstract class RecipeMachineFactory implements IRecipeFactory {
 

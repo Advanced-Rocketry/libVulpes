@@ -1,10 +1,5 @@
 package zmaster587.libVulpes.block.multiblock;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
-import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -19,6 +14,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
+import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Invisible block used to store blocks that are part of a completed multi-block structure

@@ -1,21 +1,6 @@
 package zmaster587.libVulpes.block.multiblock;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
-
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.block.BlockTile;
-import zmaster587.libVulpes.inventory.modules.IModularInventory;
-import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
-import net.minecraft.block.BlockBed;
-import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,6 +13,12 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.block.BlockTile;
+import zmaster587.libVulpes.inventory.modules.IModularInventory;
+import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
+
+import java.util.List;
 
 /**
  * hosts a multiblock machine master tile

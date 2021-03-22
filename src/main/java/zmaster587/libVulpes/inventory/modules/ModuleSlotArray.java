@@ -1,18 +1,14 @@
 package zmaster587.libVulpes.inventory.modules;
 
-import java.util.List;
-
-import zmaster587.libVulpes.gui.CommonResources;
-import zmaster587.libVulpes.inventory.ContainerModular;
-import zmaster587.libVulpes.inventory.TextureResources;
-import zmaster587.libVulpes.render.RenderHelper;
-import zmaster587.libVulpes.util.IconResource;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import zmaster587.libVulpes.inventory.ContainerModular;
+import zmaster587.libVulpes.inventory.TextureResources;
+
+import java.util.List;
 
 public class ModuleSlotArray extends ModuleBase {
 
