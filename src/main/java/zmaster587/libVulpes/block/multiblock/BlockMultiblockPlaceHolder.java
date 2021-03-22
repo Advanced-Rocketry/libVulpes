@@ -10,6 +10,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
@@ -32,7 +33,7 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 
 	//Make invisible
 	@Override
-	public boolean doesSideBlockRendering(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
 		return false;
 	}
 
@@ -61,10 +62,7 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 	
 
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos,
-			IBlockState state, int fortune) {
-		return new ArrayList<ItemStack>();
-	}
+	public void getDrops(NonNullList list, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {}
 	
 	@Override
 	public void onBlockHarvested(World world, BlockPos pos,

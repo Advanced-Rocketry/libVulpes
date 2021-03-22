@@ -49,13 +49,7 @@ public class BlockMaterial extends BlockMultiblockStructure {
 	
 	
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos,
-			IBlockState state, int fortune) {
-		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
-
-
-		return list;
-	}
+	public void getDrops(NonNullList list, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) { }
 
 
 	@Override

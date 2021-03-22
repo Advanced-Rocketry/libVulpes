@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -34,10 +35,7 @@ public class BlockPhantom extends Block {
 	public boolean canSilkHarvest(World world, BlockPos pos, IBlockState state, EntityPlayer player) { return false; }
 	
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos,
-			IBlockState state, int fortune) {
-		return new ArrayList<ItemStack>();
-	}
+	public void getDrops(NonNullList list, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) { }
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
@@ -71,7 +69,7 @@ public class BlockPhantom extends Block {
 	}
 	
 	@Override
-	public boolean doesSideBlockRendering(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
 		return false;
 	}
 	
