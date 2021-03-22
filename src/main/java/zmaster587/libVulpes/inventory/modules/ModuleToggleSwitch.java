@@ -82,7 +82,6 @@ public class ModuleToggleSwitch extends ModuleButton {
 	
 	@Override
 	public boolean needsUpdate(int localId) {
-		// TODO Auto-generated method stub
 		return prevState != currentState;
 	}
 	

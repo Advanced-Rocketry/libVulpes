@@ -80,7 +80,6 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 
 	@Override
 	public void handleUpdateTag(NBTTagCompound tag) {
-		// TODO Auto-generated method stub
 		super.handleUpdateTag(tag);
 	}
 

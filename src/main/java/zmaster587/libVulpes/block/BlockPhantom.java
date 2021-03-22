@@ -67,7 +67,6 @@ public class BlockPhantom extends Block {
 
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state) {
-		// TODO Auto-generated method stub
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 	

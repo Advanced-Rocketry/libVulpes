@@ -41,7 +41,6 @@ public class BlockTile extends RotatableBlock {
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn,
     		BlockPos pos) {
-    	// TODO Auto-generated method stub
     	return super.getActualState(state, worldIn, pos);
     }
     

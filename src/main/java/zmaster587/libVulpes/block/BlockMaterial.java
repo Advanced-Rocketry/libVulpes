@@ -61,7 +61,6 @@ public class BlockMaterial extends BlockMultiblockStructure {
 	@Override
 	public void onBlockHarvested(World world, BlockPos pos,
 			IBlockState state, EntityPlayer player) {
-		// TODO Auto-generated method stub
 		super.onBlockHarvested(world, pos, state, player);
 		
 		if(!player.capabilities.isCreativeMode) {

@@ -84,7 +84,6 @@ public abstract class TileInventoriedRFConsumerTank extends TileInventoriedRFCon
 
 	@Override
 	public IFluidTankProperties[] getTankProperties() {
-		// TODO Auto-generated method stub
 		return tank.getTankProperties();
 	}
 }
