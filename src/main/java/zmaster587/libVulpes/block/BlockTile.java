@@ -27,7 +27,14 @@ public class BlockTile extends RotatableBlock {
 	public static final PropertyBool STATE = PropertyBool.create("state");
 
 	public BlockTile(Class<? extends TileEntity> tileClass, int guiId) {
-		super(Material.ROCK);
+		super(Material.IRON);
+		this.tileClass = tileClass;
+		this.guiId = guiId;
+		this.setDefaultState(this.blockState.getBaseState().withProperty(STATE, false));
+	}
+
+	public BlockTile(Class<? extends TileEntity> tileClass, int guiId, Material material) {
+		super(material);
 		this.tileClass = tileClass;
 		this.guiId = guiId;
 		this.setDefaultState(this.blockState.getBaseState().withProperty(STATE, false));
