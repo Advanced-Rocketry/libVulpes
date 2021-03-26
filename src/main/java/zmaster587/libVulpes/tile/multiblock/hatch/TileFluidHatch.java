@@ -30,7 +30,8 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	protected FluidTank fluidTank;
 	private EmbeddedInventory inventory;
 	private boolean outputOnly;
-	
+
+
 	public TileFluidHatch() {
 		fluidTank = new FluidTank(16000);
 		inventory = new EmbeddedInventory(2, this);
@@ -97,10 +98,13 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 
 	}
 
+	public FluidTank getFluidTank() {
+		return fluidTank;
+	}
+
 	
 	@Override
-	public FluidStack drain(FluidStack resource,
-			boolean doDrain) {
+	public FluidStack drain(FluidStack resource, boolean doDrain) {
 
 		if(resource.isFluidEqual(fluidTank.getFluid())) {
 			FluidStack fluidStack = fluidTank.drain(resource.amount, doDrain);

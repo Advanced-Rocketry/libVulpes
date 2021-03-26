@@ -16,6 +16,9 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.tile.TilePointer;
@@ -23,6 +26,7 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInputHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
+import zmaster587.libVulpes.util.FluidUtils;
 
 import java.util.Random;
 
@@ -114,12 +118,18 @@ public class BlockHatch extends BlockMultiblockStructure {
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos,
-			IBlockState state, EntityPlayer playerIn, EnumHand hand,
-			EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		int meta = worldIn.getBlockState(pos).getValue(VARIANT);
+		TileEntity tile = worldIn.getTileEntity(pos);
+
+		//Do some fancy fluid stuff
+		if (FluidUtils.containsFluid(playerIn.getHeldItem(hand))) {
+			if (tile instanceof TileFluidHatch) {
+				FluidUtil.interactWithFluidHandler(playerIn, hand, ((TileFluidHatch) tile).getFluidTank());
+			}
+		}
 		//Handlue gui through modular system
-		if((meta & 7) < 8 && !worldIn.isRemote)
+		 else if((meta & 7) < 8 && !worldIn.isRemote)
 			playerIn.openGui(LibVulpes.instance, GuiHandler.guiId.MODULAR.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 
 		return true;
