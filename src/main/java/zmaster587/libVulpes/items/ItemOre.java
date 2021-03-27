@@ -5,6 +5,8 @@ import java.util.Locale;
 import zmaster587.libVulpes.block.BlockOre;
 import zmaster587.libVulpes.block.INamedMetaBlock;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
@@ -32,6 +34,9 @@ public class ItemOre extends ItemBlock {
 		String translate = "tile." + this.getUnlocalizedNameInefficiently(stack).substring(9) + "." + ((BlockOre)this.getBlock()).getProduct().name().toLowerCase(Locale.ENGLISH) + ".name";
 		if(I18n.canTranslate(translate))
 			return I18n.translateToLocal(translate);
-		return ("" + I18n.translateToLocal(this.getUnlocalizedNameInefficiently(stack) + ".name") + " " + I18n.translateToLocal("type." + ((BlockOre)this.getBlock()).getProduct().name().toLowerCase(Locale.ENGLISH) + ".name")).trim();
+		else if(gameSettings.language.equals("zh_cn") || gameSettings.language.equals("zh_tw"))
+			return ("" + I18n.translateToLocal(this.getUnlocalizedNameInefficiently(stack) + ".name") + I18n.translateToLocal("type." + ((BlockOre)this.getBlock()).getProduct().name().toLowerCase(Locale.ENGLISH) + ".name")).trim();
+		else
+			return ("" + I18n.translateToLocal(this.getUnlocalizedNameInefficiently(stack) + ".name") + " " + I18n.translateToLocal("type." + ((BlockOre)this.getBlock()).getProduct().name().toLowerCase(Locale.ENGLISH) + ".name")).trim();
     }
 }
