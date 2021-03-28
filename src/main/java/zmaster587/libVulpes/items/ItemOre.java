@@ -33,6 +33,6 @@ public class ItemOre extends ItemBlock {
 		if(I18n.canTranslate(translate))
 			return I18n.translateToLocal(translate);
 		else //if(I18n.canTranslate(I18n.translateToLocal("translating.libVulpes.order.ore")))
-			return I18n.translateToLocal(I18n.translateToLocal("translating.libVulpes.order.ore"), I18n.translateToLocal(this.getUnlocalizedNameInefficiently(stack) + ".name"), I18n.translateToLocal("type." + ((BlockOre)this.getBlock()).getProduct().name().toLowerCase(Locale.ENGLISH) + ".name")).trim;
+			return I18n.translateToLocal(String.format(I18n.translateToLocal("translating.libVulpes.order.ore"), I18n.translateToLocal(this.getUnlocalizedNameInefficiently(stack) + ".name"), I18n.translateToLocal("type." + ((BlockOre)this.getBlock()).getProduct().name().toLowerCase(Locale.ENGLISH) + ".name"))).trim();
     }
 }
