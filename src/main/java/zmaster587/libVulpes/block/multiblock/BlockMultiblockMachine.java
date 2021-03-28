@@ -28,8 +28,7 @@ public class BlockMultiblockMachine extends BlockTile {
 
 	
 	
-	public BlockMultiblockMachine(Class<? extends TileMultiBlock> tileClass,
-			int guiId) {
+	public BlockMultiblockMachine(Class<? extends TileMultiBlock> tileClass, int guiId) {
 		super(tileClass, guiId);
 	}
 	

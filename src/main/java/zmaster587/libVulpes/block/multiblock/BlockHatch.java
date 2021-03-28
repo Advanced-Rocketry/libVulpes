@@ -16,9 +16,12 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.tile.TilePointer;
@@ -121,12 +124,22 @@ public class BlockHatch extends BlockMultiblockStructure {
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		int meta = worldIn.getBlockState(pos).getValue(VARIANT);
 		TileEntity tile = worldIn.getTileEntity(pos);
+		ItemStack heldItem = playerIn.getHeldItem(hand);
 
 		//Do some fancy fluid stuff
-		if (FluidUtils.containsFluid(playerIn.getHeldItem(hand))) {
-			if (tile instanceof TileFluidHatch) {
-				FluidUtil.interactWithFluidHandler(playerIn, hand, ((TileFluidHatch) tile).getFluidTank());
+		//This code is modified from the Forge fluid handler that does both actions at once, as we want only one that corresponds to the correct hatch type
+		if (FluidUtils.containsFluid(playerIn.getHeldItem(hand)) && tile instanceof TileFluidHatch) {
+			IItemHandler playerInventory = playerIn.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			if (((TileFluidHatch)tile).isOutputOnly()) {
+				FluidActionResult fluidActionResult = FluidUtil.tryFillContainerAndStow(heldItem, ((TileFluidHatch)tile).getFluidTank(), playerInventory, Integer.MAX_VALUE, playerIn, true);
+				if (fluidActionResult.isSuccess())
+				    playerIn.setHeldItem(hand, fluidActionResult.getResult());
+			} else {
+				FluidActionResult fluidActionResult = FluidUtil.tryEmptyContainerAndStow(heldItem, ((TileFluidHatch)tile).getFluidTank(), playerInventory, Integer.MAX_VALUE, playerIn, true);
+				if (fluidActionResult.isSuccess())
+					playerIn.setHeldItem(hand, fluidActionResult.getResult());
 			}
+
 		}
 		//Handlue gui through modular system
 		 else if((meta & 7) < 8 && !worldIn.isRemote)

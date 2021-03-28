@@ -21,7 +21,7 @@ public class FluidUtils {
 	private static Map<String, List<String>> fluidEquivilentMapping = new HashMap<String, List<String>>();
 
 	public static boolean containsFluid(ItemStack stack) {
-		return stack != null && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
+		return !stack.isEmpty() && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, EnumFacing.UP);
 	}
 
 	public static boolean containsFluid(ItemStack stack, Fluid fluid) {
