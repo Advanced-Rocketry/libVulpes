@@ -1,6 +1,10 @@
 item.Linker.name=连接器
 item.holoProjector.name=全息投影器
+
 itemGroup.multiBlock=多方块机器组件
+
+machine.tooltip.multiblock=（多方块机器）
+
 material.Aluminum.name=铝
 material.Copper.name=铜
 material.Gold.name=金
@@ -11,15 +15,13 @@ material.Silicon.name=硅
 material.Steel.name=钢
 material.Tin.name=锡
 material.Titanium.name=钛
+
 msg.linker.error.firstMachine=这台机器需要第一个被连接！
 msg.linker.program=连接已配对
 msg.linker.success=成功连接
-tile.Aluminum.name=铝矿石
-tile.Copper.name=铜矿石
+
 tile.GTPlug.name=GTEU能量接口
 tile.IC2Plug.name=ICEU能量接口
-tile.Rutile.name=金红石矿石
-tile.Tin.name=锡矿石
 tile.advStructureMachine.name=高级机器结构方块
 tile.advancedMotor.name=高级马达
 tile.blockGenericMachine.name=机器控制器方块
@@ -41,6 +43,7 @@ tile.hatch.3.name=液体输出口
 tile.motor.name=马达
 tile.rfBattery.name=RF能量接口
 tile.structureMachine.name=机器结构方块
+
 type.block.name=块
 type.boule.name=球
 type.coil.name=线圈
@@ -54,5 +57,8 @@ type.ore.name=矿石
 type.plate.name=板
 type.sheet.name=片
 type.stick.name=棒
-machine.tooltip.multiblock=（多方块机器）
 type.gem.name=水晶
+
+translating.libVulpes.order.ore=%1$s%2$s
+translating.libVulpes.order.oreProduct=%1$s%2$s
+# ~~translating.libVulpes.order.materialBlock=%1$s%2$s~~

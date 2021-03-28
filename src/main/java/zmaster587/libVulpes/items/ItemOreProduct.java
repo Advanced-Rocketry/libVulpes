@@ -9,8 +9,6 @@ import zmaster587.libVulpes.api.material.Material;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.GameSettings;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -68,10 +66,8 @@ public class ItemOreProduct extends Item {
 			String translate = "item." + properties.get(itemstack.getItemDamage()).getUnlocalizedName() + "." + outputType + ".name";
 			if(I18n.canTranslate(translate))
 				return I18n.translateToLocal(translate);
-			else if(gameSettings.language.equals("zh_cn") || gameSettings.language.equals("zh_tw"))
-				return I18n.translateToLocal("" + "material." + properties.get(itemstack.getItemDamage()).getUnlocalizedName() + ".name") + I18n.translateToLocal("type." + outputType + ".name");
-			else
-				return I18n.translateToLocal("material." + properties.get(itemstack.getItemDamage()).getUnlocalizedName() + ".name") + " " + I18n.translateToLocal("type." + outputType + ".name");
+			else //if(I18n.canTranslate(I18n.translateToLocal("translating.libVulpes.order.oreProduct")))
+				return I18n.translateToLocal(I18n.translateToLocal("translating.libVulpes.order.oreProduct", I18n.translateToLocal("material." + properties.get(itemstack.getItemDamage()).getUnlocalizedName() + ".name"), I18n.translateToLocal("type." + outputType + ".name"));
 			} catch (NullPointerException e2) {
 				return "No name!!!";
 			}
