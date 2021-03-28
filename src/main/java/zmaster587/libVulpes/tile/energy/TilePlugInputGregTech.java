@@ -1,18 +1,11 @@
 package zmaster587.libVulpes.tile.energy;
 
-import zmaster587.libVulpes.Configuration;
-import zmaster587.libVulpes.compat.GTEnergyCapability;
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergyEmitter;
-import ic2.api.energy.tile.IEnergySink;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import zmaster587.libVulpes.compat.GTEnergyCapability;
 
 public class TilePlugInputGregTech extends TileForgePowerOutput {
 

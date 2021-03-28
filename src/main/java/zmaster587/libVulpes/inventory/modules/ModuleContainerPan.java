@@ -1,13 +1,5 @@
 package zmaster587.libVulpes.inventory.modules;
 
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
-import zmaster587.libVulpes.inventory.GuiModular;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -17,10 +9,16 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
-import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+import zmaster587.libVulpes.inventory.GuiModular;
+
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ModuleContainerPan extends ModuleBase {
 

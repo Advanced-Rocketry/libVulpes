@@ -1,8 +1,5 @@
 package zmaster587.libVulpes.block;
 
-import javax.annotation.Nullable;
-
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -30,7 +27,14 @@ public class BlockTile extends RotatableBlock {
 	public static final PropertyBool STATE = PropertyBool.create("state");
 
 	public BlockTile(Class<? extends TileEntity> tileClass, int guiId) {
-		super(Material.ROCK);
+		super(Material.IRON);
+		this.tileClass = tileClass;
+		this.guiId = guiId;
+		this.setDefaultState(this.blockState.getBaseState().withProperty(STATE, false));
+	}
+
+	public BlockTile(Class<? extends TileEntity> tileClass, int guiId, Material material) {
+		super(material);
 		this.tileClass = tileClass;
 		this.guiId = guiId;
 		this.setDefaultState(this.blockState.getBaseState().withProperty(STATE, false));
@@ -44,7 +48,6 @@ public class BlockTile extends RotatableBlock {
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn,
     		BlockPos pos) {
-    	// TODO Auto-generated method stub
     	return super.getActualState(state, worldIn, pos);
     }
     

@@ -1,15 +1,9 @@
 package zmaster587.libVulpes.block;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import zmaster587.libVulpes.block.multiblock.BlockMultiblockStructure;
-import zmaster587.libVulpes.tile.TileMaterial;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
@@ -17,6 +11,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import zmaster587.libVulpes.block.multiblock.BlockMultiblockStructure;
+import zmaster587.libVulpes.tile.TileMaterial;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlockMaterial extends BlockMultiblockStructure {
 
@@ -50,19 +49,12 @@ public class BlockMaterial extends BlockMultiblockStructure {
 	
 	
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos,
-			IBlockState state, int fortune) {
-		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
-
-
-		return list;
-	}
+	public void getDrops(NonNullList list, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) { }
 
 
 	@Override
 	public void onBlockHarvested(World world, BlockPos pos,
 			IBlockState state, EntityPlayer player) {
-		// TODO Auto-generated method stub
 		super.onBlockHarvested(world, pos, state, player);
 		
 		if(!player.capabilities.isCreativeMode) {

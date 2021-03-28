@@ -1,10 +1,5 @@
 package zmaster587.libVulpes.block.multiblock;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
-import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -15,10 +10,16 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
+import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Invisible block used to store blocks that are part of a completed multi-block structure
@@ -29,18 +30,15 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 	public BlockMultiblockPlaceHolder() {
 		super(Material.IRON);
 	}
-	
+
 	//Make invisible
 	@Override
-	public boolean shouldSideBeRendered(IBlockState blockState,
-			IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
 		return false;
 	}
-	
+
 	@Override
-	public boolean isBlockNormalCube(IBlockState state) {
-		return false;
-	}
+	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) { return false; }
 	
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
@@ -64,10 +62,7 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 	
 
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos,
-			IBlockState state, int fortune) {
-		return new ArrayList<ItemStack>();
-	}
+	public void getDrops(NonNullList list, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {}
 	
 	@Override
 	public void onBlockHarvested(World world, BlockPos pos,

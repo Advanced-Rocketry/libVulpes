@@ -1,11 +1,11 @@
 package zmaster587.libVulpes.api;
 
-import java.util.List;
-
-import zmaster587.libVulpes.util.IconResource;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import zmaster587.libVulpes.util.IconResource;
+
+import java.util.List;
 
 public interface IModularArmor {
 	

@@ -1,7 +1,6 @@
 package zmaster587.libVulpes.network;
 
 import io.netty.buffer.ByteBuf;
-import zmaster587.libVulpes.util.INetworkMachine;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -13,6 +12,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import zmaster587.libVulpes.util.INetworkMachine;
 
 public class PacketMachine extends BasePacket {
 

@@ -1,10 +1,6 @@
 package zmaster587.libVulpes.tile.multiblock;
 
 import io.netty.buffer.ByteBuf;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -19,13 +15,15 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.util.IFluidHandlerInternal;
 import zmaster587.libVulpes.util.ZUtils;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
@@ -34,6 +32,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		POWERERROR
 	}
 
+	private List<ItemStack> inputItemStacks;
 	private List<ItemStack> outputItemStacks;
 	private List<FluidStack> outputFluidStacks;
 
@@ -45,6 +44,10 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	public TileMultiblockMachine() {
 		super();
 		outputItemStacks = null;
+	}
+
+	public List<ItemStack> getInputs() {
+		return inputItemStacks;
 	}
 
 	public List<ItemStack> getOutputs() {
@@ -178,6 +181,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		if(!world.isRemote)
 			dumpOutputToInventory();
 
+		inputItemStacks = null;
 		outputItemStacks = null;
 		outputFluidStacks = null;
 
@@ -503,6 +507,17 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 				outputItemStacks = recipe.getOutput();
 				outputFluidStacks = recipe.getFluidOutputs();
 
+				List<List<ItemStack>> ingredients = recipe.getIngredients();
+				for(int ingredientNum = 0;ingredientNum < ingredients.size(); ingredientNum++) {
+					if (inputItemStacks == null)
+						inputItemStacks = new LinkedList<>(ingredients.get(ingredientNum));
+					else
+					    inputItemStacks.addAll(ingredients.get(ingredientNum));
+				}
+
+
+
+
 				markDirty();
 				world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 
@@ -540,6 +555,19 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 			nbt.setTag("outputItems", list);
 		}
 
+		//Save input items if applicable
+		if(inputItemStacks != null) {
+			NBTTagList list = new NBTTagList();
+			for(ItemStack stack : inputItemStacks) {
+				if(stack != null) {
+					NBTTagCompound tag = new NBTTagCompound();
+					stack.writeToNBT(tag);
+					list.appendTag(tag);
+				}
+			}
+			nbt.setTag("inputItems", list);
+		}
+
 		if(outputFluidStacks != null) {
 			NBTTagList list = new NBTTagList();
 			for(FluidStack stack : outputFluidStacks) {
@@ -567,6 +595,18 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 				NBTTagCompound tag = list.getCompoundTagAt(i);
 
 				outputItemStacks.add(new ItemStack(tag));
+			}
+		}
+
+		//Load input items being processed if applicable
+		if(nbt.hasKey("inputItems")) {
+			inputItemStacks = new LinkedList<ItemStack>();
+			NBTTagList list = nbt.getTagList("inputItems", 10);
+
+			for(int i = 0; i < list.tagCount(); i++) {
+				NBTTagCompound tag = list.getCompoundTagAt(i);
+
+				inputItemStacks.add(new ItemStack(tag));
 			}
 		}
 

@@ -8,7 +8,6 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import zmaster587.libVulpes.energy.IPower;
 import zmaster587.libVulpes.util.CreativeBattery;
-import zmaster587.libVulpes.util.UniversalBattery;
 
 public class TileCreativePowerInput extends TilePlugBase implements IPower, ITickable {
 

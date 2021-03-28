@@ -1,26 +1,9 @@
 package zmaster587.libVulpes.network;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.ChannelHandler.Sharable;
-
-import java.lang.reflect.Method;
-import java.util.EnumMap;
-
-import org.apache.logging.log4j.Level;
-
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.network.BasePacket.BasePacketHandlerClient;
-import zmaster587.libVulpes.network.BasePacket.BasePacketHandlerServer;
-import zmaster587.libVulpes.network.BasePacket.BasePacketHandlerClient.executor;
-
 import com.google.common.base.Throwables;
-import com.google.common.collect.Maps;
-
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.*;
+import io.netty.channel.ChannelHandler.Sharable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,7 +12,6 @@ import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.FMLLog;
@@ -37,16 +19,19 @@ import net.minecraftforge.fml.common.network.FMLEmbeddedChannel;
 import net.minecraftforge.fml.common.network.FMLIndexedMessageToMessageCodec;
 import net.minecraftforge.fml.common.network.FMLOutboundHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleChannelHandlerWrapper;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleIndexedCodec;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.logging.log4j.Level;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.network.BasePacket.BasePacketHandlerClient;
+import zmaster587.libVulpes.network.BasePacket.BasePacketHandlerServer;
+
+import java.lang.reflect.Method;
+import java.util.EnumMap;
 
 public class PacketHandler {
 	

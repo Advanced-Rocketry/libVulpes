@@ -1,11 +1,11 @@
 package zmaster587.libVulpes.gui;
 
-import java.util.Set;
-
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.Set;
 
 public class SlotOreDictList extends Slot {
 

@@ -1,14 +1,7 @@
 package zmaster587.libVulpes.util;
 
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.tile.TileEntityRFConsumer;
-import zmaster587.libVulpes.tile.energy.TilePlugBase;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import zmaster587.libVulpes.LibVulpes;
 
 public class TeslaCapabilityProvider {
 

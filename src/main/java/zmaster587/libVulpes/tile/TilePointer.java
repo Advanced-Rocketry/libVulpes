@@ -1,17 +1,15 @@
 package zmaster587.libVulpes.tile;
 
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.interfaces.ILinkableTile;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.interfaces.ILinkableTile;
 
 public class TilePointer extends TileEntity implements IMultiblock, ILinkableTile {
 	BlockPos masterBlockPos;

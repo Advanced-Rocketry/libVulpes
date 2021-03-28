@@ -1,28 +1,27 @@
 package zmaster587.libVulpes.inventory.modules;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.gui.CommonResources;
-import zmaster587.libVulpes.inventory.GuiModular;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.gui.CommonResources;
+import zmaster587.libVulpes.inventory.GuiModular;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public abstract class ModuleBase {
 

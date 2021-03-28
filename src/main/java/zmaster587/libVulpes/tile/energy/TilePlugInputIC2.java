@@ -1,6 +1,5 @@
 package zmaster587.libVulpes.tile.energy;
 
-import zmaster587.libVulpes.Configuration;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyEmitter;
@@ -8,6 +7,7 @@ import ic2.api.energy.tile.IEnergySink;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.MinecraftForge;
+import zmaster587.libVulpes.Configuration;
 
 public class TilePlugInputIC2 extends TileForgePowerOutput implements IEnergySink, 
 ITickable {

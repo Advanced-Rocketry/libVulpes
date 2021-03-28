@@ -1,7 +1,7 @@
 package zmaster587.libVulpes.cap;
 
-import zmaster587.libVulpes.api.IUniversalEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import zmaster587.libVulpes.api.IUniversalEnergy;
 
 public class ForgePowerCapability implements IEnergyStorage {
 

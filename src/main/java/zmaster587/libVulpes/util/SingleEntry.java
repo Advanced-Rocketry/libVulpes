@@ -14,13 +14,11 @@ public class SingleEntry<K, V> implements Entry<K, V> {
 	
 	@Override
 	public K getKey() {
-		// TODO Auto-generated method stub
 		return key;
 	}
 
 	@Override
 	public V getValue() {
-		// TODO Auto-generated method stub
 		return value;
 	}
 

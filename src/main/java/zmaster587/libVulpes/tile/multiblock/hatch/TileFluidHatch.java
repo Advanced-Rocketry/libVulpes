@@ -1,34 +1,20 @@
 package zmaster587.libVulpes.tile.multiblock.hatch;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.FluidTankProperties;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.CapabilityItemHandler;
 import zmaster587.libVulpes.cap.FluidCapability;
 import zmaster587.libVulpes.gui.CommonResources;
-import zmaster587.libVulpes.inventory.modules.IModularInventory;
-import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleImage;
-import zmaster587.libVulpes.inventory.modules.ModuleLiquidIndicator;
-import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
+import zmaster587.libVulpes.interfaces.IInventoryUpdateCallback;
+import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.EmbeddedInventory;
@@ -36,20 +22,33 @@ import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.IFluidHandlerInternal;
 import zmaster587.libVulpes.util.IconResource;
 
-public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal, IModularInventory, ISidedInventory {
+import java.util.ArrayList;
+import java.util.List;
+
+public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal, IModularInventory, ISidedInventory, IInventoryUpdateCallback {
 
 	protected FluidTank fluidTank;
 	private EmbeddedInventory inventory;
 	private boolean outputOnly;
-	
+
+
 	public TileFluidHatch() {
 		fluidTank = new FluidTank(16000);
-		inventory = new EmbeddedInventory(2);
+		inventory = new EmbeddedInventory(2, this);
+		inventory.setCanInsertSlot(0, true);
+		inventory.setCanInsertSlot(1, false);
+		inventory.setCanExtractSlot(0, false);
+		inventory.setCanExtractSlot(1, true);
+
 	}
 	
 	public TileFluidHatch(int capacity) {
 		fluidTank = new FluidTank(capacity);
-		inventory = new EmbeddedInventory(2);
+		inventory = new EmbeddedInventory(2,this);
+		inventory.setCanInsertSlot(0, true);
+		inventory.setCanInsertSlot(1, false);
+		inventory.setCanExtractSlot(0, false);
+		inventory.setCanExtractSlot(1, true);
 	}
 	
 	@Override
@@ -89,6 +88,8 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	public boolean isOutputOnly() {
 		return outputOnly;
 	}
+
+	public void setOutputOnly(boolean output) {outputOnly = output;}
 	
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
@@ -99,10 +100,13 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 
 	}
 
+	public FluidTank getFluidTank() {
+		return fluidTank;
+	}
+
 	
 	@Override
-	public FluidStack drain(FluidStack resource,
-			boolean doDrain) {
+	public FluidStack drain(FluidStack resource, boolean doDrain) {
 
 		if(resource.isFluidEqual(fluidTank.getFluid())) {
 			FluidStack fluidStack = fluidTank.drain(resource.amount, doDrain);
@@ -191,6 +195,11 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 		
 		if(this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
 			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
+	}
+	
+	@Override
+	public void onInventoryUpdated(int slot) {
+		setInventorySlotContents(slot, inventory.getStackInSlot(slot));
 	}
 
 	@Override

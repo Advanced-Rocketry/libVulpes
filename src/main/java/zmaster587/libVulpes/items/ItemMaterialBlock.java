@@ -1,13 +1,7 @@
 package zmaster587.libVulpes.items;
 
-import zmaster587.libVulpes.api.material.Material;
-import zmaster587.libVulpes.tile.TileMaterial;
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 
 public class ItemMaterialBlock extends ItemBlock {
 
