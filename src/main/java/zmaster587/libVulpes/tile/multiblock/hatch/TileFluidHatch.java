@@ -88,6 +88,8 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	public boolean isOutputOnly() {
 		return outputOnly;
 	}
+
+	public void setOutputOnly(boolean output) {outputOnly = output;}
 	
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
