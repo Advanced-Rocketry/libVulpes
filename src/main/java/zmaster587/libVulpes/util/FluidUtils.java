@@ -162,15 +162,26 @@ public class FluidUtils {
 		mappedValues.add(altName);
 	}
 	
+	public static boolean areFluidsSameType(ResourceLocation inFluidName, Fluid otherFluid) {
+		if(otherFluid == null)
+			return false;
+		ResourceLocation otherFluidName = otherFluid.getRegistryName();
+		
+	return areFluidsSameType(inFluidName, otherFluidName);
+	}
+	
+	public static boolean areFluidsSameType(ResourceLocation inFluidName, ResourceLocation otherFluidName) {
+		if(inFluidName.equals(otherFluidName))
+			return true;
+		
+		return fluidEquivilentMapping.containsKey(inFluidName) && fluidEquivilentMapping.get(inFluidName).contains(otherFluidName);
+	}
+	
 	public static boolean areFluidsSameType(Fluid in, Fluid otherFluid) {
 		if(in == null || otherFluid == null)
 			return false;
 		ResourceLocation inFluidName = in.getRegistryName();
 		ResourceLocation otherFluidName = otherFluid.getRegistryName();
-		
-		if(inFluidName.equals(otherFluidName))
-			return true;
-		
-		return fluidEquivilentMapping.containsKey(inFluidName) && fluidEquivilentMapping.get(inFluidName).contains(otherFluidName);
+		return areFluidsSameType(inFluidName, otherFluidName);
 	}
 }

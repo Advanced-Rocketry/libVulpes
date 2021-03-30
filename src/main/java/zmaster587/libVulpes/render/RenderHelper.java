@@ -152,7 +152,7 @@ public class RenderHelper {
 	}
 
 	public static RenderType getTranslucentTexturedManualRenderType(ResourceLocation location) {
-		RenderType.State rendertype$state = RenderType.State.getBuilder().texture(new RenderState.TextureState(location, false, false)).alpha(DEFAULT_ALPHA).transparency(LIGHTNING_TRANSPARENCY).diffuseLighting(DIFFUSE_LIGHTING_ENABLED).lightmap(LIGHTMAP_ENABLED).overlay(OVERLAY_DISABLED).build(true);
+		RenderType.State rendertype$state = RenderType.State.getBuilder().texture(new RenderState.TextureState(location, false, false)).alpha(DEFAULT_ALPHA).transparency(LIGHTNING_TRANSPARENCY).diffuseLighting(DIFFUSE_LIGHTING_ENABLED).lightmap(LIGHTMAP_DISABLED).overlay(OVERLAY_DISABLED).build(true);
 		return RenderType.makeType("manual_tex_translucent", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, true, false, rendertype$state);
 	}
 
