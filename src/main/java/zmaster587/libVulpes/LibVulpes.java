@@ -7,22 +7,13 @@ import ic2.api.item.IC2Items;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map.Entry;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 
 import com.google.common.collect.Lists;
@@ -31,13 +22,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
@@ -61,7 +48,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.GameData;
 import zmaster587.libVulpes.cap.TeslaHandler;
@@ -104,10 +90,12 @@ import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInputHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
+import zmaster587.libVulpes.util.ModCompatDictionary;
 import zmaster587.libVulpes.util.TeslaCapabilityProvider;
 import zmaster587.libVulpes.util.XMLRecipeLoader;
 
-@Mod(modid="libvulpes",name="Vulpes library",version="@MAJOR@.@MINOR@.@REVIS@.@BUILD@",useMetadata=true, dependencies="after:ic2;after:cofhcore;after:buildcraft|core")
+@Mod(modid="libvulpes",name="Vulpes library",version="@MAJOR@.@MINOR@.@REVIS@.@BUILD@",useMetadata=true, dependencies="after:ic2;after:cofhcore;after:buildcraft|core;after:immersiveengineering")
+
 public class LibVulpes {
 	public static org.apache.logging.log4j.Logger logger = LogManager.getLogger("libVulpes");
 	public static int time = 0;
@@ -383,6 +371,12 @@ public class LibVulpes {
 		PacketHandler.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 		proxy.registerEventHandlers();
+
+
+		if(Loader.isModLoaded("immersiveengineering")) {
+			ModCompatDictionary.registerIECoils();
+		}
+
 	}
 
 	@EventHandler
