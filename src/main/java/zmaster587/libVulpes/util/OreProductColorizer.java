@@ -1,8 +1,5 @@
 package zmaster587.libVulpes.util;
 
-import zmaster587.libVulpes.api.material.Material;
-import zmaster587.libVulpes.block.BlockOre;
-import zmaster587.libVulpes.items.ItemOreProduct;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.color.IBlockColor;
@@ -10,6 +7,9 @@ import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import zmaster587.libVulpes.api.material.Material;
+import zmaster587.libVulpes.block.BlockOre;
+import zmaster587.libVulpes.items.ItemOreProduct;
 
 public class OreProductColorizer   implements IItemColor, IBlockColor  {
 	@Override

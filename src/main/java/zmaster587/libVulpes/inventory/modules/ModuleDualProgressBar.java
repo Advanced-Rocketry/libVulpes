@@ -1,14 +1,14 @@
 package zmaster587.libVulpes.inventory.modules;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import zmaster587.libVulpes.client.util.ProgressBarImage;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import zmaster587.libVulpes.client.util.ProgressBarImage;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class ModuleDualProgressBar extends ModuleProgress {
 

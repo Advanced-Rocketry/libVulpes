@@ -1,20 +1,13 @@
 package zmaster587.libVulpes.inventory.modules;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
-import zmaster587.libVulpes.inventory.ContainerModular;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.PlayerArmorInvWrapper;
-import net.minecraftforge.items.wrapper.RangedWrapper;
+import zmaster587.libVulpes.inventory.ContainerModular;
+
+import java.util.List;
 
 public class ModuleSlotArmor extends ModuleBase {
 

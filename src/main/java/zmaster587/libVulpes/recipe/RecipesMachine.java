@@ -1,16 +1,5 @@
 package zmaster587.libVulpes.recipe;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.interfaces.IRecipe;
-import zmaster587.libVulpes.tile.TileEntityMachine;
-import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
@@ -20,6 +9,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.interfaces.IRecipe;
+import zmaster587.libVulpes.tile.TileEntityMachine;
+import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
+
+import java.util.*;
 
 public class RecipesMachine {
 	

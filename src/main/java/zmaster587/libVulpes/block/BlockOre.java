@@ -1,23 +1,15 @@
 package zmaster587.libVulpes.block;
 
-import java.util.List;
-
-import zmaster587.libVulpes.api.material.AllowedProducts;
-import zmaster587.libVulpes.items.ItemOreProduct;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import zmaster587.libVulpes.api.material.AllowedProducts;
 
 public class BlockOre extends Block implements INamedMetaBlock {
 	

@@ -66,7 +66,6 @@ public class ModuleBlockSideSelector extends ModuleBase implements IButtonInvent
 	@Override
 	public void renderForeground(int guiOffsetX, int guiOffsetY, int mouseX,
 			int mouseY, float zLevel, GuiContainer gui, FontRenderer font) {
-		// TODO Auto-generated method stub
 		super.renderForeground(guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui,
 				font);
 		for(ModuleBase button : buttons)

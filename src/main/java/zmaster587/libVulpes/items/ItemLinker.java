@@ -1,9 +1,5 @@
 package zmaster587.libVulpes.items;
 
-import java.util.List;
-
-import zmaster587.libVulpes.interfaces.ILinkableTile;
-import zmaster587.libVulpes.tile.IMultiblock;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,12 +7,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import zmaster587.libVulpes.interfaces.ILinkableTile;
+
+import java.util.List;
 
 public class ItemLinker extends Item {
 

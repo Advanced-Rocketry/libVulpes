@@ -1,6 +1,5 @@
 package zmaster587.libVulpes.util;
 
-import javax.annotation.Nonnull;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -14,6 +13,8 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.items.ItemStackHandler;
 import zmaster587.libVulpes.interfaces.IInventoryUpdateCallback;
+
+import javax.annotation.Nonnull;
 
 public class EmbeddedInventory extends ItemStackHandler implements ISidedInventory {
 

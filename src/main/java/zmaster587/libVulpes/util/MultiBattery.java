@@ -1,8 +1,8 @@
 package zmaster587.libVulpes.util;
 
-import java.util.LinkedList;
-
 import zmaster587.libVulpes.api.IUniversalEnergy;
+
+import java.util.LinkedList;
 
 public class MultiBattery implements IUniversalEnergy {
 

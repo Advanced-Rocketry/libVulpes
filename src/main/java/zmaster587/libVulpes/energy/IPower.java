@@ -1,7 +1,7 @@
 package zmaster587.libVulpes.energy;
 
-import zmaster587.libVulpes.api.IUniversalEnergy;
 import net.minecraft.util.EnumFacing;
+import zmaster587.libVulpes.api.IUniversalEnergy;
 
 public interface IPower extends IUniversalEnergy {
 	

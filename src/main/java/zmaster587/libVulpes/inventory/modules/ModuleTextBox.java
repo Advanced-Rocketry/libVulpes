@@ -1,8 +1,5 @@
 package zmaster587.libVulpes.inventory.modules;
 
-import org.lwjgl.input.Keyboard;
-
-import zmaster587.libVulpes.inventory.GuiModular;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
@@ -10,6 +7,8 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
+import zmaster587.libVulpes.inventory.GuiModular;
 
 public class ModuleTextBox extends ModuleBase {
 

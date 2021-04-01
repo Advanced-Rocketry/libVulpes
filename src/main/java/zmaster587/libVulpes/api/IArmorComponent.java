@@ -1,8 +1,5 @@
 package zmaster587.libVulpes.api;
 
-import java.util.List;
-
-import zmaster587.libVulpes.client.ResourceIcon;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +11,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import zmaster587.libVulpes.client.ResourceIcon;
+
+import java.util.List;
 
 public interface IArmorComponent {
 	

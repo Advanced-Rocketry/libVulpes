@@ -1,13 +1,9 @@
 package zmaster587.libVulpes.cap;
 
-import zmaster587.libVulpes.api.IUniversalEnergy;
 import net.darkhax.tesla.api.ITeslaConsumer;
 import net.darkhax.tesla.api.ITeslaHolder;
 import net.darkhax.tesla.api.ITeslaProducer;
-import net.darkhax.tesla.capability.TeslaCapabilities;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.energy.IEnergyStorage;
+import zmaster587.libVulpes.api.IUniversalEnergy;
 
 public class TeslaPowerCapability implements ITeslaConsumer, ITeslaProducer, ITeslaHolder {
 	

@@ -1,21 +1,20 @@
-package zmaster587.libVulpes.block;
+package zmaster587.libVulpes.block.multiblock;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockRenderLayer;
 
-public class BlockAlphaTexture extends Block {
+public class BlockMultiBlockComponentVisibleAlphaTexture extends BlockMultiBlockComponentVisible {
 
-	public BlockAlphaTexture(Material mat) {
-		super(mat);
+	public BlockMultiBlockComponentVisibleAlphaTexture(Material material) {
+		super(material);
 	}
-
+	
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
-	
+
 	@Override
 	public BlockRenderLayer getBlockLayer() {
 		return BlockRenderLayer.CUTOUT;

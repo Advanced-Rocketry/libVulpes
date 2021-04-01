@@ -1,14 +1,14 @@
 package zmaster587.libVulpes.inventory.modules;
 
-import java.util.List;
-
-import zmaster587.libVulpes.inventory.GuiModular;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import zmaster587.libVulpes.inventory.GuiModular;
+
+import java.util.List;
 
 public class ModuleTab extends ModuleBase implements IButtonInventory {
 
@@ -63,7 +63,6 @@ public class ModuleTab extends ModuleBase implements IButtonInventory {
 	@Override
 	public void renderForeground(int guiOffsetX, int guiOffsetY, int mouseX,
 			int mouseY, float zLevel, GuiContainer gui, FontRenderer font) {
-		// TODO Auto-generated method stub
 		super.renderForeground(guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui,
 				font);
 		

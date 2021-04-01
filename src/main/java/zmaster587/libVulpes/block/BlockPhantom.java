@@ -1,10 +1,5 @@
 package zmaster587.libVulpes.block;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import zmaster587.libVulpes.tile.TileSchematic;
-import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -13,11 +8,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import zmaster587.libVulpes.tile.TileSchematic;
+import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlockPhantom extends Block {
 
@@ -31,15 +32,10 @@ public class BlockPhantom extends Block {
 	}
 
 	@Override
-	protected boolean canSilkHarvest() {
-		return false;
-	}
+	public boolean canSilkHarvest(World world, BlockPos pos, IBlockState state, EntityPlayer player) { return false; }
 	
 	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos,
-			IBlockState state, int fortune) {
-		return new ArrayList<ItemStack>();
-	}
+	public void getDrops(NonNullList list, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) { }
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
@@ -69,13 +65,11 @@ public class BlockPhantom extends Block {
 
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state) {
-		// TODO Auto-generated method stub
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 	
 	@Override
-	public boolean shouldSideBeRendered(IBlockState blockState,
-			IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
 		return false;
 	}
 	
@@ -91,8 +85,7 @@ public class BlockPhantom extends Block {
 	}
 	
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState,
-			IBlockAccess worldIn, BlockPos pos) {
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
 		// TODO Auto-generated method stub
 		return null;
 	}

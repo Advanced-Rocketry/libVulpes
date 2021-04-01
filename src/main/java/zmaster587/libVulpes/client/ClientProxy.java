@@ -1,14 +1,5 @@
 package zmaster587.libVulpes.client;
 
-import java.util.LinkedList;
-
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.api.LibVulpesBlocks;
-import zmaster587.libVulpes.api.LibVulpesItems;
-import zmaster587.libVulpes.common.CommonProxy;
-import zmaster587.libVulpes.entity.fx.FxErrorBlock;
-import zmaster587.libVulpes.network.BasePacket;
-import zmaster587.libVulpes.network.ExecutorClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ITickableSound;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -21,7 +12,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.api.LibVulpesItems;
+import zmaster587.libVulpes.common.CommonProxy;
+import zmaster587.libVulpes.entity.fx.FxErrorBlock;
+import zmaster587.libVulpes.network.BasePacket;
+
+import java.util.LinkedList;
 
 public class ClientProxy extends CommonProxy {
 	@Override

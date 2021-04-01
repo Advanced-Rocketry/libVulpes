@@ -1,12 +1,12 @@
 package zmaster587.libVulpes.inventory.modules;
 
-import java.util.List;
-
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
+
+import java.util.List;
 public class ModuleRadioButton  extends ModuleBase {
 
 	IToggleButton tile;

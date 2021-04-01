@@ -1,14 +1,6 @@
 package zmaster587.libVulpes.items;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.api.material.Material;
-import zmaster587.libVulpes.api.material.MaterialRegistry;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,6 +11,10 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import zmaster587.libVulpes.api.material.Material;
+
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class ItemOreProduct extends Item {
 
