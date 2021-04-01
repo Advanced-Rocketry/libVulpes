@@ -60,6 +60,10 @@ repositories {
             name "industrialcraft-2"
             artifactPattern "http://jenkins.ic2.player.to/job/IC2_112/96/artifact/build/libs/[module]-[revision].[ext]"
         }
+    maven {
+        name 'jared maven'
+        url 'http://blamejared.com/maven'
+    }
 //    ivy {
 //            name "EnderIO"
 //            artifactPattern "https://addons-origin.cursecdn.com/files/2238/375/[module]-[revision].[ext]"
@@ -73,6 +77,7 @@ dependencies {
     //compile "some.group:artifact:version"
       
     compile name: 'industrialcraft-2', version: '2.8.96-ex112-api', ext: 'jar'
+    deobfCompile "blusunrize:ImmersiveEngineering:0.12-92-+"
     //You'll need to download Tesla Tesla-1.12.2-1.0.63-deobf.jar and put it into the libs folder
     //compile name: 'EnderIO', version: '1.7.10-2.2.8.381', ext: 'jar'
     
