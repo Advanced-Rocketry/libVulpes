@@ -63,7 +63,12 @@ public class RecipesMachine {
 		IRecipeSerializer<?> serializer;
 		ResourceLocation name;
 
-		public Recipe() {}
+		public Recipe() {
+			this.output = new LinkedList<ChanceItemStack>();
+			this.input = new LinkedList<List<ItemStack>>();
+			this.fluidInput = new LinkedList<FluidStack>();
+			this.fluidOutput = new LinkedList<ChanceFluidStack>();
+		}
 
 		public Recipe(IRecipeSerializer<?> serializer, ResourceLocation name, List<ChanceItemStack> output, List<List<ItemStack>> input, int completionTime, int powerReq, Map<Integer, ResourceLocation> oreDict) {
 			this.output = new LinkedList<ChanceItemStack>();

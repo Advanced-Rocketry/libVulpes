@@ -87,7 +87,7 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		if(maxOutput > 0)
 			recipe.setMaxOutputSize(maxOutput);
 		
-		RecipesMachine.getInstance().recipeList.get(getMachine()).removeIf(value -> value.getId() == recipe.getId());
+		RecipesMachine.getInstance().recipeList.get(getMachine()).removeIf(value -> value.getId().equals(recipe.getId()));
 		RecipesMachine.getInstance().recipeList.get(getMachine()).add(recipe);
 		
 		return recipe;
@@ -198,6 +198,7 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		if(maxOutput > 0)
 			recipe.setMaxOutputSize(maxOutput);
 		
+		RecipesMachine.getInstance().recipeList.get(getMachine()).removeIf(value -> value.getId().equals(recipe.getId()));
 		RecipesMachine.getInstance().recipeList.get(getMachine()).add(recipe);
 
 		// We handle our own registry, but we need to pass it back to sync
