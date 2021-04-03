@@ -3,10 +3,7 @@ package zmaster587.libVulpes.util;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagByte;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagInt;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.*;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
@@ -16,6 +13,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import zmaster587.libVulpes.interfaces.IInventoryUpdateCallback;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 
 public class EmbeddedInventory extends ItemStackHandler implements ISidedInventory {
 
@@ -56,19 +54,17 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 
 		nbt.setTag("outputItems", list);
 
-		NBTTagList list2 = new NBTTagList();
+		ArrayList list2 = new ArrayList<Byte>();
 		for(int i = 0; i < this.slotInsert.size(); i++) {
-			NBTTagInt tag = new NBTTagInt((slotInsert.get(i) == true) ? 1 : 0);
-				list2.appendTag(tag);
+			list2.set(i, (slotInsert.get(i) == true) ? 1 : 0);
 		}
-		nbt.setTag("slotInsert", list2);
+		nbt.setTag("slotInsert", new NBTTagByteArray(list2));
 
-		NBTTagList list3 = new NBTTagList();
+		ArrayList list3 = new ArrayList<Byte>();
 		for(int i = 0; i < this.slotExtract.size(); i++) {
-			NBTTagInt tag = new NBTTagInt((slotExtract.get(i) == true) ? 1 : 0);
-			list3.appendTag(tag);
+			list3.set(i, (slotExtract.get(i) == true) ? 1 : 0);
 		}
-		nbt.setTag("slotExtract", list3);
+		nbt.setTag("slotExtract", new NBTTagByteArray(list3));
 
 	}
 
@@ -94,15 +90,15 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 		}
 		
 		
-		NBTTagList list2 = nbt.getTagList("slotInsert", NBT.TAG_INT);
-		this.slotInsert = NonNullList.withSize(list2.tagCount(), false);
-		for (int i = 0; i < list2.tagCount(); i++) {
-			this.slotInsert.set(i, (list2.getIntAt(i) == 1) ? true : false);
+		byte[] list2 = nbt.getByteArray("slotInsert");
+		this.slotInsert = NonNullList.withSize(list2.length, false);
+		for (int i = 0; i < list2.length; i++) {
+			this.slotInsert.set(i, (list2[i] == 1) ? true : false);
 		}
-		NBTTagList list3 = nbt.getTagList("slotExtract", NBT.TAG_INT);
-		this.slotExtract = NonNullList.withSize(list3.tagCount(), false);
-		for (int i = 0; i < list3.tagCount(); i++) {
-			this.slotExtract.set(i, (list3.getIntAt(i) == 1) ? true : false);
+		byte[] list3 = nbt.getByteArray("slotExtract");
+		this.slotExtract = NonNullList.withSize(list3.length, false);
+		for (int i = 0; i < list3.length; i++) {
+			this.slotExtract.set(i, (list3[i] == 1) ? true : false);
 		}
 
 		//Backcompat, to allow older worlds to load
