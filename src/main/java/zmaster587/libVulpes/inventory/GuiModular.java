@@ -140,13 +140,16 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 	protected void drawGuiContainerForegroundLayer(MatrixStack matrix, int a, int b)  {
 		//super.drawGuiContainerForegroundLayer(matrix, a, b);
 
+		
 		//renderString
 		this.font.func_243246_a(matrix, title, 8, 6, 0xffffff);
-
+		matrix.push();
+		matrix.translate(0, 0, 999);
 		for(ModuleBase module : modules)
 			if(module.getVisible())
 				module.renderForeground(matrix, (width - xSize)/2, (height - ySize) / 2,a - (width - xSize)/2 ,b - (height - ySize) / 2, itemRenderer.zLevel, this, font);
 
+		matrix.pop();
 	}
 
 	//onMouseclicked

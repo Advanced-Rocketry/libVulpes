@@ -113,11 +113,11 @@ public class GuiImageButton extends Button {
 	        Tessellator tessellator = Tessellator.getInstance();
 	        BufferBuilder vertexbuffer = tessellator.getBuffer();
 	        // height == zlevel
-	        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-	        vertexbuffer.pos(x, y + height, (double)this.height).tex(0, 1).endVertex();
-	        vertexbuffer.pos(x + width, y + height, (double)this.height).tex( 1, 1).endVertex();
-	        vertexbuffer.pos(x + width, y, (double)this.height).tex(1, 0).endVertex();
-	        vertexbuffer.pos(x, y, (double)this.height).tex(0, 0).endVertex();
+	        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+	        vertexbuffer.pos(x, y + height, (double)this.height).tex(0, 1).color(r, g, b, a).endVertex();
+	        vertexbuffer.pos(x + width, y + height, (double)this.height).tex( 1, 1).color(r, g, b, a).endVertex();
+	        vertexbuffer.pos(x + width, y, (double)this.height).tex(1, 0).color(r, g, b, a).endVertex();
+	        vertexbuffer.pos(x, y, (double)this.height).tex(0, 0).color(r, g, b, a).endVertex();
 	        tessellator.draw();
 			
 			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
