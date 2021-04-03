@@ -56,13 +56,13 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 
 		ArrayList list2 = new ArrayList<Byte>();
 		for(int i = 0; i < this.slotInsert.size(); i++) {
-			list2.set(i, (slotInsert.get(i) == true) ? 1 : 0);
+			list2.set(i, slotInsert.get(i) ? 1 : 0);
 		}
 		nbt.setTag("slotInsert", new NBTTagByteArray(list2));
 
 		ArrayList list3 = new ArrayList<Byte>();
 		for(int i = 0; i < this.slotExtract.size(); i++) {
-			list3.set(i, (slotExtract.get(i) == true) ? 1 : 0);
+			list3.set(i, slotExtract.get(i) ? 1 : 0);
 		}
 		nbt.setTag("slotExtract", new NBTTagByteArray(list3));
 
