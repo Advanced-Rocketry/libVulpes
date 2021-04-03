@@ -56,13 +56,13 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 
 		ArrayList list2 = new ArrayList<Byte>();
 		for(int i = 0; i < this.slotInsert.size(); i++) {
-			list2.set(i, slotInsert.get(i) ? 1 : 0);
+			list2.add(i, slotInsert.get(i) ? (byte)1 : (byte)0);
 		}
 		nbt.setTag("slotInsert", new NBTTagByteArray(list2));
 
 		ArrayList list3 = new ArrayList<Byte>();
 		for(int i = 0; i < this.slotExtract.size(); i++) {
-			list3.set(i, slotExtract.get(i) ? 1 : 0);
+			list3.add(i, slotExtract.get(i) ? (byte)1 : (byte)0);
 		}
 		nbt.setTag("slotExtract", new NBTTagByteArray(list3));
 
@@ -88,8 +88,8 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 				this.stacks.set(slot, new ItemStack(tag));
 			}
 		}
-		
-		
+
+
 		byte[] list2 = nbt.getByteArray("slotInsert");
 		this.slotInsert = NonNullList.withSize(list2.length, false);
 		for (int i = 0; i < list2.length; i++) {
@@ -102,10 +102,10 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 		}
 
 		//Backcompat, to allow older worlds to load
-        if (this.slotInsert.isEmpty()) {
+        if (this.slotInsert.size() == 0) {
 			this.slotInsert = NonNullList.withSize(4, false);
 		}
-		if (this.slotExtract.isEmpty()) {
+		if (this.slotExtract.size() == 0) {
 			this.slotExtract = NonNullList.withSize(4, false);
 		}
 	}
