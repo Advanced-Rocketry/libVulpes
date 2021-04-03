@@ -124,8 +124,8 @@ public class ModuleContainerPan extends ModuleBase {
 		try
 		{
 			// Need write access to the field!
-			Field xPos = ObfuscationReflectionHelper.findField(Slot.class, "xPos");
-			Field yPos = ObfuscationReflectionHelper.findField(Slot.class, "yPos");
+			Field xPos = ObfuscationReflectionHelper.findField(Slot.class, "field_75223_e");
+			Field yPos = ObfuscationReflectionHelper.findField(Slot.class, "field_75221_f");
 
 			xPos.setAccessible(true);
 			Field modifiersField = Field.class.getDeclaredField("modifiers");
@@ -139,7 +139,6 @@ public class ModuleContainerPan extends ModuleBase {
 
 
 			for(Slot slot : slotList) {
-
 				xPos.setInt(slot, slot.xPos + deltaX );
 				yPos.setInt(slot, slot.yPos + deltaY );
 			}
