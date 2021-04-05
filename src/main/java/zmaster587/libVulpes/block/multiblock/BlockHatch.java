@@ -34,7 +34,7 @@ public class BlockHatch extends BlockMultiblockStructure {
 	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
-	
+
 	//MUST be called after construction.  The Tile type doesn't yet exist when the block is contructed
 	public BlockHatch _setTile(TileEntityType<?> tileClass)
 	{
@@ -42,46 +42,48 @@ public class BlockHatch extends BlockMultiblockStructure {
 		return this;
 	}
 
-	
+
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return tileClass.create();
 	}
-	
+
 
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 
-		TileEntity tile = world.getTileEntity(pos);
-		if(tile != null && tile instanceof IInventory) {
-			IInventory inventory = (IInventory)tile;
-			for(int i = 0; i < inventory.getSizeInventory(); i++) {
-				ItemStack stack = inventory.getStackInSlot(i);
+		if(state.getBlock() != newState.getBlock())
+		{
+			TileEntity tile = world.getTileEntity(pos);
+			if(tile != null && tile instanceof IInventory) {
+				IInventory inventory = (IInventory)tile;
+				for(int i = 0; i < inventory.getSizeInventory(); i++) {
+					ItemStack stack = inventory.getStackInSlot(i);
 
-				if(stack == null)
-					continue;
+					if(stack == null)
+						continue;
 
-				ItemEntity entityitem = new ItemEntity((World) world, pos.getX(), pos.getY(), pos.getZ(), stack);
+					ItemEntity entityitem = new ItemEntity((World) world, pos.getX(), pos.getY(), pos.getZ(), stack);
 
-				float mult = 0.05F;
+					float mult = 0.05F;
 
-				entityitem.setMotion((double)((float)this.random.nextGaussian() * mult),
-				(double)((float)this.random.nextGaussian() * mult + 0.2F),
-				(double)((float)this.random.nextGaussian() * mult));
+					entityitem.setMotion((double)((float)this.random.nextGaussian() * mult),
+							(double)((float)this.random.nextGaussian() * mult + 0.2F),
+							(double)((float)this.random.nextGaussian() * mult));
 
-				world.addEntity(entityitem);
+					world.addEntity(entityitem);
+				}
 			}
 		}
-
 		super.onReplaced(state, world, pos, newState, isMoving);
 	}
-	
+
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,
 			Hand handIn, BlockRayTraceResult hit) {
 		if(!world.isRemote)
 		{
-			
+
 			TileEntity te = world.getTileEntity(pos);
 			if(te != null)
 				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)te, buf -> {buf.writeInt(((IModularInventory)te).getModularInvType().ordinal()); buf.writeBlockPos(pos); });
