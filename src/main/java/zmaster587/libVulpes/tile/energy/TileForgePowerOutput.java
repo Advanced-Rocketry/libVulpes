@@ -33,7 +33,7 @@ public class TileForgePowerOutput extends TilePlugBase implements IEnergyStorage
 	public boolean canReceive() {
 		return false;
 	}
-	
+
 	@Override
 	public int getEnergyStored() {
 		return getUniversalEnergyStored();
@@ -44,11 +44,14 @@ public class TileForgePowerOutput extends TilePlugBase implements IEnergyStorage
 		if(!world.isRemote) {
 			for(Direction facing : Direction.values()) {
 				TileEntity tile = world.getTileEntity(this.getPos().offset(facing));
-				LazyOptional<IEnergyStorage> energyCap = tile.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite());
-				
-				if(tile != null && energyCap.isPresent()) {
-					IEnergyStorage storage = energyCap.orElse(null);
-					this.extractEnergy(storage.receiveEnergy(getUniversalEnergyStored(), false),false);
+				if(tile != null )
+				{
+					LazyOptional<IEnergyStorage> energyCap = tile.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite());
+
+					if(energyCap.isPresent()) {
+						IEnergyStorage storage = energyCap.orElse(null);
+						this.extractEnergy(storage.receiveEnergy(getUniversalEnergyStored(), false),false);
+					}
 				}
 			}
 		}
