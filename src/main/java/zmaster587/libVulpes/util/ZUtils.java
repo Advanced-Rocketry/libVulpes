@@ -17,6 +17,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.RegistryKey;
@@ -76,6 +77,11 @@ public class ZUtils {
 		return (int)(( (r/total) ) | ( (g/total) << 8 ) | ( ( b/total ) << 16 ) );
 	}
 
+	public static boolean isBlockTag(Block block, ResourceLocation tag)
+	{
+		return BlockTags.getCollection().getOwningTags(block).contains(tag);
+	}
+	
 	public static int getDirectionFacing(float rotationYaw) {
 		int l = MathHelper.floor((double)(MathHelper.wrapDegrees(rotationYaw) * 4.0F / 360.0F) + 0.5D) & 3;
 

@@ -19,6 +19,18 @@ import net.minecraft.util.text.StringTextComponent;
 
 public class GuiImageButton extends Button {
 
+	static class DummyPress implements IPressable
+	{
+		public DummyPress() {
+		}
+		
+		@Override
+		public void onPress(Button arg0) {
+			// Do nothing here
+		}
+		
+	}
+	
 	protected ResourceLocation[] buttonTexture;
 	private String soundString;
 	private int bgColor;
@@ -39,7 +51,7 @@ public class GuiImageButton extends Button {
 	 * @param location index 0: default, index 1: hover, index 2: pressed, index 3: disabled
 	 */
 	public GuiImageButton(int x, int y, int width, int height, ResourceLocation[] location) {
-		super(x, y, width, height, new StringTextComponent(""), null);
+		super(x, y, width, height, new StringTextComponent(""), new DummyPress());
 		buttonTexture = location;
 		soundString = "";
 		bgColor = 0xFFFFFFFF;

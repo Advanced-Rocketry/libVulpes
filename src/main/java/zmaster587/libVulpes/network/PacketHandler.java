@@ -1,6 +1,7 @@
 package zmaster587.libVulpes.network;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -45,9 +46,11 @@ public class PacketHandler {
 	public PacketHandler() {
 	}
 
-	static ArrayList<Class<? extends BasePacket>> packetList = new ArrayList<Class<? extends BasePacket>>();
+	static HashMap<Integer, Class<? extends BasePacket>> packetList = new HashMap<Integer, Class<? extends BasePacket>>();
+	static HashMap<Class<? extends BasePacket>, Integer> revPacketList = new HashMap<Class<? extends BasePacket>, Integer>();
 	public final void addDiscriminator(Class<? extends BasePacket> clazz) {
-		packetList.add(clazz);
+		packetList.put(clazz.getName().hashCode(), clazz);
+		revPacketList.put(clazz, clazz.getName().hashCode());
 	}
 	
 
@@ -130,7 +133,7 @@ public class PacketHandler {
 	}
 	public static int getIdByClass(Class<? extends BasePacket> id)
 	{
-		return packetList.indexOf(id);
+		return revPacketList.get(id);
 	}
     
     public static final void sendToServer(BasePacket pkt)
