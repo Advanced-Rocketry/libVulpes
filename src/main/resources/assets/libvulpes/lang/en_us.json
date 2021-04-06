@@ -21,6 +21,8 @@
     "block.libvulpes.enhanced_motor":"Enhanced Motor",
     "block.libvulpes.elite_motor":"Elite Motor",
     "block.libvulpes.coal_generator": "Coal Generator",
+    "block.libvulpes.oredilithium": "Dilithium Ore",
+    "block.libvulpes.coil.dilithium": "Dilithium Coil",
     "item.libvulpes.dustdilithium": "Dilithium Dust",
     "item.libvulpes.gemdilithium": "Dilithium Crystal",
     "item.libvulpes.oredilithium": "Dilithium Ore",
