@@ -14,6 +14,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidActionResult;
@@ -28,6 +29,7 @@ import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInputHatch;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
 import zmaster587.libVulpes.util.FluidUtils;
 
@@ -105,7 +107,38 @@ public class BlockHatch extends BlockMultiblockStructure {
 		super.breakBlock(world, pos, state);
 	}
 
+	@Override
+	public boolean hasComparatorInputOverride(IBlockState state)
+	{
+		return true;
+	}
 
+	@Override
+	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos) {
+		TileEntity tile = worldIn.getTileEntity(pos);
+		//Fluid comparator size
+		if (tile != null && tile instanceof TileFluidHatch)
+			return (15 * ((TileFluidHatch) tile).getFluidTank().getFluidAmount())/((TileFluidHatch) tile).getFluidTank().getCapacity();
+		//Otherwise, try if it's an inventory - this code is adapted from how chests do it because we don't extend BlockContainer
+		else if (tile != null && tile instanceof TileInventoryHatch) {
+			TileInventoryHatch tile2 = ((TileInventoryHatch) tile);
+			int i = 0;
+			float f = 0.0F;
+
+			for (int j = 0; j < tile2.getSizeInventory(); ++j) {
+				ItemStack itemstack = tile2.getStackInSlot(j);
+
+				if (!itemstack.isEmpty()) {
+					f += (float) itemstack.getCount() / (float) Math.min(tile2.getInventoryStackLimit(), itemstack.getMaxStackSize());
+					i++;
+				}
+			}
+			f = f / (float) tile2.getSizeInventory();
+			return MathHelper.floor(f * 14.0F) + (i > 0 ? 1 : 0);
+		}
+		//Failing that, we do nothing
+		return 0;
+	}
 
 	@Override
 	public boolean shouldSideBeRendered(IBlockState blockState,
