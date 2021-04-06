@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
@@ -192,6 +193,10 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		{
 			throw new JsonParseException("Missing parameters");
 		}
+		catch(InvalidRecipeException e)
+		{
+			throw new JsonParseException(e.getMessage());
+		}
 		
 		RecipesMachine.Recipe recipe = new RecipesMachine.Recipe(this, context, outputs, inputs, outputFluids, inputFluids, timeTaken, energy, new HashMap<Integer, ResourceLocation>());
 		
@@ -207,7 +212,7 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 	
 	public abstract Class getMachine();
 	
-	public List<ChanceFluidStack> getFluidStacks(ResourceLocation context, JsonElement json)
+	public List<ChanceFluidStack> getFluidStacks(ResourceLocation context, JsonElement json) throws InvalidRecipeException
 	{
 		
 		if(!json.isJsonArray())
@@ -224,7 +229,7 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		return fluidstacks;
 	}
 	
-	public ChanceFluidStack parseFluid(ResourceLocation context, JsonElement json)
+	public ChanceFluidStack parseFluid(ResourceLocation context, JsonElement json) throws InvalidRecipeException
 	{
 		String fluidname = json.getAsJsonObject().get("fluid").getAsString();
 		int size = json.getAsJsonObject().get("amount").getAsInt();
@@ -234,6 +239,10 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		if(chanceElem != null)
 			chance = chanceElem.getAsFloat();
 		Fluid fluid = net.minecraft.util.registry.Registry.FLUID.getOrDefault(new ResourceLocation(fluidname));
+		
+		if(fluid.isEquivalentTo(Fluids.EMPTY))
+			throw new InvalidRecipeException("Fluid '" + fluidname + "' is not a valid fluid!");
+		
 		return new ChanceFluidStack(new FluidStack(fluid,size), chance);
 	}
 	
@@ -299,5 +308,13 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		
 		
 		return stacks;
+	}
+	
+	public static class InvalidRecipeException extends Exception
+	{
+		public InvalidRecipeException(String reason)
+		{
+			super(reason);
+		}
 	}
 }

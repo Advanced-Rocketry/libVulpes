@@ -462,7 +462,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 		//Populate Fluid Counters
 		for(int i = 0; i < recipe.getFluidOutputs().size(); i++) {
-			fluidOutputCounter[i] -= fluidOutPorts.get(i).fillInternal(recipe.getFluidOutputs().get(i), FluidAction.EXECUTE);
+			fluidOutputCounter[i] -= fluidOutPorts.get(i).fillInternal(recipe.getFluidOutputs().get(i), FluidAction.SIMULATE);
 		}
 
 		for(int i = 0; i < fluidOutputCounter.length; i++)

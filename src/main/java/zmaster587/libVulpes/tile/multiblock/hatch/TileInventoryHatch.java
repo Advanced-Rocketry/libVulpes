@@ -53,7 +53,7 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 		super(LibVulpesTileEntityTypes.TILE_INPUT_HATCH);
 		inventory = new EmbeddedInventory(invSize, this);
 	}
-
+	
 	@Override
 	public CompoundNBT write(CompoundNBT nbt) {
 		super.write(nbt);

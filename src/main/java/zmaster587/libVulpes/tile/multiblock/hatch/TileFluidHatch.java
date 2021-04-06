@@ -42,16 +42,15 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 
 	protected FluidTank fluidTank;
 	private EmbeddedInventory inventory;
-	private boolean outputOnly;
 	
 	public TileFluidHatch() {
-		super(LibVulpesTileEntityTypes.TILE_FLUIDHATCH);
+		super(LibVulpesTileEntityTypes.TILE_FLUID_INPUT_HATCH);
 		fluidTank = new FluidTank(16000);
 		inventory = new EmbeddedInventory(2);
 	}
 	
 	public TileFluidHatch(int capacity) {
-		super(LibVulpesTileEntityTypes.TILE_FLUIDHATCH);
+		super(LibVulpesTileEntityTypes.TILE_FLUID_INPUT_HATCH);
 		fluidTank = new FluidTank(capacity);
 		inventory = new EmbeddedInventory(2);
 	}
@@ -68,6 +67,11 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 		inventory = new EmbeddedInventory(2);
 	}
 	
+	public boolean isOutputOnly()
+	{
+		return false;
+	}
+	
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
@@ -79,24 +83,10 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 		
 		return super.getCapability(capability, facing);
 	}
-
-	public TileFluidHatch(boolean outputOnly) {
-		this();
-
-		this.outputOnly = outputOnly;
-	}
-
-	public boolean isOutputOnly() {
-		return outputOnly;
-	}
 	
 	@Override
 	public int fill(FluidStack resource, FluidAction doFill) {
-
-		if(outputOnly)
-			return 0;
 		return fillInternal(resource, doFill);
-
 	}
 
 	
@@ -170,7 +160,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 
 	@Override
 	public String getModularInventoryName() {
-		return outputOnly ? "block.libvulpes.fluidohatch" : "block.libvulpes.fluidihatch";
+		return "block.libvulpes.fluidihatch";
 	}
 
 	@Override
@@ -221,7 +211,6 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	public CompoundNBT write(CompoundNBT nbt) {
 		super.write(nbt);
 
-		nbt.putBoolean("outputOnly", outputOnly);
 		inventory.write(nbt);
 		nbt.putInt("capacity", fluidTank.getCapacity());
 		fluidTank.writeToNBT(nbt);
@@ -232,7 +221,6 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	public void read(BlockState state, CompoundNBT nbt) {
 		super.read(state, nbt);
 
-		outputOnly = nbt.getBoolean("outputOnly");
 		inventory.readFromNBT(nbt);
 		fluidTank = new FluidTank(nbt.getInt("capacity"));
 		fluidTank.readFromNBT(nbt);

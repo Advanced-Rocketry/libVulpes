@@ -88,7 +88,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 		int tankCapacity = tile.getTankCapacity(0);
 
 		if(slot == 2) {
-			if(info == null && value != invalidFluid) {
+			if((info == null || info.getFluid().isEquivalentTo(Fluids.EMPTY)) && value != invalidFluid) {
 				if(tile2 != null)
 					tile2.fillInternal(new FluidStack(getFluid(value), 1), FluidAction.EXECUTE);
 				else
@@ -100,7 +100,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 				else
 					tile.drain(tankCapacity, FluidAction.EXECUTE);
 			}
-			else if(info  != null && value != getFluidID(info.getFluid())) { //Empty the tank then fill it back up with new resource
+			else if(info != null && value != getFluidID(info.getFluid())) { //Empty the tank then fill it back up with new resource
 				FluidStack stack;
 				if(tile2 != null)
 					stack = tile2.drainInternal(tankCapacity, FluidAction.EXECUTE);
