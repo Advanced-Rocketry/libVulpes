@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.BlockItem;
 import net.minecraftforge.registries.GameData;
 
+
 public class LibVulpesBlocks {
 	public static final Set<Block> blocks = new HashSet<>();
 

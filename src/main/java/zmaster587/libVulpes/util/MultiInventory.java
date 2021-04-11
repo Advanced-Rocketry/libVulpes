@@ -6,6 +6,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
+import java.util.List;
+
 public class MultiInventory implements IInventory {
 
 	List<IInventory> inventories;

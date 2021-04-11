@@ -3,8 +3,6 @@ package zmaster587.libVulpes.block;
 import java.util.ArrayList;
 import java.util.List;
 
-import zmaster587.libVulpes.tile.TileSchematic;
-import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,6 +18,8 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
+import zmaster587.libVulpes.tile.TileSchematic;
+import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 
 public class BlockPhantom extends Block {
 
@@ -36,6 +36,7 @@ public class BlockPhantom extends Block {
 	public List<ItemStack> getDrops(BlockState state, Builder builder) {
 		return new ArrayList<ItemStack>();
 	}
+
 	
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {

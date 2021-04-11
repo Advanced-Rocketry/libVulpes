@@ -10,6 +10,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import zmaster587.libVulpes.api.IJetPack;
 import zmaster587.libVulpes.api.IModularArmor;
 
+import java.util.HashMap;
+
 public class InputSyncHandler {
 
 	public static HashMap<PlayerEntity, Boolean> spaceDown = new HashMap<PlayerEntity, Boolean>();

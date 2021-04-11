@@ -3,6 +3,7 @@ package zmaster587.libVulpes.util;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.ByteArrayNBT;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
@@ -10,14 +11,22 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemStackHandler;
 import zmaster587.libVulpes.interfaces.IInventoryUpdateCallback;
 
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+
 public class EmbeddedInventory extends ItemStackHandler implements ISidedInventory {
 
 	ItemStackHandler handler;
 
 	IInventoryUpdateCallback tile;
 
+	NonNullList<Boolean> slotInsert;
+	NonNullList<Boolean> slotExtract;
+
 	public EmbeddedInventory(int size) {
 		this.stacks = NonNullList.withSize(size, ItemStack.EMPTY);
+		this.slotInsert = NonNullList.withSize(size, true);
+		this.slotExtract = NonNullList.withSize(size, true);
 	}
 
 	public EmbeddedInventory(int size, IInventoryUpdateCallback tile) {
@@ -43,6 +52,19 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 		}
 
 		nbt.put("outputItems", list);
+
+		ArrayList list2 = new ArrayList<Byte>();
+		for(int i = 0; i < this.slotInsert.size(); i++) {
+			list2.add(i, slotInsert.get(i) ? (byte)1 : (byte)0);
+		}
+		nbt.put("slotInsert", new ByteArrayNBT(list2));
+
+		ArrayList list3 = new ArrayList<Byte>();
+		for(int i = 0; i < this.slotExtract.size(); i++) {
+			list3.add(i, slotExtract.get(i) ? (byte)1 : (byte)0);
+		}
+		nbt.put("slotExtract", new ByteArrayNBT(list3));
+
 	}
 
 	@Override
@@ -64,6 +86,26 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 			if (slot >= 0 && slot < this.stacks.size()) {
 				this.stacks.set(slot, ItemStack.read(tag));
 			}
+		}
+
+
+		byte[] list2 = nbt.getByteArray("slotInsert");
+		this.slotInsert = NonNullList.withSize(list2.length, false);
+		for (int i = 0; i < list2.length; i++) {
+			this.slotInsert.set(i, (list2[i] == 1) ? true : false);
+		}
+		byte[] list3 = nbt.getByteArray("slotExtract");
+		this.slotExtract = NonNullList.withSize(list3.length, false);
+		for (int i = 0; i < list3.length; i++) {
+			this.slotExtract.set(i, (list3[i] == 1) ? true : false);
+		}
+
+		//Backcompat, to allow older worlds to load
+        if (this.slotInsert.size() == 0) {
+			this.slotInsert = NonNullList.withSize(4, false);
+		}
+		if (this.slotExtract.size() == 0) {
+			this.slotExtract = NonNullList.withSize(4, false);
 		}
 	}
 
@@ -101,6 +143,14 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 	@Override
 	public int getInventoryStackLimit() {
 		return 64;
+	}
+
+	public void setCanInsertSlot(int index, boolean bool) {
+		this.slotInsert.set(index, bool);
+	}
+
+	public void setCanExtractSlot(int index, boolean bool) {
+		this.slotExtract.set(index, bool);
 	}
 
 	@Override
@@ -143,18 +193,30 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 	}
 
 
-
-	public boolean canInsertItem(int index, ItemStack itemStackIn,
-			Direction direction) {
-		return true;
+	public boolean canInsertItem(int index, ItemStack itemStackIn, Direction direction) {
+		return this.slotInsert.get(index);
 	}
 
 
-	public boolean canExtractItem(int index, ItemStack stack,
-			Direction direction) {
-		return true;
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+		return this.slotExtract.get(index);
 	}
 
+	@Override
+	public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+		if (!slotInsert.isEmpty() && slotInsert.get(slot) == true ){
+			return super.insertItem(slot, stack, simulate);
+		}
+		return stack;
+	}
+
+	@Override
+	public ItemStack extractItem(int slot, int amount, boolean simulate) {
+		if (!slotExtract.isEmpty() && slotExtract.get(slot) == true ){
+			return super.extractItem(slot, amount, simulate);
+		}
+		return ItemStack.EMPTY;
+	}
 
 	public String getName() {
 		return "";

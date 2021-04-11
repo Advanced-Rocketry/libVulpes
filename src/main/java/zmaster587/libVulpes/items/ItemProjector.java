@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -47,11 +46,7 @@ import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.TextureResources;
-import zmaster587.libVulpes.inventory.modules.IButtonInventory;
-import zmaster587.libVulpes.inventory.modules.IModularInventory;
-import zmaster587.libVulpes.inventory.modules.ModuleBase;
-import zmaster587.libVulpes.inventory.modules.ModuleButton;
-import zmaster587.libVulpes.inventory.modules.ModuleContainerPan;
+import zmaster587.libVulpes.inventory.modules.*;
 import zmaster587.libVulpes.network.INetworkItem;
 import zmaster587.libVulpes.network.PacketHandler;
 import zmaster587.libVulpes.network.PacketItemModifcation;
@@ -63,6 +58,7 @@ import zmaster587.libVulpes.util.Vector3F;
 import zmaster587.libVulpes.util.ZUtils;
 
 public class ItemProjector extends Item implements IModularInventory, IButtonInventory, INetworkItem, INamedContainerProvider {
+
 
 	ArrayList<TileMultiBlock> machineList;
 	ArrayList<BlockTile> blockList;

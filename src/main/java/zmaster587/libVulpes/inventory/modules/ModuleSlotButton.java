@@ -58,7 +58,6 @@ public class ModuleSlotButton extends ModuleButton {
 
 		int zLevel = 500;
 
-
 		int k = stack.getDamage();
 		int l;
 		float f;

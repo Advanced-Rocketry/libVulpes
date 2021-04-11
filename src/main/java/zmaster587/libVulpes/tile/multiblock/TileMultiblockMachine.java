@@ -28,6 +28,9 @@ import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.util.IFluidHandlerInternal;
 import zmaster587.libVulpes.util.ZUtils;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 	public enum NetworkPackets {
@@ -35,6 +38,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		POWERERROR
 	}
 
+	private List<ItemStack> inputItemStacks;
 	private List<ItemStack> outputItemStacks;
 	private List<FluidStack> outputFluidStacks;
 
@@ -46,6 +50,10 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	public TileMultiblockMachine(TileEntityType<?> type) {
 		super(type);
 		outputItemStacks = null;
+	}
+
+	public List<ItemStack> getInputs() {
+		return inputItemStacks;
 	}
 
 	public List<ItemStack> getOutputs() {
@@ -179,6 +187,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		if(!world.isRemote)
 			dumpOutputToInventory();
 
+		inputItemStacks = null;
 		outputItemStacks = null;
 		outputFluidStacks = null;
 
@@ -504,6 +513,17 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 				outputItemStacks = recipe.getOutput();
 				outputFluidStacks = recipe.getFluidOutputs();
 
+				List<List<ItemStack>> ingredients = recipe.getPossibleIngredients();
+				for(int ingredientNum = 0;ingredientNum < ingredients.size(); ingredientNum++) {
+					if (inputItemStacks == null)
+						inputItemStacks = new LinkedList<>(ingredients.get(ingredientNum));
+					else
+					    inputItemStacks.addAll(ingredients.get(ingredientNum));
+				}
+
+
+
+
 				markDirty();
 				world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 
@@ -542,6 +562,19 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 			nbt.put("outputItems", list);
 		}
 
+		//Save input items if applicable
+		if(inputItemStacks != null) {
+			ListNBT list = new ListNBT();
+			for(ItemStack stack : inputItemStacks) {
+				if(stack != null) {
+					CompoundNBT tag = new CompoundNBT();
+					stack.write(tag);
+					list.add(tag);
+				}
+			}
+			nbt.put("inputItems", list);
+		}
+
 		if(outputFluidStacks != null) {
 			ListNBT list = new ListNBT();
 			for(FluidStack stack : outputFluidStacks) {
@@ -568,6 +601,18 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 			for(int i = 0; i < list.size(); i++) {
 				CompoundNBT tag = list.getCompound(i);
 				outputItemStacks.add(ItemStack.read(tag));
+			}
+		}
+
+		//Load input items being processed if applicable
+		if(nbt.contains("inputItems")) {
+			inputItemStacks = new LinkedList<ItemStack>();
+			ListNBT list = nbt.getList("inputItems", 10);
+
+			for(int i = 0; i < list.size(); i++) {
+				CompoundNBT tag = list.getCompound(i);
+
+				inputItemStacks.add(ItemStack.read(tag));
 			}
 		}
 

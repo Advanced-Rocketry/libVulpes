@@ -18,6 +18,11 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import zmaster587.libVulpes.event.BucketHandler;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 public class FluidUtils {
 	
 	private static Map<ResourceLocation, List<ResourceLocation>> fluidEquivilentMapping = new HashMap<ResourceLocation, List<ResourceLocation>>();

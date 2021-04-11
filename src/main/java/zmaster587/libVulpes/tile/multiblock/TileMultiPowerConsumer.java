@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.tile.multiblock;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,9 +13,11 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -126,9 +129,20 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	 */
 	public float getTimeMultiplierForBlock(BlockState state, TileEntity tile) {
 		
+		Collection<ResourceLocation> blockTags = BlockTags.getCollection().getOwningTags(state.getBlock());
+		
 		if(state.getBlock() instanceof ITimeModifier)
 			return ((ITimeModifier)state.getBlock()).getTimeMult();
-		
+		//Check coils, but with compat so people can add IE coils if wanted
+		else if( blockTags.contains(new ResourceLocation("forge:coils/gold")) || blockTags.contains(new ResourceLocation("forge:coils/electrum")))
+			return 0.9f;
+		else if(blockTags.contains(new ResourceLocation("forge:coils/aluminum")) || blockTags.contains(new ResourceLocation("forge:coils/aluminium")) || blockTags.contains(new ResourceLocation("forge:coils/highvoltage")))
+			return 0.8f;
+		else if(blockTags.contains(new ResourceLocation("forge:coils/titanium")))
+			return 0.75f;
+		else if(blockTags.contains(new ResourceLocation("forge:coils/iridium")))
+			return 0.5f;
+		//Everything else is default
 		return 1f;
 	}
 

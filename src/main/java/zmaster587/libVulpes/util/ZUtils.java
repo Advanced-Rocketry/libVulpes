@@ -9,7 +9,6 @@ import java.util.OptionalInt;
 import java.util.Random;
 
 import com.mojang.serialization.Lifecycle;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.DimensionRenderInfo;
@@ -40,6 +39,10 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 public class ZUtils {
 
@@ -462,7 +465,6 @@ public class ZUtils {
 		// I don't think you can
 		return false;
 	}
-
 
 	public static boolean registerDimension(ResourceLocation worldLoc, DimensionType type, Dimension dim)
 	{

@@ -1,11 +1,11 @@
 package zmaster587.libVulpes.api.material;
 
+import net.minecraft.block.Block;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
-import net.minecraft.block.Block;
 
 public class AllowedProducts {
 	

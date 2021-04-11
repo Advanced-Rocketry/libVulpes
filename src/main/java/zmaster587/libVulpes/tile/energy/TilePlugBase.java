@@ -29,6 +29,9 @@ import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.util.UniversalBattery;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public abstract class TilePlugBase extends TilePointer implements IModularInventory, IUniversalEnergy, IMultiblock, IInventory {
 
 	protected UniversalBattery storage;

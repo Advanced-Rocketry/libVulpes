@@ -1,7 +1,6 @@
 package zmaster587.libVulpes.network;
 
 import java.util.function.Supplier;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,6 +13,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkEvent;
+
+import java.io.IOException;
 
 public class PacketItemModifcation extends BasePacket {
 	

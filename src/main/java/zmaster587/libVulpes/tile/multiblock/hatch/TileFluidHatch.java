@@ -24,6 +24,7 @@ import zmaster587.libVulpes.api.LibVulpesTileEntityTypes;
 import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.cap.FluidCapability;
 import zmaster587.libVulpes.gui.CommonResources;
+import zmaster587.libVulpes.interfaces.IInventoryUpdateCallback;
 import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
@@ -38,21 +39,29 @@ import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.IFluidHandlerInternal;
 import zmaster587.libVulpes.util.IconResource;
 
-public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal, IModularInventory, ISidedInventory {
+public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal, IModularInventory, ISidedInventory, IInventoryUpdateCallback {
 
 	protected FluidTank fluidTank;
 	private EmbeddedInventory inventory;
-	
 	public TileFluidHatch() {
 		super(LibVulpesTileEntityTypes.TILE_FLUID_INPUT_HATCH);
 		fluidTank = new FluidTank(16000);
-		inventory = new EmbeddedInventory(2);
+		inventory = new EmbeddedInventory(2, this);
+		inventory.setCanInsertSlot(0, true);
+		inventory.setCanInsertSlot(1, false);
+		inventory.setCanExtractSlot(0, false);
+		inventory.setCanExtractSlot(1, true);
+
 	}
 	
 	public TileFluidHatch(int capacity) {
 		super(LibVulpesTileEntityTypes.TILE_FLUID_INPUT_HATCH);
 		fluidTank = new FluidTank(capacity);
-		inventory = new EmbeddedInventory(2);
+		inventory = new EmbeddedInventory(2,this);
+		inventory.setCanInsertSlot(0, true);
+		inventory.setCanInsertSlot(1, false);
+		inventory.setCanExtractSlot(0, false);
+		inventory.setCanExtractSlot(1, true);
 	}
 	
 	public TileFluidHatch(TileEntityType<?> type) {
@@ -87,6 +96,10 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	@Override
 	public int fill(FluidStack resource, FluidAction doFill) {
 		return fillInternal(resource, doFill);
+	}
+
+	public FluidTank getFluidTank() {
+		return fluidTank;
 	}
 
 	
@@ -190,6 +203,11 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 		
 		if(this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
 			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
+	}
+	
+	@Override
+	public void onInventoryUpdated(int slot) {
+		setInventorySlotContents(slot, inventory.getStackInSlot(slot));
 	}
 
 	@Override

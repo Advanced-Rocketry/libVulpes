@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -17,6 +16,9 @@ import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 import zmaster587.libVulpes.gui.GuiImageButton;
 import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.GuiModular;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class ModuleButton extends ModuleBase {
 

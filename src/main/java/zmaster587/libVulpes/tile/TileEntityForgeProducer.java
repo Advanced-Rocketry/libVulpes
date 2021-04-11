@@ -62,6 +62,7 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 		energy.write(nbt);
 		return nbt;
 	}
+	
 	@Override
 	public void read(BlockState state, CompoundNBT nbt) {
 		super.read(state, nbt);

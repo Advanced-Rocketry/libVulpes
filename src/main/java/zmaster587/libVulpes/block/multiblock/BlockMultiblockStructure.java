@@ -1,7 +1,5 @@
 package zmaster587.libVulpes.block.multiblock;
 
-import zmaster587.libVulpes.tile.IMultiblock;
-import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.BooleanProperty;
@@ -15,6 +13,8 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import zmaster587.libVulpes.tile.IMultiblock;
+import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 
 /**
  * Block which is integrated into the multiblock structure.  When a structure is formed the block

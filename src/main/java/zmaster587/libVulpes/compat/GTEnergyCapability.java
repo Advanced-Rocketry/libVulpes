@@ -31,7 +31,6 @@ public class GTEnergyCapability /*implements gregtech.api.capability.IEnergyCont
 
 	@Override
 	public long getEnergyCapacity() {
-		// TODO Auto-generated method stub
 		return storage.getMaxEnergyStored();
 	}
 

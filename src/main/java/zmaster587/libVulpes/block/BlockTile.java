@@ -36,7 +36,6 @@ public class BlockTile extends RotatableBlock {
 
 	public BlockTile(Properties properties, zmaster587.libVulpes.inventory.GuiHandler.guiId guiId) {
 		super(properties);
-		
 		this.guiId = guiId;
 		this.setDefaultState(this.stateContainer.getBaseState().with(STATE, false));
 	}
@@ -52,6 +51,7 @@ public class BlockTile extends RotatableBlock {
 	protected void fillStateContainer(StateContainer.Builder<Block, net.minecraft.block.BlockState> builder) {
 		builder.add(FACING, STATE);
 	}
+	
 	
 	public void setBlockState(World world, BlockState state, BlockPos pos, boolean newState) {
 		world.setBlockState(pos, state.with(STATE, newState), 2);

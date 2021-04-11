@@ -1,7 +1,5 @@
 package zmaster587.libVulpes;
 
-
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -359,7 +357,6 @@ public class LibVulpes {
 		{
 			if (mapping.key.compareTo(new ResourceLocation("libvulpes:productcrystal")) == 0)
 				mapping.remap(MaterialRegistry.getItemStackFromMaterialAndType("Dilithium", AllowedProducts.getProductByName("GEM")).getItem());
-
 		}
 	}
 

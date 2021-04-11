@@ -1,10 +1,10 @@
 package zmaster587.libVulpes.gui;
 
-import java.util.Set;
-
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+
+import java.util.Set;
 
 public class SlotListAllowed extends Slot {
 

@@ -7,17 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import javax.annotation.Resource;
-
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.tile.TileEntityMachine;
-import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.tags.ItemTags;
