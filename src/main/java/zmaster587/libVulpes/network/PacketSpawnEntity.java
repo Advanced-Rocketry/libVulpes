@@ -16,8 +16,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.registry.Registry;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 
-public class PacketSpawnEntity extends BasePacket implements IPacket<INetHandler> {
+public class PacketSpawnEntity extends BasePacket {
 	private int entityId;
 	private UUID uniqueId;
 	private double x;
@@ -127,34 +130,9 @@ public class PacketSpawnEntity extends BasePacket implements IPacket<INetHandler
 	public void executeServer(ServerPlayerEntity player) {
 
 	}
-
-	@Override
-	public void executeClient(PlayerEntity player) {
-		Entity entity = type.create(Minecraft.getInstance().world);
-		entity.setPositionAndRotation(x, y, z, yaw, pitch);
-		entity.setUniqueId(uniqueId);
-		entity.setVelocity(speedX, speedY, speedZ);
-		Minecraft.getInstance().world.addEntity(entityId, entity);
-	}
-
-	@Override
-	public void readPacketData(PacketBuffer buf) throws IOException {
-		read(buf);
-
-	}
-
-	@Override
-	public void writePacketData(PacketBuffer buf) throws IOException {
-		write(buf);
-	}
-
-	@Override
-	public void processPacket(INetHandler handler) {
+	
+public void execute(Entity entity) {
 		
-		// spinlock until ready
-		while(Minecraft.getInstance().world == null);
-		
-		Entity entity = type.create(Minecraft.getInstance().world);
 		entity.setUniqueId(uniqueId);
 		entity.setVelocity(speedX, speedY, speedZ);
 		entity.setEntityId(entityId);
@@ -163,6 +141,23 @@ public class PacketSpawnEntity extends BasePacket implements IPacket<INetHandler
 			((IEntitySpawnNBT) entity).readSpawnNBT(nbt);
 		
 		entity.setPositionAndRotation(x, y, z, yaw, pitch);
+		entity.setPacketCoordinates(x, y, z);
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void executeClient(PlayerEntity player) {
+		Entity entity = type.create(Minecraft.getInstance().world);
+		
+		entity.setUniqueId(uniqueId);
+		entity.setVelocity(speedX, speedY, speedZ);
+		entity.setEntityId(entityId);
+		
+		if(nbt != null && entity instanceof IEntitySpawnNBT)
+			((IEntitySpawnNBT) entity).readSpawnNBT(nbt);
+		
+		entity.setPositionAndRotation(x, y, z, yaw, pitch);
+		
 		Minecraft.getInstance().world.addEntity(entityId, entity);
 		entity.setPositionAndRotation(x, y, z, yaw, pitch);
 		entity.setPacketCoordinates(x, y, z);
