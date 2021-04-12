@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.tile.multiblock.hatch;
 
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -11,6 +12,16 @@ public class TileFluidOutputHatch extends TileFluidHatch {
 	public TileFluidOutputHatch() {
 		super(LibVulpesTileEntityTypes.TILE_FLUID_OUTPUT_HATCH);
 		fluidTank = new FluidTank(16000);
+	}
+	
+	public TileFluidOutputHatch(TileEntityType<TileFluidHatch> type) {
+		super(type);
+		fluidTank = new FluidTank(16000);
+	}
+	
+	public TileFluidOutputHatch(TileEntityType<TileFluidHatch> type, int size) {
+		super(type);
+		fluidTank = new FluidTank(size);
 	}
 	
 	@Override
