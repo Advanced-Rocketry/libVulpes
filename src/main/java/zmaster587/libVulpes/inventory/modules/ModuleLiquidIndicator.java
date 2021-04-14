@@ -55,15 +55,15 @@ public class ModuleLiquidIndicator extends ModuleBase {
 
 		for(Fluid fluid : ForgeRegistries.FLUIDS.getValues())
 		{
-			if(ForgeRegistries.FLUIDS.getKey(fluid).hashCode() == id)
+			if((ForgeRegistries.FLUIDS.getKey(fluid).hashCode() & 0xFFFF) == id)
 				return fluid;
 		}
-		return Fluids.WATER;
+		return Fluids.EMPTY;
 	}
 
 	private int getFluidID(Fluid fluid)
 	{
-		return ForgeRegistries.FLUIDS.getKey(fluid).hashCode();
+		return fluid.isEquivalentTo(Fluids.EMPTY) ? -1 : ForgeRegistries.FLUIDS.getKey(fluid).hashCode() & 0xFFFF;
 	}
 
 	@Override
@@ -71,15 +71,16 @@ public class ModuleLiquidIndicator extends ModuleBase {
 			int variableId, int localId) {
 		FluidStack info = tile.getFluidInTank(0);
 
-		if(localId == 0 && info != null)
-			crafter.sendWindowProperty(container, variableId, info.getAmount() & 0xFFFF);
-		else if(localId == 1 && info != null)
-			crafter.sendWindowProperty(container, variableId, (info.getAmount() >>> 16) & 0xFFFF);
-		else if(localId == 2)
+		if(localId == 0)
 			if(info == null) 
 				crafter.sendWindowProperty(container, variableId, invalidFluid);
 			else
 				crafter.sendWindowProperty(container, variableId, getFluidID(info.getFluid()));
+		if(localId == 1 && info != null)
+			crafter.sendWindowProperty(container, variableId, info.getAmount() & 0xFFFF);
+		else if(localId == 2 && info != null)
+			crafter.sendWindowProperty(container, variableId, (info.getAmount() >>> 16) & 0xFFFF);
+		
 	}
 
 	@Override
@@ -87,7 +88,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 		FluidStack info = tile.getFluidInTank(0);
 		int tankCapacity = tile.getTankCapacity(0);
 
-		if(slot == 2) {
+		if(slot == 0) {
 			if((info == null || info.getFluid().isEquivalentTo(Fluids.EMPTY)) && value != invalidFluid) {
 				if(tile2 != null)
 					tile2.fillInternal(new FluidStack(getFluid(value), 1), FluidAction.EXECUTE);
@@ -112,10 +113,10 @@ public class ModuleLiquidIndicator extends ModuleBase {
 				tile.fill(stack, FluidAction.EXECUTE);
 			}
 		}
-		else if((slot == 0 || slot == 1) && info != null) {
+		else if((slot == 1 || slot == 2) && info != null) {
 			int difference;
 
-			if(slot == 0) {
+			if(slot == 1) {
 				difference = (value & 0xFFFF) - (info.getAmount() & 0xFFFF);
 			}
 			else
