@@ -366,7 +366,7 @@ public class RenderHelper {
 			int j = (int)(f1 * 255.0F) << 24;
 			FontRenderer fontrenderer = Minecraft.getInstance().fontRenderer;
 			float f3 = (float)(-fontrenderer.getStringPropertyWidth(new StringTextComponent(displayString)) / 2);
-			fontrenderer.func_243247_a(new StringTextComponent(displayString), f3, (float)0, 553648127, false, matrix4f, buffer, true, j, packedLightIn);
+			fontrenderer.func_243247_a(new StringTextComponent(displayString), f3, (float)0, 0xFFFFFFFF, false, matrix4f, buffer, false, j, packedLightIn);
 
 			matrix.pop();
 		}
