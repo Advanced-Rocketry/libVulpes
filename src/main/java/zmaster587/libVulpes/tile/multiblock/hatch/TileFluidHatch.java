@@ -130,9 +130,8 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	@Override
 	public int fillInternal(FluidStack resource, boolean doFill) {
 		int fillAmt = fluidTank.fill(resource, doFill);
-		while(useBucket(0, getStackInSlot(0)));
 		
-		if(doFill && this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
+		if(doFill && fillAmt > 0 && this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
 			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
 		
 		
@@ -237,9 +236,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 		fluidTank = new FluidTank(nbt.getInteger("capacity"));
 		fluidTank.readFromNBT(nbt);
 	}
-
-	//Yes i was lazy
-	//TODO: make better
+	
 	protected boolean useBucket( int slot, ItemStack stack) {
 		return FluidUtils.attemptDrainContainerIInv(inventory, fluidTank, stack, 0, 1);
 	}
