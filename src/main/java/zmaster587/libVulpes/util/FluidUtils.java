@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -176,6 +177,11 @@ public class FluidUtils {
 	}
 	
 	public static boolean areFluidsSameType(ResourceLocation inFluidName, ResourceLocation otherFluidName) {
+		if(inFluidName == null)
+			inFluidName = Fluids.EMPTY.getRegistryName();
+		if(otherFluidName == null)
+			otherFluidName = Fluids.EMPTY.getRegistryName();
+		
 		if(inFluidName.equals(otherFluidName))
 			return true;
 		
