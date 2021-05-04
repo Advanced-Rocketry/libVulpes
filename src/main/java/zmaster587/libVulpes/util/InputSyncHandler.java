@@ -1,6 +1,9 @@
 package zmaster587.libVulpes.util;
 
 import java.util.HashMap;
+
+import org.lwjgl.glfw.GLFW;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -73,7 +76,7 @@ public class InputSyncHandler {
 				}
 			}
 			break;
-		case 57: //SPACE
+		case GLFW.GLFW_KEY_SPACE : //SPACE
 			spaceDown.put(player, state);
 			break;
 			

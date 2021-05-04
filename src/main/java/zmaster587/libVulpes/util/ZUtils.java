@@ -428,6 +428,11 @@ public class ZUtils {
 
 	public static boolean isWorldLoaded(ResourceLocation worldLoc)
 	{
+		
+		// We're on the client, just assume it's there, server will sort it out
+		if(ServerLifecycleHooks.getCurrentServer() == null)
+			return true;
+		
 		RegistryKey<World> registrykey = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, worldLoc);
 
 		return registrykey != null && ServerLifecycleHooks.getCurrentServer().getWorld(registrykey) != null;
