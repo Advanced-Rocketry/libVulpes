@@ -114,7 +114,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 			
 			return fluidStack;
 		}
-		return null;
+		return FluidStack.EMPTY;
 	}
 
 	@Override
