@@ -319,7 +319,7 @@ public class RecipesMachine {
 					}
 					else if(inputs[i] instanceof NumberedOreDictStack) {
 						oreDict.put(i, ((NumberedOreDictStack)inputs[i]).ore);
-						for (Item item : ItemTags.getCollection().get(new ResourceLocation((String)inputs[i])).getAllElements()) {
+						for (Item item : ItemTags.getCollection().get(((NumberedOreDictStack)inputs[i]).ore).getAllElements()) {
 							int number  = ((NumberedOreDictStack)inputs[i]).getNumber();
 							ItemStack stack2 = new ItemStack(item, number);
 							stack2.setCount(number);
