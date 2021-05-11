@@ -281,16 +281,22 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 			JsonElement chanceElem = json.getAsJsonObject().get("chance");
 			
 			if(countElem != null)
+			{
 				count = countElem.getAsInt();
+				stack2.setCount(count);
+			}
 			
 			if(dataElem != null)
+			{
 				data = dataElem.getAsInt();
+				stack2.setDamage(data);
+			}
 			
 			if(chanceElem != null)
 				chance = chanceElem.getAsFloat();
 			
-			stack2.setCount(count);
-			stack2.setDamage(data);
+			
+			
 			stacks.add(new ChanceItemStack(stack2,chance));
 		}
 		return stacks;
