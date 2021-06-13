@@ -54,8 +54,8 @@ public class ModuleContainerPan extends ModuleBase {
 		this.screenSizeX = screenSizeX;
 		this.screenSizeY = screenSizeY;
 
-		buttonList = new LinkedList<GuiButton>();
-		staticButtonList = new LinkedList<GuiButton>();
+		buttonList = new LinkedList<>();
+		staticButtonList = new LinkedList<>();
 		slotList = new LinkedList<>();
 
 		this.backdrop = backdrop;
@@ -101,7 +101,7 @@ public class ModuleContainerPan extends ModuleBase {
 			staticButtonList.addAll(module.addButtons(x, y));
 		}
 
-		return new LinkedList<GuiButton>();
+		return new LinkedList<>();
 	}
 
 	public void setOffset(int x, int y) {
@@ -142,7 +142,7 @@ public class ModuleContainerPan extends ModuleBase {
 	
 	@Override
 	public List<Slot> getSlots(Container container) {
-		List<Slot> list = new LinkedList<Slot>();
+		List<Slot> list = new LinkedList<>();
 
 		for(ModuleBase module : this.moduleList) {
 			list.addAll(module.getSlots(container));
@@ -225,7 +225,7 @@ public class ModuleContainerPan extends ModuleBase {
 		//Handles buttons (mostly vanilla copy)
 		if(button == 0 && isMouseInBounds(0, 0, x, y)) {
 
-			List<GuiButton> fullButtonList = new LinkedList<GuiButton>();
+			List<GuiButton> fullButtonList = new LinkedList<>();
 			fullButtonList.addAll(buttonList);
 			fullButtonList.addAll(staticButtonList);
 
@@ -314,8 +314,8 @@ public class ModuleContainerPan extends ModuleBase {
 			}
 			else if(mouseLastX != x && mouseLastY != y) {
 
-				int deltaX = (int) ((k - mouseLastX));
-				int deltaY = (int) ((l - mouseLastY));
+				int deltaX = (k - mouseLastX);
+				int deltaY = (l - mouseLastY);
 
 				moveContainerInterior(deltaX, deltaY);
 
