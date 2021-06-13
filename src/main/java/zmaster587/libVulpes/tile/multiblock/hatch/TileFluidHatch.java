@@ -22,6 +22,8 @@ import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.IFluidHandlerInternal;
 import zmaster587.libVulpes.util.IconResource;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -152,7 +154,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		List<ModuleBase> list = new ArrayList<ModuleBase>();
+		List<ModuleBase> list = new ArrayList<>();
 
 		list.add(new ModuleSlotArray(45, 18, this, 0, 1));
 		list.add(new ModuleSlotArray(45, 54, this, 1, 2));
@@ -179,17 +181,19 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int slot) {
 		return inventory.getStackInSlot(slot);
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int slot, int amt) {
 		return inventory.decrStackSize(slot, amt);
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
 		while(useBucket(0, getStackInSlot(0)));
 		
@@ -208,12 +212,12 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(@Nullable EntityPlayer player) {
 		return true;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
 		return inventory.isItemValidForSlot(slot, stack);
 	}
 
@@ -240,7 +244,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 
 	//Yes i was lazy
 	//TODO: make better
-	protected boolean useBucket( int slot, ItemStack stack) {
+	protected boolean useBucket( int slot, @Nonnull ItemStack stack) {
 		return FluidUtils.attemptDrainContainerIInv(inventory, fluidTank, stack, 0, 1);
 	}
 
@@ -255,8 +259,9 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
@@ -295,18 +300,19 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	}
 
 	@Override
+	@Nonnull
 	public int[] getSlotsForFace(EnumFacing side) {
 		return new int[] {0,1};
 	}
 
 	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn,
+	public boolean canInsertItem(int index, @Nonnull ItemStack itemStackIn,
 			EnumFacing direction) {
 		return index == 0 && isItemValidForSlot(index, itemStackIn);
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack,
+	public boolean canExtractItem(int index, @Nonnull ItemStack stack,
 			EnumFacing direction) {
 		return index == 1;
 	}

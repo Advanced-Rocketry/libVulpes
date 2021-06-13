@@ -17,6 +17,8 @@ import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.util.UniversalBattery;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -52,9 +54,7 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 
-		if(capability == CapabilityEnergy.ENERGY || TeslaHandler.hasTeslaCapability(this, capability))
-			return true;
-		return false;
+		return capability == CapabilityEnergy.ENERGY || TeslaHandler.hasTeslaCapability(this, capability);
 	}
 
 	@Override
@@ -111,17 +111,19 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int p_70301_1_) {
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int p_70298_1_, int p_70298_2_) {
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_) {
+	public void setInventorySlotContents(int p_70299_1_, @Nonnull ItemStack p_70299_2_) {
 		
 	}
 
@@ -147,13 +149,14 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
 		return true;
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
@@ -178,7 +181,7 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	
 	@Override
 	public List<ModuleBase> getModules(int ID, EntityPlayer player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 		modules.add(new ModulePower(18, 20,this));
 		return modules;
 	}
@@ -209,7 +212,7 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(@Nullable EntityPlayer player) {
 		return true;
 	}
 	

@@ -1,7 +1,6 @@
 package zmaster587.libVulpes.block.multiblock;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -18,8 +17,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import zmaster587.libVulpes.LibVulpes;
@@ -45,7 +42,7 @@ public class BlockHatch extends BlockMultiblockStructure {
 
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] {VARIANT});
+		return new BlockStateContainer(this, VARIANT);
 	}
 
 	@Override
@@ -82,21 +79,21 @@ public class BlockHatch extends BlockMultiblockStructure {
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 
 		TileEntity tile = world.getTileEntity(pos);
-		if(tile != null && tile instanceof IInventory) {
+		if(tile instanceof IInventory) {
 			IInventory inventory = (IInventory)tile;
 			for(int i = 0; i < inventory.getSizeInventory(); i++) {
 				ItemStack stack = inventory.getStackInSlot(i);
 
-				if(stack == null)
+				if(stack.isEmpty())
 					continue;
 
 				EntityItem entityitem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 
 				float mult = 0.05F;
 
-				entityitem.motionX = (double)((float)this.random.nextGaussian() * mult);
-				entityitem.motionY = (double)((float)this.random.nextGaussian() * mult + 0.2F);
-				entityitem.motionZ = (double)((float)this.random.nextGaussian() * mult);
+				entityitem.motionX = (float)this.random.nextGaussian() * mult;
+				entityitem.motionY = (float)this.random.nextGaussian() * mult + 0.2F;
+				entityitem.motionZ = (float)this.random.nextGaussian() * mult;
 
 				world.spawnEntity(entityitem);
 			}
@@ -114,7 +111,7 @@ public class BlockHatch extends BlockMultiblockStructure {
 
 		boolean isPointer = blockAccess.getTileEntity(pos.offset(direction.getOpposite())) instanceof TilePointer;
 		if(isPointer)
-			isPointer = isPointer && !(((TilePointer)blockAccess.getTileEntity(pos.offset(direction.getOpposite()))).getMasterBlock() instanceof TileMultiBlock);
+			isPointer = !(((TilePointer)blockAccess.getTileEntity(pos.offset(direction.getOpposite()))).getMasterBlock() instanceof TileMultiBlock);
 
 		return blockState.getValue(VARIANT) < 8;
 
@@ -141,7 +138,7 @@ public class BlockHatch extends BlockMultiblockStructure {
 			}
 
 		}
-		//Handlue gui through modular system
+		//Handle gui through modular system
 		 else if((meta & 7) < 8 && !worldIn.isRemote)
 			playerIn.openGui(LibVulpes.instance, GuiHandler.guiId.MODULAR.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 

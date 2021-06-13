@@ -9,6 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.libVulpes.gui.GuiImageButton;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class ModuleButton extends ModuleBase {
 	}*/
 
 	public void setImage(ResourceLocation[] images) {
-		((GuiImageButton)button).setButtonTexture(images);
+		button.setButtonTexture(images);
 	}
 
 
@@ -149,7 +150,7 @@ public class ModuleButton extends ModuleBase {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 		if(button != null)
-			this.enabled = button.enabled = enabled;
+			button.enabled = enabled;
 	}
 
 	/**
@@ -163,7 +164,7 @@ public class ModuleButton extends ModuleBase {
 	@SideOnly(Side.CLIENT)
 	public List<GuiButton> addButtons(int x, int y) {
 
-		List<GuiButton> list = new LinkedList<GuiButton>();
+		List<GuiButton> list = new LinkedList<>();
 
 		button = new GuiImageButton(buttonId, x + offsetX, y + offsetY, sizeX, sizeY, buttonImages);
 
@@ -205,12 +206,7 @@ public class ModuleButton extends ModuleBase {
 		if(tooltipText != null) {
 
 			if( isMouseOver(mouseX, mouseY) ) {
-				List<String> list = new LinkedList<String>();
-				for(String str : tooltipText.split("\n")) {
-
-					list.add(str);
-
-				}
+				List<String> list = new LinkedList<>(Arrays.asList(tooltipText.split("\n")));
 				this.drawTooltip(gui, list, mouseX, mouseY, zLevel, font);
 			}
 			//}

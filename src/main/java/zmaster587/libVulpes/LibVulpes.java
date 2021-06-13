@@ -94,12 +94,14 @@ import zmaster587.libVulpes.util.ModCompatDictionary;
 import zmaster587.libVulpes.util.TeslaCapabilityProvider;
 import zmaster587.libVulpes.util.XMLRecipeLoader;
 
+import javax.annotation.Nonnull;
+
 @Mod(modid="libvulpes",name="Vulpes library",version="@MAJOR@.@MINOR@.@REVIS@.@BUILD@",useMetadata=true, dependencies="after:ic2;after:cofhcore;after:buildcraft|core;after:immersiveengineering")
 
 public class LibVulpes {
 	public static org.apache.logging.log4j.Logger logger = LogManager.getLogger("libVulpes");
 	public static int time = 0;
-	private static HashMap<Class, String> userModifiableRecipes = new HashMap<Class, String>();
+	private static HashMap<Class, String> userModifiableRecipes = new HashMap<>();
 
 	@Instance(value = "libvulpes")
 	public static LibVulpes instance;
@@ -111,6 +113,7 @@ public class LibVulpes {
 
 	private static CreativeTabs tabMultiblock = new CreativeTabs("multiBlock") {
 		@Override
+		@Nonnull
 		public ItemStack getTabIconItem() {
 			return new ItemStack(LibVulpesItems.itemLinker);// AdvancedRocketryItems.itemSatelliteIdChip;
 		}
@@ -119,6 +122,7 @@ public class LibVulpes {
 	public static CreativeTabs tabLibVulpesOres = new CreativeTabs("advancedRocketryOres") {
 
 		@Override
+		@Nonnull
 		public ItemStack getTabIconItem() {
 			return MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("ORE"));
 		}
@@ -134,7 +138,7 @@ public class LibVulpes {
     {
         MinecraftForge.EVENT_BUS.register(this);
 
-        //Initialze Blocks
+        //Initialize Blocks
         LibVulpesBlocks.blockPhantom = new BlockPhantom(Material.CIRCUITS).setUnlocalizedName("blockPhantom");
         LibVulpesBlocks.blockHatch = new BlockHatch(Material.IRON).setUnlocalizedName("hatch").setCreativeTab(tabMultiblock).setHardness(3f);
         LibVulpesBlocks.blockPlaceHolder = new BlockMultiblockPlaceHolder().setUnlocalizedName("placeHolder").setHardness(1f);
@@ -235,8 +239,7 @@ public class LibVulpes {
         //LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockRFOutput.setRegistryName(LibVulpesBlocks.blockRFOutput.getUnlocalizedName()));
 
         //populate lists
-        Block motors[] = { LibVulpesBlocks.blockMotor, LibVulpesBlocks.blockAdvancedMotor, LibVulpesBlocks.blockEnhancedMotor, LibVulpesBlocks.blockEliteMotor };
-        LibVulpesBlocks.motors = motors;
+		LibVulpesBlocks.motors = new Block[]{ LibVulpesBlocks.blockMotor, LibVulpesBlocks.blockAdvancedMotor, LibVulpesBlocks.blockEnhancedMotor, LibVulpesBlocks.blockEliteMotor };
 
         //Register Tile
         GameRegistry.registerTileEntity(TileOutputHatch.class, "vulpesoutputHatch");
@@ -302,7 +305,7 @@ public class LibVulpes {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		proxy.preinit();
+		proxy.preInit();
 		teslaHandler = null;
 		//Configuration
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
@@ -385,19 +388,19 @@ public class LibVulpes {
 		
 		//Init TileMultiblock
 		//Item output
-		List<BlockMeta> list = new LinkedList<BlockMeta>();
+		List<BlockMeta> list = new LinkedList<>();
 		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 1));
 		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 9));
 		TileMultiBlock.addMapping('O', list);
 
 		//Item Inputs
-		list = new LinkedList<BlockMeta>();
+		list = new LinkedList<>();
 		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 0));
 		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 8));
 		TileMultiBlock.addMapping('I', list);
 
 		//Power input
-		list = new LinkedList<BlockMeta>();
+		list = new LinkedList<>();
 		list.add(new BlockMeta(LibVulpesBlocks.blockCreativeInputPlug, BlockMeta.WILDCARD));
 		list.add(new BlockMeta(LibVulpesBlocks.blockForgeInputPlug, BlockMeta.WILDCARD));
 		if(LibVulpesBlocks.blockRFBattery != null)
@@ -407,20 +410,20 @@ public class LibVulpes {
 		TileMultiBlock.addMapping('P', list);
 
 		//Power output
-		list = new LinkedList<BlockMeta>();
+		list = new LinkedList<>();
 		list.add(new BlockMeta(LibVulpesBlocks.blockForgeOutputPlug, BlockMeta.WILDCARD));
 		if(LibVulpesBlocks.blockRFOutput != null)
 			list.add(new BlockMeta(LibVulpesBlocks.blockRFOutput, BlockMeta.WILDCARD));
 		TileMultiBlock.addMapping('p', list);
 
 		//Liquid input
-		list = new LinkedList<BlockMeta>();
+		list = new LinkedList<>();
 		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 2));
 		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 10));
 		TileMultiBlock.addMapping('L', list);
 
 		//Liquid output
-		list = new LinkedList<BlockMeta>();
+		list = new LinkedList<>();
 		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 3));
 		list.add(new BlockMeta(LibVulpesBlocks.blockHatch, 11));
 		TileMultiBlock.addMapping('l', list);
@@ -436,39 +439,37 @@ public class LibVulpes {
 			try {
 				file.createNewFile();
 				BufferedReader inputStream = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/assets/libvulpes/defaultrecipe.xml")));
-				
-				if(inputStream != null) {
-					BufferedWriter stream2 = new BufferedWriter(new FileWriter(file));
-					
-					
-					while(inputStream.ready()) {
-						stream2.write(inputStream.readLine() + "\n");
-					}
-					
-					
-					//Write recipes
-					
-					stream2.write("<Recipes useDefault=\"true\">\n");
-					for(IRecipe recipe : RecipesMachine.getInstance().getRecipes(clazz)) {
-						boolean writeable = true;
-						for (ItemStack stack : recipe.getOutput()) {
-							if(stack.hasTagCompound()) {
-								writeable = false;
-								break;
-							}
-						}
-						
-						if(((RecipesMachine.Recipe)recipe).outputToOnlyEmptySlots())
-							writeable = false;
-						
-						if(writeable)
-							stream2.write(XMLRecipeLoader.writeRecipe(recipe) + "\n");
-					}
-					stream2.write("</Recipes>");
-					stream2.close();
-					
-					inputStream.close();
+
+				BufferedWriter stream2 = new BufferedWriter(new FileWriter(file));
+
+
+				while(inputStream.ready()) {
+					stream2.write(inputStream.readLine() + "\n");
 				}
+
+
+				//Write recipes
+
+				stream2.write("<Recipes useDefault=\"true\">\n");
+				for(IRecipe recipe : RecipesMachine.getInstance().getRecipes(clazz)) {
+					boolean writeable = true;
+					for (ItemStack stack : recipe.getOutput()) {
+						if(stack.hasTagCompound()) {
+							writeable = false;
+							break;
+						}
+					}
+
+					if(((RecipesMachine.Recipe)recipe).outputToOnlyEmptySlots())
+						writeable = false;
+
+					if(writeable)
+						stream2.write(XMLRecipeLoader.writeRecipe(recipe) + "\n");
+				}
+				stream2.write("</Recipes>");
+				stream2.close();
+
+				inputStream.close();
 
 
 			} catch (IOException e) {

@@ -54,7 +54,7 @@ public class ModuleToggleSwitch extends ModuleButton {
 	@SideOnly(Side.CLIENT)
 	public List<GuiButton> addButtons(int x, int y) {
 
-		List<GuiButton> list = new LinkedList<GuiButton>();
+		List<GuiButton> list = new LinkedList<>();
 
 		enabledButton = new GuiToggleButtonImage(0, x + offsetX, y + offsetY, sizeX, sizeY, buttonImages);
 		enabledButton.setState(currentState);
