@@ -114,16 +114,8 @@ public class TileInventoriedPointer extends TilePointer implements IInventoryMul
 		TileEntity e = world.getTileEntity(masterBlockPos);
 		if(e != null && e instanceof ISidedInventory)
 			return ((ISidedInventory)e).getSlotsForFace(side);
-		else if(e != null && e instanceof ISidedInventory) {
-			int[] slots = new int[((IInventory)e).getSizeInventory()];
-
-			for(int i = 0; i < slots.length; i++)
-			{
-				slots[i] = i;
-			}
-			return slots;
-		}
-		return new int[] {};
+		else
+			return new int[] {};
 	}
 	
 	@Override
