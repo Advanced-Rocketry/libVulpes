@@ -10,6 +10,10 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
+//import javax.annotation.Nonnull;
+
 public class ContainerModular extends Container {
 
 	List<ModuleBase> modules;
@@ -74,9 +78,9 @@ public class ContainerModular extends Container {
 			for(int i = 0; i < module.numberOfChangesToSend(); i++) {
 				if(module.isUpdateRequired(i)) {
 
-					for (int j = 0; j < this.listeners.size(); ++j) {
-						module.sendChanges(this, ((IContainerListener)this.listeners.get(j)), moduleIndex, i);
-					}
+                    for (IContainerListener listener : this.listeners) {
+                        module.sendChanges(this, listener, moduleIndex, i);
+                    }
 				}
 				moduleIndex++;
 			}
@@ -99,10 +103,11 @@ public class ContainerModular extends Container {
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotId) {
 
 		ItemStack itemstack = ItemStack.EMPTY;
-		Slot slot = (Slot)this.inventorySlots.get(slotId);
+		Slot slot = this.inventorySlots.get(slotId);
 
 		if (slot != null && slot.getHasStack())
 		{
@@ -136,9 +141,9 @@ public class ContainerModular extends Container {
 	}
 	
 	 /**
-     * merges provided ItemStack with the first avaliable one in the container/player inventory
+     * merges provided ItemStack with the first available one in the container/player inventory
      */
-    /*protected boolean mergeItemStack(ItemStack p_75135_1_, int p_75135_2_, int p_75135_3_, boolean p_75135_4_)
+    /*protected boolean mergeItemStack(@Nonnull ItemStack p_75135_1_, int p_75135_2_, int p_75135_3_, boolean p_75135_4_)
     {
         boolean flag1 = false;
         int k = p_75135_2_;

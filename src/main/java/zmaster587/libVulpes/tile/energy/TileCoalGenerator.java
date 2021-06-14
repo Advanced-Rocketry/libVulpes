@@ -10,6 +10,7 @@ import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.tile.TileInventoriedForgePowerMachine;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class TileCoalGenerator extends TileInventoriedForgePowerMachine {
@@ -36,7 +37,7 @@ public class TileCoalGenerator extends TileInventoriedForgePowerMachine {
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		super.setInventorySlotContents(slot, stack);
 
 		if(!canGeneratePower())
