@@ -118,6 +118,7 @@ public class AdjacencyGraph<T> {
 			removableNodes.add(stackElement);
 
             for (T nextElement : adjacencyMatrix.get(stackElement)) {
+            	if(nextElement == null) return false;
                 if (to.equals(nextElement))
                     return true;
 
