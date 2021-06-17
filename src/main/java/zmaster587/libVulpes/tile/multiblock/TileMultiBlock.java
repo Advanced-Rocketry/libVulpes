@@ -198,12 +198,15 @@ public class TileMultiBlock extends TileEntity {
 					int globalZ = pos.getZ() - (x - offset.x)*front.getFrontOffsetX()  - (z-offset.z)*front.getFrontOffsetZ();
 
 
-					//This block is being broken anyway so don't bother
-					if(blockBroken && globalX == destroyedPos.getX() &&
-							globalY == destroyedPos.getY() &&
-							globalZ == destroyedPos.getZ())
-						continue;
 					TileEntity tile = world.getTileEntity(new BlockPos(globalX, globalY, globalZ));
+					//This block is being broken anyway so don't bother
+					if(blockBroken && globalX == destroyedPos.getX() && globalY == destroyedPos.getY() && globalZ == destroyedPos.getZ()) {
+						if(tile instanceof IMultiblock) {
+							((IMultiblock)tile).setIncomplete();
+						}
+						tile.invalidate();
+						continue;
+					}
 					Block block = world.getBlockState(new BlockPos(globalX, globalY, globalZ)).getBlock();
 
 					destroyBlockAt(new BlockPos(globalX, globalY, globalZ), block, tile);
@@ -246,11 +249,13 @@ public class TileMultiBlock extends TileEntity {
 				placeholder.getReplacedTileEntity().writeToNBT(nbt);
 
 				world.getTileEntity(destroyedPos).readFromNBT(nbt);
-			}
+			} else if (world.getTileEntity(destroyedPos) != null)
+				world.getTileEntity(destroyedPos).invalidate();
 		}
 		//Make all pointers incomplete
 		else if(tile instanceof IMultiblock) {
 			((IMultiblock)tile).setIncomplete();
+			tile.invalidate();
 		}
 	}
 
