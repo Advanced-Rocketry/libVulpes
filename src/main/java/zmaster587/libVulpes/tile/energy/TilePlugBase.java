@@ -13,6 +13,7 @@ import zmaster587.libVulpes.cap.TeslaHandler;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModulePower;
+import zmaster587.libVulpes.tile.IComparatorOverride;
 import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.util.UniversalBattery;
@@ -22,7 +23,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class TilePlugBase extends TilePointer implements IModularInventory, IUniversalEnergy, IMultiblock, IInventory {
+public abstract class TilePlugBase extends TilePointer implements IModularInventory, IUniversalEnergy, IMultiblock, IInventory, IComparatorOverride {
 
 	protected UniversalBattery storage;
 	protected int teir;
@@ -102,6 +103,7 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 
 	@Override
 	public void setEnergyStored(int amt) {
+		markDirty();
 		storage.setEnergyStored(amt);
 	}
 
@@ -193,6 +195,8 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 
 	@Override
 	public int extractEnergy(int amt, boolean simulate) {
+		if (!simulate && getUniversalEnergyStored()/15 != (-amt + getUniversalEnergyStored())/15)
+			markDirty();
 		return storage.extractEnergy(amt, simulate);
 	}
 
@@ -208,6 +212,8 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 
 	@Override
 	public int acceptEnergy(int amt, boolean simulate) {
+		if (!simulate && getUniversalEnergyStored()/15 != (amt + getUniversalEnergyStored())/15)
+			markDirty();
 		return  storage.acceptEnergy(amt, simulate);
 	}
 
@@ -219,5 +225,10 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	@Override
 	public boolean isEmpty() {
 		return false;
+	}
+
+	@Override
+	public int getComparatorOverride() {
+		return getUniversalEnergyStored() * 15/getMaxEnergyStored();
 	}
 }
