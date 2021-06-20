@@ -74,8 +74,6 @@ public class TileCreativePowerInput extends TilePlugBase implements IPower, ITic
 	@Override
 	public int receiveEnergy(int amt, boolean simulate) {
 		return 0;
-		// TODO why was this infinite recursion here?
-		//return receiveEnergy(amt, simulate);
 	}
 
 	@Override

@@ -94,8 +94,10 @@ public class ItemLinker extends Item {
 	
 	public static int getDimId(@Nonnull ItemStack itemStack) {
 		NBTTagCompound nbt;
-		if(!itemStack.hasTagCompound() || (nbt = itemStack.getTagCompound()) == null)
+		if(!itemStack.hasTagCompound()) {
 			nbt = new NBTTagCompound();
+	    } else
+	        nbt = itemStack.getTagCompound();
 		
 		return nbt.hasKey("dimId") ? nbt.getInteger("dimId") : -1;
 		
