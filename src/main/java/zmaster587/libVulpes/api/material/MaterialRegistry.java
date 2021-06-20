@@ -264,7 +264,7 @@ public class MaterialRegistry {
 	 * @param ore
 	 * @param product
 	 * @param amount stackSize
-	 * @return an EtemStack of stackSize amount containing the product with the given material, or ItemStack.EMPTY if one does not exist
+	 * @return an ItemStack of stackSize amount containing the product with the given material, or ItemStack.EMPTY if one does not exist
 	 */
 	@Nonnull
 	public static ItemStack getItemStackFromMaterialAndType(String ore, AllowedProducts product, int amount) {

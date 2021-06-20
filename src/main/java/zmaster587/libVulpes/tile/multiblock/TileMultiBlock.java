@@ -200,7 +200,10 @@ public class TileMultiBlock extends TileEntity {
 
 					TileEntity tile = world.getTileEntity(new BlockPos(globalX, globalY, globalZ));
 					//This block is being broken anyway so don't bother
-					if(blockBroken && globalX == destroyedPos.getX() && globalY == destroyedPos.getY() && globalZ == destroyedPos.getZ()) {
+					if(blockBroken 
+					&& globalX == destroyedPos.getX() 
+					&& globalY == destroyedPos.getY() 
+					&& globalZ == destroyedPos.getZ()) {
 						if(tile instanceof IMultiblock) {
 							((IMultiblock)tile).setIncomplete();
 						}
@@ -367,10 +370,17 @@ public class TileMultiBlock extends TileEntity {
 							continue;
 					}
 					//Make sure the structure is valid
-					if(!(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') && !(structure[y][z][x] instanceof Block && structure[y][z][x] == Blocks.AIR && world.isAirBlock(globalPos)) && !getAllowableBlocks(structure[y][z][x]).contains(new BlockMeta(block,meta))) {
+					if(!(structure[y][z][x] instanceof Character
+					&& (Character)structure[y][z][x] == 'c')
+					&& !(structure[y][z][x] instanceof Block
+					&& structure[y][z][x] == Blocks.AIR
+					&& world.isAirBlock(globalPos))
+					&& !getAllowableBlocks(structure[y][z][x]).contains(new BlockMeta(block,meta))) {
 
 						//Can it be replaced?
-						if(block.isReplaceable(world, globalPos) && structure[y][z][x] instanceof Block && structure[y][z][x] == Blocks.AIR )
+						if(block.isReplaceable(world, globalPos)
+						&& structure[y][z][x] instanceof Block
+						&& structure[y][z][x] == Blocks.AIR)
 							replacableBlocks.add(globalPos);
 						else {
 							LibVulpes.proxy.spawnParticle("errorBox", world, globalX, globalY, globalZ, 0, 0, 0);
