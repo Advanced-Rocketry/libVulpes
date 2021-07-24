@@ -33,7 +33,7 @@ public class ClientProxy extends CommonProxy {
 	public void init() {
 		LibVulpes.materialRegistry.init();
 	}
-	
+
 	@Override
 	public void preinit() {
 		//OBJLoader.INSTANCE. addDomain("libvulpes");

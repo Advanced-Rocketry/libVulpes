@@ -4,14 +4,16 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public interface IJetPack {
-	public boolean isActive(ItemStack stack, PlayerEntity player);
+	boolean isActive(ItemStack stack, PlayerEntity player);
 	
-	public boolean isEnabled(ItemStack stack);
+	boolean isEnabled(@Nonnull ItemStack stack);
 	
-	public void setEnabledState(ItemStack stack, boolean state);
+	void setEnabledState(@Nonnull ItemStack stack, boolean state);
+
+	void onAccelerate(ItemStack stack, IInventory inv, PlayerEntity player);
 	
-	public void onAccelerate(ItemStack stack, IInventory inv, PlayerEntity player);
-	
-	public void changeMode(ItemStack stack, IInventory modules, PlayerEntity player);
+	void changeMode(ItemStack stack, IInventory modules, PlayerEntity player);
 }

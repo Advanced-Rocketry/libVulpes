@@ -6,14 +6,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.api.distmarker.Dist;
 
+import javax.annotation.Nonnull;
+
 public interface INetworkItem {
 	
 	//Writes data to the network given an id of what type of packet to write
-	public void writeDataToNetwork(ByteBuf out, byte id, ItemStack stack);
+	void writeDataToNetwork(ByteBuf out, byte id, @Nonnull ItemStack stack);
 	
 	//Reads data, stores read data to nbt to be passed to useNetworkData
-	public void readDataFromNetwork(ByteBuf in, byte packetId, CompoundNBT nbt, ItemStack stack);
+	void readDataFromNetwork(ByteBuf in, byte packetId, CompoundNBT nbt, ItemStack stack);
 	
 	//Applies changes from network
-	public void useNetworkData(PlayerEntity player, Dist side, byte id, CompoundNBT nbt, ItemStack stack);
+	void useNetworkData(PlayerEntity player, Dist side, byte id, CompoundNBT nbt, ItemStack stack);
 }

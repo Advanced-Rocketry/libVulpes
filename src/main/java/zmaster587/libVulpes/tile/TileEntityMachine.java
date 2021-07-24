@@ -17,6 +17,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public abstract class TileEntityMachine extends TileEntity implements ISidedInventory, ITickableTileEntity,  IToggleableMachine {
 	
 	
@@ -26,7 +28,7 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 
 	protected UniversalBattery energy;
 	
-	protected ItemStack inv[];
+	protected ItemStack[] inv;
 	
 	protected int progress, totalTime;
 	
@@ -91,7 +93,7 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 	@Override
 	public void read(BlockState state, CompoundNBT nbt) {
 		super.read(state, nbt);
-		
+
 		ListNBT tagList = nbt.getList("Inventory", (byte)10);
 		for (int i = 0; i < tagList.size(); i++) {
 			CompoundNBT tag = (CompoundNBT) tagList.getCompound(i);
@@ -111,31 +113,30 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 	}
 	
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int i) {
 		return inv[i];
 	}
 	
 	public void incStackSize(int i, int amt) {
 
-		if(inv[i] == null)
-			return;
-		else if(inv[i].getCount() + amt > inv[i].getMaxStackSize())
-			inv[i].setCount(inv[i].getMaxStackSize());
-		else
-			inv[i].setCount(inv[i].getCount() + amt);
+		if(!inv[i].isEmpty()) {
+			inv[i].setCount(Math.min(inv[i].getCount() + amt, inv[i].getMaxStackSize()));
+		}
 	}
 	
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int i, int j) {
 		ItemStack ret;
-		if(inv[i] == null)
-			ret = null;
+		if(inv[i].isEmpty())
+			ret = ItemStack.EMPTY;
 		else if(inv[i].getCount() > j) {
 			ret = inv[i].split(j);
 		}
 		else {
 			ret = inv[i].copy();
-			inv[i] = null;
+			inv[i] = ItemStack.EMPTY;
 		}
 		return ret;
 	}
@@ -143,7 +144,7 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 	public abstract void onInventoryUpdate();
 	
 	@Override
-	public void setInventorySlotContents(int i, ItemStack itemstack) {
+	public void setInventorySlotContents(int i, @Nonnull ItemStack itemstack) {
 		inv[i] = itemstack;
 
 		//if(!this.worldObj.isRemote)

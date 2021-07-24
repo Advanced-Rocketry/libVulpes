@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.block;
 
+
 import java.util.List;
 import java.util.Random;
 
@@ -74,7 +75,7 @@ public class RotatableMachineBlock extends RotatableBlock {
 			{
 				ItemStack itemstack = tileentitychest.getStackInSlot(j1);
 
-				if (itemstack != null)
+				if (!itemstack.isEmpty())
 				{
 					float f = this.random.nextFloat() * 0.8F + 0.1F;
 					float f1 = this.random.nextFloat() * 0.8F + 0.1F;

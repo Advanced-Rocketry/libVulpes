@@ -11,12 +11,12 @@ public interface IModularInventory extends INamedContainerProvider {
 	/**
 	 * @return a list of modules to add to the inventory
 	 */
-	public List<ModuleBase> getModules(int id, PlayerEntity player);
+	List<ModuleBase> getModules(int id, PlayerEntity player);
 	
-	public String getModularInventoryName();
+	String getModularInventoryName();
+
+	boolean canInteractWithContainer(PlayerEntity entity);
 	
-	public boolean canInteractWithContainer(PlayerEntity entity);
-	
-	public GuiHandler.guiId getModularInvType();
+	GuiHandler.guiId getModularInvType();
 	
 }

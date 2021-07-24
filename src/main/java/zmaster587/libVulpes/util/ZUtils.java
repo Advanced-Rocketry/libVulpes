@@ -40,6 +40,7 @@ import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -139,14 +140,12 @@ public class ZUtils {
 			maxX = buffer;
 		}
 
-		AxisAlignedBB ret = new AxisAlignedBB(minX,
+		return new AxisAlignedBB(minX,
 				axis.minY,
 				minZ,
 				maxX,
 				axis.maxY,
 				maxZ);
-
-		return ret;
 	}
 
 	/**
@@ -209,20 +208,20 @@ public class ZUtils {
 		return false;
 	}
 
-	public static boolean isInvEmpty(IInventory stack) {
+	public static boolean isInvEmpty(IInventory inv) {
 		boolean empty = true;
-		if(stack == null)
+		if(inv == null)
 			return true;
 
-		for(int i = 0; i < stack.getSizeInventory(); i++) {
-			if(!stack.getStackInSlot(i).isEmpty())
+		for(int i = 0; i < inv.getSizeInventory(); i++) {
+			if(!inv.getStackInSlot(i).isEmpty())
 				return false;
 		}
 
 		return true;
 	}
 
-	public static boolean doesInvHaveRoom(ItemStack item, IInventory inv) {
+	public static boolean doesInvHaveRoom(@Nonnull ItemStack item, IInventory inv) {
 		for(int i = 0; i < inv.getSizeInventory(); i++)
 		{
 			if(inv.getStackInSlot(i).isEmpty() || (item.isItemEqual(inv.getStackInSlot(i)) && inv.getStackInSlot(i).getCount() < inv.getInventoryStackLimit()))
@@ -272,7 +271,7 @@ public class ZUtils {
 			int firstEmtpySlot = -1;
 			int slot;
 
-			if(a[i] != null) {
+			if(!a[i].isEmpty()) {
 				for(slot = 0; slot < b.getSizeInventory(); slot++) {
 
 					if(b.getStackInSlot(slot).isEmpty()) {
@@ -304,11 +303,11 @@ public class ZUtils {
 		}
 	}
 
-	public static void mergeInventory(ItemStack a, IInventory b) {
+	public static void mergeInventory(@Nonnull ItemStack a, IInventory b) {
 		int firstEmtpySlot = -1;
 		int slot;
 
-		if(a != null) {
+		if(!a.isEmpty()) {
 			for(slot = 0; slot < b.getSizeInventory(); slot++) {
 
 				if(b.getStackInSlot(slot).isEmpty()) {
@@ -340,10 +339,11 @@ public class ZUtils {
 		}
 	}
 
-	public static ItemStack getFirstItemInInv(ItemStack i[]) {
+	@Nonnull
+	public static ItemStack getFirstItemInInv(@Nonnull ItemStack[] i) {
 		for(ItemStack stack : i)
 			if(!stack.isEmpty()) return stack;
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	public static int getFirstFilledSlotIndex(IInventory inv) {

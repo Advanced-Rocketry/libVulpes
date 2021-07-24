@@ -4,16 +4,21 @@ import zmaster587.libVulpes.api.IUniversalEnergy;
 import net.minecraft.util.Direction;
 
 public interface IPower extends IUniversalEnergy {
+
+	boolean canConnectEnergy(Direction facing);
 	
-	public boolean canConnectEnergy(Direction facing);
+	int extractEnergy(Direction dir, int maxExtract, boolean simulate);
 	
-	public int extractEnergy(Direction dir, int maxExtract, boolean simulate);
+	int getEnergyStored(Direction dir);
 	
-	public int getEnergyStored(Direction dir);
+	int getMaxEnergyStored(Direction dir);
 	
-	public int getMaxEnergyStored(Direction dir);
-	
-	public int receiveEnergy(Direction dir, int amt, boolean simulate);
-	
-	public int receiveEnergy(int amt, boolean simulate);
+	int receiveEnergy(Direction dir, int amt, boolean simulate);
+
+	/**
+	 * @param amt
+	 * @param simulate
+	 * @return amount of energy used out of amt
+	 */
+	int receiveEnergy(int amt, boolean simulate);
 }

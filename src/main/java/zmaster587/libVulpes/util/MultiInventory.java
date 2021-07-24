@@ -6,6 +6,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class MultiInventory implements IInventory {
@@ -26,6 +28,7 @@ public class MultiInventory implements IInventory {
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int i) {
 		for(IInventory inv : inventories) {
 			if(i >= inv.getSizeInventory()) {
@@ -34,10 +37,11 @@ public class MultiInventory implements IInventory {
 			}
 			return inv.getStackInSlot(i);
 		}
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int i, int j) {
 		
 		for(IInventory inv : inventories) {
@@ -47,12 +51,12 @@ public class MultiInventory implements IInventory {
 			}
 			return inv.decrStackSize(i, j);
 		}
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 
 	@Override
-	public void setInventorySlotContents(int i, ItemStack j) {
+	public void setInventorySlotContents(int i, @Nonnull ItemStack j) {
 		for(IInventory inv : inventories) {
 			if(i >= inv.getSizeInventory()) {
 				i -= inv.getSizeInventory();
@@ -88,7 +92,7 @@ public class MultiInventory implements IInventory {
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int i, ItemStack j) {
+	public boolean isItemValidForSlot(int i, @Nonnull ItemStack j) {
 		
 		for(IInventory inv : inventories) {
 			if(i >= inv.getSizeInventory()) {
@@ -111,7 +115,7 @@ public class MultiInventory implements IInventory {
 			return inv.removeStackFromSlot(index);
 			
 		}
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override

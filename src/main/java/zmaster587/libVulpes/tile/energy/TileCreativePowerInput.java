@@ -11,6 +11,7 @@ import zmaster587.libVulpes.api.LibVulpesTileEntityTypes;
 import zmaster587.libVulpes.energy.IPower;
 import zmaster587.libVulpes.util.CreativeBattery;
 
+import javax.annotation.Nullable;
 public class TileCreativePowerInput extends TilePlugBase implements IPower, ITickableTileEntity {
 
 	public TileCreativePowerInput() {
@@ -66,7 +67,7 @@ public class TileCreativePowerInput extends TilePlugBase implements IPower, ITic
 
 	@Override
 	public int receiveEnergy(int amt, boolean simulate) {
-		return receiveEnergy(amt, simulate);
+		return 0;
 	}
 
 	@Override

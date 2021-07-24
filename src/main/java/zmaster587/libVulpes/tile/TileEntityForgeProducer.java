@@ -45,7 +45,7 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 	public CompoundNBT getUpdateTag() {
 		return write(new CompoundNBT());
 	}
-	
+
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if(capability == CapabilityEnergy.ENERGY )

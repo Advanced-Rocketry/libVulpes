@@ -2,6 +2,7 @@ package zmaster587.libVulpes.items;
 
 import java.util.List;
 
+import net.minecraft.util.text.ITextComponent;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,6 +20,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemLinker extends Item {
@@ -35,7 +37,7 @@ public class ItemLinker extends Item {
 
 
 	@Override
-	public void addInformation(ItemStack par1ItemStack, World par2EntityPlayer, List par3List, ITooltipFlag par4)
+	public void addInformation(@Nonnull ItemStack par1ItemStack, World par2EntityPlayer, List<ITextComponent> par3List, ITooltipFlag par4)
 	{
 		int y = getMasterY(par1ItemStack);
 
@@ -52,7 +54,7 @@ public class ItemLinker extends Item {
 		}
 	}
 
-	public static boolean isSet(ItemStack stack) {
+	public static boolean isSet(@Nonnull ItemStack stack) {
 		return getMasterY(stack) != 0;
 	}
 
@@ -81,7 +83,7 @@ public class ItemLinker extends Item {
 
 		return nbt.getInt("MasterZ");
 	}
-	
+
 	public static void setDimId(ItemStack itemStack, ResourceLocation id) {
 		CompoundNBT nbt;
 		if(!itemStack.hasTag()) {
@@ -94,7 +96,7 @@ public class ItemLinker extends Item {
 		nbt.putString("dimId", id.toString());
 		
 	}
-	
+
 	public static ResourceLocation getDimId(ItemStack itemStack) {
 		CompoundNBT nbt;
 		if(!itemStack.hasTag()) {
@@ -145,7 +147,7 @@ public class ItemLinker extends Item {
 		nbt.put("MasterPos", tag);
 	}
 	
-	public static void setMasterCoords(ItemStack stack, BlockPos pos) {
+	public static void setMasterCoords(@Nonnull ItemStack stack, BlockPos pos) {
 		setMasterCoords(stack, pos.getX(), pos.getY(), pos.getZ());
 	}
 
@@ -159,7 +161,7 @@ public class ItemLinker extends Item {
 		
 		return new BlockPos(getMasterX(stack),getMasterY(stack),getMasterZ(stack));
 	}
-	
+
 	public static void resetPosition(ItemStack itemStack) {
 		CompoundNBT position = new CompoundNBT();
 

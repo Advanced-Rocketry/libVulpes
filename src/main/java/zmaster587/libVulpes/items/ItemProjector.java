@@ -18,6 +18,7 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
@@ -57,6 +58,8 @@ import zmaster587.libVulpes.util.HashedBlockPosition;
 import zmaster587.libVulpes.util.Vector3F;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+
 public class ItemProjector extends Item implements IModularInventory, IButtonInventory, INetworkItem, INamedContainerProvider {
 
 
@@ -77,17 +80,15 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	{
 		HashMap<Object, Integer> map = new HashMap<Object, Integer>();
 
-		Object structure[][][] = multiblock.getStructure();
+		Object[][][] structure = multiblock.getStructure();
 
-		for(int i = 0; i < structure.length; i++) {
-			for(int j = 0; j < structure[i].length; j++) {
-				for(int k = 0; k < structure[i][j].length; k++) {
-					Object o = structure[i][j][k];
-					if(!map.containsKey(o)) {
-						map.put(o, 1);
-					}
-					else
-						map.put(o, map.get(o) + 1);
+		for (Object[][] objects2d : structure) {
+			for (Object[] objects : objects2d) {
+				for (Object object : objects) {
+					if (!map.containsKey(object)) {
+						map.put(object, 1);
+					} else
+						map.put(object, map.get(object) + 1);
 				}
 			}
 		}
@@ -98,7 +99,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 			List<BlockMeta> blockMeta = multiblock.getAllowableBlocks(entry.getKey());
 
-			if(blockMeta.isEmpty() || Item.getItemFromBlock(blockMeta.get(0).getBlock()) == null || blockMeta.get(0).getBlock() == Blocks.AIR )
+			if(blockMeta.isEmpty() || Item.getItemFromBlock(blockMeta.get(0).getBlock()) == Items.AIR || blockMeta.get(0).getBlock() == Blocks.AIR )
 				continue;
 			for(int i = 0; i < blockMeta.size(); i++) {
 				String itemStr  = Item.getItemFromBlock(blockMeta.get(i).getBlock()).getDisplayName(new ItemStack(blockMeta.get(i).getBlock(), 1)).getString();
@@ -111,7 +112,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			if(str.endsWith(" or ")) {
 				str = str.substring(0, str.length()-4);
 			}
-			str = str + " x" + entry.getValue() + "\n";
+			str += " x" + entry.getValue() + "\n";
 		}
 
 		return str;
@@ -142,7 +143,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		}
 	}
 
-	private void clearStructure(World world, TileMultiBlock tile, ItemStack stack) {
+	private void clearStructure(World world, TileMultiBlock tile, @Nonnull ItemStack stack) {
 
 		int id = getMachineId(stack);
 		Direction direction = Direction.values()[getDirection(stack)];
@@ -343,7 +344,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			((ModuleButton)btns.get(i)).setAdditionalData(i);
 		}
 
-		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<ModuleBase>(), TextureResources.starryBG, 160, 100, 0, 500);
+		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<>(), TextureResources.starryBG, 160, 100, 0, 500);
 		modules.add(panningContainer);
 		//modules.addAll(btns);
 		return modules;
@@ -507,7 +508,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			list.add(new StringTextComponent(TextFormatting.GREEN + LibVulpes.proxy.getLocalizedString(machineList.get(id).getMachineName())));
 			String str = getDescription(id);
 
-			String strList[] = str.split("\n");
+			String[] strList = str.split("\n");
 
 			for(String s : strList)
 				list.add(new StringTextComponent(s));
@@ -515,7 +516,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	}
 
 	@Override
-	public void writeDataToNetwork(ByteBuf out, byte id, ItemStack stack) {
+	public void writeDataToNetwork(ByteBuf out, byte id, @Nonnull ItemStack stack) {
 		if(id == 0) {
 			out.writeInt(getMachineId(stack));
 		}

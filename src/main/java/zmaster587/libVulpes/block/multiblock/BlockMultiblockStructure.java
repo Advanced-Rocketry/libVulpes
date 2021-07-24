@@ -40,10 +40,8 @@ public class BlockMultiblockStructure extends Block implements IHidableBlock {
 	/**
 	 * Turns the block invisible or in the case of BlockMultiBlockComponentVisible makes it create a tileEntity
 	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param meta
+	 * @param pos
+	 * @param state
 	 */
 	@Override
 	public void hideBlock(World world, BlockPos pos, BlockState state) {

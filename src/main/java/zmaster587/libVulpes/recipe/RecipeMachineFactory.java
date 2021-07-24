@@ -140,10 +140,10 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 	@Override
 	public IRecipe read(ResourceLocation context, JsonObject json) {
 		
-		List<List<ItemStack>> inputs = new LinkedList<List<ItemStack>>();
-		List<ChanceItemStack> outputs = new LinkedList<ChanceItemStack>();
-		List<FluidStack> inputFluids = new LinkedList<FluidStack>();
-		List<ChanceFluidStack> outputFluids = new LinkedList<ChanceFluidStack>();
+		List<List<ItemStack>> inputs = new LinkedList<>();
+		List<ChanceItemStack> outputs = new LinkedList<>();
+		List<FluidStack> inputFluids = new LinkedList<>();
+		List<ChanceFluidStack> outputFluids = new LinkedList<>();
 		int timeTaken = 0;
 		int energy = 0;
 		int maxOutput = -1;
@@ -197,7 +197,7 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		{
 			throw new JsonParseException(e.getMessage());
 		}
-		
+
 		RecipesMachine.Recipe recipe = new RecipesMachine.Recipe(this, context, outputs, inputs, outputFluids, inputFluids, timeTaken, energy, new HashMap<Integer, ResourceLocation>());
 		
 		if(maxOutput > 0)
@@ -218,7 +218,7 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		if(!json.isJsonArray())
 			return null;
 		
-		List<ChanceFluidStack> fluidstacks= new LinkedList<ChanceFluidStack>();
+		List<ChanceFluidStack> fluidstacks= new LinkedList<>();
 				
 		JsonArray ingredientListJSON =  json.getAsJsonArray();
 		for(JsonElement ingredient : ingredientListJSON)
@@ -253,10 +253,10 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 			return null;
 		
 		JsonArray ingredientListJSON =  json.getAsJsonArray();
-		List<List<ItemStack>> inputs = new LinkedList<List<ItemStack>>();
+		List<List<ItemStack>> inputs = new LinkedList<>();
 		for(JsonElement ingredient : ingredientListJSON)
 		{
-			List<ItemStack> newList = new LinkedList<ItemStack>();
+			List<ItemStack> newList = new LinkedList<>();
 			for( ChanceItemStack stack3 : getIngredients(context, ingredient) )
 			{
 				newList.add(stack3.stack);
@@ -308,7 +308,7 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		if(stacks.size() > 1)
 		{
 			ChanceItemStack stack  = stacks.get(0);
-			stacks = new LinkedList<ChanceItemStack>();
+			stacks = new LinkedList<>();
 			stacks.add(stack);
 		}
 		

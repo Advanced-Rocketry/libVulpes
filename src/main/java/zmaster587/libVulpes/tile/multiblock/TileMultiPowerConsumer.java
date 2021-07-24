@@ -64,7 +64,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	protected boolean enabled;
 	protected ModuleToggleSwitch toggleSwitch;
 	//On server determines change in power state, on client determines last power state on server
-	boolean hadPowerLastTick = true;
+	boolean hadPowerLastTick;
 
 	Object soundToPlay;
 
@@ -123,14 +123,14 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 	/**
 	 * 
-	 * @param block
+	 * @param state
 	 * @param tile can be null
 	 * @return
 	 */
 	public float getTimeMultiplierForBlock(BlockState state, TileEntity tile) {
 		
 		Collection<ResourceLocation> blockTags = BlockTags.getCollection().getOwningTags(state.getBlock());
-		
+
 		if(state.getBlock() instanceof ITimeModifier)
 			return ((ITimeModifier)state.getBlock()).getTimeMult();
 		//Check coils, but with compat so people can add IE coils if wanted
@@ -160,7 +160,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	@Override
 	public void tick() {
 
-		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
+		//Freaky janky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0) {
 			if(!world.isRemote) {
 				if(isComplete())
@@ -168,7 +168,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 			}
 			else {
 				SoundEvent str;
-				if(world.isRemote && (str = getSound()) != null) {
+				if((str = getSound()) != null) {
 					playMachineSound(str);
 				}
 			}
@@ -264,9 +264,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 	/**
 	 * @param world world
-	 * @param destroyedX x coord of destroyed block
-	 * @param destroyedY y coord of destroyed block
-	 * @param destroyedZ z coord of destroyed block
+	 * @param destroyedPos coords of destroyed block
 	 * @param blockBroken set true if the block is being broken, otherwise some other means is being used to disassemble the machine
 	 */
 	@Override

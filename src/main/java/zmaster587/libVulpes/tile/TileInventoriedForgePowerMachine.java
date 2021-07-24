@@ -38,7 +38,7 @@ public abstract class TileInventoriedForgePowerMachine extends TileInventoriedFo
 	protected void onOperationFinish() {
 		
 		setState(false);
-	};
+	}
 
 	@Override
 	public void tick() {

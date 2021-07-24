@@ -30,7 +30,7 @@ public class IndicatorBarImage extends ProgressBarImage {
 		
 		gui.blit(mat, x, y, backOffsetX, backOffsetY, backWidth, backHeight);
 		
-		int xProgress = 0, yProgress = 0;
+		int xProgress, yProgress;
 		
 		if(direction == Direction.WEST)
 			xProgress = (int) (backWidth - insetX - ( ( backWidth - ( insetX*2 ) )*percent)) - foreHeight/2;
