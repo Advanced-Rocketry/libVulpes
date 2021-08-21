@@ -4,6 +4,9 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class HashedBlockPosition  {
 	public int x,z;
 	public short y;
@@ -15,7 +18,7 @@ public class HashedBlockPosition  {
 		this.z = z;
 	}
 	
-	public HashedBlockPosition(BlockPos pos) {
+	public HashedBlockPosition(@Nonnull BlockPos pos) {
 		this.x = pos.getX();
 		this.y = (short)pos.getY();
 		this.z = pos.getZ();
@@ -26,7 +29,7 @@ public class HashedBlockPosition  {
 		this.y = (short) pos.getY();
 		this.z = (int) pos.getZ();
 	}
-	
+
 	public BlockPos getBlockPos() {
 		return new BlockPos(x,y,z);
 	}
@@ -37,6 +40,7 @@ public class HashedBlockPosition  {
 	 * @param dz z offset
 	 * @return a new object containing the coordinates of that offset
 	 */
+	@Nonnull
 	public HashedBlockPosition getPositionAtOffset(int dx, int dy, int dz) {
 		return new HashedBlockPosition(dx + x, dy + y, dz + z);
 	}
@@ -45,7 +49,7 @@ public class HashedBlockPosition  {
 		return new HashedBlockPosition(facing.getXOffset() + x, facing.getYOffset() + y, facing.getZOffset() + z);
 	}
 	
-	public double getDistance(HashedBlockPosition otherPos) {
+	public double getDistance(@Nonnull HashedBlockPosition otherPos) {
 		return Math.sqrt(Math.pow(x-otherPos.x, 2) + Math.pow(y-otherPos.y, 2) + Math.pow(z-otherPos.z, 2));
 	}
 	
@@ -55,7 +59,7 @@ public class HashedBlockPosition  {
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(@Nullable Object obj) {
 		
 		if(obj instanceof HashedBlockPosition) {
 			return this.x == ((HashedBlockPosition) obj).x && this.y == ((HashedBlockPosition) obj).y && this.z == ((HashedBlockPosition) obj).z;
@@ -65,6 +69,7 @@ public class HashedBlockPosition  {
 	}
 	
 	@Override
+	@Nonnull
 	public String toString() {
 		return this.x + " " + this.y + " " + this.z;
 	}

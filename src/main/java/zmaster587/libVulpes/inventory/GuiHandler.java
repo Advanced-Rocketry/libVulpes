@@ -71,7 +71,7 @@ public class GuiHandler {
 			ItemStack stack = player.getHeldItem(Hand.MAIN_HAND);
 			
 			//If there is latency or some desync odd things can happen so check for that
-			if(stack == null || !(stack.getItem() instanceof IModularInventory)) {
+			if(stack.isEmpty() || !(stack.getItem() instanceof IModularInventory)) {
 				return null;
 			}
 			
@@ -99,7 +99,7 @@ public class GuiHandler {
 			ItemStack stack = player.getHeldItem(Hand.MAIN_HAND);
 			
 			//If there is latency or some desync odd things can happen so check for that
-			if(stack == null || !(stack.getItem() instanceof IModularInventory)) {
+			if(stack.isEmpty() || !(stack.getItem() instanceof IModularInventory)) {
 				return null;
 			}
 			

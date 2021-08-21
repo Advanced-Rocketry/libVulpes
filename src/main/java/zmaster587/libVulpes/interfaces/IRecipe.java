@@ -6,26 +6,25 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-import zmaster587.libVulpes.recipe.RecipesMachine.ChanceFluidStack;
-import zmaster587.libVulpes.recipe.RecipesMachine.ChanceItemStack;
+import zmaster587.libVulpes.recipe.RecipesMachine;
 
 public interface IRecipe extends net.minecraft.item.crafting.IRecipe<IInventory> {
-	public List<ItemStack> getOutput();
+	List<ItemStack> getOutput();
 	
-	public List<FluidStack> getFluidOutputs();
-	
-	public List<List<ItemStack>> getPossibleIngredients();
-	
-	public List<FluidStack> getFluidIngredients();
-	
-	public int getTime();
-	
-	public int getPower();
-	
-	public ResourceLocation getOreDictString(int slot);
+	List<FluidStack> getFluidOutputs();
 
-	List<ChanceItemStack> _getRawOutput();
-	List<ChanceFluidStack> _getRawFluidOutput();
+	List<List<ItemStack>> getPossibleIngredients();
+	
+	List<FluidStack> getFluidIngredients();
+	
+	int getTime();
+	
+	int getPower();
 
-	public int getRequiredEmptyOutputs();
+	ResourceLocation getOreDictString(int slot);
+
+	List<RecipesMachine.ChanceItemStack> _getRawOutput();
+	List<RecipesMachine.ChanceFluidStack> _getRawFluidOutput();
+
+	int getRequiredEmptyOutputs();
 }

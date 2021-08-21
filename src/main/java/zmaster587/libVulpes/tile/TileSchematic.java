@@ -18,11 +18,12 @@ public class TileSchematic extends TilePlaceholder implements ITickableTileEntit
 
 	private final int ttl = 6000;
 	private int timeAlive = 0;
-	List<BlockMeta> possibleBlocks;
+	private List<BlockMeta> possibleBlocks;
 
 	public TileSchematic() {
 		super(LibVulpesTileEntityTypes.TILE_SCHEMATIC);
 		possibleBlocks = new ArrayList<BlockMeta>();
+		possibleBlocks = new ArrayList<>();
 	}
 
 	@Override
@@ -58,8 +59,8 @@ public class TileSchematic extends TilePlaceholder implements ITickableTileEntit
 		super.write(nbt);
 		nbt.putInt("timeAlive", timeAlive);
 
-		List<Integer> blockIds = new ArrayList<Integer>();
-		List<Integer> wildCard = new ArrayList<Integer>();
+		List<Integer> blockIds = new ArrayList<>();
+		List<Integer> wildCard = new ArrayList<>();
 		for(int i = 0;  i < possibleBlocks.size();i++) {
 			blockIds.add(Block.getStateId(possibleBlocks.get(i).getBlockState()));
 			wildCard.add(possibleBlocks.get(i).isWild() ? 1 : 0);

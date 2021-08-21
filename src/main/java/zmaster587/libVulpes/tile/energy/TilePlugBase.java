@@ -25,14 +25,17 @@ import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModulePower;
+import zmaster587.libVulpes.tile.IComparatorOverride;
 import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.util.UniversalBattery;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class TilePlugBase extends TilePointer implements IModularInventory, IUniversalEnergy, IMultiblock, IInventory {
+public abstract class TilePlugBase extends TilePointer implements IModularInventory, IUniversalEnergy, IMultiblock, IInventory, IComparatorOverride {
 
 	protected UniversalBattery storage;
 	protected int teir;
@@ -98,6 +101,7 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 
 	@Override
 	public void setEnergyStored(int amt) {
+		markDirty();
 		storage.setEnergyStored(amt);
 	}
 
@@ -107,17 +111,19 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int p_70301_1_) {
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int p_70298_1_, int p_70298_2_) {
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_) {
+	public void setInventorySlotContents(int p_70299_1_, @Nonnull ItemStack p_70299_2_) {
 		
 	}
 
@@ -138,13 +144,14 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
 		return true;
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
@@ -166,6 +173,8 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 
 	@Override
 	public int extractEnergy(int amt, boolean simulate) {
+		if (!simulate && getUniversalEnergyStored()/15 != (-amt + getUniversalEnergyStored())/15)
+			markDirty();
 		return storage.extractEnergy(amt, simulate);
 	}
 
@@ -181,6 +190,8 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 
 	@Override
 	public int acceptEnergy(int amt, boolean simulate) {
+		if (!simulate && getUniversalEnergyStored()/15 != (amt + getUniversalEnergyStored())/15)
+			markDirty();
 		return  storage.acceptEnergy(amt, simulate);
 	}
 
@@ -207,5 +218,11 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	@Override
 	public Container createMenu(int ID, PlayerInventory playerInv, PlayerEntity playerEntity) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, ID, playerEntity, getModules(getModularInvType().ordinal(), playerEntity), this, getModularInvType());
+	}
+
+	@Override
+	public int getComparatorOverride() {
+		return getUniversalEnergyStored() * 15/getMaxEnergyStored();
+
 	}
 }

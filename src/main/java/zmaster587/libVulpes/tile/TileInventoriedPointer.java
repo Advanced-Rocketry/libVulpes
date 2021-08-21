@@ -42,7 +42,7 @@ public class TileInventoriedPointer extends TilePointer implements IInventoryMul
 	public void setInventorySlotContents(int i, ItemStack itemstack) {
 		TileEntity e = world.getTileEntity(masterBlockPos);
 		if(e != null && e instanceof IInventory)
-			 ((IInventory)e).setInventorySlotContents(i,itemstack);
+			((IInventory)e).setInventorySlotContents(i,itemstack);
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class TileInventoriedPointer extends TilePointer implements IInventoryMul
 			return ((IInventory)e).getInventoryStackLimit();
 		return 0;
 	}
-	
+
 	@Override
 	public boolean isUsableByPlayer(PlayerEntity entityplayer) {
 		TileEntity e = world.getTileEntity(masterBlockPos);
@@ -68,7 +68,7 @@ public class TileInventoriedPointer extends TilePointer implements IInventoryMul
 			return ((IInventory)e).isEmpty();
 		return true;
 	}
-	
+
 	@Override
 	public void openInventory(PlayerEntity player) {
 		TileEntity e = world.getTileEntity(masterBlockPos);
@@ -90,7 +90,7 @@ public class TileInventoriedPointer extends TilePointer implements IInventoryMul
 			return ((IInventory)e).isItemValidForSlot(i,itemstack);
 		return false;
 	}
-	
+
 	@Override
 	public int[] getSlotsForFace(Direction side) {
 		TileEntity e = world.getTileEntity(masterBlockPos);
@@ -98,7 +98,7 @@ public class TileInventoriedPointer extends TilePointer implements IInventoryMul
 			return ((ISidedInventory)e).getSlotsForFace(side);
 		else if(e != null && e instanceof ISidedInventory) {
 			int slots[] = new int[((IInventory)e).getSizeInventory()];
-			
+
 			for(int i = 0; i < slots.length; i++)
 			{
 				slots[i] = i;
@@ -107,7 +107,7 @@ public class TileInventoriedPointer extends TilePointer implements IInventoryMul
 		}
 		return new int[] {};
 	}
-	
+
 	@Override
 	public boolean canInsertItem(int i, ItemStack itemstack, Direction direction) {
 		TileEntity e = world.getTileEntity(masterBlockPos);
@@ -121,7 +121,7 @@ public class TileInventoriedPointer extends TilePointer implements IInventoryMul
 		TileEntity e = world.getTileEntity(masterBlockPos);
 		if(e != null && e instanceof ISidedInventory)
 			return ((ISidedInventory)e).canExtractItem(i,itemstack, direction);
-		
+
 		return true;
 	}
 
@@ -130,12 +130,12 @@ public class TileInventoriedPointer extends TilePointer implements IInventoryMul
 		TileEntity e = world.getTileEntity(masterBlockPos);
 		if(e != null && e instanceof ISidedInventory)
 			return ((ISidedInventory)e).removeStackFromSlot(index);
-		
+
 		return null;
 	}
-	
+
 	@Override
 	public void clear() {
-		
+
 	}
 }

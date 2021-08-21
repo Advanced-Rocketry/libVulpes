@@ -48,7 +48,7 @@ public abstract class ModuleBase {
 	protected ModuleBase(int offsetX, int offsetY) {
 		this.offsetX = offsetX;
 		this.offsetY = offsetY;
-		slotList = new LinkedList<Slot>();
+		slotList = new LinkedList<>();
 		enabled = true;
 		visible = true;
 	}
@@ -228,7 +228,7 @@ public abstract class ModuleBase {
 	 * @return List of slots to add to this module
 	 */
 	public List<Slot> getSlots(Container container) {
-		return new LinkedList<Slot>();
+		return new LinkedList<>();
 	}
 	
 	public List<IntReferenceHolder>  getIntTrackers(Container container)
@@ -251,15 +251,11 @@ public abstract class ModuleBase {
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		int k = 0;
-		Iterator iterator = textList.iterator();
 
-		while (iterator.hasNext())
-		{
-			String s = (String)iterator.next();
+		for (String s : textList) {
 			int l = font.getStringWidth(s);
 
-			if (l > k)
-			{
+			if (l > k) {
 				k = l;
 			}
 		}
@@ -285,7 +281,7 @@ public abstract class ModuleBase {
 
 		for (int i2 = 0; i2 < textList.size(); ++i2)
 		{
-			String s1 = (String)textList.get(i2);
+			String s1 = textList.get(i2);
 			font.drawStringWithShadow(matrix, s1, j2, k2, -1);
 
 			if (i2 == 0)
@@ -334,10 +330,10 @@ public abstract class ModuleBase {
 		BufferBuilder vertex = tessellator.getBuffer();
 		vertex.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 		
-		vertex.pos((double)x2, (double)y1, (double)zLevel).color(f1, f2, f3, f).endVertex();
-		vertex.pos((double)x1, (double)y1, (double)zLevel).color(f1, f2, f3, f).endVertex();
-		vertex.pos((double)x1, (double)y2, (double)zLevel).color(f5, f6, f7, f4).endVertex();
-		vertex.pos((double)x2, (double)y2, (double)zLevel).color(f5, f6, f7, f4).endVertex();
+		vertex.pos(x2, y1, zLevel).color(f1, f2, f3, f).endVertex();
+		vertex.pos(x1, y1, zLevel).color(f1, f2, f3, f).endVertex();
+		vertex.pos(x1, y2, zLevel).color(f5, f6, f7, f4).endVertex();
+		vertex.pos(x2, y2, zLevel).color(f5, f6, f7, f4).endVertex();
 		tessellator.draw();
 		GL11.glShadeModel(GL11.GL_FLAT);
 		GL11.glDisable(GL11.GL_BLEND);

@@ -13,6 +13,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class TilePointer extends TileEntity implements IMultiblock, ILinkableTile {
 	BlockPos masterBlockPos;
 

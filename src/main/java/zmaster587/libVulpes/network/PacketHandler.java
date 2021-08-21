@@ -30,7 +30,7 @@ import zmaster587.libVulpes.network.PacketHandler.EncapsulatingPacket;
 import zmaster587.libVulpes.util.ZUtils;
 
 public class PacketHandler {
-	
+
 	private static final String PROTOCOL_VERSION = Integer.toString(1);
 	private static final SimpleChannel HANDLER = NetworkRegistry.ChannelBuilder
 			.named(new ResourceLocation("libvulpes", "main_channel"))
@@ -38,7 +38,7 @@ public class PacketHandler {
 			.serverAcceptedVersions(PROTOCOL_VERSION::equals)
 			.networkProtocolVersion(() -> PROTOCOL_VERSION)
 			.simpleChannel();
-	
+
 	
 	public static PacketHandler INSTANCE = new PacketHandler();
 	
@@ -51,7 +51,7 @@ public class PacketHandler {
 		packetList.put(clazz.getName().hashCode(), clazz);
 		revPacketList.put(clazz, clazz.getName().hashCode());
 	}
-	
+
 
 	public static final void register() {
 		HANDLER.registerMessage(0, EncapsulatingPacket.class, EncapsulatingPacket::encode, EncapsulatingPacket::decode, EncapsulatingPacket.Handler::handle);

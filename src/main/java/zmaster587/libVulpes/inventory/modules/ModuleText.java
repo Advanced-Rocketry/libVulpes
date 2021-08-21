@@ -1,6 +1,7 @@
 package zmaster587.libVulpes.inventory.modules;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.lwjgl.opengl.GL11;
@@ -24,7 +25,7 @@ public class ModuleText extends ModuleBase {
 	public ModuleText(int offsetX, int offsetY, String text, int color) {
 		super(offsetX, offsetY);
 
-		this.text = new ArrayList<String>();
+		this.text = new ArrayList<>();
 		scale = 1f;
 		setText(text);
 		this.color = color;
@@ -46,9 +47,7 @@ public class ModuleText extends ModuleBase {
 	public void setText(String text) {
 
 		this.text.clear();
-		for(String str : text.split("\\n")) {
-			this.text.add(str);
-		}
+		this.text.addAll(Arrays.asList(text.split("\\n")));
 	}
 
 	public void setAlwaysOnTop(boolean alwaysOnTop) {
@@ -61,10 +60,10 @@ public class ModuleText extends ModuleBase {
 
 	public String getText() {
 
-		String str = "";
+		StringBuilder str = new StringBuilder();
 
 		for(String str2 : this.text) {
-			str += "\n" + str2;
+			str.append("\n").append(str2);
 		}
 
 		return str.substring(1);

@@ -32,8 +32,8 @@ public class LibVulpesBlocks {
 	//public static List<Block> blockOre = new ArrayList<Block>();
 	//public static List<Block> blockMetal = new ArrayList<Block>();
 	public static Item[] itemOreProduct;
-	//public static List<Block> coils = new ArrayList<Block>();
-	public static Block motors[];
+	//public static List<Block> blockCoil = new ArrayList<Block>();
+	public static Block[] motors;
 	public static Block blockCoalGenerator;
 	public static Block blockGTPlug;
 
@@ -73,7 +73,6 @@ public class LibVulpesBlocks {
 	 */
 	public static <BLOCK extends Block> BLOCK registerBlock(BLOCK block, Class<? extends BlockItem> clazz, boolean registerItemStates) {
 		GameData.register_impl(block);
-
 		blocks.add(block);
 		return block;
 	}

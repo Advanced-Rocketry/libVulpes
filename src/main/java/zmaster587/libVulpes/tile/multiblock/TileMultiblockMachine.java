@@ -42,10 +42,10 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	private List<ItemStack> outputItemStacks;
 	private List<FluidStack> outputFluidStacks;
 
-	boolean smartInventoryUpgrade = true;
+	private boolean smartInventoryUpgrade = true;
 	//When using smart inventories sometimes setInventory content calls need to be made
 	//This flag prevents infinite recursion by having a value of true if any invCheck has started
-	boolean invCheckFlag = false;
+	private boolean invCheckFlag = false;
 
 	public TileMultiblockMachine(TileEntityType<?> type) {
 		super(type);
@@ -110,7 +110,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	public void tick() {
 		//super.update();
 
-		//Freaky jenky crap to make sure the multiblock loads on chunkload etc
+		//Freaky janky crap to make sure the multiblock loads on chunkload etc
 		if(timeAlive == 0) {
 			if(!world.isRemote) {
 				if(isComplete())
@@ -118,7 +118,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 			}
 			else {
 				SoundEvent str;
-				if(world.isRemote && (str = getSound()) != null) {
+				if((str = getSound()) != null) {
 					playMachineSound(str);
 				}
 			}
@@ -169,9 +169,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 	/**
 	 * @param world world
-	 * @param destroyedX x coord of destroyed block
-	 * @param destroyedY y coord of destroyed block
-	 * @param destroyedZ z coord of destroyed block
+	 * @param destroyedPos coords of destroyed block
 	 * @param blockBroken set true if the block is being broken, otherwise some other means is being used to disassemble the machine
 	 */
 	@Override
@@ -205,7 +203,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 			for(int i = totalItems; i < outputItemStacks.size(); i++) {
 				ItemStack stack = outInventory.getStackInSlot(smartInventoryUpgrade ? outInventory.getSizeInventory() - i - 1 : i);
 
-				if(stack == ItemStack.EMPTY || stack.getItem() == Items.AIR) {
+				if(stack.isEmpty()) {
 					outInventory.setInventorySlotContents(smartInventoryUpgrade ? outInventory.getSizeInventory() - i - 1 : i, outputItemStacks.get(i));
 					outInventory.markDirty();
 					totalItems++;
@@ -260,16 +258,13 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	public void consumeItems(IRecipe recipe) {
 		List<List<ItemStack>> ingredients = recipe.getPossibleIngredients();
 
-		for(int ingredientNum = 0;ingredientNum < ingredients.size(); ingredientNum++) {
-
-			List<ItemStack> ingredient = ingredients.get(ingredientNum);
+		for (List<ItemStack> ingredient : ingredients) {
 
 			ingredientCheck:
 
-				for(IInventory hatch : getItemInPorts()) {
-					for(int i = 0; i < hatch.getSizeInventory(); i++) {
-						ItemStack stackInSlot = hatch.getStackInSlot(i);
-
+			for (IInventory hatch : getItemInPorts()) {
+				for (int i = 0; i < hatch.getSizeInventory(); i++) {
+					ItemStack stackInSlot = hatch.getStackInSlot(i);
 						for (ItemStack stack : ingredient) {
 							if(stackInSlot != null && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.isItemEqual(stack) || (/*stack.getDamage() == OreDictionary.WILDCARD_VALUE &&*/ stackInSlot.getItem() == stack.getItem() ))) {
 								hatch.decrStackSize(i, stack.getCount());
@@ -280,7 +275,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 						}
 					}
 				}
-		}
+			}
 
 
 		//Consume fluids
@@ -474,8 +469,8 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 			fluidOutputCounter[i] -= fluidOutPorts.get(i).fillInternal(recipe.getFluidOutputs().get(i), FluidAction.SIMULATE);
 		}
 
-		for(int i = 0; i < fluidOutputCounter.length; i++)
-			if(fluidOutputCounter[i] > 0 )
+		for (int value : fluidOutputCounter)
+			if (value > 0)
 				return false;
 
 		return itemCheck;
@@ -494,7 +489,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	//Must be overridden or an NPE will occur
 	public List<IRecipe> getMachineRecipeList() {
 		List<IRecipe> list = RecipesMachine.getInstance().getRecipes(this.getClass());
-		return (list != null) ? list : new LinkedList<IRecipe>();
+		return (list != null) ? list : new LinkedList<>();
 	}
 
 	//Called by inventory blocks that are part of the structure
@@ -518,7 +513,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 					if (inputItemStacks == null)
 						inputItemStacks = new LinkedList<>(ingredients.get(ingredientNum));
 					else
-					    inputItemStacks.addAll(ingredients.get(ingredientNum));
+						inputItemStacks.addAll(ingredients.get(ingredientNum));
 				}
 
 

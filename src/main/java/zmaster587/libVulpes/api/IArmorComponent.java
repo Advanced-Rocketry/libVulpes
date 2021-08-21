@@ -19,7 +19,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public interface IArmorComponent {
-	
+
 	/**
 	 * Called on Armor tick for each IArmorComponent in IModularArmor
 	 * @param world the world
@@ -29,7 +29,7 @@ public interface IArmorComponent {
 	 * @param componentStack the ItemStack representing the current component being ticked
 	 */
 	public void onTick(World world, PlayerEntity player, ItemStack armorStack, IInventory modules, ItemStack componentStack);
-	
+
 	/**
 	 * Called right before adding a component to the armor
 	 * @param world
@@ -38,17 +38,17 @@ public interface IArmorComponent {
 	 * @return true if it should be added false otherwise
 	 */
 	public boolean onComponentAdded(World world, ItemStack armorStack);
-	
+
 	public void onComponentRemoved(World world, ItemStack armorStack);
-	
+
 	public void onArmorDamaged(LivingEntity entity, ItemStack armorStack, ItemStack componentStack, DamageSource source, int damage);
 
 	public boolean isAllowedInSlot(ItemStack componentStack, EquipmentSlotType armorType);
 
 	@OnlyIn(value=Dist.CLIENT)
 	public void renderScreen(MatrixStack mat, ItemStack componentStack, List<ItemStack> modules,
-			RenderGameOverlayEvent event, Screen gui);
-	
+							 RenderGameOverlayEvent event, Screen gui);
+
 	/**
 	 * @param armorStack
 	 * @return The Icon for the HUD, null renders standard item

@@ -39,6 +39,8 @@ import zmaster587.libVulpes.util.FluidUtils;
 import zmaster587.libVulpes.util.IFluidHandlerInternal;
 import zmaster587.libVulpes.util.IconResource;
 
+import javax.annotation.Nonnull;
+
 public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal, IModularInventory, ISidedInventory, IInventoryUpdateCallback {
 
 	protected FluidTank fluidTank;
@@ -129,8 +131,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	@Override
 	public int fillInternal(FluidStack resource, FluidAction doFill) {
 		int fillAmt = fluidTank.fill(resource, doFill);
-		while(useBucket(0, getStackInSlot(0)));
-		
+
 		if(doFill == FluidAction.EXECUTE && this.hasMaster() && this.getMasterBlock() instanceof TileMultiBlock)
 			((TileMultiBlock)this.getMasterBlock()).onInventoryUpdated();
 		
@@ -187,17 +188,19 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int slot) {
 		return inventory.getStackInSlot(slot);
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int slot, int amt) {
 		return inventory.decrStackSize(slot, amt);
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
 		while(useBucket(0, getStackInSlot(0)));
 		
@@ -221,7 +224,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
 		return inventory.isItemValidForSlot(slot, stack);
 	}
 
@@ -243,16 +246,14 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 		fluidTank = new FluidTank(nbt.getInt("capacity"));
 		fluidTank.readFromNBT(nbt);
 	}
-
-	//Yes i was lazy
-	//TODO: make better
-	protected boolean useBucket( int slot, ItemStack stack) {
+	
+	protected boolean useBucket( int slot, @Nonnull ItemStack stack) {
 		return FluidUtils.attemptDrainContainerIInv(inventory, fluidTank, stack, 0, 1);
 	}
 
 	@Override
 	public ItemStack removeStackFromSlot(int index) {
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override

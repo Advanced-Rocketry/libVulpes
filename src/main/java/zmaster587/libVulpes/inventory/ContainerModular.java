@@ -20,6 +20,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IntReferenceHolder;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import javax.annotation.Nonnull;
+
+//import javax.annotation.Nonnull;
+
 public class ContainerModular extends Container {
 
 	List<ModuleBase> modules;
@@ -171,7 +175,7 @@ public class ContainerModular extends Container {
 	public ItemStack transferStackInSlot(PlayerEntity player, int slotId) {
 
 		ItemStack itemstack = ItemStack.EMPTY;
-		Slot slot = (Slot)this.inventorySlots.get(slotId);
+		Slot slot = this.inventorySlots.get(slotId);
 
 		if (slot != null && slot.getHasStack())
 		{
@@ -203,7 +207,6 @@ public class ContainerModular extends Container {
 
 		return itemstack;
 	}
-	
 	@Override
 	public boolean canInteractWith(PlayerEntity player) {
 		return modularInventory.canInteractWithContainer(player);

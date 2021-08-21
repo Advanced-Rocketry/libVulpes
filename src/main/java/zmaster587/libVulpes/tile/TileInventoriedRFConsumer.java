@@ -9,6 +9,9 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public abstract class TileInventoriedRFConsumer extends TileEntityRFConsumer implements ISidedInventory {
 
 	protected EmbeddedInventory inventory;
@@ -39,18 +42,20 @@ public abstract class TileInventoriedRFConsumer extends TileEntityRFConsumer imp
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int slot) {
 		return inventory.getStackInSlot(slot);
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int slot, int amt) {
 		return inventory.decrStackSize(slot, amt);
 	}
 
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
 	}
 
@@ -86,6 +91,7 @@ public abstract class TileInventoriedRFConsumer extends TileEntityRFConsumer imp
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
 		return inventory.removeStackFromSlot(index);
 	}

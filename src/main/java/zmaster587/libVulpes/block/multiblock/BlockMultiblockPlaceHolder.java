@@ -84,7 +84,7 @@ public class BlockMultiblockPlaceHolder extends ContainerBlock {
 			Block newBlock = newBlockState.getBlock();
 			
 			
-			if(newBlock != null && newBlock != Blocks.AIR && newBlockState.canHarvestBlock(world, pos, player)) {
+			if(newBlock != Blocks.AIR && newBlockState.canHarvestBlock(world, pos, player)) {
 				newBlock.spawnDrops(newBlockState, world, pos);
 			}
 		}
@@ -93,12 +93,12 @@ public class BlockMultiblockPlaceHolder extends ContainerBlock {
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		TileEntity tile = world.getTileEntity(pos);
 
-		if(tile != null && tile instanceof TilePlaceholder) {
+		if(tile instanceof TilePlaceholder) {
 			tile = ((TilePlaceholder)tile).getMasterBlock();
 			if(tile instanceof TileMultiBlock)
 				((TileMultiBlock)tile).deconstructMultiBlock((World)world, pos, true, world.getBlockState(tile.getPos()));
 		}
-		
+
 		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 

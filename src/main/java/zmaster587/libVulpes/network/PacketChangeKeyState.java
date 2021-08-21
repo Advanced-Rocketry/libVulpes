@@ -20,7 +20,7 @@ public class PacketChangeKeyState extends BasePacket {
 		this.state = state;
 	}
 	
-	public PacketChangeKeyState() {};
+	public PacketChangeKeyState() {}
 	
 
 	@Override

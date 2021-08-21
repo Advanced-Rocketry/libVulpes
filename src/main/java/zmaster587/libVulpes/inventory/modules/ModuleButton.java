@@ -17,6 +17,7 @@ import zmaster587.libVulpes.gui.GuiImageButton;
 import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.GuiModular;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class ModuleButton extends ModuleBase {
 
 	protected int bgColor;
 	protected String text, tooltipText;
-	ResourceLocation buttonImages[];
+	ResourceLocation[] buttonImages;
 	protected boolean visible = true;
 
 	boolean enabled = true;
@@ -91,7 +92,7 @@ public class ModuleButton extends ModuleBase {
 	}*/
 
 	public void setImage(ResourceLocation[] images) {
-		((GuiImageButton)button).setButtonTexture(images);
+		button.setButtonTexture(images);
 	}
 
 
@@ -169,7 +170,7 @@ public class ModuleButton extends ModuleBase {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 		if(button != null)
-			this.enabled = button.enabled = enabled;
+			button.enabled = enabled;
 	}
 
 	/**

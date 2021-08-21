@@ -37,7 +37,7 @@ public class ModuleDualProgressBar extends ModuleProgress {
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
 	protected List<String> getToolTip() {
-		List<String> modifiedList = new LinkedList<String>();
+		List<String> modifiedList = new LinkedList<>();
 		
 		for(String string : tooltip) {
 			int centerPoint = progress.getTotalProgress(id);

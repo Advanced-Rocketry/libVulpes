@@ -1,13 +1,7 @@
 package zmaster587.libVulpes;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import org.apache.logging.log4j.LogManager;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -21,10 +15,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.RegistryEvent.MissingMappings.Mapping;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -35,25 +27,21 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistry;
-import zmaster587.libVulpes.common.CommonProxy;
-import zmaster587.libVulpes.config.LibVulpesConfig;
-import zmaster587.libVulpes.event.BucketHandler;
+import org.apache.logging.log4j.LogManager;
 import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.LibVulpesItems;
 import zmaster587.libVulpes.api.LibVulpesTileEntityTypes;
 import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.api.material.AllowedProducts;
 import zmaster587.libVulpes.api.material.MaterialRegistry;
-import zmaster587.libVulpes.block.BlockAlphaTexture;
-import zmaster587.libVulpes.block.BlockMeta;
-import zmaster587.libVulpes.block.BlockPhantom;
-import zmaster587.libVulpes.block.BlockMotor;
-import zmaster587.libVulpes.block.BlockTile;
+import zmaster587.libVulpes.block.*;
 import zmaster587.libVulpes.block.multiblock.BlockHatch;
 import zmaster587.libVulpes.block.multiblock.BlockMultiMachineBattery;
 import zmaster587.libVulpes.block.multiblock.BlockMultiblockPlaceHolder;
 import zmaster587.libVulpes.client.ClientProxy;
-import zmaster587.libVulpes.inventory.ContainerModular;
+import zmaster587.libVulpes.common.CommonProxy;
+import zmaster587.libVulpes.config.LibVulpesConfig;
+import zmaster587.libVulpes.event.BucketHandler;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.items.ItemLinker;
 import zmaster587.libVulpes.items.ItemProjector;
@@ -63,12 +51,16 @@ import zmaster587.libVulpes.tile.energy.TileForgePowerInput;
 import zmaster587.libVulpes.tile.energy.TileForgePowerOutput;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
 // name="Vulpes library",version="@MAJOR@.@MINOR@.@REVIS@.@BUILD@",useMetadata=true, dependencies="after:ic2;after:cofhcore;after:buildcraft|core"
 @Mod(LibVulpes.MODID)
 public class LibVulpes {
 	public static org.apache.logging.log4j.Logger logger = LogManager.getLogger("libVulpes");
 	public static int time = 0;
-	private static HashMap<Class, String> userModifiableRecipes = new HashMap<Class, String>();
+	private static HashMap<Class, String> userModifiableRecipes = new HashMap<>();
 
 	public final static String MODID = "libvulpes";
 	public static LibVulpes instance;

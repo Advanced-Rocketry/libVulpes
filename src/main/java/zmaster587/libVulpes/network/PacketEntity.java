@@ -25,7 +25,6 @@ public class PacketEntity extends BasePacket {
 	public PacketEntity() {
 		nbt = new CompoundNBT();
 	};
-
 	public PacketEntity(INetworkEntity machine, byte packetId) {
 		this();
 		this.entity = machine;
@@ -69,7 +68,7 @@ public class PacketEntity extends BasePacket {
 			this.nbt = nbt;
 		}
 
-		if(ent != null && ent instanceof INetworkEntity) {
+		if(ent instanceof INetworkEntity) {
 			entity = (INetworkEntity)ent;
 			entity.readDataFromNetwork(in, packetId, nbt);
 		}
@@ -120,7 +119,7 @@ public class PacketEntity extends BasePacket {
 			this.nbt = nbt;
 		}
 
-		if(ent != null && ent instanceof INetworkEntity) {
+		if(ent instanceof INetworkEntity) {
 			entity = (INetworkEntity)ent;
 			entity.readDataFromNetwork(buffer, packetId, nbt);
 		}

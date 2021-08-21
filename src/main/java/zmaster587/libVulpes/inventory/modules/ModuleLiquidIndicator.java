@@ -194,7 +194,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 			List<String> list = new LinkedList<String>();
 			FluidStack fluidStack = tile.getFluidInTank(0);
 
-			if(fluidStack!= null) {
+			if(fluidStack != null) {
 
 				list.add(fluidStack.getDisplayName().getString() +": "+fluidStack.getAmount() + " / " + tile.getTankCapacity(0) + " mB");
 

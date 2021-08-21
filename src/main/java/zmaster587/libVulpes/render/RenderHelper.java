@@ -896,7 +896,7 @@ public class RenderHelper {
 
 	/*public static void renderItem(TileEntity tile, ItemStack itemstack, ItemRenderer dummyItem)
 	{
-		if (itemstack != null)
+		if (!itemstack.isEmpty())
 		{
 			ItemEntity entityitem = new ItemEntity(tile.getWorld(), 0.0D, 0.0D, 0.0D, itemstack);
 			Item item = entityitem.getItem().getItem();

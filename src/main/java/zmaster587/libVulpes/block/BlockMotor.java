@@ -32,7 +32,7 @@ public class BlockMotor extends RotatableBlock implements ITimeModifier {
 	public float getTimeMult() {
 		return timeModifier;
 	}
-	 
+
 	@Override
 	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip,
 			ITooltipFlag flagIn) {

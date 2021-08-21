@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 block.libvulpes.hatch.0.name=Écoutille d'entrée
 block.libvulpes.hatch.1.name=Écoutille de sortie
 block.libvulpes.hatch.4.name=Écoutille d'entrée de fluide
@@ -13,6 +14,23 @@ block.libvulpes.coil=Bobine
 block.libvulpes.Copper.name=Minerai de cuivre
 block.libvulpes.Tin.name=Minerai d'étain
 block.libvulpes.Rutile.name=Minerai de rutile
+=======
+tile.hatch.0.name=Écoutille d'entrée
+tile.hatch.1.name=Écoutille de sortie
+tile.hatch.2.name=Écoutille d'entrée de fluide
+tile.hatch.3.name=Écoutille de sortie de fluide
+tile.rfBattery.name=Interface Redstone Flux(RF)
+tile.IC2Plug.name=Interface IC2(EU)
+tile.structureMachine.name=Structure de machine
+tile.coil.silicon.name=Bobine en silicone
+tile.coil.copper.name=Bobine en cuivre
+tile.coil.tin.name=Bobine en étain
+tile.coil.steel.name=Bobine en en acier
+tile.coil=Bobine
+tile.Copper.name=Minerai de cuivre
+tile.Tin.name=Minerai d'étain
+tile.Rutile.name=Minerai de rutile
+>>>>>>> origin/1.12
 
 item.libvulpes.holo_projector.name=Holo-projecteur
 

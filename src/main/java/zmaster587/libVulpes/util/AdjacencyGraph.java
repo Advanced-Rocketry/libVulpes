@@ -11,7 +11,7 @@ public class AdjacencyGraph<T> {
 	private HashMap<T, HashSet<T>> adjacencyMatrix;
 
 	public AdjacencyGraph() {
-		adjacencyMatrix = new HashMap<T, HashSet<T>>();
+		adjacencyMatrix = new HashMap<>();
 	}
 
 	/**
@@ -22,11 +22,10 @@ public class AdjacencyGraph<T> {
 	public void add(T object, HashSet<T> adjNodes) {
 		if(!contains(object)) {
 			adjacencyMatrix.put(object, adjNodes);
-			Iterator<T> iterator = adjNodes.iterator();
 
-			while(iterator.hasNext()) {
-				adjacencyMatrix.get(iterator.next()).add(object);
-			}
+            for (T adjNode : adjNodes) {
+                adjacencyMatrix.get(adjNode).add(object);
+            }
 		}
 	}
 
@@ -67,7 +66,7 @@ public class AdjacencyGraph<T> {
 	 * @return a hashset containing all block connected to node including itself
 	 */
 	public HashSet<T> getAllNodesConnectedToNode(T node) {
-		HashSet<T> removableNodes = new HashSet<T>();
+		HashSet<T> removableNodes = new HashSet<>();
 		getAllNodesConnectedToBlock(node, removableNodes);
 
 		return removableNodes;
@@ -81,22 +80,19 @@ public class AdjacencyGraph<T> {
 	private void getAllNodesConnectedToBlock(T node,HashSet<T> removableNodes) {
 
 		
-		Stack<T> stack = new Stack<T>();
+		Stack<T> stack = new Stack<>();
 		stack.push(node);
 		removableNodes.add(node);
 		
 		while(!stack.isEmpty()) {
 			T stackElement = stack.pop();
-			Iterator<T> iterator = adjacencyMatrix.get(stackElement).iterator();
-			
-			while(iterator.hasNext()) {
-				T nextElement = iterator.next();
-				
-				if(!removableNodes.contains(nextElement)) {
-					stack.push(nextElement);
-					removableNodes.add(nextElement);
-				}
-			}
+
+            for (T nextElement : adjacencyMatrix.get(stackElement)) {
+                if (!removableNodes.contains(nextElement)) {
+                    stack.push(nextElement);
+                    removableNodes.add(nextElement);
+                }
+            }
 		}
 		
 		/*Iterator<T> iterator = adjacencyMatrix.get(node).iterator();
@@ -119,23 +115,21 @@ public class AdjacencyGraph<T> {
 	 */
 	private boolean findPathToBlock(T from, T to, HashSet<T> removableNodes) {
 
-		Stack<T> stack = new Stack<T>();
+		Stack<T> stack = new Stack<>();
 		stack.push(from);
 
 		while(!stack.isEmpty()) {
 			T stackElement = stack.pop();
 			removableNodes.add(stackElement);
-			Iterator<T> iterator = adjacencyMatrix.get(stackElement).iterator();
-			
-			while(iterator.hasNext()) {
-				T nextElement = iterator.next();
-				
-				if(to.equals(nextElement))
-					return true;
-				
-				if(!removableNodes.contains(nextElement))
-					stack.push(nextElement);
-			}
+
+            for (T nextElement : adjacencyMatrix.get(stackElement)) {
+            	if(nextElement == null) return false;
+                if (to.equals(nextElement))
+                    return true;
+
+                if (!removableNodes.contains(nextElement))
+                    stack.push(nextElement);
+            }
 		}
 		
 		return false;
@@ -148,7 +142,7 @@ public class AdjacencyGraph<T> {
 	 * @return true if a path from from to to is found
 	 */
 	public boolean doesPathExist(T from, T to) {
-		HashSet<T> pos = new HashSet<T>();
+		HashSet<T> pos = new HashSet<>();
 
 		return findPathToBlock(from, to, pos);
 	}
@@ -160,10 +154,8 @@ public class AdjacencyGraph<T> {
 	public Collection<T> removeAllNodesConnectedTo(T node) {
 
 		HashSet<T> removableNode = getAllNodesConnectedToNode(node);
-		Iterator<T> iterator = removableNode.iterator();
 
-		while(iterator.hasNext())
-			adjacencyMatrix.remove(iterator.next());
+        for (T t : removableNode) adjacencyMatrix.remove(t);
 		
 		return removableNode;
 	}
@@ -175,10 +167,9 @@ public class AdjacencyGraph<T> {
 	public void remove(T node) {
 		HashSet<T> set = adjacencyMatrix.get(node);
 		if(set != null) {
-			Iterator<T> iterator = set.iterator();
-			while(iterator.hasNext()) {
-				adjacencyMatrix.get(iterator.next()).remove(node);
-			}
+            for (T t : set) {
+                adjacencyMatrix.get(t).remove(node);
+            }
 		}
 		adjacencyMatrix.remove(node); //I will be not here
 	}

@@ -9,6 +9,9 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public abstract class TileInventoriedForgeProducer extends TileEntityForgeProducer implements ISidedInventory {
 
 	protected EmbeddedInventory inventory;
@@ -28,7 +31,7 @@ public abstract class TileInventoriedForgeProducer extends TileEntityForgeProduc
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) {
+	public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack) {
 		return true;
 	}
 	
@@ -52,18 +55,20 @@ public abstract class TileInventoriedForgeProducer extends TileEntityForgeProduc
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int slot) {
 		return inventory.getStackInSlot(slot);
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack decrStackSize(int slot, int amt) {
 		return inventory.decrStackSize(slot, amt);
 	}
 
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		inventory.setInventorySlotContents(slot, stack);
 	}
 
@@ -105,6 +110,7 @@ public abstract class TileInventoriedForgeProducer extends TileEntityForgeProduc
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
 		return inventory.removeStackFromSlot(index);
 	}

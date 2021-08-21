@@ -17,9 +17,11 @@ import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleProgress;
 import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
 import zmaster587.libVulpes.inventory.modules.ModuleText;
+import zmaster587.libVulpes.tile.IComparatorOverride;
 import zmaster587.libVulpes.tile.TileInventoriedForgePowerMachine;
+import javax.annotation.Nonnull;
 
-public class TileCoalGenerator extends TileInventoriedForgePowerMachine {
+public class TileCoalGenerator extends TileInventoriedForgePowerMachine implements IComparatorOverride {
 
 	int powerPerTick;
 	private static final int INPUT_SLOT = 0;
@@ -43,7 +45,7 @@ public class TileCoalGenerator extends TileInventoriedForgePowerMachine {
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack) {
 		super.setInventorySlotContents(slot, stack);
 
 		if(!canGeneratePower())
@@ -71,6 +73,7 @@ public class TileCoalGenerator extends TileInventoriedForgePowerMachine {
 	@Override
 	public void tick() {
 		super.tick();
+		markDirty();
 		if(world.isRemote)
 			textModule.setText("Generating " + getLastAmtGenerated() + " RF/t");
 	}
@@ -98,5 +101,9 @@ public class TileCoalGenerator extends TileInventoriedForgePowerMachine {
 	public Container createMenu(int ID, PlayerInventory playerInv, PlayerEntity playerEntity) {
 		GuiHandler.guiId guid = getModularInvType();
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, ID, playerEntity, getModules(guid.ordinal(), playerEntity), this, guid);
+	}
+
+	public int getComparatorOverride() {
+		return energy.getUniversalEnergyStored() * 15/energy.getMaxEnergyStored();
 	}
 }

@@ -28,7 +28,7 @@ public class ModuleToggleSwitch extends ModuleButton {
 		this.tile = tile;
 		currentState = defaultState;
 	}
-	
+
 	public ModuleToggleSwitch(int offsetX, int offsetY, String text, IToggleButton tile, ResourceLocation buttonImages[], String tooltipText, boolean defaultState) {
 		super(offsetX, offsetY, text, tile, buttonImages, tooltipText);
 		this.tile = tile;
@@ -40,7 +40,7 @@ public class ModuleToggleSwitch extends ModuleButton {
 		this.tile = tile;
 		currentState = defaultState;
 	}
-	
+
 	public ModuleToggleSwitch(int offsetX, int offsetY, String text, IToggleButton tile, ResourceLocation buttonImages[], String tooltipText, int sizeX, int sizeY, boolean defaultState) {
 		super(offsetX, offsetY, text, tile, buttonImages, tooltipText, sizeX, sizeY);
 		this.tile = tile;
@@ -55,7 +55,7 @@ public class ModuleToggleSwitch extends ModuleButton {
 	@OnlyIn(value=Dist.CLIENT)
 	public List<Button> addButtons(int x, int y) {
 
-		List<Button> list = new LinkedList<Button>();
+		List<Button> list = new LinkedList<>();
 
 		button = new GuiToggleButtonImage(x + offsetX, y + offsetY, sizeX, sizeY, buttonImages);
 		((GuiToggleButtonImage)button).setState(currentState);

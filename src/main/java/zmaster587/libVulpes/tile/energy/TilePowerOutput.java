@@ -33,7 +33,6 @@ public class TilePowerOutput extends TilePlugBase implements IPower, ITickableTi
 
 				if(tile instanceof IPower) {
 					IPower handle = (IPower)tile;
-					storage.getUniversalEnergyStored();
 					storage.extractEnergy(handle.receiveEnergy(dir.getOpposite(), storage.getUniversalEnergyStored(), false), false);
 				}
 			}

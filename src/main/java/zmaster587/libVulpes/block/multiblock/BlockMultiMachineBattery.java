@@ -15,6 +15,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
+import zmaster587.libVulpes.tile.IComparatorOverride;
 
 public class BlockMultiMachineBattery extends BlockMultiblockStructure {
 
@@ -54,5 +55,20 @@ public class BlockMultiMachineBattery extends BlockMultiblockStructure {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(BlockState state)
+	{
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
+		TileEntity tile = worldIn.getTileEntity(pos);
+		if (tile instanceof IComparatorOverride) {
+			return ((IComparatorOverride) tile).getComparatorOverride();
+		}
+		return 0;
 	}
 }

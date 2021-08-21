@@ -6,6 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
+
 public class SlotOreDict extends Slot {
 	
 	ResourceLocation acceptedNames;
@@ -16,7 +18,7 @@ public class SlotOreDict extends Slot {
 	}
 	
 	@Override
-	public boolean isItemValid(ItemStack stack)
+	public boolean isItemValid(@Nonnull ItemStack stack)
 	{
 		return ItemTags.getCollection().getOwningTags(stack.getItem()).contains(acceptedNames);
 	}

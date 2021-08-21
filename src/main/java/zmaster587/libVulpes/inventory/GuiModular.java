@@ -48,7 +48,6 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 
 	/*@Override
 	protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
-
 	}*/
 
 	@Override
@@ -140,7 +139,7 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 	protected void drawGuiContainerForegroundLayer(MatrixStack matrix, int a, int b)  {
 		//super.drawGuiContainerForegroundLayer(matrix, a, b);
 
-		
+
 		//renderString
 		this.font.func_243246_a(matrix, title, 8, 6, 0xffffff);
 		matrix.push();

@@ -61,7 +61,7 @@ public class PacketMachine extends BasePacket {
 
 		TileEntity ent = world.getTileEntity(new BlockPos(x, y, z));
 
-		if(ent != null && ent instanceof INetworkMachine) {
+		if(ent instanceof INetworkMachine) {
 			machine = (INetworkMachine)ent;
 			machine.readDataFromNetwork(in, packetId, nbt);
 		}
@@ -85,7 +85,7 @@ public class PacketMachine extends BasePacket {
 		if(chunk != null && world.isBlockLoaded(pos)) {
 			TileEntity ent = world.getTileEntity(pos);
 
-			if(ent != null && ent instanceof INetworkMachine) {
+			if(ent instanceof INetworkMachine) {
 				machine = (INetworkMachine)ent;
 				machine.readDataFromNetwork(in, packetId, nbt);
 			}
