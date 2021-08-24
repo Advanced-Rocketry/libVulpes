@@ -141,7 +141,7 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 
 
 		//renderString
-		this.font.func_243246_a(matrix, title, 8, 6, 0xffffff);
+		this.font.drawString(matrix, title.getString(), 8, 6, 0xffffff);
 		matrix.push();
 		matrix.translate(0, 0, 999);
 		for(ModuleBase module : modules)
