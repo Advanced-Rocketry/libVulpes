@@ -57,10 +57,6 @@ public class BlockMultiblockMachine extends BlockTile implements IHidableBlock {
 	
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving)  {
-		
-		if (state.isIn(newState.getBlock()))
-			return;
-		
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileMultiBlock) {
 			TileMultiBlock tileMulti = (TileMultiBlock)tile;
