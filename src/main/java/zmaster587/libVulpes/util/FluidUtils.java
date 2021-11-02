@@ -63,7 +63,7 @@ public class FluidUtils {
 			boolean fill = false;
 			boolean toReturn = false;
 			FluidActionResult modifiedContainer = null;
-			if (!(stack.getItem() == Items.BUCKET) && (getFluidForItem(stack).amount == getFluidItemCapacity(stack) || tank.getTankProperties()[0].getContents().amount == 0)) {
+			if (!(stack.getItem() == Items.BUCKET) && ((getFluidForItem(stack) != null && getFluidForItem(stack).amount == getFluidItemCapacity(stack)) || tank.getTankProperties()[0].getContents().amount == 0)) {
 				modifiedContainer = FluidUtil.tryEmptyContainer(stack, tank, getFluidItemCapacity(stack), null, false);
 			} else {
 				modifiedContainer = FluidUtil.tryFillContainer(stack, tank, getFluidItemCapacity(stack), null, false);
