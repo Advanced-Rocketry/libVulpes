@@ -4,7 +4,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -154,10 +153,10 @@ public class ProgressBarImage {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexbuffer = tessellator.getBuffer();
         vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vertexbuffer.pos((double)(x + 0), (double)(y + height), (double)zLevel).tex(((float)(textureX + 0) * 0.00390625F), ((float)(textureY + height) * 0.00390625F)).endVertex();
-        vertexbuffer.pos((double)(x + width), (double)(y + height), (double)zLevel).tex(((float)(textureX + width) * 0.00390625F), ((float)(textureY + height) * 0.00390625F)).endVertex();
-        vertexbuffer.pos((double)(x + width), (double)(y + 0), (double)zLevel).tex(((float)(textureX + width) * 0.00390625F), ((float)(textureY + 0) * 0.00390625F)).endVertex();
-        vertexbuffer.pos((double)(x + 0), (double)(y + 0), zLevel).tex(((float)(textureX + 0) * 0.00390625F), ((float)(textureY + 0) * 0.00390625F)).endVertex();
+        vertexbuffer.pos(x + 0, y + height, zLevel).tex(((float)(textureX + 0) * 0.00390625F), ((float)(textureY + height) * 0.00390625F)).endVertex();
+        vertexbuffer.pos(x + width, y + height, zLevel).tex(((float)(textureX + width) * 0.00390625F), ((float)(textureY + height) * 0.00390625F)).endVertex();
+        vertexbuffer.pos(x + width, y + 0, zLevel).tex(((float)(textureX + width) * 0.00390625F), ((float)(textureY + 0) * 0.00390625F)).endVertex();
+        vertexbuffer.pos(x + 0, y + 0, zLevel).tex(((float)(textureX + 0) * 0.00390625F), ((float)(textureY + 0) * 0.00390625F)).endVertex();
         tessellator.draw();
     }
 	

@@ -10,8 +10,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.GuiModular;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.MouseHelper;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -58,8 +56,8 @@ public class ModuleContainerPan extends ModuleBase {
 		this.screenSizeX = screenSizeX;
 		this.screenSizeY = screenSizeY;
 
-		buttonList = new LinkedList<Button>();
-		staticButtonList = new LinkedList<Button>();
+		buttonList = new LinkedList<>();
+		staticButtonList = new LinkedList<>();
 		slotList = new LinkedList<>();
 
 		this.backdrop = backdrop;
@@ -144,11 +142,8 @@ public class ModuleContainerPan extends ModuleBase {
 				yPos.setInt(slot, slot.yPos + deltaY );
 			}
 		}
-		catch( SecurityException e)
+		catch( SecurityException | IllegalAccessException | IllegalArgumentException | NoSuchFieldException e)
 		{
-		} catch (NoSuchFieldException e) {
-		} catch (IllegalArgumentException e) {
-		} catch (IllegalAccessException e) {
 		}
 
 		for(Button button2 : buttonList) {
@@ -330,11 +325,8 @@ public class ModuleContainerPan extends ModuleBase {
 				yPos.setInt(slot, slot.yPos + deltaY );
 			}
 		}
-		catch( SecurityException e)
+		catch( SecurityException | IllegalAccessException | IllegalArgumentException | NoSuchFieldException e)
 		{
-		} catch (NoSuchFieldException e) {
-		} catch (IllegalArgumentException e) {
-		} catch (IllegalAccessException e) {
 		}
 
 		for(Button button2 : buttonList) {

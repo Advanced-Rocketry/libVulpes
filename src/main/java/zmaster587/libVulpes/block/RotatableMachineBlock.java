@@ -13,7 +13,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -26,7 +25,6 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -92,16 +90,16 @@ public class RotatableMachineBlock extends RotatableBlock {
 
 						itemstack.setCount(itemstack.getCount() - k1);
 
-						entityitem = new ItemEntity((World) world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), new ItemStack(itemstack.getItem(), k1, itemstack.getTag() ));
+						entityitem = new ItemEntity(world, (float)pos.getX() + f, (float)pos.getY() + f1, (float)pos.getZ() + f2, new ItemStack(itemstack.getItem(), k1, itemstack.getTag() ));
 						float f3 = 0.05F;
 						entityitem.setMotion(
-								(double)((float)this.random.nextGaussian() * f3),
-								(double)((float)this.random.nextGaussian() * f3 + 0.2F),
-								(double)((float)this.random.nextGaussian() * f3));
+								(float)this.random.nextGaussian() * f3,
+								(float)this.random.nextGaussian() * f3 + 0.2F,
+								(float)this.random.nextGaussian() * f3);
 
 						if (itemstack.hasTag())
 						{
-							entityitem.getItem().setTag((CompoundNBT)itemstack.getTag().copy());
+							entityitem.getItem().setTag(itemstack.getTag().copy());
 						}
 					}
 				}

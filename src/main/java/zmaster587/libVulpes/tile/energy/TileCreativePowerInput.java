@@ -11,7 +11,6 @@ import zmaster587.libVulpes.api.LibVulpesTileEntityTypes;
 import zmaster587.libVulpes.energy.IPower;
 import zmaster587.libVulpes.util.CreativeBattery;
 
-import javax.annotation.Nullable;
 public class TileCreativePowerInput extends TilePlugBase implements IPower, ITickableTileEntity {
 
 	public TileCreativePowerInput() {

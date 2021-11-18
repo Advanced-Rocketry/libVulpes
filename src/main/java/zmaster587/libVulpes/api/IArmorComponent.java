@@ -28,7 +28,7 @@ public interface IArmorComponent {
 	 * @param modules Inventory of the armorStack containing all modules inlcuding the current one
 	 * @param componentStack the ItemStack representing the current component being ticked
 	 */
-	public void onTick(World world, PlayerEntity player, ItemStack armorStack, IInventory modules, ItemStack componentStack);
+    void onTick(World world, PlayerEntity player, ItemStack armorStack, IInventory modules, ItemStack componentStack);
 
 	/**
 	 * Called right before adding a component to the armor
@@ -37,24 +37,24 @@ public interface IArmorComponent {
 	 * @param itemStack the armor itemStack to add the component to
 	 * @return true if it should be added false otherwise
 	 */
-	public boolean onComponentAdded(World world, ItemStack armorStack);
+    boolean onComponentAdded(World world, ItemStack armorStack);
 
-	public void onComponentRemoved(World world, ItemStack armorStack);
+	void onComponentRemoved(World world, ItemStack armorStack);
 
-	public void onArmorDamaged(LivingEntity entity, ItemStack armorStack, ItemStack componentStack, DamageSource source, int damage);
+	void onArmorDamaged(LivingEntity entity, ItemStack armorStack, ItemStack componentStack, DamageSource source, int damage);
 
-	public boolean isAllowedInSlot(ItemStack componentStack, EquipmentSlotType armorType);
+	boolean isAllowedInSlot(ItemStack componentStack, EquipmentSlotType armorType);
 
 	@OnlyIn(value=Dist.CLIENT)
-	public void renderScreen(MatrixStack mat, ItemStack componentStack, List<ItemStack> modules,
-							 RenderGameOverlayEvent event, Screen gui);
+    void renderScreen(MatrixStack mat, ItemStack componentStack, List<ItemStack> modules,
+                      RenderGameOverlayEvent event, Screen gui);
 
 	/**
 	 * @param armorStack
 	 * @return The Icon for the HUD, null renders standard item
 	 */
 	@OnlyIn(value=Dist.CLIENT)
-	public ResourceIcon getComponentIcon(ItemStack armorStack);
+    ResourceIcon getComponentIcon(ItemStack armorStack);
 
 
 }

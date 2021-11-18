@@ -1,9 +1,6 @@
 package zmaster587.libVulpes.items;
 
-import java.util.List;
-
 import net.minecraft.util.text.ITextComponent;
-import zmaster587.libVulpes.interfaces.ILinkableTile;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;

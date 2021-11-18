@@ -1,27 +1,5 @@
 package zmaster587.libVulpes.tile.multiblock;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import zmaster587.libVulpes.LibVulpes;
-import zmaster587.libVulpes.api.LibVulpesBlocks;
-import zmaster587.libVulpes.block.BlockMeta;
-import zmaster587.libVulpes.block.BlockTile;
-import zmaster587.libVulpes.block.RotatableBlock;
-import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisible;
-import zmaster587.libVulpes.block.multiblock.BlockMultiblockStructure;
-import zmaster587.libVulpes.block.multiblock.IHidableBlock;
-import zmaster587.libVulpes.tile.IMultiblock;
-import zmaster587.libVulpes.tile.TilePointer;
-import zmaster587.libVulpes.tile.TileSchematic;
-import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
-import zmaster587.libVulpes.tile.multiblock.hatch.TileInputHatch;
-import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
-import zmaster587.libVulpes.util.IFluidHandlerInternal;
-import zmaster587.libVulpes.util.Vector3F;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -39,6 +17,28 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
+import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.block.BlockTile;
+import zmaster587.libVulpes.block.RotatableBlock;
+import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisible;
+import zmaster587.libVulpes.block.multiblock.BlockMultiblockStructure;
+import zmaster587.libVulpes.block.multiblock.IHidableBlock;
+import zmaster587.libVulpes.tile.IMultiblock;
+import zmaster587.libVulpes.tile.TilePointer;
+import zmaster587.libVulpes.tile.TileSchematic;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileInputHatch;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
+import zmaster587.libVulpes.util.IFluidHandlerInternal;
+import zmaster587.libVulpes.util.Vector3F;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TileMultiBlock extends TileEntity {
 
@@ -283,8 +283,7 @@ public class TileMultiBlock extends TileEntity {
 	}
 
 	public List<BlockMeta> getAllowableWildCardBlocks() {
-		List<BlockMeta> list = new ArrayList<>();
-		return list;
+		return new ArrayList<>();
 	}
 
 	/**
@@ -372,7 +371,7 @@ public class TileMultiBlock extends TileEntity {
 							continue;
 					}
 					//Make sure the structure is valid
-					if(!(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') && !(structure[y][z][x] instanceof Block && (Block)structure[y][z][x] == Blocks.AIR && world.isAirBlock(globalPos)) && !getAllowableBlocks(structure[y][z][x]).contains(new BlockMeta(blockState))) {
+					if(!(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') && !(structure[y][z][x] instanceof Block && structure[y][z][x] == Blocks.AIR && world.isAirBlock(globalPos)) && !getAllowableBlocks(structure[y][z][x]).contains(new BlockMeta(blockState))) {
 
 						/*//Can it be replaced?
 							replacableBlocks.add(globalPos);
@@ -456,7 +455,7 @@ public class TileMultiBlock extends TileEntity {
 			LibVulpes.logger.warn(String.format("No ore dictionary entry for '%s' in machine %s", input,  getMachineName()));
 		}
 		else if(input instanceof Block) {
-			List<BlockMeta> list = new ArrayList<BlockMeta>();
+			List<BlockMeta> list = new ArrayList<>();
 			list.add(new BlockMeta(((Block) input).getDefaultState(), true));
 			return list;
 		}
@@ -466,7 +465,7 @@ public class TileMultiBlock extends TileEntity {
 			return list;
 		}
 		else if(input instanceof Block[]) {
-			List<BlockMeta> list = new ArrayList<BlockMeta>();
+			List<BlockMeta> list = new ArrayList<>();
 			for(Block b : (Block[])input) list.add(new BlockMeta(b.getDefaultState(), true));
 			return list;
 		}

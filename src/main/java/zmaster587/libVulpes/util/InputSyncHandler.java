@@ -1,7 +1,5 @@
 package zmaster587.libVulpes.util;
 
-import java.util.HashMap;
-
 import org.lwjgl.glfw.GLFW;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,7 +15,7 @@ import java.util.HashMap;
 
 public class InputSyncHandler {
 
-	public static HashMap<PlayerEntity, Boolean> spaceDown = new HashMap<PlayerEntity, Boolean>();
+	public static HashMap<PlayerEntity, Boolean> spaceDown = new HashMap<>();
 	
 
 	public static boolean isSpaceDown(PlayerEntity player) {

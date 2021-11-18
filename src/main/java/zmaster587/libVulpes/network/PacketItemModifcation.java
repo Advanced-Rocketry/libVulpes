@@ -1,6 +1,5 @@
 package zmaster587.libVulpes.network;
 
-import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -12,9 +11,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkEvent;
-
-import java.io.IOException;
 
 public class PacketItemModifcation extends BasePacket {
 	
@@ -27,7 +23,7 @@ public class PacketItemModifcation extends BasePacket {
 
 	public PacketItemModifcation() {
 		nbt = new CompoundNBT();
-	};
+	}
 
 	public PacketItemModifcation(INetworkItem machine, PlayerEntity entity, byte packetId) {
 		this();
@@ -82,7 +78,7 @@ public class PacketItemModifcation extends BasePacket {
 			this.nbt = nbt;
 		}
 
-		if(ent != null && ent instanceof PlayerEntity) {
+		if(ent instanceof PlayerEntity) {
 			ItemStack itemStack = ((PlayerEntity)ent).getHeldItem(Hand.MAIN_HAND);
 			if(itemStack != null && itemStack.getItem() instanceof INetworkItem) {
 				((INetworkItem)itemStack.getItem()).readDataFromNetwork(in, packetId, nbt, itemStack);
@@ -108,12 +104,12 @@ public class PacketItemModifcation extends BasePacket {
 
 	@Override
 	public void executeServer(ServerPlayerEntity player) {
-		execute((PlayerEntity)player, Dist.DEDICATED_SERVER);
+		execute(player, Dist.DEDICATED_SERVER);
 	}
 
 	@Override
 	public void executeClient(PlayerEntity player) {
-		execute((PlayerEntity)player, Dist.CLIENT);
+		execute(player, Dist.CLIENT);
 	}
 
 	@OnlyIn(value=Dist.CLIENT)
@@ -138,7 +134,7 @@ public class PacketItemModifcation extends BasePacket {
 			this.nbt = nbt;
 		}
 
-		if(ent != null && ent instanceof PlayerEntity) {
+		if(ent instanceof PlayerEntity) {
 			ItemStack itemStack = ((PlayerEntity)ent).getHeldItem(Hand.MAIN_HAND);
 			if(itemStack != null && itemStack.getItem() instanceof INetworkItem) {
 				((INetworkItem)itemStack.getItem()).readDataFromNetwork(in, packetId, nbt, itemStack);

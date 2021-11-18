@@ -1,6 +1,5 @@
 package zmaster587.libVulpes.network;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
@@ -9,8 +8,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.INetHandler;
-import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -18,7 +15,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
 
 public class PacketSpawnEntity extends BasePacket {
 	private int entityId;
@@ -69,7 +65,7 @@ public class PacketSpawnEntity extends BasePacket {
 	}
 
 	public PacketSpawnEntity(Entity p_i50779_1_, EntityType<?> p_i50779_2_, int p_i50779_3_, BlockPos p_i50779_4_) {
-		this(p_i50779_1_.getEntityId(), p_i50779_1_.getUniqueID(), (double)p_i50779_4_.getX(), (double)p_i50779_4_.getY(), (double)p_i50779_4_.getZ(), p_i50779_1_.rotationPitch, p_i50779_1_.rotationYaw, p_i50779_2_, p_i50779_3_, p_i50779_1_.getMotion());
+		this(p_i50779_1_.getEntityId(), p_i50779_1_.getUniqueID(), p_i50779_4_.getX(), p_i50779_4_.getY(), p_i50779_4_.getZ(), p_i50779_1_.rotationPitch, p_i50779_1_.rotationYaw, p_i50779_2_, p_i50779_3_, p_i50779_1_.getMotion());
 	}
 
 

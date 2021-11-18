@@ -303,8 +303,7 @@ public class LibVulpes {
 		r.register(LibVulpesBlocks.blockAdvStructureBlock);
 
 		//populate lists
-		Block motors[] = { LibVulpesBlocks.blockMotor, LibVulpesBlocks.blockAdvancedMotor, LibVulpesBlocks.blockEnhancedMotor, LibVulpesBlocks.blockEliteMotor };
-		LibVulpesBlocks.motors = motors;
+		LibVulpesBlocks.motors = new Block[]{ LibVulpesBlocks.blockMotor, LibVulpesBlocks.blockAdvancedMotor, LibVulpesBlocks.blockEnhancedMotor, LibVulpesBlocks.blockEliteMotor };
 
 
 
@@ -375,19 +374,19 @@ public class LibVulpes {
 
 	private void registerBlockTypes()
 	{
-		List<BlockMeta> list = new LinkedList<BlockMeta>();
+		List<BlockMeta> list = new LinkedList<>();
 		list.add(new BlockMeta(LibVulpesBlocks.blockItemOutputHatch.getDefaultState(), true));
 		list.add(new BlockMeta(LibVulpesBlocks.blockItemOutputHatch.getDefaultState(), true));
 		TileMultiBlock.addMapping('O', list);
 
 		//Item Inputs
-		list = new LinkedList<BlockMeta>();
+		list = new LinkedList<>();
 		list.add(new BlockMeta(LibVulpesBlocks.blockItemInputHatch.getDefaultState(), true));
 		list.add(new BlockMeta(LibVulpesBlocks.blockItemInputHatch.getDefaultState(), true));
 		TileMultiBlock.addMapping('I', list);
 
 		//Power input
-		list = new LinkedList<BlockMeta>();
+		list = new LinkedList<>();
 		list.add(new BlockMeta(LibVulpesBlocks.blockCreativeInputPlug.getDefaultState()));
 		list.add(new BlockMeta(LibVulpesBlocks.blockForgeInputPlug.getDefaultState()));
 		if(LibVulpesBlocks.blockRFBattery != null)
@@ -397,20 +396,20 @@ public class LibVulpes {
 		TileMultiBlock.addMapping('P', list);
 
 		//Power output
-		list = new LinkedList<BlockMeta>();
+		list = new LinkedList<>();
 		list.add(new BlockMeta(LibVulpesBlocks.blockForgeOutputPlug.getDefaultState()));
 		if(LibVulpesBlocks.blockRFOutput != null)
 			list.add(new BlockMeta(LibVulpesBlocks.blockRFOutput.getDefaultState()));
 		TileMultiBlock.addMapping('p', list);
 
 		//Liquid input
-		list = new LinkedList<BlockMeta>();
+		list = new LinkedList<>();
 		list.add(new BlockMeta(LibVulpesBlocks.blockFluidInputHatch.getDefaultState(), true));
 		list.add(new BlockMeta(LibVulpesBlocks.blockFluidInputHatch.getDefaultState(), true));
 		TileMultiBlock.addMapping('L', list);
 
 		//Liquid output
-		list = new LinkedList<BlockMeta>();
+		list = new LinkedList<>();
 		list.add(new BlockMeta(LibVulpesBlocks.blockFluidOutputHatch.getDefaultState(), true));
 		list.add(new BlockMeta(LibVulpesBlocks.blockFluidOutputHatch.getDefaultState(), true));
 		TileMultiBlock.addMapping('l', list);

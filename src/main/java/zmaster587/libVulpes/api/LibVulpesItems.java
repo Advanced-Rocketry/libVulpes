@@ -1,6 +1,5 @@
 package zmaster587.libVulpes.api;
 
-import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 
 public class LibVulpesItems {

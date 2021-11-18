@@ -68,7 +68,7 @@ public class BlockMultiblockPlaceHolder extends ContainerBlock {
 	@Override
 	public List<ItemStack> getDrops(BlockState state, Builder builder) {
 		// TODO Auto-generated method stub
-		return new LinkedList<ItemStack>();
+		return new LinkedList<>();
 	}
 	
 	@Override
@@ -85,7 +85,7 @@ public class BlockMultiblockPlaceHolder extends ContainerBlock {
 			
 			
 			if(newBlock != Blocks.AIR && newBlockState.canHarvestBlock(world, pos, player)) {
-				newBlock.spawnDrops(newBlockState, world, pos);
+				spawnDrops(newBlockState, world, pos);
 			}
 		}
 	}
@@ -96,7 +96,7 @@ public class BlockMultiblockPlaceHolder extends ContainerBlock {
 		if(tile instanceof TilePlaceholder) {
 			tile = ((TilePlaceholder)tile).getMasterBlock();
 			if(tile instanceof TileMultiBlock)
-				((TileMultiBlock)tile).deconstructMultiBlock((World)world, pos, true, world.getBlockState(tile.getPos()));
+				((TileMultiBlock)tile).deconstructMultiBlock(world, pos, true, world.getBlockState(tile.getPos()));
 		}
 
 		super.onReplaced(state, world, pos, newState, isMoving);

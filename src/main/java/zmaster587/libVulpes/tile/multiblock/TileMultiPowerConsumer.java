@@ -4,10 +4,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -23,15 +21,12 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.Dimension;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.api.ITimeModifier;
 import zmaster587.libVulpes.api.IToggleableMachine;
 import zmaster587.libVulpes.api.IUniversalEnergy;
-import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.BlockTile;
@@ -379,7 +374,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
+		LinkedList<ModuleBase> modules = new LinkedList<>();
 		modules.add(new ModulePower(18, 20, getBatteries()));
 
 		modules.add(toggleSwitch);

@@ -1,6 +1,5 @@
 package zmaster587.libVulpes.tile.multiblock;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -105,7 +104,7 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
+		LinkedList<ModuleBase> modules = new LinkedList<>();
 		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
 

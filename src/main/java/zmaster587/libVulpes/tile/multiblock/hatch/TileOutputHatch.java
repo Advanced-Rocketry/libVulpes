@@ -44,7 +44,7 @@ public class TileOutputHatch extends TileInventoryHatch {
 
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
+		LinkedList<ModuleBase> modules = new LinkedList<>();
 		modules.add(new ModuleOutputSlotArray(8, 18, this, 0, this.getSizeInventory()));
 		return modules;
 	}

@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 
 public interface IHidableBlock {
 	
-	public void hideBlock(World world, BlockPos pos, BlockState state);
+	void hideBlock(World world, BlockPos pos, BlockState state);
 
-	public void showBlock(World world, BlockPos pos, BlockState state);
+	void showBlock(World world, BlockPos pos, BlockState state);
 }

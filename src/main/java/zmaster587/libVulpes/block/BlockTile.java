@@ -9,7 +9,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -18,10 +17,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -119,15 +115,15 @@ public class BlockTile extends RotatableBlock {
 						Item oldItem = itemstack.getItem();
 						ItemStack oldStack = itemstack.copy();
 						itemstack.setCount(itemstack.getCount() - j1);
-						entityitem = new ItemEntity((World) world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), new ItemStack(oldItem, j1, itemstack.getTag()));
+						entityitem = new ItemEntity(world, (float)pos.getX() + f, (float)pos.getY() + f1, (float)pos.getZ() + f2, new ItemStack(oldItem, j1, itemstack.getTag()));
 						float f3 = 0.05F;
-						entityitem.setMotion((double)((float)world.getRandom().nextGaussian() * f3),
-						(double)((float)world.getRandom().nextGaussian() * f3 + 0.2F),
-						(double)((float)world.getRandom().nextGaussian() * f3));
+						entityitem.setMotion((float)world.getRandom().nextGaussian() * f3,
+								(float)world.getRandom().nextGaussian() * f3 + 0.2F,
+								(float)world.getRandom().nextGaussian() * f3);
 
 						if (oldStack.hasTag())
 						{
-							entityitem.getItem().setTag((CompoundNBT)oldStack.getTag().copy());
+							entityitem.getItem().setTag(oldStack.getTag().copy());
 						}
 						world.addEntity(entityitem);
 					}

@@ -1,6 +1,5 @@
 package zmaster587.libVulpes.tile.energy;
 
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.energy.IEnergyStorage;
 import zmaster587.libVulpes.api.LibVulpesTileEntityTypes;
 

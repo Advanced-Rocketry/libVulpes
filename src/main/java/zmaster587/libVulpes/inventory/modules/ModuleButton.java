@@ -1,9 +1,7 @@
 package zmaster587.libVulpes.inventory.modules;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -12,12 +10,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
-import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 import zmaster587.libVulpes.gui.GuiImageButton;
-import zmaster587.libVulpes.inventory.ContainerModular;
-import zmaster587.libVulpes.inventory.GuiModular;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,7 +36,7 @@ public class ModuleButton extends ModuleBase {
 	protected String sound;
 	Object additionalData;
 
-	public ModuleButton(int offsetX, int offsetY, String text, IButtonInventory tile, ResourceLocation buttonImages[]) {
+	public ModuleButton(int offsetX, int offsetY, String text, IButtonInventory tile, ResourceLocation[] buttonImages) {
 		super(offsetX, offsetY);
 		this.tile = tile;
 		this.buttonImages = buttonImages;
@@ -56,19 +51,19 @@ public class ModuleButton extends ModuleBase {
 		color = 0xFF22FF22; // Lime green
 	}
 
-	public ModuleButton(int offsetX, int offsetY, String text, IButtonInventory tile, ResourceLocation buttonImages[], String tooltipText) {
+	public ModuleButton(int offsetX, int offsetY, String text, IButtonInventory tile, ResourceLocation[] buttonImages, String tooltipText) {
 		this(offsetX, offsetY, text, tile, buttonImages);
 		this.tooltipText = tooltipText;
 	}
 
 
-	public ModuleButton(int offsetX, int offsetY, String text, IButtonInventory tile, ResourceLocation buttonImages[], int sizeX, int sizeY) {
+	public ModuleButton(int offsetX, int offsetY, String text, IButtonInventory tile, ResourceLocation[] buttonImages, int sizeX, int sizeY) {
 		this(offsetX, offsetY, text, tile, buttonImages);
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 	}
 
-	public ModuleButton(int offsetX, int offsetY, String text, IButtonInventory tile, ResourceLocation buttonImages[], String tooltipText, int sizeX, int sizeY) {
+	public ModuleButton(int offsetX, int offsetY, String text, IButtonInventory tile, ResourceLocation[] buttonImages, String tooltipText, int sizeX, int sizeY) {
 		this(offsetX, offsetY, text, tile, buttonImages,sizeX, sizeY);
 		this.tooltipText = tooltipText;
 	}
@@ -184,7 +179,7 @@ public class ModuleButton extends ModuleBase {
 	@OnlyIn(value=Dist.CLIENT)
 	public List<Button> addButtons(int x, int y) {
 
-		List<Button> list = new LinkedList<Button>();
+		List<Button> list = new LinkedList<>();
 
 		button = new GuiImageButton(x + offsetX, y + offsetY, sizeX, sizeY, buttonImages);
 
@@ -218,24 +213,19 @@ public class ModuleButton extends ModuleBase {
 
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public void renderForeground(MatrixStack mat, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel,
-			ContainerScreen<? extends Container> gui, FontRenderer font) {
+	public void renderForeground(MatrixStack mat, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel, ContainerScreen<? extends Container> gui, FontRenderer font) {
 
 		if(visible) {
 
 			// RenderCenteredString
-			gui.drawCenteredString(mat, font, text, offsetX + sizeX / 2, offsetY + sizeY / 2  - font.FONT_HEIGHT/2, color);
+			AbstractGui.drawCenteredString(mat, font, text, offsetX + sizeX / 2, offsetY + sizeY / 2  - font.FONT_HEIGHT/2, color);
 
 			if(tooltipText != null) {
 
 				if( isMouseOver(mouseX, mouseY) ) {
-					List<String> list = new LinkedList<String>();
-					for(String str : tooltipText.split("\n")) {
-
-						list.add(str);
-
-					}
-					this.drawTooltip((ContainerScreen<Container>) gui, mat, list, mouseX, mouseY, zLevel, font);
+					List<String> list = new LinkedList<>();
+					Collections.addAll(list, tooltipText.split("\n"));
+					this.drawTooltip(gui, mat, list, mouseX, mouseY, zLevel, font);
 				}
 			}
 		}

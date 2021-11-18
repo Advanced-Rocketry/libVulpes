@@ -20,8 +20,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IntReferenceHolder;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-import javax.annotation.Nonnull;
-
 //import javax.annotation.Nonnull;
 
 public class ContainerModular extends Container {
@@ -147,8 +145,8 @@ public class ContainerModular extends Container {
 				if(module.isUpdateRequired(i)) {
 
 					List<IContainerListener> listeners = ObfuscationReflectionHelper.getPrivateValue(Container.class, this, "field_75149_d");
-					for (int j = 0; j < listeners.size(); ++j) {
-						module.sendChanges(this, ((IContainerListener)listeners.get(j)), moduleIndex, i);
+					for (IContainerListener listener : listeners) {
+						module.sendChanges(this, ((IContainerListener) listener), moduleIndex, i);
 					}
 				}
 				moduleIndex++;

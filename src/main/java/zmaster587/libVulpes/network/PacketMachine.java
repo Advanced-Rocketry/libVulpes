@@ -1,9 +1,6 @@
 package zmaster587.libVulpes.network;
 
-import java.util.function.Supplier;
-
 import zmaster587.libVulpes.util.INetworkMachine;
-import zmaster587.libVulpes.util.ZUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -15,7 +12,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkEvent;
 
 public class PacketMachine extends BasePacket {
 
@@ -27,7 +23,7 @@ public class PacketMachine extends BasePacket {
 
 	public PacketMachine() {
 		nbt = new CompoundNBT();
-	};
+	}
 
 	public PacketMachine(INetworkMachine machine, byte packetId) {
 		this();

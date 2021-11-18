@@ -2,13 +2,9 @@ package zmaster587.libVulpes.network;
 
 import zmaster587.libVulpes.util.InputSyncHandler;
 
-import java.util.function.Supplier;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraft.client.Minecraft;
 
 public class PacketChangeKeyState extends BasePacket {
 	

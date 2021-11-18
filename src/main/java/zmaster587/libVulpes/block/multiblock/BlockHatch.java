@@ -12,7 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -65,13 +64,13 @@ public class BlockHatch extends BlockMultiblockStructure {
 					if(stack.isEmpty())
 						continue;
 
-					ItemEntity entityitem = new ItemEntity((World) world, pos.getX(), pos.getY(), pos.getZ(), stack);
+					ItemEntity entityitem = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 
 					float mult = 0.05F;
 
-					entityitem.setMotion((double)((float)this.random.nextGaussian() * mult),
-							(double)((float)this.random.nextGaussian() * mult + 0.2F),
-							(double)((float)this.random.nextGaussian() * mult));
+					entityitem.setMotion((float)this.random.nextGaussian() * mult,
+							(float)this.random.nextGaussian() * mult + 0.2F,
+							(float)this.random.nextGaussian() * mult);
 
 					world.addEntity(entityitem);
 				}

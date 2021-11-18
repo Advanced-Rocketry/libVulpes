@@ -82,7 +82,7 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 		this.stacks = NonNullList.withSize(Math.max(nbt.getInt("size") == 0 ? 4 : nbt.getInt("size"), this.stacks.size()), ItemStack.EMPTY);
 		handler = new ItemStackHandler(this.stacks);
 		for (int i = 0; i < list.size(); i++) {
-			CompoundNBT tag = (CompoundNBT) list.getCompound(i);
+			CompoundNBT tag = list.getCompound(i);
 			byte slot = tag.getByte("Slot");
 			if (slot >= 0 && slot < this.stacks.size()) {
 				this.stacks.set(slot, ItemStack.read(tag));
@@ -187,7 +187,7 @@ public class EmbeddedInventory extends ItemStackHandler implements ISidedInvento
 
 	@Override
 	public int[] getSlotsForFace(Direction side) {
-		int array[] = new int[this.stacks.size()];
+		int[] array = new int[this.stacks.size()];
 
 		for(int i = 0; i < this.stacks.size(); i++) {
 			array[i] = i;
