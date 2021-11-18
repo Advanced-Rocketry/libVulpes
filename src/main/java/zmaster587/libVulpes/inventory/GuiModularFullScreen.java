@@ -1,17 +1,9 @@
 package zmaster587.libVulpes.inventory;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import zmaster587.libVulpes.inventory.modules.IModularInventory;
-import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.util.text.ITextComponent;
 
 public class GuiModularFullScreen extends GuiModular {

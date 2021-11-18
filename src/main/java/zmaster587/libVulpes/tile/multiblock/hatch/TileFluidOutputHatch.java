@@ -5,7 +5,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import zmaster587.libVulpes.api.LibVulpesTileEntityTypes;
-import zmaster587.libVulpes.util.EmbeddedInventory;
 
 public class TileFluidOutputHatch extends TileFluidHatch {
 	

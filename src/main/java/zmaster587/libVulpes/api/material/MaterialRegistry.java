@@ -35,8 +35,8 @@ public class MaterialRegistry {
 	@OnlyIn(value=Dist.CLIENT)
 	static Object oreProductColorizer;
 
-	public HashMap<String, zmaster587.libVulpes.api.material.Material> strToMaterial = new HashMap<String, zmaster587.libVulpes.api.material.Material>();
-	public List<zmaster587.libVulpes.api.material.Material> materialList = new LinkedList<zmaster587.libVulpes.api.material.Material>();
+	public HashMap<String, zmaster587.libVulpes.api.material.Material> strToMaterial = new HashMap<>();
+	public List<zmaster587.libVulpes.api.material.Material> materialList = new LinkedList<>();
 	public HashMap<AllowedProducts, HashMap<zmaster587.libVulpes.api.material.Material, Item>> oreProducts;
 
 
@@ -62,19 +62,16 @@ public class MaterialRegistry {
 
 		List<AllowedProducts> allAllowedProducts = AllowedProducts.getAllAllowedProducts();
 
-		oreProducts = new HashMap<AllowedProducts, HashMap<zmaster587.libVulpes.api.material.Material, Item>> ();
+		oreProducts = new HashMap<>();
 
 		for(int i = 0; i < allAllowedProducts.size(); i++) {
 
-			HashMap<zmaster587.libVulpes.api.material.Material, Item> productToItem = new HashMap<zmaster587.libVulpes.api.material.Material, Item>();
+			HashMap<zmaster587.libVulpes.api.material.Material, Item> productToItem = new HashMap<>();
 			oreProducts.put(AllowedProducts.getAllAllowedProducts().get(i), productToItem);
 
 			AllowedProducts product = allAllowedProducts.get(i);
-			for( int j = 0; j < materialList.size(); j++)
-			{
-				zmaster587.libVulpes.api.material.Material mat = materialList.get(j);
-
-				if(!product.isOfType(mat.getAllowedProducts()))
+			for (zmaster587.libVulpes.api.material.Material mat : materialList) {
+				if (!product.isOfType(mat.getAllowedProducts()))
 					continue;
 
 
@@ -84,8 +81,7 @@ public class MaterialRegistry {
 				Item item;
 
 				// if it's a block, register the block
-				if(allAllowedProducts.get(i).isBlock())
-				{
+				if (allAllowedProducts.get(i).isBlock()) {
 					Properties oreProperties = Properties.create(Material.ROCK).hardnessAndResistance(4f);
 					oreProperties.harvestTool(mat.getTool());
 					oreProperties.harvestLevel(mat.getHarvestLevel());
@@ -101,14 +97,12 @@ public class MaterialRegistry {
 					productToItem.put(mat, item);
 					LibVulpesBlocks.registerItem(item.setRegistryName(productName + mat.unlocalizedName));
 					// Register block tags
-					for(int g = 0; g < mat.getOreDictNames().length; g++) {
+					for (int g = 0; g < mat.getOreDictNames().length; g++) {
 						String str = mat.getOreDictNames()[g];
-						BlockTags.getCollection().getTagByID(new ResourceLocation("forge:" + productName +  "s/" + str)).contains(metalBlocks);
+						BlockTags.getCollection().getTagByID(new ResourceLocation("forge:" + productName + "s/" + str)).contains(metalBlocks);
 					}
-					BlockTags.getCollection().getTagByID(new ResourceLocation(LibVulpes.MODID,"block" + productName)).contains(metalBlocks);
-				}
-				else
-				{
+					BlockTags.getCollection().getTagByID(new ResourceLocation(LibVulpes.MODID, "block" + productName)).contains(metalBlocks);
+				} else {
 					item = new ItemOreProduct(itemProps, mat);
 
 					productToItem.put(mat, item);
@@ -116,9 +110,9 @@ public class MaterialRegistry {
 				}
 
 				// Register item tags
-				for(int g = 0; g < mat.getOreDictNames().length; g++) {
+				for (int g = 0; g < mat.getOreDictNames().length; g++) {
 					String str = mat.getOreDictNames()[g];
-					ItemTags.getCollection().getTagByID(new ResourceLocation("forge:" + productName +  "s/" + str)).contains(item);
+					ItemTags.getCollection().getTagByID(new ResourceLocation("forge:" + productName + "s/" + str)).contains(item);
 				}
 			}
 		}

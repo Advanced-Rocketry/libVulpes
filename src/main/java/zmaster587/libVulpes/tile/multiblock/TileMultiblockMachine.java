@@ -1,15 +1,9 @@
 package zmaster587.libVulpes.tile.multiblock;
 
-import io.netty.buffer.ByteBuf;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.NetworkManager;
@@ -310,7 +304,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		invCheckFlag = true;
 		int reservedSpotSize = 0;
 		if(recipe instanceof RecipesMachine.Recipe)
-			reservedSpotSize = ((RecipesMachine.Recipe)recipe).getRequiredEmptyOutputs();
+			reservedSpotSize = recipe.getRequiredEmptyOutputs();
 		
 		List<ItemStack> outputItems = getItemOutputs(recipe);
 
@@ -509,11 +503,11 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 				outputFluidStacks = recipe.getFluidOutputs();
 
 				List<List<ItemStack>> ingredients = recipe.getPossibleIngredients();
-				for(int ingredientNum = 0;ingredientNum < ingredients.size(); ingredientNum++) {
+				for (List<ItemStack> ingredient : ingredients) {
 					if (inputItemStacks == null)
-						inputItemStacks = new LinkedList<>(ingredients.get(ingredientNum));
+						inputItemStacks = new LinkedList<>(ingredient);
 					else
-						inputItemStacks.addAll(ingredients.get(ingredientNum));
+						inputItemStacks.addAll(ingredient);
 				}
 
 
@@ -590,7 +584,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 		//Load output items being processed if applicable
 		if(nbt.contains("outputItems")) {
-			outputItemStacks = new LinkedList<ItemStack>();
+			outputItemStacks = new LinkedList<>();
 			ListNBT list = nbt.getList("outputItems", 10);
 
 			for(int i = 0; i < list.size(); i++) {
@@ -601,7 +595,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 		//Load input items being processed if applicable
 		if(nbt.contains("inputItems")) {
-			inputItemStacks = new LinkedList<ItemStack>();
+			inputItemStacks = new LinkedList<>();
 			ListNBT list = nbt.getList("inputItems", 10);
 
 			for(int i = 0; i < list.size(); i++) {
@@ -613,7 +607,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 		//Load output fluids being processed if applicable
 		if(nbt.contains("outputFluids")) {
-			outputFluidStacks = new LinkedList<FluidStack>();
+			outputFluidStacks = new LinkedList<>();
 			ListNBT list = nbt.getList("outputFluids", 10);
 
 			for(int i = 0; i < list.size(); i++) {

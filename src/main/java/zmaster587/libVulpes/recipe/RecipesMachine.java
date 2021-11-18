@@ -62,14 +62,14 @@ public class RecipesMachine {
 		ResourceLocation name;
 
 		public Recipe() {
-			this.output = new LinkedList<ChanceItemStack>();
-			this.input = new LinkedList<List<ItemStack>>();
-			this.fluidInput = new LinkedList<FluidStack>();
-			this.fluidOutput = new LinkedList<ChanceFluidStack>();
+			this.output = new LinkedList<>();
+			this.input = new LinkedList<>();
+			this.fluidInput = new LinkedList<>();
+			this.fluidOutput = new LinkedList<>();
 		}
 
 		public Recipe(IRecipeSerializer<?> serializer, ResourceLocation name, List<ChanceItemStack> output, List<List<ItemStack>> input, int completionTime, int powerReq, Map<Integer, ResourceLocation> oreDict) {
-			this.output = new LinkedList<ChanceItemStack>();
+			this.output = new LinkedList<>();
 			this.output.addAll(output);
 
 			this.input = new LinkedList<>();
@@ -278,7 +278,7 @@ public class RecipesMachine {
 	private static RecipesMachine instance = new RecipesMachine();
 
 	public RecipesMachine() {
-		recipeList = new HashMap<Class<?>, List<IRecipe>>();
+		recipeList = new HashMap<>();
 	}
 
 	public static RecipesMachine getInstance() { return instance; }
@@ -294,8 +294,8 @@ public class RecipesMachine {
 			recipeList.put(clazz,recipes);
 		}
 
-		Map<Integer, ResourceLocation> oreDict = new HashMap<Integer, ResourceLocation>();
-		LinkedList<List<ItemStack>> stack = new LinkedList<List<ItemStack>>();
+		Map<Integer, ResourceLocation> oreDict = new HashMap<>();
+		LinkedList<List<ItemStack>> stack = new LinkedList<>();
 
 		ArrayList<FluidStack> inputFluidStacks = new ArrayList<>();
 

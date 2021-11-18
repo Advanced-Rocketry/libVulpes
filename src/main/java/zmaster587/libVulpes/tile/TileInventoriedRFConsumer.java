@@ -10,7 +10,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public abstract class TileInventoriedRFConsumer extends TileEntityRFConsumer implements ISidedInventory {
 

@@ -2,16 +2,10 @@ package zmaster587.libVulpes.util;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.Random;
 
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.DimensionRenderInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -28,17 +22,12 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.MutableRegistry;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.SimpleRegistry;
 import net.minecraft.world.Dimension;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import java.util.LinkedList;
@@ -390,7 +379,7 @@ public class ZUtils {
 		Collection<ResourceLocation> item1s = ItemTags.getCollection().getOwningTags(stack1.getItem());
 		Collection<ResourceLocation> item2s = ItemTags.getCollection().getOwningTags(stack2.getItem());
 
-		return item1s.stream().anyMatch(value -> item2s.contains(value));
+		return item1s.stream().anyMatch(item2s::contains);
 	}
 
 	// Dimension stuff

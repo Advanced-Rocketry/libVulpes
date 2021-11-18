@@ -67,10 +67,10 @@ public class GuiToggleButtonImage extends GuiImageButton {
 	        BufferBuilder vertexbuffer = tessellator.getBuffer();
 	        // height == zlevel
 	        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-	        vertexbuffer.pos(x, y + height, (double)this.height).tex(0, 1).endVertex();
-	        vertexbuffer.pos(x + width, y + height, (double)this.height).tex( 1, 1).endVertex();
-	        vertexbuffer.pos(x + width, y, (double)this.height).tex(1, 0).endVertex();
-	        vertexbuffer.pos(x, y, (double)this.height).tex(0, 0).endVertex();
+	        vertexbuffer.pos(x, y + height, this.height).tex(0, 1).endVertex();
+	        vertexbuffer.pos(x + width, y + height, this.height).tex( 1, 1).endVertex();
+	        vertexbuffer.pos(x + width, y, this.height).tex(1, 0).endVertex();
+	        vertexbuffer.pos(x, y, this.height).tex(0, 0).endVertex();
 	        tessellator.draw();
 			
 			// mousedragged

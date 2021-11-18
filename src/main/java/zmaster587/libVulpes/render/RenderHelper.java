@@ -37,9 +37,7 @@ public class RenderHelper {
 		RenderSystem.defaultBlendFunc();
 	});
 
-	protected static final RenderState.TransparencyState NO_TRANSPARENCY = new RenderState.TransparencyState("no_transparency", () -> {
-		RenderSystem.disableBlend();
-	}, () -> {
+	protected static final RenderState.TransparencyState NO_TRANSPARENCY = new RenderState.TransparencyState("no_transparency", RenderSystem::disableBlend, () -> {
 	});
 
 	protected static final RenderState.TransparencyState TRANSLUCENT_TRANSPARENCY = new RenderState.TransparencyState("translucent_transparency", () -> {
@@ -350,7 +348,6 @@ public class RenderHelper {
 
 
 	public static void renderTag(MatrixStack matrix, IRenderTypeBuffer buffer, double distanceSq, String displayString, int packedLightIn, float scale) {
-		double d3 = distanceSq;
 
 		Minecraft mc = Minecraft.getInstance();
 		EntityRendererManager renderManager = mc.getRenderManager();

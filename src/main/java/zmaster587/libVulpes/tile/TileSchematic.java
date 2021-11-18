@@ -22,7 +22,7 @@ public class TileSchematic extends TilePlaceholder implements ITickableTileEntit
 
 	public TileSchematic() {
 		super(LibVulpesTileEntityTypes.TILE_SCHEMATIC);
-		possibleBlocks = new ArrayList<BlockMeta>();
+		possibleBlocks = new ArrayList<>();
 		possibleBlocks = new ArrayList<>();
 	}
 
@@ -61,9 +61,9 @@ public class TileSchematic extends TilePlaceholder implements ITickableTileEntit
 
 		List<Integer> blockIds = new ArrayList<>();
 		List<Integer> wildCard = new ArrayList<>();
-		for(int i = 0;  i < possibleBlocks.size();i++) {
-			blockIds.add(Block.getStateId(possibleBlocks.get(i).getBlockState()));
-			wildCard.add(possibleBlocks.get(i).isWild() ? 1 : 0);
+		for (BlockMeta possibleBlock : possibleBlocks) {
+			blockIds.add(Block.getStateId(possibleBlock.getBlockState()));
+			wildCard.add(possibleBlock.isWild() ? 1 : 0);
 		}
 
 		if(!blockIds.isEmpty()) {

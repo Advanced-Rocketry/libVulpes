@@ -1,6 +1,5 @@
 package zmaster587.libVulpes.network;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Supplier;
@@ -18,7 +17,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.network.NetworkDirection;
@@ -45,8 +43,8 @@ public class PacketHandler {
 	public PacketHandler() {
 	}
 
-	static HashMap<Integer, Class<? extends BasePacket>> packetList = new HashMap<Integer, Class<? extends BasePacket>>();
-	static HashMap<Class<? extends BasePacket>, Integer> revPacketList = new HashMap<Class<? extends BasePacket>, Integer>();
+	static HashMap<Integer, Class<? extends BasePacket>> packetList = new HashMap<>();
+	static HashMap<Class<? extends BasePacket>, Integer> revPacketList = new HashMap<>();
 	public final void addDiscriminator(Class<? extends BasePacket> clazz) {
 		packetList.put(clazz.getName().hashCode(), clazz);
 		revPacketList.put(clazz, clazz.getName().hashCode());
@@ -88,14 +86,11 @@ public class PacketHandler {
 			BasePacket pkt;
 			try {
 				pkt = clazz.newInstance();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-				return null;
-			} catch (IllegalAccessException e) {
+			} catch (InstantiationException | IllegalAccessException e) {
 				e.printStackTrace();
 				return null;
 			}
-			
+
 			if(EffectiveSide.get() == LogicalSide.CLIENT)
 				pkt.readClient(buf);
 			else
@@ -174,7 +169,7 @@ public class PacketHandler {
 		for(ServerPlayerEntity player : players)
 		{
 			if(ZUtils.getDimensionId(player.getEntityWorld()) == dimId && player.getDistanceSq(x, y, z) <= dist*dist)
-				HANDLER.sendTo(msg, ((ServerPlayerEntity)player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+				HANDLER.sendTo(msg, player.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
 		}
 	}
 	
@@ -188,7 +183,7 @@ public class PacketHandler {
 		for(ServerPlayerEntity player : players)
 		{
 			if(ZUtils.getDimensionIdentifier(player.getEntityWorld()) == dimId && player.getDistanceSq(x, y, z) <= dist*dist)
-				HANDLER.sendTo(msg, ((ServerPlayerEntity)player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+				HANDLER.sendTo(msg, player.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
 		}
 	}
 	
@@ -200,7 +195,7 @@ public class PacketHandler {
 		for(ServerPlayerEntity player : players)
 		{
 			if(ZUtils.getDimensionIdentifier(player.getEntityWorld()) == dimId && player.getDistanceSq(x, y, z) <= dist*dist)
-				HANDLER.sendTo(msg, ((ServerPlayerEntity)player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+				HANDLER.sendTo(msg, player.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
 		}
 	}
 

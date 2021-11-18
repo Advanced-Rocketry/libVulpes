@@ -20,7 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
@@ -71,14 +70,14 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 	public ItemProjector(Properties properties) {
 		super(properties);
-		machineList = new ArrayList<TileMultiBlock>();
-		blockList = new ArrayList<BlockTile>();
-		descriptionList = new HashMap<Integer,String>();
+		machineList = new ArrayList<>();
+		blockList = new ArrayList<>();
+		descriptionList = new HashMap<>();
 	}
 
 	private String buildMachineBlocks(TileMultiBlock multiblock, BlockTile mainBlock)
 	{
-		HashMap<Object, Integer> map = new HashMap<Object, Integer>();
+		HashMap<Object, Integer> map = new HashMap<>();
 
 		Object[][][] structure = multiblock.getStructure();
 
@@ -101,9 +100,9 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 			if(blockMeta.isEmpty() || Item.getItemFromBlock(blockMeta.get(0).getBlock()) == Items.AIR || blockMeta.get(0).getBlock() == Blocks.AIR )
 				continue;
-			for(int i = 0; i < blockMeta.size(); i++) {
-				String itemStr  = Item.getItemFromBlock(blockMeta.get(i).getBlock()).getDisplayName(new ItemStack(blockMeta.get(i).getBlock(), 1)).getString();
-				if(!itemStr.contains("block.")) {
+			for (BlockMeta meta : blockMeta) {
+				String itemStr = Item.getItemFromBlock(meta.getBlock()).getDisplayName(new ItemStack(meta.getBlock(), 1)).getString();
+				if (!itemStr.contains("block.")) {
 					str = str + itemStr;
 					str = str + " or ";
 				}
@@ -201,7 +200,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 				for(int x=0; x < structure[0][0].length; x++) {
 					List<BlockMeta> block;
 					if(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') {
-						block = new ArrayList<BlockMeta>();
+						block = new ArrayList<>();
 						block.add(new BlockMeta(blockList.get(id).getDefaultState(), true));
 					}
 					else if(multiblock.getAllowableBlocks(structure[y][z][x]).isEmpty())
@@ -335,8 +334,8 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
-		List<ModuleBase> btns = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
+		List<ModuleBase> btns = new LinkedList<>();
 
 		for(int i = 0; 	i <	machineList.size(); i++) {
 			TileMultiBlock multiblock = machineList.get(i);
@@ -440,8 +439,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	private Vector3F<Integer> getBasePosition(ItemStack stack) {
 		if(stack.hasTag()) {
 			CompoundNBT nbt = stack.getTag();
-			Vector3F<Integer> vec = new Vector3F<Integer>(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"));
-			return vec;
+			return new Vector3F<>(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"));
 		}
 		else
 			return null;

@@ -9,7 +9,6 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -18,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -61,7 +59,7 @@ public class BlockMultiblockMachine extends BlockTile implements IHidableBlock {
 		if(tile instanceof TileMultiBlock) {
 			TileMultiBlock tileMulti = (TileMultiBlock)tile;
 			if(tileMulti.isComplete())
-				tileMulti.deconstructMultiBlock((World)world, pos, false, state);
+				tileMulti.deconstructMultiBlock(world, pos, false, state);
 		}
 		super.onReplaced(state, world, pos, newState, isMoving);
 	}

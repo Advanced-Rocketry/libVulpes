@@ -1,6 +1,5 @@
 package zmaster587.libVulpes.inventory.modules;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,7 +11,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.gui.CommonResources;
-import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.GuiModular;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -212,7 +210,7 @@ public abstract class ModuleBase {
 	 */
 	@OnlyIn(value=Dist.CLIENT)
 	public List<Button> addButtons(int x, int y) {
-		return new LinkedList<Button>();
+		return new LinkedList<>();
 	}
 
 	/**
@@ -233,7 +231,7 @@ public abstract class ModuleBase {
 	
 	public List<IntReferenceHolder>  getIntTrackers(Container container)
 	{
-		return new LinkedList<IntReferenceHolder>();
+		return new LinkedList<>();
 	}
 
 	/**

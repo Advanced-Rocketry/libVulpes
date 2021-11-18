@@ -10,7 +10,6 @@ import net.minecraft.util.Direction;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public abstract class TileInventoriedForgeProducer extends TileEntityForgeProducer implements ISidedInventory {
 
@@ -23,7 +22,7 @@ public abstract class TileInventoriedForgeProducer extends TileEntityForgeProduc
 
 	@Override
 	public int[] getSlotsForFace(Direction side) {
-		int i[] = new int[inventory.getSizeInventory()];
+		int[] i = new int[inventory.getSizeInventory()];
 
 		for(int j = 0; j < i.length; j++) { i[j] = j;}
 

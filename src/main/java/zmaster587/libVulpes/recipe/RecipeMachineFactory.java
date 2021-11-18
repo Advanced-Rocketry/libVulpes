@@ -31,10 +31,10 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 
 	@Override
 	public IRecipe read(ResourceLocation context, PacketBuffer buffer) {
-		List<List<ItemStack>> inputs = new LinkedList<List<ItemStack>>();
-		List<ChanceItemStack> outputs = new LinkedList<ChanceItemStack>();
-		List<FluidStack> inputFluids = new LinkedList<FluidStack>();
-		List<ChanceFluidStack> outputFluids = new LinkedList<ChanceFluidStack>();
+		List<List<ItemStack>> inputs = new LinkedList<>();
+		List<ChanceItemStack> outputs = new LinkedList<>();
+		List<FluidStack> inputFluids = new LinkedList<>();
+		List<ChanceFluidStack> outputFluids = new LinkedList<>();
 		int timeTaken = 0;
 		int energy = 0;
 		int maxOutput = -1;
@@ -45,7 +45,7 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		{
 			// Write subingredient count
 			int subingredient = buffer.readInt();
-			List<ItemStack> stacks = new LinkedList<ItemStack>();
+			List<ItemStack> stacks = new LinkedList<>();
 			for(; subingredient > 0; subingredient--)
 			{
 				stacks.add(buffer.readItemStack());
@@ -83,7 +83,7 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		timeTaken = buffer.readInt();
 		maxOutput = buffer.readInt();
 		
-		RecipesMachine.Recipe recipe = new RecipesMachine.Recipe(this, context, outputs, inputs, outputFluids, inputFluids, timeTaken, energy, new HashMap<Integer, ResourceLocation>());
+		RecipesMachine.Recipe recipe = new RecipesMachine.Recipe(this, context, outputs, inputs, outputFluids, inputFluids, timeTaken, energy, new HashMap<>());
 		
 		if(maxOutput > 0)
 			recipe.setMaxOutputSize(maxOutput);
@@ -198,7 +198,7 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 			throw new JsonParseException(e.getMessage());
 		}
 
-		RecipesMachine.Recipe recipe = new RecipesMachine.Recipe(this, context, outputs, inputs, outputFluids, inputFluids, timeTaken, energy, new HashMap<Integer, ResourceLocation>());
+		RecipesMachine.Recipe recipe = new RecipesMachine.Recipe(this, context, outputs, inputs, outputFluids, inputFluids, timeTaken, energy, new HashMap<>());
 		
 		if(maxOutput > 0)
 			recipe.setMaxOutputSize(maxOutput);
@@ -269,7 +269,7 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 	
 	List<ChanceItemStack> getIngredients(ResourceLocation context, JsonElement json)
 	{
-		List<ChanceItemStack> stacks = new LinkedList<ChanceItemStack>();
+		List<ChanceItemStack> stacks = new LinkedList<>();
 		for(ItemStack stack : CraftingHelper.getIngredient(json).getMatchingStacks())
 		{
 			int count = stack.getCount();

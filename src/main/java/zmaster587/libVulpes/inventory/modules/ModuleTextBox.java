@@ -15,7 +15,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
-import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 
 public class ModuleTextBox extends ModuleBase {
 
@@ -74,10 +73,7 @@ public class ModuleTextBox extends ModuleBase {
 	public void onMouseClicked(GuiModular gui, double x, double y, int button) {
 
 		//Make sure we can focus the textboxes
-		if(offsetX < x && offsetY < y && offsetX + textBox.getAdjustedWidth() > x  && offsetY + textBox.getHeightRealms() > y )
-			textBox.setFocused2(true);
-		else
-			textBox.setFocused2(false);
+		textBox.setFocused2(offsetX < x && offsetY < y && offsetX + textBox.getAdjustedWidth() > x && offsetY + textBox.getHeightRealms() > y);
 
 	}
 

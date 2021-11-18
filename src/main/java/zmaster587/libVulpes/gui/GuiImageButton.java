@@ -1,7 +1,5 @@
 package zmaster587.libVulpes.gui;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -125,10 +123,10 @@ public class GuiImageButton extends Button {
 	        BufferBuilder vertexbuffer = tessellator.getBuffer();
 	        // height == zlevel
 	        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-	        vertexbuffer.pos(x, y + height, (double)this.height).tex(0, 1).color(r, g, b, a).endVertex();
-	        vertexbuffer.pos(x + width, y + height, (double)this.height).tex( 1, 1).color(r, g, b, a).endVertex();
-	        vertexbuffer.pos(x + width, y, (double)this.height).tex(1, 0).color(r, g, b, a).endVertex();
-	        vertexbuffer.pos(x, y, (double)this.height).tex(0, 0).color(r, g, b, a).endVertex();
+	        vertexbuffer.pos(x, y + height, this.height).tex(0, 1).color(r, g, b, a).endVertex();
+	        vertexbuffer.pos(x + width, y + height, this.height).tex( 1, 1).color(r, g, b, a).endVertex();
+	        vertexbuffer.pos(x + width, y, this.height).tex(1, 0).color(r, g, b, a).endVertex();
+	        vertexbuffer.pos(x, y, this.height).tex(0, 0).color(r, g, b, a).endVertex();
 	        tessellator.draw();
 			
 			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);

@@ -1,7 +1,5 @@
 package zmaster587.libVulpes.network;
 
-import java.util.function.Supplier;
-
 import zmaster587.libVulpes.interfaces.INetworkEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -24,7 +22,8 @@ public class PacketEntity extends BasePacket {
 
 	public PacketEntity() {
 		nbt = new CompoundNBT();
-	};
+	}
+
 	public PacketEntity(INetworkEntity machine, byte packetId) {
 		this();
 		this.entity = machine;
@@ -84,12 +83,12 @@ public class PacketEntity extends BasePacket {
 
 	@Override
 	public void executeServer(ServerPlayerEntity player) {
-		execute((PlayerEntity)player, Dist.DEDICATED_SERVER);
+		execute(player, Dist.DEDICATED_SERVER);
 	}
 
 	@Override
 	public void executeClient(PlayerEntity player) {
-		execute((PlayerEntity)player, Dist.CLIENT);
+		execute(player, Dist.CLIENT);
 		if(entity == null) {
 			
 		}

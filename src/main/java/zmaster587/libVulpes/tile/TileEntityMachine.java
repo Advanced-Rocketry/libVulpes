@@ -96,7 +96,7 @@ public abstract class TileEntityMachine extends TileEntity implements ISidedInve
 
 		ListNBT tagList = nbt.getList("Inventory", (byte)10);
 		for (int i = 0; i < tagList.size(); i++) {
-			CompoundNBT tag = (CompoundNBT) tagList.getCompound(i);
+			CompoundNBT tag = tagList.getCompound(i);
 			byte slot = tag.getByte("Slot");
 			if (slot >= 0 && slot < inv.length) {
 				inv[slot] = ItemStack.read(tag);

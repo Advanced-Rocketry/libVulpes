@@ -156,7 +156,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		List<ModuleBase> list = new ArrayList<ModuleBase>();
+		List<ModuleBase> list = new ArrayList<>();
 
 		list.add(new ModuleSlotArray(45, 18, this, 0, 1));
 		list.add(new ModuleSlotArray(45, 54, this, 1, 2));

@@ -35,7 +35,7 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		LinkedList<ModuleBase> modules = new LinkedList<ModuleBase>();
+		LinkedList<ModuleBase> modules = new LinkedList<>();
 		modules.add(new ModulePower(18, 20, energy));
 
 		return modules;

@@ -8,7 +8,6 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.DistExecutor;
 import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.GuiModular;
-import zmaster587.libVulpes.inventory.GuiModularFullScreen;
 
 public class LibvulpesGuiRegistry {
 	

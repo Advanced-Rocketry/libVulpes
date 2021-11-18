@@ -34,7 +34,7 @@ public class BlockPhantom extends Block {
 	
 	@Override
 	public List<ItemStack> getDrops(BlockState state, Builder builder) {
-		return new ArrayList<ItemStack>();
+		return new ArrayList<>();
 	}
 
 	

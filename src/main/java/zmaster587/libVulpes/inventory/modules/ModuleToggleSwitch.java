@@ -29,19 +29,19 @@ public class ModuleToggleSwitch extends ModuleButton {
 		currentState = defaultState;
 	}
 
-	public ModuleToggleSwitch(int offsetX, int offsetY, String text, IToggleButton tile, ResourceLocation buttonImages[], String tooltipText, boolean defaultState) {
+	public ModuleToggleSwitch(int offsetX, int offsetY, String text, IToggleButton tile, ResourceLocation[] buttonImages, String tooltipText, boolean defaultState) {
 		super(offsetX, offsetY, text, tile, buttonImages, tooltipText);
 		this.tile = tile;
 		currentState = defaultState;
 	}
 
-	public ModuleToggleSwitch(int offsetX, int offsetY, String text, IToggleButton tile, ResourceLocation buttonImages[], int sizeX, int sizeY, boolean defaultState) {
+	public ModuleToggleSwitch(int offsetX, int offsetY, String text, IToggleButton tile, ResourceLocation[] buttonImages, int sizeX, int sizeY, boolean defaultState) {
 		super(offsetX, offsetY, text, tile, buttonImages, sizeX, sizeY);
 		this.tile = tile;
 		currentState = defaultState;
 	}
 
-	public ModuleToggleSwitch(int offsetX, int offsetY, String text, IToggleButton tile, ResourceLocation buttonImages[], String tooltipText, int sizeX, int sizeY, boolean defaultState) {
+	public ModuleToggleSwitch(int offsetX, int offsetY, String text, IToggleButton tile, ResourceLocation[] buttonImages, String tooltipText, int sizeX, int sizeY, boolean defaultState) {
 		super(offsetX, offsetY, text, tile, buttonImages, tooltipText, sizeX, sizeY);
 		this.tile = tile;
 		currentState = defaultState;

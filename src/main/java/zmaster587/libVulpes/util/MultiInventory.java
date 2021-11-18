@@ -1,13 +1,10 @@
 package zmaster587.libVulpes.util;
 
-import java.util.List;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class MultiInventory implements IInventory {

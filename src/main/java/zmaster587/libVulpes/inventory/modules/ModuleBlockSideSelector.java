@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
-import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.util.BlockDirectionFunction;
 import net.minecraft.client.gui.FontRenderer;
@@ -16,7 +15,6 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
-import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 
 public class ModuleBlockSideSelector extends ModuleBase implements IButtonInventory {
 

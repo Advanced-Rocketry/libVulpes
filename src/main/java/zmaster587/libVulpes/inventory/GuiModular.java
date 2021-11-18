@@ -11,20 +11,14 @@ import com.mojang.blaze3d.platform.GlStateManager;
 
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.inventory.GuiHandler.guiId;
-import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 
 public class GuiModular extends ContainerScreen<ContainerModular> {
 
@@ -70,7 +64,7 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 		if (!net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Pre(this, this.buttons, this::addButton, remove))) {
 			this.buttons.clear();
 			this.children.clear();
-			this.setListener((IGuiEventListener)null);
+			this.setListener(null);
 			this.init();
 		}
 		net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Post(this, this.buttons, this::addButton, remove));
@@ -160,8 +154,7 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 		//Handles buttons (mostly vanilla copy)
 		if(button == 0) {
 
-			List<Widget> fullButtonList = new LinkedList<Widget>();
-			fullButtonList.addAll(this.buttons);
+			List<Widget> fullButtonList = new LinkedList<>(this.buttons);
 
 
 			for(IGuiEventListener iguieventlistener : fullButtonList) {
@@ -213,7 +206,7 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 	}
 
 	public List<Rectangle> getExtraAreasCovered() {
-		List<Rectangle> list = new LinkedList<Rectangle>();
+		List<Rectangle> list = new LinkedList<>();
 
 		for(ModuleBase module : modules) {
 			list.add(new Rectangle((width - xSize) / 2 + module.offsetX, (height - ySize) / 2 + module.offsetY, module.getSizeX(), module.getSizeY()));

@@ -191,7 +191,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 		int xSize = 12;
 
 		if( relativeX > 0 && relativeX < xSize && relativeY > 0 && relativeY < ySize) {
-			List<String> list = new LinkedList<String>();
+			List<String> list = new LinkedList<>();
 			FluidStack fluidStack = tile.getFluidInTank(0);
 
 			if(fluidStack != null) {

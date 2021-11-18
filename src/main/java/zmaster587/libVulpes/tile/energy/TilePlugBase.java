@@ -1,8 +1,5 @@
 package zmaster587.libVulpes.tile.energy;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -31,7 +28,6 @@ import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.util.UniversalBattery;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -161,7 +157,7 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	
 	@Override
 	public List<ModuleBase> getModules(int ID, PlayerEntity player) {
-		List<ModuleBase> modules = new LinkedList<ModuleBase>();
+		List<ModuleBase> modules = new LinkedList<>();
 		modules.add(new ModulePower(18, 20,this));
 		return modules;
 	}

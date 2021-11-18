@@ -1,6 +1,5 @@
 package zmaster587.libVulpes.tile;
 
-import zmaster587.libVulpes.cap.FluidCapability;
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundNBT;
@@ -36,7 +35,7 @@ public abstract class TileInventoriedRFConsumerTank extends TileInventoriedRFCon
 	public void read(BlockState state, CompoundNBT nbt) {
 		super.read(state, nbt);
 		if(nbt.contains("tank"))
-			tank.readFromNBT((CompoundNBT)nbt.getCompound("tank"));
+			tank.readFromNBT(nbt.getCompound("tank"));
 	}
 
 	@Override
@@ -51,7 +50,7 @@ public abstract class TileInventoriedRFConsumerTank extends TileInventoriedRFCon
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return LazyOptional.of(() -> new FluidCapability(this)).cast();
+			return LazyOptional.of(() -> new CapabilityFluidHandler(this)).cast();
 		}
 		return super.getCapability(capability, facing);
 	}
