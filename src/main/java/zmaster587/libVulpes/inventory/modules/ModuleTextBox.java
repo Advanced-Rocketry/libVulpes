@@ -73,7 +73,7 @@ public class ModuleTextBox extends ModuleBase {
 	public void onMouseClicked(GuiModular gui, double x, double y, int button) {
 
 		//Make sure we can focus the textboxes
-		textBox.setFocused2(offsetX < x && offsetY < y && offsetX + textBox.getAdjustedWidth() > x && offsetY + textBox.getHeightRealms() > y);
+		textBox.setFocused2(offsetX < x && offsetY < y && offsetX + textBox.getAdjustedWidth() > x && offsetY + textBox.getHeight() > y);
 
 	}
 
@@ -84,7 +84,7 @@ public class ModuleTextBox extends ModuleBase {
 		super.renderForeground(mat, guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui,
 				font);
 
-		textBox.renderButton(mat, guiOffsetX, guiOffsetY, zLevel);
+		textBox.render(mat, guiOffsetX, guiOffsetY, zLevel);
 	}
 
 	public void setText(String str) {

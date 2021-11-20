@@ -79,7 +79,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	public double getPowerMultiplier() {
-		return LibVulpesConfig.common.powerMult.get();
+		return 1.0d;
 	}
 
 	

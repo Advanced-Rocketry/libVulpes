@@ -15,10 +15,10 @@ import zmaster587.libVulpes.config.LibVulpesConfig;
 import zmaster587.libVulpes.energy.IPower;
 import zmaster587.libVulpes.util.UniversalBattery;
 
-public abstract class TileEntityRFConsumer extends TileEntity implements IPower, IUniversalEnergy, ITickableTileEntity {
+public abstract class TileEntityFEConsumer extends TileEntity implements IPower, IUniversalEnergy, ITickableTileEntity {
 	protected UniversalBattery energy;
 
-	protected TileEntityRFConsumer(TileEntityType<?> type, int energy) {
+	protected TileEntityFEConsumer(TileEntityType<?> type, int energy) {
 		super(type);
 		this.energy = new UniversalBattery(energy);
 	}
@@ -93,7 +93,7 @@ public abstract class TileEntityRFConsumer extends TileEntity implements IPower,
 
 		if(canPerformFunction()) {
 
-			if(hasEnoughEnergy( (int) Math.max(LibVulpesConfig.common.powerMult.get()*getPowerPerOperation(), 1))) {
+			if(hasEnoughEnergy(Math.max(getPowerPerOperation(), 1))) {
 				if(!world.isRemote) this.energy.extractEnergy(getPowerPerOperation(), false);
 				performFunction();
 			}

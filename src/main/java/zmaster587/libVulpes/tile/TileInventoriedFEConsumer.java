@@ -11,11 +11,11 @@ import net.minecraft.util.Direction;
 
 import javax.annotation.Nonnull;
 
-public abstract class TileInventoriedRFConsumer extends TileEntityRFConsumer implements ISidedInventory {
+public abstract class TileInventoriedFEConsumer extends TileEntityFEConsumer implements ISidedInventory {
 
 	protected EmbeddedInventory inventory;
 	
-	protected TileInventoriedRFConsumer(TileEntityType<?> type, int energy,int invSize) {
+	protected TileInventoriedFEConsumer(TileEntityType<?> type, int energy, int invSize) {
 		super(type, energy);
 		inventory = new EmbeddedInventory(invSize);
 	}

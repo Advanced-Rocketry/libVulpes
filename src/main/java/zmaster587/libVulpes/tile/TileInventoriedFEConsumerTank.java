@@ -12,11 +12,12 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public abstract class TileInventoriedRFConsumerTank extends TileInventoriedRFConsumer implements IFluidHandler {
+public abstract class TileInventoriedFEConsumerTank extends TileInventoriedFEConsumer implements IFluidHandler {
 
 	protected FluidTank tank;
+	private final LazyOptional<IFluidHandler> holder = LazyOptional.of(() -> tank);
 
-	protected TileInventoriedRFConsumerTank(TileEntityType<?> type, int energy, int invSize, int tankSize) {
+	protected TileInventoriedFEConsumerTank(TileEntityType<?> type, int energy, int invSize, int tankSize) {
 		super(type, energy,invSize);
 		tank = new FluidTank(tankSize);
 	}
@@ -50,7 +51,7 @@ public abstract class TileInventoriedRFConsumerTank extends TileInventoriedRFCon
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return LazyOptional.of(() -> new CapabilityFluidHandler(this)).cast();
+			return holder.cast();
 		}
 		return super.getCapability(capability, facing);
 	}

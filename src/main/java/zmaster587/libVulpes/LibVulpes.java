@@ -50,6 +50,7 @@ import zmaster587.libVulpes.tile.energy.TileCreativePowerInput;
 import zmaster587.libVulpes.tile.energy.TileForgePowerInput;
 import zmaster587.libVulpes.tile.energy.TileForgePowerOutput;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
+import zmaster587.libVulpes.util.OreGen;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -76,7 +77,7 @@ public class LibVulpes {
 		}
 	};
 
-	public static ItemGroup tabLibVulpesOres = new ItemGroup("advancedRocketryOres") {
+	public static ItemGroup tabLibVulpesOres = new ItemGroup("libvulpesmaterials") {
 
 		@Override
 		public ItemStack createIcon() {
@@ -90,8 +91,7 @@ public class LibVulpes {
 		userModifiableRecipes.put(clazz, fileName);
 	}
 
-	public LibVulpes()
-	{
+	public LibVulpes() {
 		MOD_CONTAINER = ModLoadingContext.get().getActiveContainer();
 		FMLJavaModLoadingContext.get().getModEventBus().register(this);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::init);
@@ -111,21 +111,12 @@ public class LibVulpes {
 		LibVulpesBlocks.blockForgeInputPlug = new BlockMultiMachineBattery(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f), TileForgePowerInput.class, GuiHandler.guiId.MODULAR).setRegistryName("forge_power_input"); 
 		LibVulpesBlocks.blockForgeOutputPlug = new BlockMultiMachineBattery(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f), TileForgePowerOutput.class, GuiHandler.guiId.MODULAR).setRegistryName("forge_power_output");
 		LibVulpesBlocks.blockCoalGenerator = new BlockTile(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f), GuiHandler.guiId.MODULAR).setRegistryName("coal_generator");
-		//LibVulpesBlocks.blockRFBattery = new BlockMultiMachineBattery(Material.ROCK, TilePlugInputRF.class, GuiHandler.guiId.MODULAR).setRegistryName("rfBattery").setCreativeTab(tabMultiblock).setHardness(3f);
-		//LibVulpesBlocks.blockRFOutput = new BlockMultiMachineBattery(Material.ROCK, TilePlugOutputRF.class, GuiHandler.guiId.MODULAR).setRegistryName("rfOutput").setCreativeTab(tabMultiblock).setHardness(3f);
 
 		net.minecraft.block.AbstractBlock.Properties motorProperties = net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(2);
 		LibVulpesBlocks.blockMotor = new BlockMotor(motorProperties, 1f).setRegistryName("motor");
 		LibVulpesBlocks.blockAdvancedMotor = new BlockMotor(motorProperties, 1/1.5f).setRegistryName("advanced_motor");
 		LibVulpesBlocks.blockEnhancedMotor = new BlockMotor(motorProperties, 1/2f).setRegistryName("enhanced_motor");
 		LibVulpesBlocks.blockEliteMotor = new BlockMotor(motorProperties, 1/4f).setRegistryName("elite_motor");
-
-		//if(Loader.isModLoaded("ic2"))
-		//	LibVulpesBlocks.blockIC2Plug = new BlockMultiMachineBattery(Material.ROCK, TilePlugInputIC2.class, GuiHandler.guiId.MODULAR).setRegistryName("forgePowerInput").setCreativeTab(tabMultiblock).setHardness(3f);
-
-		//if(Loader.isModLoaded("gregtech"))
-		//	LibVulpesBlocks.blockGTPlug = new BlockMultiMachineBattery(Material.ROCK, TilePlugInputGregTech.class, GuiHandler.guiId.MODULAR).setRegistryName("gregPowerInput").setCreativeTab(tabMultiblock).setHardness(3f);
-
 
 		//Initialize Items
 		LibVulpesItems.itemLinker = new ItemLinker(new net.minecraft.item.Item.Properties().group(tabMultiblock)).setRegistryName("linker");
@@ -205,8 +196,7 @@ public class LibVulpes {
 	}
 
 	@SubscribeEvent(priority=EventPriority.HIGH)
-	public void registerItems(RegistryEvent.Register<Item> evt)
-	{
+	public void registerItems(RegistryEvent.Register<Item> evt) {
 		//Register Items
 
 		evt.getRegistry().registerAll(LibVulpesItems.itemLinker,
@@ -237,8 +227,7 @@ public class LibVulpes {
 	}
 
 	@SubscribeEvent
-	public void registerContainers(RegistryEvent.Register<ContainerType<?>> evt)
-	{
+	public void registerContainers(RegistryEvent.Register<ContainerType<?>> evt) {
 		LibvulpesGuiRegistry.initContainers(evt);
 	}
 
@@ -249,37 +238,13 @@ public class LibVulpes {
 		proxy.preInitBlocks();
 	}
 
-
-	/*@EventHandler
-    public void registerRecipes(FMLInitializationEvent evt)
-    {
-
-//
-
-//      
-//      //Plugs
-        /*if(Loader.isModLoaded("ic2")) {
-          toRegister.add(new ShapelessOreRecipe(null, new ItemStack(LibVulpesBlocks.blockIC2Plug), LibVulpesBlocks.blockStructureBlock, 
-                  IC2Items.getItem("te","mv_transformer"), LibVulpesItems.itemBattery).setRegistryName(new ResourceLocation("libvulpes", "blockIC2Plug")));
-        }
-        if(Loader.isModLoaded("gregtech")) {
-          toRegister.add(new ShapelessOreRecipe(null, new ItemStack(LibVulpesBlocks.blockGTPlug), LibVulpesBlocks.blockStructureBlock, 
-                  "plateBatteryAlloy","plateBatteryAlloy", LibVulpesItems.itemBattery).setRegistryName(new ResourceLocation("libvulpes", "blockGTPlug")));
-        }* /
-
-//      //GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockRFBattery), new ItemStack(LibVulpesBlocks.blockRFOutput));
-//      //GameRegistry.addShapelessRecipe(new ItemStack(LibVulpesBlocks.blockRFOutput), new ItemStack(LibVulpesBlocks.blockRFBattery));
-    }*/
-
 	@SubscribeEvent(priority=EventPriority.HIGH)
-	public void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> evt)
-	{
+	public void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> evt) {
 		LibVulpesTileEntityTypes.registerTileEntities(evt);
 	}
 
 	@SubscribeEvent(priority=EventPriority.HIGH)
-	public void registerBlocks(RegistryEvent.Register<Block> evt)
-	{
+	public void registerBlocks(RegistryEvent.Register<Block> evt) {
 		IForgeRegistry<Block> r = evt.getRegistry();
 		//Register Blocks
 		r.register(LibVulpesBlocks.blockPhantom);
@@ -298,39 +263,10 @@ public class LibVulpes {
 		r.register(LibVulpesBlocks.blockAdvancedMotor);
 		r.register(LibVulpesBlocks.blockEnhancedMotor);
 		r.register(LibVulpesBlocks.blockEliteMotor);
-		//r.register(LibVulpesBlocks.blockRFBattery.setRegistryName(LibVulpesBlocks.blockRFBattery.getUnlocalizedName()));
-		//r.register(LibVulpesBlocks.blockRFOutput.setRegistryName(LibVulpesBlocks.blockRFOutput.getUnlocalizedName()));
 		r.register(LibVulpesBlocks.blockAdvStructureBlock);
 
 		//populate lists
 		LibVulpesBlocks.motors = new Block[]{ LibVulpesBlocks.blockMotor, LibVulpesBlocks.blockAdvancedMotor, LibVulpesBlocks.blockEnhancedMotor, LibVulpesBlocks.blockEliteMotor };
-
-
-
-
-		//MOD-SPECIFIC ENTRIES --------------------------------------------------------------------------------------------------------------------------
-		//Items dependant on IC2
-		/*if(Loader.isModLoaded("ic2")) {
-            LibVulpesBlocks.blockIC2Plug = new BlockMultiMachineBattery(Material.ROCK ,TilePlugInputIC2.class, GuiHandler.guiId.MODULAR).setRegistryName("IC2Plug").setCreativeTab(tabMultiblock).setHardness(3f);
-            LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockIC2Plug.setRegistryName( LibVulpesBlocks.blockIC2Plug.getUnlocalizedName().substring(5)));
-            GameRegistry.registerTileEntity(TilePlugInputIC2.class, "ARIC2Plug");
-        }
-
-        if(Loader.isModLoaded("gregtech")) {
-            LibVulpesBlocks.blockGTPlug = new BlockMultiMachineBattery(Material.ROCK ,TilePlugInputGregTech.class, GuiHandler.guiId.MODULAR).setRegistryName("GTPlug").setCreativeTab(tabMultiblock).setHardness(3f);
-            LibVulpesBlocks.registerBlock(LibVulpesBlocks.blockGTPlug.setRegistryName( LibVulpesBlocks.blockGTPlug.getUnlocalizedName().substring(5)));
-            GameRegistry.registerTileEntity(TilePlugInputGregTech.class, "ARGTPlug");
-        }
-
-
-        if(FMLCommonHandler.instance().getSide().isClient()) {
-            //Register Block models
-            Item blockItem = Item.getItemFromBlock(LibVulpesBlocks.blockHatch);
-            ModelLoader.setCustomModelResourceLocation(blockItem, 0, new ModelResourceLocation("libvulpes:inputHatch", "inventory"));
-            ModelLoader.setCustomModelResourceLocation(blockItem, 1, new ModelResourceLocation("libvulpes:outputHatch", "inventory"));
-            ModelLoader.setCustomModelResourceLocation(blockItem, 2, new ModelResourceLocation("libvulpes:fluidInputHatch", "inventory"));
-            ModelLoader.setCustomModelResourceLocation(blockItem, 3, new ModelResourceLocation("libvulpes:fluidOutputHatch", "inventory"));
-        }*/
 
 		materialRegistry.registerOres(tabLibVulpesOres);
 
@@ -342,10 +278,8 @@ public class LibVulpes {
 	}
 
 	@SubscribeEvent(priority=EventPriority.HIGH)
-	public void missingMappings(RegistryEvent.MissingMappings<Item> evt)
-	{
-		for(Mapping<Item> mapping : evt.getAllMappings())
-		{
+	public void missingMappings(RegistryEvent.MissingMappings<Item> evt) {
+		for(Mapping<Item> mapping : evt.getAllMappings()) {
 			if (mapping.key.compareTo(new ResourceLocation("libvulpes:productcrystal")) == 0)
 				mapping.remap(MaterialRegistry.getItemStackFromMaterialAndType("Dilithium", AllowedProducts.getProductByName("GEM")).getItem());
 		}
@@ -363,17 +297,10 @@ public class LibVulpes {
 	@SubscribeEvent(priority=EventPriority.HIGH)
 	public void postInit(FMLLoadCompleteEvent event) {
 		MinecraftForge.EVENT_BUS.register(new BucketHandler());
-
-		//Init TileMultiblock
-		//Item output
-
-		//User Recipes
-
-
+		OreGen.injectOreGen();
 	}
 
-	private void registerBlockTypes()
-	{
+	private void registerBlockTypes() {
 		List<BlockMeta> list = new LinkedList<>();
 		list.add(new BlockMeta(LibVulpesBlocks.blockItemOutputHatch.getDefaultState(), true));
 		list.add(new BlockMeta(LibVulpesBlocks.blockItemOutputHatch.getDefaultState(), true));
@@ -414,10 +341,5 @@ public class LibVulpes {
 		list.add(new BlockMeta(LibVulpesBlocks.blockFluidOutputHatch.getDefaultState(), true));
 		TileMultiBlock.addMapping('l', list);
 	}
-	
-	/*@SubscribeEvent
-	public void tick(TickEvent.ServerTickEvent event) {
-		time++;
-	}*/
 }
 

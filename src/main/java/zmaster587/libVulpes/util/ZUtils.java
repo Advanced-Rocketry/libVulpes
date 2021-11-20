@@ -1,13 +1,14 @@
 package zmaster587.libVulpes.util;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.BlockTags;
@@ -27,12 +28,14 @@ import net.minecraft.world.DimensionType;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraftforge.registries.ForgeRegistries;
+import zmaster587.libVulpes.config.LibVulpesConfig;
 
 import javax.annotation.Nonnull;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
 
 public class ZUtils {
 
@@ -70,8 +73,7 @@ public class ZUtils {
 		return (int)(( (r/total) ) | ( (g/total) << 8 ) | ( ( b/total ) << 16 ) );
 	}
 
-	public static boolean isBlockTag(Block block, ResourceLocation tag)
-	{
+	public static boolean isBlockTag(Block block, ResourceLocation tag) {
 		return BlockTags.getCollection().getOwningTags(block).contains(tag);
 	}
 	
@@ -148,7 +150,6 @@ public class ZUtils {
 	public static AxisAlignedBB convertLocalBBToGlobal(AxisAlignedBB local, AxisAlignedBB global, Entity e, double angle) {
 		AxisAlignedBB rotatedLocal = rotateAABB(local, angle);
 
-
 		return new AxisAlignedBB(e.getPosX() + rotatedLocal.minX, e.getPosY() + rotatedLocal.minY, e.getPosZ() + rotatedLocal.minZ, rotatedLocal.maxX + e.getPosX(), rotatedLocal.maxY + e.getPosY(), rotatedLocal.maxZ + e.getPosZ());
 	}
 
@@ -211,8 +212,7 @@ public class ZUtils {
 	}
 
 	public static boolean doesInvHaveRoom(@Nonnull ItemStack item, IInventory inv) {
-		for(int i = 0; i < inv.getSizeInventory(); i++)
-		{
+		for(int i = 0; i < inv.getSizeInventory(); i++) {
 			if(inv.getStackInSlot(i).isEmpty() || (item.isItemEqual(inv.getStackInSlot(i)) && inv.getStackInSlot(i).getCount() < inv.getInventoryStackLimit()))
 				return true;
 		}
@@ -222,8 +222,7 @@ public class ZUtils {
 
 	public static boolean hasFullStack(IInventory inv) {
 
-		for(int i = 0; i < inv.getSizeInventory(); i++)
-		{
+		for(int i = 0; i < inv.getSizeInventory(); i++) {
 			if(!inv.getStackInSlot(i).isEmpty() && inv.getStackInSlot(i).getMaxStackSize() == inv.getStackInSlot(i).getCount())
 				return true;
 		}
@@ -234,8 +233,7 @@ public class ZUtils {
 	public static int numEmptySlots(IInventory inv) {
 		int num = 0;
 
-		for(int i = 0; i < inv.getSizeInventory(); i++)
-		{
+		for(int i = 0; i < inv.getSizeInventory(); i++) {
 			if(inv.getStackInSlot(i).isEmpty())
 				num++;
 		}
@@ -246,8 +244,7 @@ public class ZUtils {
 	public static int numFilledSlots(IInventory inv) {
 		int num = 0;
 
-		for(int i = 0; i < inv.getSizeInventory(); i++)
-		{
+		for(int i = 0; i < inv.getSizeInventory(); i++) {
 			if(!inv.getStackInSlot(i).isEmpty() && inv.getStackInSlot(i).getCount() == inv.getStackInSlot(i).getMaxStackSize())
 				num++;
 		}
@@ -374,32 +371,21 @@ public class ZUtils {
 		return dist;
 	}
 
-	public static boolean areOresSameTypeOreDict(ItemStack stack1, ItemStack stack2) {
-
+	public static boolean areStacksInSameTags(ItemStack stack1, ItemStack stack2) {
 		Collection<ResourceLocation> item1s = ItemTags.getCollection().getOwningTags(stack1.getItem());
 		Collection<ResourceLocation> item2s = ItemTags.getCollection().getOwningTags(stack2.getItem());
 
 		return item1s.stream().anyMatch(item2s::contains);
 	}
 
-	// Dimension stuff
-
-	// public static final RegistryKey<Registry<DimensionType>> DIMENSION_TYPE_KEY = func_239741_a_("dimension_type");
-	// public static final RegistryKey<Registry<World>> WORLD_KEY = func_239741_a_("dimension");
-	// public static final RegistryKey<Registry<Dimension>> field_239700_af_ = func_239741_a_("dimension");
-
-	public static ResourceLocation getDimensionIdentifier(World world)
-	{
+	public static ResourceLocation getDimensionIdentifier(World world) {
 		if(world == null)
-			return null;
-		if(world.getDimensionKey() == null)
 			return null;
 		return world.getDimensionKey().getLocation();
 
 	}
 
-	public static Optional<DimensionType> getDimensionFromIdentifier(ResourceLocation location)
-	{
+	public static Optional<DimensionType> getDimensionFromIdentifier(ResourceLocation location) {
 		return DynamicRegistries.func_239770_b_().func_230520_a_().getOptional(location);
 	}
 
@@ -408,39 +394,29 @@ public class ZUtils {
 		return world.getDimensionType();
 	}
 
-	public static ServerWorld getWorld(ResourceLocation worldLoc)
-	{
+	public static ServerWorld getWorld(ResourceLocation worldLoc) {
 		RegistryKey<World> registrykey = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, worldLoc);
 
 		return ServerLifecycleHooks.getCurrentServer().getWorld(registrykey);
 	}
 
-	public static boolean isWorldLoaded(ResourceLocation worldLoc)
-	{
-		
+	public static boolean isWorldLoaded(ResourceLocation worldLoc) {
 		// We're on the client, just assume it's there, server will sort it out
 		if(ServerLifecycleHooks.getCurrentServer() == null)
 			return true;
 		
 		RegistryKey<World> registrykey = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, worldLoc);
 
-		return registrykey != null && ServerLifecycleHooks.getCurrentServer().getWorld(registrykey) != null;
+		return ServerLifecycleHooks.getCurrentServer().getWorld(registrykey) != null;
 	}
 
-	public static boolean isWorldRegistered(ResourceLocation worldLoc)
-	{
+	public static boolean isWorldRegistered(ResourceLocation worldLoc) {
 		// They're now one in the same
 		return isWorldLoaded(worldLoc);
 	}
 
 	public static void unloadWorld(ResourceLocation dimId) {
-		// I don't think worlds can be unloaded anymore
-
-		//minecraftServer.worlds
-
-
-		if(isWorldLoaded(dimId))
-		{
+		if(isWorldLoaded(dimId)) {
 
 			ServerWorld world = getWorld(dimId);
 			try {
@@ -454,14 +430,12 @@ public class ZUtils {
 		}
 	}
 
-	public static boolean unregisterDimension(ResourceLocation worldLoc)
-	{
+	public static boolean unregisterDimension(ResourceLocation worldLoc) {
 		// I don't think you can
 		return false;
 	}
 
-	public static boolean registerDimension(ResourceLocation worldLoc, DimensionType type, Dimension dim)
-	{
+	public static boolean registerDimension(ResourceLocation worldLoc, DimensionType type, Dimension dim) {
 
 		if(getDimensionFromIdentifier(worldLoc).isPresent())
 			return false;
@@ -470,24 +444,23 @@ public class ZUtils {
 		MutableRegistry<DimensionType> mutableregistry = DynamicRegistries.func_239770_b_().getRegistry(Registry.DIMENSION_TYPE_KEY);
 		mutableregistry.register(dimRegistryKey, type, Lifecycle.stable());
 
-		//RegistryKey<Dimension> dimension = RegistryKey.getOrCreateKey(Registry.field_239700_af_, worldLoc);
-		//SimpleRegistry<Dimension> simpleregistry = ServerLifecycleHooks.getCurrentServer().func_240793_aU_().func_230418_z_().func_236224_e_();
-		//simpleregistry.register(dimension, dim, Lifecycle.stable());
+		/*
+		RegistryKey<Dimension> dimension = RegistryKey.getOrCreateKey(Registry.DIMENSION_KEY, worldLoc);
+		MutableRegistry<Dimension> simpleregistry = ServerLifecycleHooks.getCurrentServer().getDynamicRegistries().getRegistry(Registry.DIMENSION_KEY);
+		simpleregistry.register(dimension, dim, Lifecycle.stable());
 		
 		
 		
 		// register the world
-		/*RegistryKey<World> registrykey = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, worldLoc);
-		
-		if(EffectiveSide.get().isClient())
-			DistExecutor.runWhenOn(Dist.CLIENT,() -> () -> 
+		RegistryKey<World> registrykey = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, worldLoc);
+		if(EffectiveSide.get().isClient()) {
+			DistExecutor.runWhenOn(Dist.CLIENT, () -> () ->
 			{
-				if(Minecraft.getInstance().player ==null) return;
-				
-				Minecraft.getInstance().player.connection.func_239164_m_().add(registrykey);
+				if (Minecraft.getInstance().player == null) return;
+
+				Minecraft.getInstance().player.connection.getDimensionKeys().add(registrykey);
 			});
-		else
-		{
+		} else {
 			new ServerWorld(p_i241885_1_, p_i241885_2_, p_i241885_3_, p_i241885_4_, p_i241885_5_, p_i241885_6_, p_i241885_7_, p_i241885_8_, p_i241885_9_, p_i241885_10_, p_i241885_12_, p_i241885_13_)
 			ServerLifecycleHooks.getCurrentServer().forgeGetWorldMap().put(registrykey,getWorld(worldLoc));
 		}*/
@@ -499,20 +472,65 @@ public class ZUtils {
 		return getDimensionType(world).getLogicalHeight();
 	}
 
-	public static void initDimension(ResourceLocation dimid) {
-		/*if(isWorldRegistered(dimid))
-		{
-			RegistryKey<World> registrykey = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, dimid);
-
-			ServerLifecycleHooks.getCurrentServer().forgeGetWorldMap().put(registrykey,getWorld(dimid));
-		}*/
-	}
-
-	public static Direction rotateAround(Direction a, Direction b)
-	{
+	public static Direction rotateAround(Direction a, Direction b) {
 		Vector3f newdir = new Vector3f(a.getDirectionVec().getX(), a.getDirectionVec().getY(), a.getDirectionVec().getZ());
 		newdir.transform(b.getRotation());
 
 		return Direction.getFacingFromVector(newdir.getX(), newdir.getY(), newdir.getZ());
+	}
+
+	public static void initDimension(ResourceLocation dimid) {
+		/*
+		if(isWorldRegistered(dimid)) {
+			RegistryKey<World> registrykey = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, dimid);
+			ServerLifecycleHooks.getCurrentServer().forgeGetWorldMap().put(registrykey,getWorld(dimid));
+		}
+		*/
+	}
+
+	public static List<ItemStack> readListFromString(String input) {
+		ArrayList<ItemStack> output = new ArrayList<>();
+
+		String[] entries = input.split(",");
+		for (String entry : entries) {
+
+			String[] parts = entry.split(";");
+			ResourceLocation tagname = ResourceLocation.tryCreate(parts[0].trim());
+
+			if (ItemTags.getAllTags().contains(tagname)) {
+				List<Item> items = ItemTags.getCollection().getTagByID(tagname).getAllElements();
+				ItemStack item = items.get(0).getDefaultInstance();
+				if(parts.length > 1) {
+					try {
+						item.setCount(Integer.parseInt(parts[1]));
+					} catch (NumberFormatException ignored) {}
+				}
+				output.add(item);
+			} else if (ForgeRegistries.ITEMS.containsKey(tagname)) {
+				int quantity = 1;
+				if(parts.length > 1) {
+					try {
+						quantity = Integer.parseInt(parts[1]);
+					} catch (NumberFormatException ignored) {}
+				}
+				output.add(new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(tagname)),quantity));
+			} else {
+				LibVulpesConfig.logger.warn(parts[0] + " is not a valid tag name or item ID");
+			}
+		}
+
+		return output;
+	}
+
+	public static LinkedList<Block> readBlockListFromStringList(List<? extends String> input) {
+		LinkedList<Block> output = new LinkedList<>();
+		for(String str : input) {
+			Block block = ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryCreate(str));
+			if(block == null)
+				LibVulpesConfig.logger.warn("'" + str + "' is not a valid Block");
+			else
+				output.add(block);
+		}
+		return output;
 	}
 }

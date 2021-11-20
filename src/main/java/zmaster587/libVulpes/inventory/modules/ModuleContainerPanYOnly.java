@@ -300,10 +300,10 @@ public class ModuleContainerPanYOnly extends ModuleBase {
 		}
 
 		for(Button button : buttonList)
-			button.renderButton(mat, mouseX, mouseY, 0);
+			button.render(mat, mouseX, mouseY, 0);
 
 		for(Button button : staticButtonList)
-			button.renderButton(mat, mouseX, mouseY, 0);
+			button.render(mat, mouseX, mouseY, 0);
 
 		for(ModuleBase module : moduleList) {
 			module.renderBackground(gui, mat, x, y, mouseX, mouseY, font);

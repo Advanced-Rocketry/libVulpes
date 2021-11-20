@@ -343,7 +343,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			((ModuleButton)btns.get(i)).setAdditionalData(i);
 		}
 
-		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<>(), TextureResources.starryBG, 160, 100, 0, 500);
+		ModuleContainerPanYOnly panningContainer = new ModuleContainerPanYOnly(5, 20, btns, new LinkedList<>(), TextureResources.starryBG, 160, 100, 0, 500);
 		modules.add(panningContainer);
 		//modules.addAll(btns);
 		return modules;
