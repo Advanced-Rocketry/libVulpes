@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#i#",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "tag": "forge:ingots/iridium"
+    },
+    "i": {
+      "item": "libvulpes:ingotiridium"
+    }
+  },
+  "result": {
+    "item": "libvulpes:blockiridium"
+  }
+}

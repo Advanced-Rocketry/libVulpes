@@ -25,31 +25,27 @@ import javax.annotation.Nonnull;
 
 public class RecipesMachine {
 
-    public static class ChanceItemStack
-    {
+    public static class ChanceItemStack {
     	public ItemStack stack;
     	public float chance;
     	
-    	public ChanceItemStack(@Nonnull ItemStack stack, float chance)
-    	{
+    	public ChanceItemStack(@Nonnull ItemStack stack, float chance) {
     		this.stack = stack;
     		this.chance = chance;
     	}
     }
     
-    public static class ChanceFluidStack
-    {
+    public static class ChanceFluidStack {
     	public FluidStack stack;
     	public float chance;
-    	public ChanceFluidStack(FluidStack stack, float chance)
-    	{
+    	public ChanceFluidStack(FluidStack stack, float chance) {
     		this.stack = stack;
     		this.chance = chance;
     	}
 
     }
     
-	public static class Recipe implements IRecipe {
+	public static class LibVulpesRecipe implements IRecipe {
 
 		private List<List<ItemStack>> input;
 		private Map<Integer, ResourceLocation> inputOreDict;
@@ -61,14 +57,14 @@ public class RecipesMachine {
 		IRecipeSerializer<?> serializer;
 		ResourceLocation name;
 
-		public Recipe() {
+		public LibVulpesRecipe() {
 			this.output = new LinkedList<>();
 			this.input = new LinkedList<>();
 			this.fluidInput = new LinkedList<>();
 			this.fluidOutput = new LinkedList<>();
 		}
 
-		public Recipe(IRecipeSerializer<?> serializer, ResourceLocation name, List<ChanceItemStack> output, List<List<ItemStack>> input, int completionTime, int powerReq, Map<Integer, ResourceLocation> oreDict) {
+		public LibVulpesRecipe(IRecipeSerializer<?> serializer, ResourceLocation name, List<ChanceItemStack> output, List<List<ItemStack>> input, int completionTime, int powerReq, Map<Integer, ResourceLocation> oreDict) {
 			this.output = new LinkedList<>();
 			this.output.addAll(output);
 
@@ -89,7 +85,7 @@ public class RecipesMachine {
 			this.name = name;
 		}
 
-		public Recipe(IRecipeSerializer<?> serializer, ResourceLocation name, List<ChanceItemStack> output, List<List<ItemStack>> input, List<ChanceFluidStack> fluidOutput, List<FluidStack> fluidInput, int completionTime, int powerReq, Map<Integer, ResourceLocation> oreDict) {
+		public LibVulpesRecipe(IRecipeSerializer<?> serializer, ResourceLocation name, List<ChanceItemStack> output, List<List<ItemStack>> input, List<ChanceFluidStack> fluidOutput, List<FluidStack> fluidInput, int completionTime, int powerReq, Map<Integer, ResourceLocation> oreDict) {
 			this(serializer, name, output, input, completionTime, powerReq, oreDict);
 
 			this.fluidInput.addAll(fluidInput);
@@ -152,16 +148,14 @@ public class RecipesMachine {
 
 			int maxOutputSize = getRequiredEmptyOutputs();
 			
-			if(maxOutputSize > 0)
-			{
+			if(maxOutputSize > 0) {
 				float maxChance = 0;
 				Random rand = new Random(System.currentTimeMillis());
 				for(ChanceItemStack i : output) {
 					maxChance += i.chance;
 				}
 				
-				for(int i = 0; i < maxOutputSize; i++)
-				{
+				for(int i = 0; i < maxOutputSize; i++) {
 					float currentHit = rand.nextFloat()*maxChance;
 					float currChance = 0;
 					ItemStack nextStack = output.get(0).stack;
@@ -175,16 +169,13 @@ public class RecipesMachine {
 						nextStack = currStack.stack;
 					}
 				}
-			}
-			else
-			{
+			} else {
 				for(ChanceItemStack i : output) {
 					stack.add(i.stack.copy());
 				}
 			}
 
-			if(stack.contains(null))
-			{
+			if(stack.contains(null)) {
 				while(stack.remove(null));
 				
 				LibVulpes.logger.warn("Recipe " + this.getId().toString() + " has null item output, this should NOT happen!!");
@@ -210,8 +201,8 @@ public class RecipesMachine {
 		
 		@Override
 		public boolean equals(Object obj) {
-			if(obj instanceof Recipe) {
-				Recipe otherRecipe = (Recipe)obj;
+			if(obj instanceof LibVulpesRecipe) {
+				LibVulpesRecipe otherRecipe = (LibVulpesRecipe)obj;
 				if(input.size() != otherRecipe.input.size() || fluidInput.size() != otherRecipe.fluidInput.size())
 					return false;
 
@@ -269,7 +260,7 @@ public class RecipesMachine {
 
 		@Override
 		public IRecipeType<?> getType() {
-			return RecipeMachineFactory.machiningType;
+			return RecipeMachineFactory.MACHINING_TYPE;
 		}
 	}
 
@@ -350,14 +341,12 @@ public class RecipesMachine {
 					outputFluidStacks.add(new ChanceFluidStack((FluidStack)outputObject, 0f));
 			}
 
-			Recipe recipe;
+			LibVulpesRecipe recipe;
 			if(inputFluidStacks.isEmpty() && outputFluidStacks.isEmpty())
-				recipe = new Recipe(serializer, name, outputItem, stack, timeRequired, power, oreDict);
+				recipe = new LibVulpesRecipe(serializer, name, outputItem, stack, timeRequired, power, oreDict);
 			else
-				recipe = new Recipe(serializer, name, outputItem, stack, outputFluidStacks, inputFluidStacks, timeRequired, power, oreDict);
+				recipe = new LibVulpesRecipe(serializer, name, outputItem, stack, outputFluidStacks, inputFluidStacks, timeRequired, power, oreDict);
 
-			if(recipes.contains(recipe)) 
-				LibVulpes.logger.info("Overwriting recipe " + recipes.remove(recipe));
 			recipes.add(recipe);
 
 		} catch(ClassCastException e) {
@@ -371,9 +360,7 @@ public class RecipesMachine {
 			LibVulpes.logger.warn("Cannot add recipe!");
 			LibVulpes.logger.warn(message.toString());
 
-		}
-		catch(NullPointerException e)
-		{
+		} catch(NullPointerException e) {
 			//Custom handling to make sure it logs and can be suppressed by user
 			String message = e.getLocalizedMessage();
 

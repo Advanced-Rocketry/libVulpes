@@ -35,13 +35,6 @@ public class OreGen {
 		    .range(LibVulpesConfig.getCurrentConfig().copperMaxHeight.get()).square()
 		    .count(LibVulpesConfig.getCurrentConfig().copperMinHeight.get())
 		    .chance(LibVulpesConfig.getCurrentConfig().copperPerChunk.get()));
-	public static final ConfiguredFeature<?, ?> TIN_ORE = register("ore_tin",
-		Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD,
-			((BlockItem)MaterialRegistry.getMaterialFromName("tin").getProduct(AllowedProducts.getProductByName("ORE")).getItem()).getBlock().getDefaultState(),
-			LibVulpesConfig.getCurrentConfig().tinClumpSize.get()))
-			.range(LibVulpesConfig.getCurrentConfig().tinMaxHeight.get()).square()
-			.count(LibVulpesConfig.getCurrentConfig().tinMinHeight.get())
-			.chance(LibVulpesConfig.getCurrentConfig().tinPerChunk.get()));
 	public static final ConfiguredFeature<?, ?> RUTILE_ORE = register("ore_rutile",
 		Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD,
 			((BlockItem)MaterialRegistry.getMaterialFromName("rutile").getProduct(AllowedProducts.getProductByName("ORE")).getItem()).getBlock().getDefaultState(),
@@ -78,8 +71,6 @@ public class OreGen {
 		ForgeRegistries.BIOMES.iterator().forEachRemaining((biome) -> {
 			if(LibVulpesConfig.getCurrentConfig().generateCopper.get())
 				getOreFeatures(biome).add(() -> COPPER_ORE);
-			if(LibVulpesConfig.getCurrentConfig().generateTin.get())
-				getOreFeatures(biome).add(() -> TIN_ORE);
 			if(LibVulpesConfig.getCurrentConfig().generateRutile.get())
 				getOreFeatures(biome).add(() -> RUTILE_ORE);
 			if(LibVulpesConfig.getCurrentConfig().generateAluminum.get())

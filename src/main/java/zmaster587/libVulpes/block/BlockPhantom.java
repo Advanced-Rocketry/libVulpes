@@ -44,8 +44,7 @@ public class BlockPhantom extends Block {
 	}
 	
 	@Override
-	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
-			PlayerEntity player) {
+	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
 		TileEntity tile = world.getTileEntity(pos);
 		
 		if(tile instanceof TilePlaceholder && ((TilePlaceholder) tile).getReplacedState() != null) {

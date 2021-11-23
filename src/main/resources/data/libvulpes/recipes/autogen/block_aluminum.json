@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#i#",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "tag": "forge:ingots/aluminum"
+    },
+    "i": {
+      "item": "libvulpes:ingotaluminum"
+    }
+  },
+  "result": {
+    "item": "libvulpes:blockaluminum"
+  }
+}

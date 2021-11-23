@@ -17,7 +17,6 @@ public class LibVulpesConfig {
 
 	private final static String CATEGORY_ORE = "ore_generation";
 	private final static String CATEGORY_COPPER = "copper";
-	private final static String CATEGORY_TIN = "tin";
 	private final static String CATEGORY_DILITHIUM = "dilithium";
 	private final static String CATEGORY_ALUMINUM = "aluminum";
 	private final static String CATEGORY_RUTILE = "rutile";
@@ -57,14 +56,6 @@ public class LibVulpesConfig {
 		lvConfig.copperPerChunk = builder.define("chanceCopper", 10);
 		lvConfig.copperMinHeight = builder.define("minHeightCopper", 40);
 		lvConfig.copperMaxHeight = builder.define("maxHeightCopper", 120);
-		builder.pop();
-
-		builder.push(CATEGORY_TIN);
-		lvConfig.generateTin = builder.define("generateTin", true);
-		lvConfig.tinClumpSize = builder.define("sizeTin", 6);
-		lvConfig.tinPerChunk = builder.define("chanceTin", 10);
-		lvConfig.tinMinHeight = builder.define("minHeightTin", 20);
-		lvConfig.tinMaxHeight = builder.define("maxHeightTin", 120);
 		builder.pop();
 
 		builder.push(CATEGORY_DILITHIUM);

@@ -50,7 +50,7 @@ public class AllowedProducts {
 	NUGGET,
 	COIL(true, AdvancedRocketryBlocks.coils),
 	PLATE,
-	STICK,
+	ROD,
 	BLOCK(true, LibVulpesBlocks.blockMetal),
 	ORE(true, LibVulpesBlocks.blockOre),
 	FAN,
@@ -86,7 +86,7 @@ public class AllowedProducts {
 	}
 	
 	public String getName() {
-		return this.name.equalsIgnoreCase("stick") ? "rod" : this.name;
+		return this.name;
 	}
 
 	/**

@@ -31,7 +31,6 @@ public class RotatableBlock extends Block {
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-
 		world.setBlockState(pos, state.with(FACING, placer.getHorizontalFacing().getOpposite()), 2);
 	}
 

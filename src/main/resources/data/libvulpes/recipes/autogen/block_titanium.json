@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#i#",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "tag": "forge:ingots/titanium"
+    },
+    "i": {
+      "item": "libvulpes:ingottitanium"
+    }
+  },
+  "result": {
+    "item": "libvulpes:blocktitanium"
+  }
+}

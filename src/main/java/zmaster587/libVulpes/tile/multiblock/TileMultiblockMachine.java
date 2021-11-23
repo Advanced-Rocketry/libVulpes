@@ -303,7 +303,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 		invCheckFlag = true;
 		int reservedSpotSize = 0;
-		if(recipe instanceof RecipesMachine.Recipe)
+		if(recipe instanceof RecipesMachine.LibVulpesRecipe)
 			reservedSpotSize = recipe.getRequiredEmptyOutputs();
 		
 		List<ItemStack> outputItems = getItemOutputs(recipe);

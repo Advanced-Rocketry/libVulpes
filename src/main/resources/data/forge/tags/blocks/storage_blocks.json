@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [    "libvulpes:blockcopper",
-    "libvulpes:blocktin",
     "libvulpes:blocksteel",
     "libvulpes:blocktitanium",
     "libvulpes:blockaluminum",

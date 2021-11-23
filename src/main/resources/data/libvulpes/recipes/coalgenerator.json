@@ -1,23 +1,18 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	"a",
-	"b"
+    "pattern": [
+		"a",
+		"b"
     ],
-    "key":
-    {
-        "a":
-        {
-            "item": "libvulpes:smallbattery"
+    "key": {
+        "a": {
+            "item": "libvulpes:battery"
         },
-	"b":
-        {
+		"b": {
             "item": "minecraft:furnace"
         }
     },
-    "result":
-    {
+    "result": {
         "item": "libvulpes:coal_generator",
         "count": 1
     }

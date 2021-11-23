@@ -13,21 +13,20 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.SmithingRecipe;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine.ChanceFluidStack;
 import zmaster587.libVulpes.recipe.RecipesMachine.ChanceItemStack;
 
 public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<IRecipe> {
 
-	public static IRecipeType<SmithingRecipe> machiningType = IRecipeType.register("machining");
-	
-	
+	public static IRecipeType<RecipesMachine.LibVulpesRecipe> MACHINING_TYPE = register(new ResourceLocation(LibVulpes.MODID, "machining"));
 
 	@Override
 	public IRecipe read(ResourceLocation context, PacketBuffer buffer) {
@@ -83,7 +82,7 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		timeTaken = buffer.readInt();
 		maxOutput = buffer.readInt();
 		
-		RecipesMachine.Recipe recipe = new RecipesMachine.Recipe(this, context, outputs, inputs, outputFluids, inputFluids, timeTaken, energy, new HashMap<>());
+		RecipesMachine.LibVulpesRecipe recipe = new RecipesMachine.LibVulpesRecipe(this, context, outputs, inputs, outputFluids, inputFluids, timeTaken, energy, new HashMap<>());
 		
 		if(maxOutput > 0)
 			recipe.setMaxOutputSize(maxOutput);
@@ -99,35 +98,29 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		
 		// Write count
 		buffer.writeInt(recipe.getPossibleIngredients().size());
-		for(List<ItemStack> ingredientList : recipe.getPossibleIngredients())
-		{
+		for(List<ItemStack> ingredientList : recipe.getPossibleIngredients()) {
 			// Write subingredient count
 			buffer.writeInt(ingredientList.size());
-			
-			for(ItemStack ingredient : ingredientList)
-			{
+			for(ItemStack ingredient : ingredientList) {
 				buffer.writeItemStack(ingredient);
 			}
 		}
 		
 		// write fluid input count
 		buffer.writeInt(recipe.getFluidIngredients().size());
-		for(FluidStack fluid : recipe.getFluidIngredients() )
-		{
+		for(FluidStack fluid : recipe.getFluidIngredients() ) {
 			buffer.writeFluidStack(fluid);
 		}
 		
 		// write item output
 		buffer.writeInt(recipe.getOutput().size());
-		for(ChanceItemStack product : recipe._getRawOutput())
-		{
+		for(ChanceItemStack product : recipe._getRawOutput()) {
 			buffer.writeItemStack(product.stack);
 			buffer.writeFloat(product.chance);
 		}
 		
 		buffer.writeInt(recipe.getFluidOutputs().size());
-		for(ChanceFluidStack fluid : recipe._getRawFluidOutput() )
-		{
+		for(ChanceFluidStack fluid : recipe._getRawFluidOutput() ) {
 			buffer.writeFluidStack(fluid.stack);
 			buffer.writeFloat(fluid.chance);
 		}
@@ -162,22 +155,17 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 			if(maxOutputJson != null)
 				maxOutput = maxOutputJson.getAsInt();
 			
-			if(itemResults != null)
-			{
-				if (itemResults.isJsonArray())
-				{
-					for(JsonElement element : itemResults.getAsJsonArray())
-					{
+			if(itemResults != null) {
+				if (itemResults.isJsonArray()) {
+					for(JsonElement element : itemResults.getAsJsonArray()) {
 						outputs.addAll(getFirstIngredient(context, element));
 					}
-				}
-				else
+				} else
 					outputs = getFirstIngredient(context, itemResults);
 			}
 			
 			JsonElement fluidIngredientElement = json.get("fluidingredients");
-			if(fluidIngredientElement != null)
-			{
+			if(fluidIngredientElement != null) {
 				for(ChanceFluidStack stack : getFluidStacks(context, fluidIngredientElement))
 					inputFluids.add(stack.stack);
 			}
@@ -188,17 +176,13 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 			
 			timeTaken = json.get("time").getAsInt();
 			energy = json.get("energy").getAsInt();
-		}
-		catch(NullPointerException e)
-		{
+		} catch(NullPointerException e) {
 			throw new JsonParseException("Missing parameters");
-		}
-		catch(InvalidRecipeException e)
-		{
+		} catch(InvalidRecipeException e) {
 			throw new JsonParseException(e.getMessage());
 		}
 
-		RecipesMachine.Recipe recipe = new RecipesMachine.Recipe(this, context, outputs, inputs, outputFluids, inputFluids, timeTaken, energy, new HashMap<>());
+		RecipesMachine.LibVulpesRecipe recipe = new RecipesMachine.LibVulpesRecipe(this, context, outputs, inputs, outputFluids, inputFluids, timeTaken, energy, new HashMap<>());
 		
 		if(maxOutput > 0)
 			recipe.setMaxOutputSize(maxOutput);
@@ -211,26 +195,21 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 	}
 	
 	public abstract Class getMachine();
-	
-	public List<ChanceFluidStack> getFluidStacks(ResourceLocation context, JsonElement json) throws InvalidRecipeException
-	{
-		
+	public List<ChanceFluidStack> getFluidStacks(ResourceLocation context, JsonElement json) throws InvalidRecipeException {
 		if(!json.isJsonArray())
 			return null;
 		
 		List<ChanceFluidStack> fluidstacks= new LinkedList<>();
 				
 		JsonArray ingredientListJSON =  json.getAsJsonArray();
-		for(JsonElement ingredient : ingredientListJSON)
-		{
+		for(JsonElement ingredient : ingredientListJSON) {
 			fluidstacks.add(parseFluid(context, ingredient));
 		}
 		
 		return fluidstacks;
 	}
 	
-	public ChanceFluidStack parseFluid(ResourceLocation context, JsonElement json) throws InvalidRecipeException
-	{
+	public ChanceFluidStack parseFluid(ResourceLocation context, JsonElement json) throws InvalidRecipeException {
 		String fluidname = json.getAsJsonObject().get("fluid").getAsString();
 		int size = json.getAsJsonObject().get("amount").getAsInt();
 		JsonElement chanceElem = json.getAsJsonObject().get("chance");
@@ -246,19 +225,16 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		return new ChanceFluidStack(new FluidStack(fluid,size), chance);
 	}
 	
-	List<List<ItemStack>> getIngredientsFromArray(ResourceLocation context, JsonElement json)
-	{
+	List<List<ItemStack>> getIngredientsFromArray(ResourceLocation context, JsonElement json) {
 		if(!json.isJsonArray())
 			//Handle error
 			return null;
 		
 		JsonArray ingredientListJSON =  json.getAsJsonArray();
 		List<List<ItemStack>> inputs = new LinkedList<>();
-		for(JsonElement ingredient : ingredientListJSON)
-		{
+		for(JsonElement ingredient : ingredientListJSON) {
 			List<ItemStack> newList = new LinkedList<>();
-			for( ChanceItemStack stack3 : getIngredients(context, ingredient) )
-			{
+			for( ChanceItemStack stack3 : getIngredients(context, ingredient) ) {
 				newList.add(stack3.stack);
 			}
 			inputs.add(newList);
@@ -267,11 +243,9 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		return inputs;
 	}
 	
-	List<ChanceItemStack> getIngredients(ResourceLocation context, JsonElement json)
-	{
+	List<ChanceItemStack> getIngredients(ResourceLocation context, JsonElement json) {
 		List<ChanceItemStack> stacks = new LinkedList<>();
-		for(ItemStack stack : CraftingHelper.getIngredient(json).getMatchingStacks())
-		{
+		for(ItemStack stack : CraftingHelper.getIngredient(json).getMatchingStacks()) {
 			int count = stack.getCount();
 			int data = stack.getDamage();
 			float chance = 0f;
@@ -280,14 +254,12 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 			JsonElement dataElem = json.getAsJsonObject().get("data");
 			JsonElement chanceElem = json.getAsJsonObject().get("chance");
 			
-			if(countElem != null)
-			{
+			if(countElem != null) {
 				count = countElem.getAsInt();
 				stack2.setCount(count);
 			}
 			
-			if(dataElem != null)
-			{
+			if(dataElem != null) {
 				data = dataElem.getAsInt();
 				stack2.setDamage(data);
 			}
@@ -302,11 +274,9 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		return stacks;
 	}
 
-	List<ChanceItemStack> getFirstIngredient(ResourceLocation context, JsonElement json)
-	{
+	List<ChanceItemStack> getFirstIngredient(ResourceLocation context, JsonElement json) {
 		List<ChanceItemStack> stacks = getIngredients(context, json);
-		if(stacks.size() > 1)
-		{
+		if(stacks.size() > 1) {
 			ChanceItemStack stack  = stacks.get(0);
 			stacks = new LinkedList<>();
 			stacks.add(stack);
@@ -316,11 +286,19 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		return stacks;
 	}
 	
-	public static class InvalidRecipeException extends Exception
-	{
+	public static class InvalidRecipeException extends Exception {
 		public InvalidRecipeException(String reason)
 		{
 			super(reason);
 		}
+	}
+
+	private static <T extends IRecipe> IRecipeType<T> register(ResourceLocation path) {
+		return Registry.register(Registry.RECIPE_TYPE, path, new IRecipeType<T>() {
+			@Override
+			public String toString() {
+				return path.toString();
+			}
+		});
 	}
 }

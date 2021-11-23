@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+		"bpb",
+		"bpb"
+    ],
+    "key": {
+        "b": {
+            "item": "libvulpes:battery"
+        },
+		"p": {
+            "tag": "forge:plates/copper"
+        }
+    },
+    "result": {
+        "item": "libvulpes:batterypack",
+        "count": 1
+    }
+}

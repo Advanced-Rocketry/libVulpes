@@ -48,8 +48,7 @@ public class RotatableMachineBlock extends RotatableBlock {
 	
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip,
-			ITooltipFlag flagIn) {
+	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		
 		Style style = Style.EMPTY.setFormatting(TextFormatting.ITALIC);
@@ -63,28 +62,22 @@ public class RotatableMachineBlock extends RotatableBlock {
      * metadata
      */
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) 
-	{
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		IInventory tileentitychest = (IInventory)world.getTileEntity(pos);
 
-		if (tileentitychest != null)
-		{
-			for (int j1 = 0; j1 < tileentitychest.getSizeInventory(); ++j1)
-			{
+		if (tileentitychest != null) {
+			for (int j1 = 0; j1 < tileentitychest.getSizeInventory(); ++j1) {
 				ItemStack itemstack = tileentitychest.getStackInSlot(j1);
 
-				if (!itemstack.isEmpty())
-				{
+				if (!itemstack.isEmpty()) {
 					float f = this.random.nextFloat() * 0.8F + 0.1F;
 					float f1 = this.random.nextFloat() * 0.8F + 0.1F;
 					ItemEntity entityitem;
 
-					for (float f2 = this.random.nextFloat() * 0.8F + 0.1F; itemstack.getCount() > 0; world.addEntity(entityitem))
-					{
+					for (float f2 = this.random.nextFloat() * 0.8F + 0.1F; itemstack.getCount() > 0; world.addEntity(entityitem)) {
 						int k1 = this.random.nextInt(21) + 10;
 
-						if (k1 > itemstack.getCount())
-						{
+						if (k1 > itemstack.getCount()) {
 							k1 = itemstack.getCount();
 						}
 
@@ -97,8 +90,7 @@ public class RotatableMachineBlock extends RotatableBlock {
 								(float)this.random.nextGaussian() * f3 + 0.2F,
 								(float)this.random.nextGaussian() * f3);
 
-						if (itemstack.hasTag())
-						{
+						if (itemstack.hasTag()) {
 							entityitem.getItem().setTag(itemstack.getTag().copy());
 						}
 					}
@@ -110,23 +102,11 @@ public class RotatableMachineBlock extends RotatableBlock {
 	}
 	
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player,
-			Hand handIn, BlockRayTraceResult hit) {
+	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		TileEntity tile = worldIn.getTileEntity(pos);
-			if(tile != null && !worldIn.isRemote) {
-				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)tile, buf -> {buf.writeInt(((IModularInventory)tile).getModularInvType().ordinal()); buf.writeBlockPos(pos); });
-			}
-			return ActionResultType.SUCCESS;
+		if(tile != null && !worldIn.isRemote) {
+			NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)tile, buf -> {buf.writeInt(((IModularInventory)tile).getModularInvType().ordinal()); buf.writeBlockPos(pos); });
+		}
+		return ActionResultType.SUCCESS;
 	}
-
-	/**
-	 * Called when the block receives a BlockEvent - see World.addBlockEvent. By default, passes it on to the tile
-	 * entity at this location. Args: world, x, y, z, blockID, EventID, event parameter
-	 */
-	/*public boolean onBlockEventReceived(World par1World, int par2, int par3, int par4, int par5, int par6)
-	{
-		super.onBlockEventReceived(par1World, par2, par3, par4, par5, par6);
-		TileEntity tileentity = par1World.getTileEntity(par2, par3, par4);
-		return tileentity != null ? tileentity.receiveClientEvent(par5, par6) : false;
-	}*/
 }

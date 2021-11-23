@@ -73,7 +73,7 @@ public class LibVulpes {
 	private static ItemGroup tabMultiblock = new ItemGroup("multiBlock") {
 		@Override
 		public ItemStack createIcon() {
-			return new ItemStack(LibVulpesItems.itemLinker);// AdvancedRocketryItems.itemSatelliteIdChip;
+			return new ItemStack(LibVulpesItems.itemLinker);
 		}
 	};
 
@@ -100,19 +100,19 @@ public class LibVulpes {
 		//Initialze Blocks
 		LibVulpesBlocks.blockPhantom = new BlockPhantom(net.minecraft.block.AbstractBlock.Properties.create(Material.MISCELLANEOUS)).setRegistryName("block_phantom");
 
-		LibVulpesBlocks.blockItemOutputHatch = new BlockHatch(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3)).setRegistryName("itemohatch");
-		LibVulpesBlocks.blockFluidOutputHatch = new BlockHatch(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3)).setRegistryName("fluidohatch");
-		LibVulpesBlocks.blockItemInputHatch = new BlockHatch(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3)).setRegistryName("itemihatch");
-		LibVulpesBlocks.blockFluidInputHatch = new BlockHatch(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3)).setRegistryName("fluidihatch");
+		LibVulpesBlocks.blockItemOutputHatch = new BlockHatch(net.minecraft.block.AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3)).setRegistryName("itemohatch");
+		LibVulpesBlocks.blockFluidOutputHatch = new BlockHatch(net.minecraft.block.AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3)).setRegistryName("fluidohatch");
+		LibVulpesBlocks.blockItemInputHatch = new BlockHatch(net.minecraft.block.AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3)).setRegistryName("itemihatch");
+		LibVulpesBlocks.blockFluidInputHatch = new BlockHatch(net.minecraft.block.AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3)).setRegistryName("fluidihatch");
 		LibVulpesBlocks.blockPlaceHolder = new BlockMultiblockPlaceHolder().setRegistryName("place_holder");
-		LibVulpesBlocks.blockAdvStructureBlock = new BlockAlphaTexture(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3)).setRegistryName("adv_structure_machine");
-		LibVulpesBlocks.blockStructureBlock = new BlockAlphaTexture(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3)).setRegistryName("structure_machine");
-		LibVulpesBlocks.blockCreativeInputPlug = new BlockMultiMachineBattery(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3), TileCreativePowerInput.class, GuiHandler.guiId.MODULAR).setRegistryName("creative_power_battery");
-		LibVulpesBlocks.blockForgeInputPlug = new BlockMultiMachineBattery(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f), TileForgePowerInput.class, GuiHandler.guiId.MODULAR).setRegistryName("forge_power_input"); 
-		LibVulpesBlocks.blockForgeOutputPlug = new BlockMultiMachineBattery(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f), TileForgePowerOutput.class, GuiHandler.guiId.MODULAR).setRegistryName("forge_power_output");
+		LibVulpesBlocks.blockAdvancedMachineStructure = new Block(net.minecraft.block.AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3)).setRegistryName("advancedmachinestructure");
+		LibVulpesBlocks.blockMachineStructure = new Block(net.minecraft.block.AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3)).setRegistryName("machinestructure");
+		LibVulpesBlocks.blockCreativeInputPlug = new BlockMultiMachineBattery(net.minecraft.block.AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3), TileCreativePowerInput.class, GuiHandler.guiId.MODULAR).setRegistryName("creative_power_battery");
+		LibVulpesBlocks.blockForgeInputPlug = new BlockMultiMachineBattery(net.minecraft.block.AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3f), TileForgePowerInput.class, GuiHandler.guiId.MODULAR).setRegistryName("forge_power_input");
+		LibVulpesBlocks.blockForgeOutputPlug = new BlockMultiMachineBattery(net.minecraft.block.AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3f), TileForgePowerOutput.class, GuiHandler.guiId.MODULAR).setRegistryName("forge_power_output");
 		LibVulpesBlocks.blockCoalGenerator = new BlockTile(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f), GuiHandler.guiId.MODULAR).setRegistryName("coal_generator");
 
-		net.minecraft.block.AbstractBlock.Properties motorProperties = net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(2);
+		net.minecraft.block.AbstractBlock.Properties motorProperties = net.minecraft.block.AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(2).notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false);
 		LibVulpesBlocks.blockMotor = new BlockMotor(motorProperties, 1f).setRegistryName("motor");
 		LibVulpesBlocks.blockAdvancedMotor = new BlockMotor(motorProperties, 1/1.5f).setRegistryName("advanced_motor");
 		LibVulpesBlocks.blockEnhancedMotor = new BlockMotor(motorProperties, 1/2f).setRegistryName("enhanced_motor");
@@ -120,8 +120,8 @@ public class LibVulpes {
 
 		//Initialize Items
 		LibVulpesItems.itemLinker = new ItemLinker(new net.minecraft.item.Item.Properties().group(tabMultiblock)).setRegistryName("linker");
-		LibVulpesItems.itemBattery = new Item(new net.minecraft.item.Item.Properties().group(tabMultiblock)).setRegistryName("smallbattery");
-		LibVulpesItems.itemBatteryx2 = new Item(new net.minecraft.item.Item.Properties().group(tabMultiblock)).setRegistryName("small2xbattery");
+		LibVulpesItems.itemBattery = new Item(new net.minecraft.item.Item.Properties().group(tabMultiblock)).setRegistryName("battery");
+		LibVulpesItems.itemBatteryPack = new Item(new net.minecraft.item.Item.Properties().group(tabMultiblock)).setRegistryName("batterypack");
 		LibVulpesItems.itemHoloProjector = new ItemProjector(new net.minecraft.item.Item.Properties().group(tabMultiblock)).setRegistryName("holo_projector");
 
 
@@ -129,8 +129,8 @@ public class LibVulpes {
 		LibVulpesItems.itemFluidOutputHatch = new BlockItem(LibVulpesBlocks.blockFluidOutputHatch, new net.minecraft.item.Item.Properties().group(tabMultiblock)).setRegistryName("fluidohatch");
 		LibVulpesItems.itemItemInputHatch = new BlockItem(LibVulpesBlocks.blockItemInputHatch, new net.minecraft.item.Item.Properties().group(tabMultiblock)).setRegistryName("itemihatch");
 		LibVulpesItems.itemFluidInputHatch = new BlockItem(LibVulpesBlocks.blockFluidInputHatch, new net.minecraft.item.Item.Properties().group(tabMultiblock)).setRegistryName("fluidihatch");
-		LibVulpesItems.itemAdvStructureBlock = new BlockItem(LibVulpesBlocks.blockAdvStructureBlock, new net.minecraft.item.Item.Properties().group(tabMultiblock)).setRegistryName("adv_structure_machine");
-		LibVulpesItems.itemStructureBlock = new BlockItem(LibVulpesBlocks.blockStructureBlock, new net.minecraft.item.Item.Properties().group(tabMultiblock)).setRegistryName("structure_machine");
+		LibVulpesItems.itemAdvancedMachineStructure = new BlockItem(LibVulpesBlocks.blockAdvancedMachineStructure, new net.minecraft.item.Item.Properties().group(tabMultiblock)).setRegistryName("advancedmachinestructure");
+		LibVulpesItems.itemMachineStructure = new BlockItem(LibVulpesBlocks.blockMachineStructure, new net.minecraft.item.Item.Properties().group(tabMultiblock)).setRegistryName("machinestructure");
 		LibVulpesItems.itemCreativeInputPlug = new BlockItem(LibVulpesBlocks.blockCreativeInputPlug, new net.minecraft.item.Item.Properties().group(tabMultiblock)).setRegistryName("creative_power_battery");
 		LibVulpesItems.itemForgeInputPlug = new BlockItem(LibVulpesBlocks.blockForgeInputPlug, new net.minecraft.item.Item.Properties().group(tabMultiblock)).setRegistryName("forge_power_input"); 
 		LibVulpesItems.itemForgeOutputPlug = new BlockItem(LibVulpesBlocks.blockForgeOutputPlug, new net.minecraft.item.Item.Properties().group(tabMultiblock)).setRegistryName("forge_power_output");
@@ -146,24 +146,8 @@ public class LibVulpes {
 		proxy.preinit();
 		//Configuration
 		LibVulpesConfig.register();
-		//TeslaCapabilityProvider.registerCap();
 
-
-		/*DUST,
-        INGOT,
-        GEM,
-        BOULE,
-        NUGGET,
-        COIL(true, AdvancedRocketryBlocks.coils),
-        PLATE,
-        STICK,
-        BLOCK(true, LibVulpesBlocks.blockMetal),
-        ORE(true, LibVulpesBlocks.blockOre),
-        FAN,
-        SHEET,
-        GEAR;*/
-
-		//Register allowedProducts
+		//Register allowed products
 		AllowedProducts.registerProduct("DUST");
 		AllowedProducts.registerProduct("INGOT");
 		AllowedProducts.registerProduct("GEM");
@@ -171,28 +155,24 @@ public class LibVulpes {
 		AllowedProducts.registerProduct("NUGGET");
 		AllowedProducts.registerProduct("COIL", true);
 		AllowedProducts.registerProduct("PLATE");
-		AllowedProducts.registerProduct("STICK");
+		AllowedProducts.registerProduct("ROD");
 		AllowedProducts.registerProduct("BLOCK", true);
 		AllowedProducts.registerProduct("ORE", true);
 		AllowedProducts.registerProduct("FAN");
 		AllowedProducts.registerProduct("SHEET");
 		AllowedProducts.registerProduct("GEAR");
 
-		//Register Ores
-
+		//Register materials
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("dilithium", "pickaxe", 3, 0xddcecb, AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("GEM").getFlagValue()));
-		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("iron", "pickaxe", 1, 0xafafaf, AllowedProducts.getProductByName("SHEET").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue(), false));
+		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("iron", "pickaxe", 1, 0xafafaf, AllowedProducts.getProductByName("SHEET").getFlagValue() | AllowedProducts.getProductByName("ROD").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue(), false));
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("gold", "pickaxe", 1, 0xffff5d, AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("COIL").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue(), false));
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("silicon", "pickaxe", 1, 0x2c2c2b, AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("BOULE").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue(), false));
-		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("copper", "pickaxe", 1, 0xd55e28, AllowedProducts.getProductByName("COIL").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue()));
-		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("tin", "pickaxe", 1, 0xcdd5d8, AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue()));
-		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("steel", "pickaxe", 1, 0x55555d, AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("FAN").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("GEAR").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue(), false));
-		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("titanium", "pickaxe", 1, 0xb2669e, AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("COIL").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("GEAR").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue(), false));
+		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("copper", "pickaxe", 1, 0xd55e28, AllowedProducts.getProductByName("COIL").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("ROD").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue()));
+		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("steel", "pickaxe", 1, 0x55555d, AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("FAN").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("ROD").getFlagValue() | AllowedProducts.getProductByName("GEAR").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue(), false));
+		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("titanium", "pickaxe", 1, 0xb2669e, AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("COIL").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("ROD").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("GEAR").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue(), false));
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("rutile", "pickaxe", 1, 0xbf936a, AllowedProducts.getProductByName("ORE").getFlagValue(), new String[] {"rutile", "titanium"}));
 		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("aluminum", "pickaxe", 1, 0xb3e4dc, AllowedProducts.getProductByName("COIL").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("SHEET").getFlagValue()));
-		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("iridium", "pickaxe", 2, 0xdedcce, AllowedProducts.getProductByName("COIL").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("STICK").getFlagValue()));
-
-		//
+		materialRegistry.registerMaterial(new zmaster587.libVulpes.api.material.Material("iridium", "pickaxe", 2, 0xdedcce, AllowedProducts.getProductByName("COIL").getFlagValue() | AllowedProducts.getProductByName("BLOCK").getFlagValue() | AllowedProducts.getProductByName("DUST").getFlagValue() | AllowedProducts.getProductByName("INGOT").getFlagValue() | AllowedProducts.getProductByName("NUGGET").getFlagValue() | AllowedProducts.getProductByName("PLATE").getFlagValue() | AllowedProducts.getProductByName("ROD").getFlagValue()));
 	}
 
 	@SubscribeEvent(priority=EventPriority.HIGH)
@@ -201,14 +181,14 @@ public class LibVulpes {
 
 		evt.getRegistry().registerAll(LibVulpesItems.itemLinker,
 				LibVulpesItems.itemBattery,
-				LibVulpesItems.itemBatteryx2,
+				LibVulpesItems.itemBatteryPack,
 				LibVulpesItems.itemHoloProjector,
 				LibVulpesItems.itemItemOutputHatch,
 				LibVulpesItems.itemFluidOutputHatch,
 				LibVulpesItems.itemItemInputHatch,
 				LibVulpesItems.itemFluidInputHatch,
-				LibVulpesItems.itemAdvStructureBlock,
-				LibVulpesItems.itemStructureBlock,
+				LibVulpesItems.itemAdvancedMachineStructure,
+				LibVulpesItems.itemMachineStructure,
 				LibVulpesItems.itemCreativeInputPlug,
 				LibVulpesItems.itemForgeInputPlug,
 				LibVulpesItems.itemForgeOutputPlug,
@@ -218,8 +198,7 @@ public class LibVulpes {
 				LibVulpesItems.itemEnhancedMotor,
 				LibVulpesItems.itemEliteMotor);
 
-		//ItemTags.getCollection().getTagByID(new ResourceLocation("forge", "itemsilicon")).contains(MaterialRegistry.getItemStackFromMaterialAndType("Silicon", AllowedProducts.getProductByName("INGOT")).getItem());
-		ItemTags.getCollection().getTagByID(new ResourceLocation("forge", "itembattery")).contains(LibVulpesItems.itemBattery);
+		ItemTags.getCollection().getTagByID(new ResourceLocation("forge", "battery")).contains(LibVulpesItems.itemBattery);
 		ItemTags.getCollection().getTagByID(new ResourceLocation("forge","motor")).contains(LibVulpesItems.itemMotor);
 		ItemTags.getCollection().getTagByID(new ResourceLocation("forge","motor")).contains(LibVulpesItems.itemAdvancedMotor);
 		ItemTags.getCollection().getTagByID(new ResourceLocation("forge","motor")).contains(LibVulpesItems.itemEnhancedMotor);
@@ -253,7 +232,7 @@ public class LibVulpes {
 		r.register(LibVulpesBlocks.blockItemInputHatch);
 		r.register(LibVulpesBlocks.blockFluidInputHatch);
 		r.register(LibVulpesBlocks.blockPlaceHolder);
-		r.register(LibVulpesBlocks.blockStructureBlock);
+		r.register(LibVulpesBlocks.blockMachineStructure);
 		r.register(LibVulpesBlocks.blockCreativeInputPlug);
 		r.register(LibVulpesBlocks.blockForgeInputPlug);
 		r.register(LibVulpesBlocks.blockForgeOutputPlug);
@@ -263,14 +242,14 @@ public class LibVulpes {
 		r.register(LibVulpesBlocks.blockAdvancedMotor);
 		r.register(LibVulpesBlocks.blockEnhancedMotor);
 		r.register(LibVulpesBlocks.blockEliteMotor);
-		r.register(LibVulpesBlocks.blockAdvStructureBlock);
+		r.register(LibVulpesBlocks.blockAdvancedMachineStructure);
 
 		//populate lists
 		LibVulpesBlocks.motors = new Block[]{ LibVulpesBlocks.blockMotor, LibVulpesBlocks.blockAdvancedMotor, LibVulpesBlocks.blockEnhancedMotor, LibVulpesBlocks.blockEliteMotor };
 
 		materialRegistry.registerOres(tabLibVulpesOres);
 
-		//Ore dict stuff
+		//tag stuff
 		BlockTags.getCollection().getTagByID(new ResourceLocation("forge","motor")).contains(LibVulpesBlocks.blockMotor);
 		BlockTags.getCollection().getTagByID(new ResourceLocation("forge","motor")).contains(LibVulpesBlocks.blockAdvancedMotor);
 		BlockTags.getCollection().getTagByID(new ResourceLocation("forge","motor")).contains(LibVulpesBlocks.blockEnhancedMotor);
@@ -289,7 +268,6 @@ public class LibVulpes {
 	public void init(FMLCommonSetupEvent event) {
 		proxy.init();
 		PacketHandler.register();
-		//NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 		proxy.registerEventHandlers();
 		registerBlockTypes();
 	}
@@ -316,17 +294,11 @@ public class LibVulpes {
 		list = new LinkedList<>();
 		list.add(new BlockMeta(LibVulpesBlocks.blockCreativeInputPlug.getDefaultState()));
 		list.add(new BlockMeta(LibVulpesBlocks.blockForgeInputPlug.getDefaultState()));
-		if(LibVulpesBlocks.blockRFBattery != null)
-			list.add(new BlockMeta(LibVulpesBlocks.blockRFBattery.getDefaultState()));
-		if(LibVulpesBlocks.blockIC2Plug != null)
-			list.add(new BlockMeta(LibVulpesBlocks.blockIC2Plug.getDefaultState()));
 		TileMultiBlock.addMapping('P', list);
 
 		//Power output
 		list = new LinkedList<>();
 		list.add(new BlockMeta(LibVulpesBlocks.blockForgeOutputPlug.getDefaultState()));
-		if(LibVulpesBlocks.blockRFOutput != null)
-			list.add(new BlockMeta(LibVulpesBlocks.blockRFOutput.getDefaultState()));
 		TileMultiBlock.addMapping('p', list);
 
 		//Liquid input

@@ -33,16 +33,10 @@ public class BlockMotor extends RotatableBlock implements ITimeModifier {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip,
-			ITooltipFlag flagIn) {
+	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		
 		tooltip.add(new StringTextComponent(String.format(TextFormatting.GRAY + "Machine Speed: %.2f", 1/getTimeMult())));
-	}
-	
-	@Override
-	public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
-		return VoxelShapes.empty();
 	}
 	
 	@Override

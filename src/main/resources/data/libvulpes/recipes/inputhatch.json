@@ -1,37 +1,18 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
+    "pattern": [
         "x",
         "y"
     ],
-    "key":
-    {
-        "x":
-        {
+    "key": {
+        "x": {
             "item": "minecraft:chest"
         },
-        "y":
-        {
-            "item": "libvulpes:structure_machine"
-	}
+        "y": {
+            "item": "libvulpes:machinestructure"
+	    }
     },
-    "result":
-    {
-        "item": "libvulpes:itemihatch",
-        "count": 1
-    }
-}
-{
-    "type": "minecraft:crafting_shapeless",
-    "ingredients":
-    [
-        {
-	    "item": "libvulpes:itemohatch"
-        }
-    ],
-    "result":
-    {
+    "result": {
         "item": "libvulpes:itemihatch",
         "count": 1
     }

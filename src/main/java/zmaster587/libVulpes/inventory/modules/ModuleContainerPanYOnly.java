@@ -10,10 +10,13 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.lwjgl.opengl.GL11;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.GuiModular;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -92,7 +95,7 @@ public class ModuleContainerPanYOnly extends ModuleBase {
 		staticButtonList.clear();
 
 		for(ModuleBase module : this.moduleList) {
-			buttonList.addAll(module.addButtons(x, y));
+			buttonList.addAll(module.addButtons(0, 0));
 		}
 
 		for(ModuleBase module : this.staticModuleList) {
@@ -118,11 +121,11 @@ public class ModuleContainerPanYOnly extends ModuleBase {
 			module.offsetY += deltaY;
 		}
 	}
-	
+
 	public int getScrollY() {
 		return currentPosY;
 	}
-	
+
 	@Override
 	public List<Slot> getSlots(Container container) {
 		List<Slot> list = new LinkedList<>();
@@ -203,14 +206,12 @@ public class ModuleContainerPanYOnly extends ModuleBase {
 	}
 
 	@OnlyIn(value=Dist.CLIENT)
-	public void onMouseClicked(GuiModular gui, int x, int y, int button) {
+	@Override
+	public void onMouseClicked(GuiModular gui, double x, double y, int button) {
 		super.onMouseClicked(gui, x, y, button);
 
-		int scaledX = x;
-		int scaledY = y;
-
-		//mouseLastX = scaledX;
-		//mouseLastY = scaledY;
+		double scaledX = x;
+		double scaledY = y;
 
 		//Handles buttons (mostly vanilla copy)
 		if(button == 0 && isMouseInBounds(0, 0, x, y)) {
@@ -232,9 +233,9 @@ public class ModuleContainerPanYOnly extends ModuleBase {
 	}
 
 	@OnlyIn(value= Dist.CLIENT)
-	private boolean isMouseInBounds(int x , int y, int mouseX, int mouseY) {
-		int transformedMouseX = mouseX - x - offsetX;
-		int transformedMouseY = mouseY - y - offsetY;
+	private boolean isMouseInBounds(int x , int y, double x2, double y2) {
+		double transformedMouseX = x2 - x - offsetX;
+		double transformedMouseY = y2 - y - offsetY;
 		//return true;
 		return transformedMouseX > 0 && transformedMouseX < screenSizeX + offsetX && transformedMouseY > 0 && transformedMouseY < screenSizeY + offsetY;
 	}
@@ -248,20 +249,47 @@ public class ModuleContainerPanYOnly extends ModuleBase {
 			deltaY = Math.max(deltaY, -containerSizeY - currentPosY);
 		}
 		//--------------------------------------------------------------
-
 		currentPosY += deltaY;
+
+		//Transform
+		try
+		{
+			// Need write access to the field!
+			Field xPos = ObfuscationReflectionHelper.findField(Slot.class, "field_75223_e");
+			Field yPos = ObfuscationReflectionHelper.findField(Slot.class, "field_75221_f");
+
+			xPos.setAccessible(true);
+			Field modifiersField = Field.class.getDeclaredField("modifiers");
+			modifiersField.setAccessible(true);
+			modifiersField.setInt(xPos, xPos.getModifiers() & ~Modifier.FINAL);
+
+			yPos.setAccessible(true);
+			modifiersField = Field.class.getDeclaredField("modifiers");
+			modifiersField.setAccessible(true);
+			modifiersField.setInt(yPos, yPos.getModifiers() & ~Modifier.FINAL);
+
+
+			for(Slot slot : slotList) {
+				yPos.setInt(slot, slot.yPos + deltaY );
+			}
+		}
+		catch( SecurityException | IllegalAccessException | IllegalArgumentException | NoSuchFieldException e)
+		{
+		}
 
 		for(Button button2 : buttonList) {
 			button2.y += deltaY;
 		}
+
 
 		for(ModuleBase module : moduleList) {
 			module.offsetY += deltaY;
 		}
 	}
 
+	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public void onMouseClickedAndDragged(int x, int y, int button) {
+	public void onMouseClickedAndDragged(double x, double y, int button) {
 
 		if(isMouseInBounds(0, 0, x, y) ) {
 
@@ -271,7 +299,7 @@ public class ModuleContainerPanYOnly extends ModuleBase {
 				outofBounds = false;
 				mouseFirstDown = false;
 			}
-			else if(mouseLastY != y) {
+			else if(mouseLastX != x && mouseLastY != y) {
 
 				int deltaY = (int) ((y - mouseLastY));
 
