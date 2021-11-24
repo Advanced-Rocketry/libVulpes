@@ -12,6 +12,7 @@ import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
 import zmaster587.libVulpes.tile.TilePointer;
+import zmaster587.libVulpes.tile.multiblock.INoTileRemoval;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import net.minecraft.block.BlockState;
@@ -32,7 +33,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 
-public class TileInventoryHatch extends TilePointer implements ISidedInventory, IModularInventory, IInventoryUpdateCallback {
+public class TileInventoryHatch extends TilePointer implements ISidedInventory, IModularInventory, IInventoryUpdateCallback, INoTileRemoval {
 
 	protected EmbeddedInventory inventory;
 

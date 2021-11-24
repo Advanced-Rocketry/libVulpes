@@ -30,6 +30,7 @@ import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.tile.TileSchematic;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInputHatch;
+import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
 import zmaster587.libVulpes.util.IFluidHandlerInternal;
 import zmaster587.libVulpes.util.Vector3F;
@@ -42,14 +43,14 @@ import java.util.stream.Collectors;
 
 public class TileMultiBlock extends TileEntity {
 
-	/*CanRender must be seperate from incomplete because some multiblocks must be completed on the client but
+	/*CanRender must be separate from incomplete because some multiblocks must be completed on the client but
 	because chunks on the client.  It is also used to determine if the block on the server has ever been complete */
-	protected boolean completeStructure, canRender;
-	protected byte timeAlive = 0;
+	//LocalCompleteStructure is nonpermanent across reloads to account for reforming if needed
+	protected boolean completeStructure, canRender, localCompleteStructure;
 
+	//Port stack list for recipes
 	protected LinkedList<IInventory> itemInPorts = new LinkedList<>();
 	protected LinkedList<IInventory> itemOutPorts = new LinkedList<>();
-
 	protected LinkedList<IFluidHandlerInternal> fluidInPorts = new LinkedList<>();
 	protected LinkedList<IFluidHandlerInternal> fluidOutPorts = new LinkedList<>();
 
@@ -118,14 +119,6 @@ public class TileMultiBlock extends TileEntity {
 		return "";
 	}
 
-	public void setMachineRunning(boolean running) {
-		world.setBlockState(pos, world.getBlockState(pos).with(BlockTile.STATE, running), 2);
-	}
-
-	public boolean isUsableByPlayer(PlayerEntity player) {
-		return player.getDistanceSq(this.pos.getX(), this.pos.getY(), this.pos.getZ()) < 64*64;
-	}
-
 
 	@Override
 	public SUpdateTileEntityPacket getUpdatePacket() {
@@ -133,6 +126,14 @@ public class TileMultiBlock extends TileEntity {
 		nbt.putBoolean("canRender", canRender);
 		writeNetworkData(nbt);
 		return new SUpdateTileEntityPacket(this.pos, 0, nbt);
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+		CompoundNBT nbt = pkt.getNbtCompound();
+
+		canRender = nbt.getBoolean("canRender");
+		readNetworkData(nbt);
 	}
 
 	@Override
@@ -145,15 +146,6 @@ public class TileMultiBlock extends TileEntity {
 
 	@Override
 	public void handleUpdateTag(BlockState state, CompoundNBT nbt) {
-
-		canRender = nbt.getBoolean("canRender");
-		readNetworkData(nbt);
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-		CompoundNBT nbt = pkt.getNbtCompound();
-
 		canRender = nbt.getBoolean("canRender");
 		readNetworkData(nbt);
 	}
@@ -165,8 +157,7 @@ public class TileMultiBlock extends TileEntity {
 	/**Called by inventory blocks that are part of the structure
 	 ** This includes recipe management etc
 	 **/
-	public void onInventoryUpdated() {
-	}
+	public void onInventoryUpdated() { }
 
 	/**
 	 * @param world world
@@ -174,11 +165,9 @@ public class TileMultiBlock extends TileEntity {
 	 * @param blockBroken set true if the block is being broken, otherwise some other means is being used to disassemble the machine
 	 */
 	public void deconstructMultiBlock(World world, BlockPos destroyedPos, boolean blockBroken, BlockState state) {
-		canRender = completeStructure = false;
+		canRender = completeStructure = localCompleteStructure = false;
 		if(this.pos.compareTo(destroyedPos) != 0 && world.getBlockState(pos).getBlock() instanceof BlockTile) 
 			world.setBlockState(this.pos, world.getBlockState(pos).with(BlockTile.STATE, false));
-
-
 
 		//UNDO all the placeholder blocks
 		Direction front = getFrontDirection(state);
@@ -212,7 +201,6 @@ public class TileMultiBlock extends TileEntity {
 					Block block = world.getBlockState(new BlockPos(globalX, globalY, globalZ)).getBlock();
 
 					destroyBlockAt(new BlockPos(globalX, globalY, globalZ), block, tile);
-
 				}
 			}
 		}
@@ -230,12 +218,6 @@ public class TileMultiBlock extends TileEntity {
 	 * @param tile
 	 */
 	protected void destroyBlockAt(BlockPos destroyedPos, Block block, TileEntity tile) {
-
-		//if it's an instance of multiblock structure call its destroyStructure method
-		if(block instanceof BlockMultiblockStructure) {
-			((BlockMultiblockStructure)block).destroyStructure(world, destroyedPos, world.getBlockState(destroyedPos));
-		}
-		
 		if(block instanceof IHidableBlock) {
 			((IHidableBlock)block).showBlock(world, destroyedPos, world.getBlockState(destroyedPos));
 		}
@@ -260,7 +242,7 @@ public class TileMultiBlock extends TileEntity {
 		//Make all pointers incomplete
 		else if(tile instanceof IMultiblock) {
 			((IMultiblock)tile).setIncomplete();
-			tile.remove();
+			if (!(tile instanceof INoTileRemoval)) tile.remove();
 		}
 	}
 
@@ -274,7 +256,7 @@ public class TileMultiBlock extends TileEntity {
 
 	public boolean attemptCompleteStructure(BlockState state) {
 		//if(!completeStructure)
-		canRender = completeStructure = completeStructure(state);
+		canRender = completeStructure = localCompleteStructure = completeStructure(state);
 		return completeStructure;
 	}
 
@@ -312,46 +294,41 @@ public class TileMultiBlock extends TileEntity {
 	 * @return true if the structure is valid
 	 */
 	protected boolean completeStructure(BlockState state) {
-
 		//Make sure the environment is clean
 		resetCache();
-
+        //Required data for structure formation
 		Object[][][] structure = getStructure();
-
 		Vector3F<Integer> offset = getControllerOffset(structure);
 		List<BlockPos> replacableBlocks = new LinkedList<>();
-
 		Direction front = getFrontDirection(state);
-
 		//Store tile entities for later processing so we don't risk the check failing halfway through leaving half the multiblock assigned
 		LinkedList<TileEntity> tiles = new LinkedList<>();
 
 		for(int y = 0; y < structure.length; y++) {
 			for(int z = 0; z < structure[0].length; z++) {
 				for(int x = 0; x< structure[0][0].length; x++) {
-
 					//Ignore nulls
-					if(structure[y][z][x] == null)
-						continue;
+					if(structure[y][z][x] == null) continue;
 
+					//Get global position from relative positions
 					int globalX = pos.getX() + (x - offset.x)*front.getZOffset() - (z-offset.z)*front.getXOffset();
 					int globalY = pos.getY() - y + offset.y;
 					int globalZ = pos.getZ() - (x - offset.x)*front.getXOffset()  - (z-offset.z)*front.getZOffset();
 					BlockPos globalPos = new BlockPos(globalX, globalY, globalZ);
 
-					if(!world.isBlockLoaded(globalPos))
-						return false;
+					//We don't do anything if part of the multiblock is unloaded (how?)
+					if(!world.isBlockLoaded(globalPos)) return false;
 
+					//Grab the TE, blockstate, and block of the current place
 					TileEntity tile = world.getTileEntity(globalPos);
 					BlockState blockState = world.getBlockState(globalPos);
 					Block block = blockState.getBlock();
-					int meta = block.getStateId(blockState);
 
-					if(block == LibVulpesBlocks.blockPhantom)
-						return false;
+					//Phantom blocks are not, in fact, multiblock components
+					if(block == LibVulpesBlocks.blockPhantom) return false;
 
-					if(tile != null)
-						tiles.add(tile);
+					//If there is a tile, add the tile to the list
+					if(tile != null) tiles.add(tile);
 
 					//If the other block already thinks it's complete just assume valid
 					if(tile instanceof TilePointer) {
@@ -359,26 +336,19 @@ public class TileMultiBlock extends TileEntity {
 						if(((IMultiblock)tile).hasMaster() && (masterBlock = ((IMultiblock)tile).getMasterBlock()) != this) {
 							
 							//This ~should~ only occur with world edits and being moved to space stations and such
-							if(masterBlock == null)
-								((IMultiblock)tile).setMasterBlock(this.pos);
+							if(masterBlock == null) ((IMultiblock)tile).setMasterBlock(this.pos);
 							
 							if(((IMultiblock)tile).getMasterBlock().getPos().equals(getPos())) {
 								((IMultiblock)tile).setMasterBlock(getPos());
 								continue;
 							}
-						}
-						else if(((IMultiblock)tile).getMasterBlock() == this) 
+						} else if(((IMultiblock)tile).getMasterBlock() == this)
 							continue;
 					}
 					//Make sure the structure is valid
 					if(!(structure[y][z][x] instanceof Character && (Character)structure[y][z][x] == 'c') && !(structure[y][z][x] instanceof Block && structure[y][z][x] == Blocks.AIR && world.isAirBlock(globalPos)) && !getAllowableBlocks(structure[y][z][x]).contains(new BlockMeta(blockState))) {
-
-						/*//Can it be replaced?
-							replacableBlocks.add(globalPos);
-						else {*/
-							LibVulpes.proxy.spawnParticle("errorBox", world, globalX, globalY, globalZ, 0, 0, 0);
-							return false;
-						//}
+						LibVulpes.proxy.spawnParticle("errorBox", world, globalX, globalY, globalZ, 0, 0, 0);
+						return false;
 					}
 				}
 			}
@@ -388,30 +358,19 @@ public class TileMultiBlock extends TileEntity {
 		for(int y = 0; y < structure.length; y++) {
 			for(int z = 0; z < structure[0].length; z++) {
 				for(int x = 0; x< structure[0][0].length; x++) {
-
+					//Get global position from relative positions
 					int globalX = pos.getX() + (x - offset.x)*front.getZOffset() - (z-offset.z)*front.getXOffset();
 					int globalY = pos.getY() - y + offset.y;
 					int globalZ = pos.getZ() - (x - offset.x)*front.getXOffset()  - (z-offset.z)*front.getZOffset();
 					BlockPos globalPos = new BlockPos(globalX, globalY, globalZ);
 
-
+					//Grab the TE, blockstate, and block of the current place
 					TileEntity tile = world.getTileEntity(globalPos);
 					BlockState blockState = world.getBlockState(globalPos);
 					Block block = blockState.getBlock();
-					int meta = block.getStateId(blockState);
 
-					if(block instanceof BlockMultiBlockComponentVisible) {
-						if(shouldHideBlock(world, globalPos, blockState))
-							((BlockMultiBlockComponentVisible)block).hideBlock(world, globalPos, blockState);
-
-						tile = world.getTileEntity(globalPos);
-
-						if(tile instanceof IMultiblock)
-							((IMultiblock)tile).setComplete(globalPos);
-					}
-					else if(block instanceof IHidableBlock) {
-						if(shouldHideBlock(world, globalPos, blockState))
-							((IHidableBlock)block).hideBlock(world, globalPos, blockState);
+					if(block instanceof IHidableBlock && !(block instanceof BlockMultiBlockComponentVisible)) {
+						if(shouldHideBlock(world, globalPos, blockState)) ((IHidableBlock)block).hideBlock(world, globalPos, blockState);
 					}
 
 					if(structure[y][z][x] != null && !block.isAir(blockState, world, globalPos) && !(tile instanceof IMultiblock) && !(tile instanceof TileMultiBlock)) {
@@ -421,15 +380,8 @@ public class TileMultiBlock extends TileEntity {
 			}
 		}
 
-		//Now that we know the multiblock is valid we can assign
-		for(TileEntity tile : tiles) {
-			integrateTile(tile);
-		}
-		
-		//Replace and drop replaceable blocks
-		for(BlockPos pos : replacableBlocks) {
-			world.setBlockState(pos, Blocks.AIR.getDefaultState());
-		}
+		//Now that we know the multiblock is valid we can integrate tiles
+		for(TileEntity tile : tiles) integrateTile(tile);
 		
 		markDirty();
 		world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
@@ -485,7 +437,6 @@ public class TileMultiBlock extends TileEntity {
 	 * @return
 	 */
 	protected void replaceStandardBlock(BlockPos newPos, BlockState state, TileEntity tile) {
-
 		world.setBlockState(newPos, LibVulpesBlocks.blockPlaceHolder.getDefaultState());
 		TilePlaceholder newTile = (TilePlaceholder)world.getTileEntity(newPos);
 

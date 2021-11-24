@@ -31,8 +31,6 @@ public class ModuleLiquidIndicator extends ModuleBase {
 	IFluidHandler tile;
 	IFluidHandlerInternal tile2;
 
-	ResourceLocation fluidIcon = new ResourceLocation("advancedrocketry:textures/blocks/fluid/oxygen_flow.png");
-
 	int prevLiquidUUID;
 	int prevLiquidAmt;
 	private static final int invalidFluid = -1;
@@ -50,25 +48,20 @@ public class ModuleLiquidIndicator extends ModuleBase {
 		return 3;
 	}
 
-	private Fluid getFluid(int id)
-	{
-
-		for(Fluid fluid : ForgeRegistries.FLUIDS.getValues())
-		{
+	private Fluid getFluid(int id) {
+		for(Fluid fluid : ForgeRegistries.FLUIDS.getValues()) {
 			if((ForgeRegistries.FLUIDS.getKey(fluid).hashCode() & 0xFFFF) == id)
 				return fluid;
 		}
 		return Fluids.EMPTY;
 	}
 
-	private int getFluidID(Fluid fluid)
-	{
+	private int getFluidID(Fluid fluid) {
 		return fluid.isEquivalentTo(Fluids.EMPTY) ? -1 : ForgeRegistries.FLUIDS.getKey(fluid).hashCode() & 0xFFFF;
 	}
 
 	@Override
-	public void sendChanges(Container container, IContainerListener crafter,
-			int variableId, int localId) {
+	public void sendChanges(Container container, IContainerListener crafter, int variableId, int localId) {
 		FluidStack info = tile.getFluidInTank(0);
 
 		if(localId == 0)
@@ -89,19 +82,17 @@ public class ModuleLiquidIndicator extends ModuleBase {
 		int tankCapacity = tile.getTankCapacity(0);
 
 		if(slot == 0) {
-			if((info == null || info.getFluid().isEquivalentTo(Fluids.EMPTY)) && value != invalidFluid) {
+			if((info.isEmpty() || info.getFluid().isEquivalentTo(Fluids.EMPTY)) && value != invalidFluid) {
 				if(tile2 != null)
 					tile2.fillInternal(new FluidStack(getFluid(value), 1), FluidAction.EXECUTE);
 				else
 					tile.fill(new FluidStack(getFluid(value), 1), FluidAction.EXECUTE);
-			}
-			else if(value == invalidFluid) {
+			} else if(value == invalidFluid) {
 				if(tile2 != null) 
 					tile2.drainInternal(tankCapacity, FluidAction.EXECUTE);
 				else
 					tile.drain(tankCapacity, FluidAction.EXECUTE);
-			}
-			else if(info != null && value != getFluidID(info.getFluid())) { //Empty the tank then fill it back up with new resource
+			} else if(!info.isEmpty() && value != getFluidID(info.getFluid())) { //Empty the tank then fill it back up with new resource
 				FluidStack stack;
 				if(tile2 != null)
 					stack = tile2.drainInternal(tankCapacity, FluidAction.EXECUTE);
@@ -112,8 +103,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 
 				tile.fill(stack, FluidAction.EXECUTE);
 			}
-		}
-		else if((slot == 1 || slot == 2) && info != null) {
+		} else if((slot == 1 || slot == 2) && !info.isEmpty()) {
 			int difference;
 
 			if(slot == 1) {
@@ -140,12 +130,10 @@ public class ModuleLiquidIndicator extends ModuleBase {
 	public boolean needsUpdate(int localId) {
 		FluidStack info = tile.getFluidInTank(0);
 
-
 		if(localId == 0 || localId == 1) {
-			return (info != null && prevLiquidAmt != info.getAmount());
-		}
-		else if(localId == 2) {
-			if(info == null)
+			return (!info.isEmpty() && prevLiquidAmt != info.getAmount());
+		} else if(localId == 2) {
+			if(info.isEmpty())
 				return prevLiquidUUID != invalidFluid;
 			else
 				return getFluidID(info.getFluid()) != prevLiquidUUID;
@@ -157,10 +145,10 @@ public class ModuleLiquidIndicator extends ModuleBase {
 	@Override
 	protected void updatePreviousState(int localId) {
 		FluidStack info = tile.getFluidInTank(0);
-		if(localId == 0 && info != null)
+		if(localId == 0 && !info.isEmpty())
 			prevLiquidAmt =  info.getAmount();
 		else if(localId == 1)
-			if( info == null) 
+			if(info.isEmpty())
 				prevLiquidUUID = invalidFluid;
 			else
 				prevLiquidUUID = getFluidID(info.getFluid());
@@ -174,7 +162,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 		for(int i = 0; i < tile.getTanks(); i++) {
 			FluidStack fluidInfo = tile.getFluidInTank(i);
 			capacity += tile.getTankCapacity(i);
-			if(fluidInfo != null)
+			if(!fluidInfo.isEmpty())
 				fillAmount += fluidInfo.getAmount();
 		}
 
@@ -184,7 +172,6 @@ public class ModuleLiquidIndicator extends ModuleBase {
 	@OnlyIn(value=Dist.CLIENT)
 	@Override
 	public void renderForeground (MatrixStack mat, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel, ContainerScreen<? extends Container>  gui, FontRenderer font) {
-
 		int relativeX = mouseX - offsetX;
 		int relativeY = mouseY - offsetY;
 		int ySize = 52;
@@ -194,7 +181,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 			List<String> list = new LinkedList<>();
 			FluidStack fluidStack = tile.getFluidInTank(0);
 
-			if(fluidStack != null) {
+			if(!fluidStack.isEmpty()) {
 
 				list.add(fluidStack.getDisplayName().getString() +": "+fluidStack.getAmount() + " / " + tile.getTankCapacity(0) + " mB");
 
@@ -203,26 +190,19 @@ public class ModuleLiquidIndicator extends ModuleBase {
 			else
 				list.add("Empty");
 
-			this.drawTooltip((ContainerScreen<Container>) gui, mat, list, mouseX, mouseY, zLevel, font);
+			this.drawTooltip(gui, mat, list, mouseX, mouseY, zLevel, font);
 		}
 
 	}
 
 	@Override
-	public void renderBackground(ContainerScreen<? extends Container> gui, MatrixStack mat, int x, int y, int mouseX, int mouseY,
-			FontRenderer font) {
+	public void renderBackground(ContainerScreen<? extends Container> gui, MatrixStack mat, int x, int y, int mouseX, int mouseY, FontRenderer font) {
 		super.renderBackground(gui, mat, x, y, mouseX, mouseY,  font);
 		gui.blit(mat, x + offsetX, y + offsetY, 176, 58, 14, 54);
 
 		//Draw Fluid
 		FluidStack info = tile.getFluidInTank(0);
-
-		if(info == null)
-			return;
-		
-		if(info.getFluid() == Fluids.EMPTY)
-			return;
-
+		if(info.isEmpty()) return;
 
 		TextureAtlasSprite sprite = info.getFluid() != Fluids.EMPTY ? ModelLoader.defaultTextureGetter().apply(ForgeHooksClient.getBlockMaterial(info.getFluid().getAttributes().getStillTexture())) : null;
 		

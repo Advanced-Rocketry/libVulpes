@@ -82,7 +82,6 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		return 1.0d;
 	}
 
-	
 	@Override
 	public int getProgress(int id) {
 		return currentTime;
@@ -146,32 +145,14 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	@Override
-	protected void replaceStandardBlock(BlockPos newPos, BlockState state,
-			TileEntity tile) {
+	protected void replaceStandardBlock(BlockPos newPos, BlockState state, TileEntity tile) {
 		super.replaceStandardBlock(newPos, state, tile);
 		timeMultiplier *= getTimeMultiplierForBlock(state, tile);
 	}
 	
 	@Override
 	public void tick() {
-
-		//Freaky janky crap to make sure the multiblock loads on chunkload etc
-		if(timeAlive == 0) {
-			if(!world.isRemote) {
-				if(isComplete())
-					canRender = completeStructure = completeStructure(world.getBlockState(pos));
-			}
-			else {
-				SoundEvent str;
-				if((str = getSound()) != null) {
-					playMachineSound(str);
-				}
-			}
-
-			timeAlive = 0x1;
-		}
-
-		if(!world.isRemote && world.getGameTime() % 1000L == 0 && !isComplete()) {
+		if(!localCompleteStructure && isComplete()) {
 			attemptCompleteStructure(world.getBlockState(pos));
 			markDirty();
 			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
@@ -179,25 +160,17 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 		if(isRunning()) {
 			if(hasEnergy(requiredPowerPerTick()) || (world.isRemote && hadPowerLastTick)) {
-
 				onRunningPoweredTick();
 
 				//If server then check to see if we need to update the client, use power and process output if applicable
 				if(!world.isRemote) {
-
 					if(!hadPowerLastTick) {
 						hadPowerLastTick = true;
-						markDirty();
-						world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 					}
-
 					useEnergy(usedPowerPerTick());
 				}
-			}
-			else if(!world.isRemote && hadPowerLastTick) { //If server and out of power check to see if client needs update
+			} else if(!world.isRemote && hadPowerLastTick) { //If server and out of power check to see if client needs update
 				hadPowerLastTick = false;
-				markDirty();
-				world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 			}
 		}
 	}
@@ -276,9 +249,6 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	protected void processComplete() {
 		completionTime = 0;
 		currentTime = 0;
-
-		this.markDirty();
-		world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 	}
 
 	/**

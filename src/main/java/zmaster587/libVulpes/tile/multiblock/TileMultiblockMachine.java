@@ -11,7 +11,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -22,6 +21,7 @@ import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.util.IFluidHandlerInternal;
 import zmaster587.libVulpes.util.ZUtils;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,6 +35,8 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	private List<ItemStack> inputItemStacks;
 	private List<ItemStack> outputItemStacks;
 	private List<FluidStack> outputFluidStacks;
+
+	private IRecipe cachedRecipe;
 
 	private boolean smartInventoryUpgrade = true;
 	//When using smart inventories sometimes setInventory content calls need to be made
@@ -95,58 +97,13 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		hadPowerLastTick = nbt.getBoolean("hadPowerLastTick");
 		deserializeNBT(nbt);
 	}
-
-	public void registerRecipes() {
-		
-	}
 	
 	@Override
 	public void tick() {
-		//super.update();
-
-		//Freaky janky crap to make sure the multiblock loads on chunkload etc
-		if(timeAlive == 0) {
-			if(!world.isRemote) {
-				if(isComplete())
-					canRender = completeStructure = completeStructure(world.getBlockState(pos));
-			}
-			else {
-				SoundEvent str;
-				if((str = getSound()) != null) {
-					playMachineSound(str);
-				}
-			}
-
-			timeAlive = 0x1;
-		}
-
+		super.tick();
 		//In case the machine jams for some reason
 		if(!isRunning() && world.getGameTime() % 1000L == 0)
 			onInventoryUpdated();
-
-		if(isRunning()) {
-			if( hasEnergy(powerPerTick) || (world.isRemote && hadPowerLastTick)) {
-
-				//Increment for both client and server
-				onRunningPoweredTick();
-				//If server then check to see if we need to update the client, use power and process output if applicable
-				if(!world.isRemote) {
-
-					if(!hadPowerLastTick) {
-						hadPowerLastTick = true;
-						markDirty();
-						world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
-					}
-
-					useEnergy(powerPerTick);
-				}
-			}
-			else if(!world.isRemote && hadPowerLastTick) { //If server and out of power check to see if client needs update
-				hadPowerLastTick = false;
-				markDirty();
-				world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
-			}
-		}
 	}
 
 	@Override
@@ -184,9 +141,6 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		outputFluidStacks = null;
 
 		onInventoryUpdated();
-
-		this.markDirty();
-		world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 	}
 
 	//When the output of the recipe is dumped to the inventory
@@ -217,16 +171,18 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		}
 	}
 
-	//TODO: improve recipe checks
-	//Attempt to get a valid recipe given the inputs, null if none found
+	//Attempt to get a valid recipe given the inputs, null if none found, check from cached recipe first
 	protected IRecipe getRecipe(List<IRecipe> set) {
-
-		for(IRecipe recipe : set) {
-
-			if(canProcessRecipe(recipe))
-				return recipe;
-
+		if (cachedRecipe != null && canProcessRecipe(cachedRecipe)) return cachedRecipe;
+		else {
+			for (IRecipe recipe : set) {
+				if (canProcessRecipe(recipe)) {
+					cachedRecipe = recipe;
+					return recipe;
+				}
+			}
 		}
+		cachedRecipe = null;
 		return null;
 	}
 
@@ -236,7 +192,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	 * @return list of itemstacks the machine can output
 	 */
 	protected List<ItemStack> getItemOutputs(IRecipe recipe) {
-		return recipe.getOutput();
+		return recipe == null ? new ArrayList<>() : recipe.getOutput();
 	}
 
 	/**
@@ -245,22 +201,19 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	 * @return list of fluidstacks the machine can output
 	 */
 	protected List<FluidStack> getFluidOutputs(IRecipe recipe) {
-		return recipe.getFluidOutputs();
+		return recipe == null ? new ArrayList<>() : recipe.getFluidOutputs();
 	}
 
 
 	public void consumeItems(IRecipe recipe) {
 		List<List<ItemStack>> ingredients = recipe.getPossibleIngredients();
-
 		for (List<ItemStack> ingredient : ingredients) {
-
 			ingredientCheck:
-
 			for (IInventory hatch : getItemInPorts()) {
 				for (int i = 0; i < hatch.getSizeInventory(); i++) {
 					ItemStack stackInSlot = hatch.getStackInSlot(i);
 						for (ItemStack stack : ingredient) {
-							if(stackInSlot != null && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.isItemEqual(stack) || (/*stack.getDamage() == OreDictionary.WILDCARD_VALUE &&*/ stackInSlot.getItem() == stack.getItem() ))) {
+							if(!stackInSlot.isEmpty() && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.isItemEqual(stack) || (stackInSlot.getItem() == stack.getItem() ))) {
 								hatch.decrStackSize(i, stack.getCount());
 								hatch.markDirty();
 								world.notifyBlockUpdate(pos, world.getBlockState(((TileEntity)hatch).getPos()),  world.getBlockState(((TileEntity)hatch).getPos()), 6);
@@ -470,16 +423,6 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		return itemCheck;
 	}
 
-
-	//Used To make sure the multiblock is valid
-	/*@Override
-	public void updateContainingBlockInfo() {
-		super.updateContainingBlockInfo();
-
-		completeStructure = completeStructure();
-	}*/
-
-
 	//Must be overridden or an NPE will occur
 	public List<IRecipe> getMachineRecipeList() {
 		List<IRecipe> list = RecipesMachine.getInstance().getRecipes(this.getClass());
@@ -509,18 +452,6 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 					else
 						inputItemStacks.addAll(ingredient);
 				}
-
-
-
-
-				markDirty();
-				world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
-
-				setMachineRunning(true); //turn on machine
-
-			}
-			else {
-				setMachineRunning(false);
 			}
 		}
 	}
@@ -617,11 +548,10 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 		}
 	}
 
-	public boolean attemptCompleteStructure() {
-		boolean completeStructure = super.attemptCompleteStructure(world.getBlockState(pos));
-		if(completeStructure)
-			onInventoryUpdated();
-
+	@Override
+	public boolean attemptCompleteStructure(BlockState state) {
+		boolean completeStructure = super.attemptCompleteStructure(state);
+		if(completeStructure) onInventoryUpdated();
 		return completeStructure;
 	}
 

@@ -6,6 +6,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.text.ITextComponent;
@@ -30,10 +31,11 @@ import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.MultiBattery;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileMultiPowerProducer extends TileMultiBlock implements IToggleButton, IModularInventory, INetworkMachine {
+public class TileMultiPowerProducer extends TileMultiBlock implements IToggleButton, IModularInventory, INetworkMachine, ITickableTileEntity {
 
 	protected MultiBattery batteries = new MultiBattery();
 	protected boolean enabled;
@@ -51,13 +53,19 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 
 	public void setMachineEnabled(boolean enabled) {
 		this.enabled = enabled;
-		this.markDirty();
-		world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 	}
 
 	@Override
-	public void useNetworkData(PlayerEntity player, Dist side, byte id,
-			CompoundNBT nbt) {
+	public void tick() {
+		if(!localCompleteStructure && isComplete()) {
+			attemptCompleteStructure(world.getBlockState(pos));
+			markDirty();
+			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
+		}
+	}
+
+	@Override
+	public void useNetworkData(PlayerEntity player, Dist side, byte id, CompoundNBT nbt) {
 		if (id == NetworkPackets.TOGGLE.ordinal()) {
 			setMachineEnabled(nbt.getBoolean("enabled"));
 			toggleSwitch.setToggleState(getMachineEnabled());
@@ -161,6 +169,7 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 	}
 	
 	@Override
+	@Nonnull
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}

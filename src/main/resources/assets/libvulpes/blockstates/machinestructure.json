@@ -1,5 +1,5 @@
 {
     "variants": {
-        "": { "model": "libvulpes:block/structuremachine" }
+        "": { "model": "libvulpes:block/machinestructure" }
     }
 }

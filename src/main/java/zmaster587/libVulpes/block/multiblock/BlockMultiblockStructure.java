@@ -57,30 +57,14 @@ public class BlockMultiblockStructure extends Block implements IHidableBlock {
 		return state.get(VISIBLE) ? super.getShape(state, worldIn, pos, context) : almostFull;
 	}
 
-
-
-	// loot tables
-
-	public void completeStructure(World world, BlockPos pos, BlockState state) {
-
-	}
-
-	public void destroyStructure(World world, BlockPos pos, BlockState state) {
-	}
-
 	@Override
-	public boolean isSideInvisible(net.minecraft.block.BlockState state,
-			net.minecraft.block.BlockState adjacentBlockState, Direction side) {
-
+	public boolean isSideInvisible(net.minecraft.block.BlockState state, net.minecraft.block.BlockState adjacentBlockState, Direction side) {
 		return super.isSideInvisible(state, adjacentBlockState, side) || !state.get(VISIBLE);
 	}
 
 	@Override
-	public void onReplaced(net.minecraft.block.BlockState state, World world, BlockPos pos,
-			net.minecraft.block.BlockState newState, boolean isMoving) {
-
-		if(state.getBlock() != newState.getBlock())
-		{
+	public void onReplaced(net.minecraft.block.BlockState state, World world, BlockPos pos, net.minecraft.block.BlockState newState, boolean isMoving) {
+		if(state.getBlock() != newState.getBlock()) {
 			TileEntity tile = world.getTileEntity(pos);
 			if(tile instanceof IMultiblock) {
 				IMultiblock tileMulti = (IMultiblock)tile;

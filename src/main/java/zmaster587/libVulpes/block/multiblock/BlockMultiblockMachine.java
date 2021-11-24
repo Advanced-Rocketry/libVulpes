@@ -34,6 +34,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * hosts a multiblock machine master tile
  *
@@ -74,8 +78,8 @@ public class BlockMultiblockMachine extends BlockTile implements IHidableBlock {
 	
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip,
-			ITooltipFlag flagIn)  {
+	@ParametersAreNonnullByDefault
+	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)  {
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		Style style = Style.EMPTY.setFormatting(TextFormatting.DARK_GRAY).setFormatting(TextFormatting.ITALIC);
 		
@@ -83,6 +87,7 @@ public class BlockMultiblockMachine extends BlockTile implements IHidableBlock {
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
 		return super.isSideInvisible(state, adjacentBlockState, side) || !state.get(VISIBLE);
 	}
@@ -92,13 +97,14 @@ public class BlockMultiblockMachine extends BlockTile implements IHidableBlock {
 	}
 	 
 	@Override
+	@ParametersAreNonnullByDefault
+	@Nonnull
 	public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return state.get(VISIBLE) ? state.getShape(worldIn, pos) : VoxelShapes.empty();
 	}
 	
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player,
-			Hand handIn, BlockRayTraceResult hit) {
+	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if(tile instanceof TileMultiBlock) {
 			TileMultiBlock tileMulti = (TileMultiBlock)tile;

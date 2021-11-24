@@ -23,6 +23,9 @@ import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class BlockHatch extends BlockMultiblockStructure {
 
 	protected TileEntityType<?> tileClass;
@@ -37,24 +40,19 @@ public class BlockHatch extends BlockMultiblockStructure {
 	}
 
 	//MUST be called after construction.  The Tile type doesn't yet exist when the block is contructed
-	public BlockHatch _setTile(TileEntityType<?> tileClass)
-	{
+	public BlockHatch _setTile(TileEntityType<?> tileClass) {
 		this.tileClass = tileClass;
 		return this;
 	}
-
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return tileClass.create();
 	}
 
-
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
-
-		if(state.getBlock() != newState.getBlock())
-		{
+		if(state.getBlock() != newState.getBlock()) {
 			TileEntity tile = world.getTileEntity(pos);
 			if(tile instanceof IInventory) {
 				IInventory inventory = (IInventory)tile;
@@ -81,8 +79,9 @@ public class BlockHatch extends BlockMultiblockStructure {
 
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,
-			Hand handIn, BlockRayTraceResult hit) {
+	@ParametersAreNonnullByDefault
+	@Nonnull
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		if (!world.isRemote) {
 
 			TileEntity te = world.getTileEntity(pos);
@@ -96,12 +95,14 @@ public class BlockHatch extends BlockMultiblockStructure {
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean hasComparatorInputOverride(BlockState state)
 	{
 		return true;
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
 		TileEntity tile = worldIn.getTileEntity(pos);
 		//Fluid comparator size

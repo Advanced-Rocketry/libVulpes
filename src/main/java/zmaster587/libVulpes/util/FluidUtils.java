@@ -52,29 +52,21 @@ public class FluidUtils {
 	//Use Forge methods to handle containers being put into inventories
 	public static boolean attemptDrainContainerIInv(EmbeddedInventory inv, IFluidHandler tank, @Nonnull ItemStack stack, int inputSlot, int outputSlot) {
 		if (containsFluid(stack)) {
-			boolean fill = false;
-			boolean toReturn = false;
-			FluidActionResult modifiedContainer = null;
-			if (!(stack.getItem() == Items.BUCKET) && (getFluidForItem(stack).getAmount() == getFluidItemCapacity(stack) || tank.getTankCapacity(0) == 0)) {
-				modifiedContainer = FluidUtil.tryEmptyContainer(stack, tank, getFluidItemCapacity(stack), null, false);
-			} else {
-				modifiedContainer = FluidUtil.tryFillContainer(stack, tank, getFluidItemCapacity(stack), null, false);
-				fill = true;
-			}
-				if (modifiedContainer.isSuccess()) {
-					if (inv.getStackInSlot(outputSlot).isEmpty()) {
-						toReturn = fill ? FluidUtil.tryFillContainer(stack, tank, getFluidItemCapacity(stack), null, true).isSuccess() : FluidUtil.tryEmptyContainer(stack, tank, getFluidItemCapacity(stack), null, true).isSuccess();
-						inv.getStackInSlot(inputSlot).shrink(1);
-						inv.setStackInSlot(outputSlot, modifiedContainer.getResult());
-					} else if ((inv.getStackInSlot(outputSlot).getItem() == modifiedContainer.getResult().getItem() && inv.getStackInSlot(outputSlot).getCount() < inv.getStackInSlot(outputSlot).getMaxStackSize())) {
-						toReturn = fill ? FluidUtil.tryFillContainer(stack, tank, getFluidItemCapacity(stack), null, true).isSuccess() : FluidUtil.tryEmptyContainer(stack, tank, getFluidItemCapacity(stack), null, true).isSuccess();
-						inv.getStackInSlot(inputSlot).shrink(1);
-						inv.getStackInSlot(outputSlot).grow(1);
-						return true;
-					}
+			FluidActionResult modifiedContainer;
+			if (inv.getStackInSlot(outputSlot).isEmpty()) {
+				if (!(stack.getItem() == Items.BUCKET) && (getFluidForItem(stack).getAmount() == getFluidItemCapacity(stack) || tank.getTankCapacity(0) == 0)) {
+					modifiedContainer = FluidUtil.tryEmptyContainer(stack, tank, getFluidItemCapacity(stack), null, true);
+				} else {
+					modifiedContainer = FluidUtil.tryFillContainer(stack, tank, getFluidItemCapacity(stack), null, true);
 				}
-                return toReturn;
+
+				if (modifiedContainer.isSuccess()) {
+					inv.getStackInSlot(inputSlot).shrink(1);
+					inv.setStackInSlot(outputSlot, modifiedContainer.getResult());
+				}
+				return modifiedContainer.isSuccess();
 			}
+		}
 		return false;
 	}
 

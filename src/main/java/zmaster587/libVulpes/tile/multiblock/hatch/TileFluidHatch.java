@@ -33,6 +33,7 @@ import zmaster587.libVulpes.inventory.modules.ModuleImage;
 import zmaster587.libVulpes.inventory.modules.ModuleLiquidIndicator;
 import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
 import zmaster587.libVulpes.tile.TilePointer;
+import zmaster587.libVulpes.tile.multiblock.INoTileRemoval;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.FluidUtils;
@@ -41,7 +42,7 @@ import zmaster587.libVulpes.util.IconResource;
 
 import javax.annotation.Nonnull;
 
-public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal, IModularInventory, ISidedInventory, IInventoryUpdateCallback {
+public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal, IModularInventory, ISidedInventory, IInventoryUpdateCallback, INoTileRemoval {
 
 	protected FluidTank fluidTank;
 	private EmbeddedInventory inventory;
@@ -159,7 +160,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 		List<ModuleBase> list = new ArrayList<>();
 
 		list.add(new ModuleSlotArray(45, 18, this, 0, 1));
-		list.add(new ModuleSlotArray(45, 54, this, 1, 2));
+		list.add(new ModuleSlotArray(45, 54, this, 1, 2, false));
 		if(world.isRemote)
 			list.add(new ModuleImage(44, 35, new IconResource(194, 0, 18, 18, CommonResources.genericBackground)));
 		list.add(new ModuleLiquidIndicator(27, 18, this));
@@ -282,14 +283,12 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	}
 
 	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn,
-			Direction direction) {
+	public boolean canInsertItem(int index, ItemStack itemStackIn, Direction direction) {
 		return index == 0 && isItemValidForSlot(index, itemStackIn);
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack,
-			Direction direction) {
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
 		return index == 1;
 	}
 
