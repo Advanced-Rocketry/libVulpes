@@ -48,11 +48,7 @@ public abstract class TileEntityForgeProducer extends TileEntity implements IMod
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-		if(capability == CapabilityEnergy.ENERGY )
-			return LazyOptional.of(() -> new ForgePowerCapability(this)).cast();
-		/*else if(TeslaHandler.hasTeslaCapability(this, capability))
-			return LazyOptional.of(() -> TeslaHandler.getHandler(this)).cast();*/
-
+		if(capability == CapabilityEnergy.ENERGY ) return LazyOptional.of(() -> new ForgePowerCapability(this)).cast();
 		return super.getCapability(capability, facing);
 	}
 

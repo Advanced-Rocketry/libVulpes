@@ -73,32 +73,25 @@ public class PacketItemModifcation extends BasePacket {
 		}
 
 		if(in.readBoolean()) {
-			CompoundNBT nbt = null;
+			CompoundNBT nbt;
 			nbt = in.readCompoundTag();
 			this.nbt = nbt;
 		}
 
 		if(ent instanceof PlayerEntity) {
-			ItemStack itemStack = ((PlayerEntity)ent).getHeldItem(Hand.MAIN_HAND);
-			if(itemStack != null && itemStack.getItem() instanceof INetworkItem) {
+			ItemStack itemStack = ((PlayerEntity)ent).getHeldItem(Hand.MAIN_HAND).isEmpty() ? ((PlayerEntity)ent).getHeldItem(Hand.OFF_HAND) : ((PlayerEntity)ent).getHeldItem(Hand.MAIN_HAND);
+			if(!itemStack.isEmpty() && itemStack.getItem() instanceof INetworkItem) {
 				((INetworkItem)itemStack.getItem()).readDataFromNetwork(in, packetId, nbt, itemStack);
 			}
-		}
-		else {
-			//Error
 		}
 	}
 
 	public void execute(PlayerEntity player, Dist side) {
-
 		if(player != null) {
-			ItemStack itemStack = player.getHeldItem(Hand.MAIN_HAND);
-			if(itemStack != null && itemStack.getItem() instanceof INetworkItem) {
+			ItemStack itemStack = (player).getHeldItem(Hand.MAIN_HAND).isEmpty() ? (player).getHeldItem(Hand.OFF_HAND) : (player).getHeldItem(Hand.MAIN_HAND);
+			if(!itemStack.isEmpty() && itemStack.getItem() instanceof INetworkItem) {
 				((INetworkItem)itemStack.getItem()).useNetworkData(player, side, packetId, nbt, itemStack);
 			}
-		}
-		else {
-			//Error
 		}
 	}
 
@@ -135,13 +128,10 @@ public class PacketItemModifcation extends BasePacket {
 		}
 
 		if(ent instanceof PlayerEntity) {
-			ItemStack itemStack = ((PlayerEntity)ent).getHeldItem(Hand.MAIN_HAND);
-			if(itemStack != null && itemStack.getItem() instanceof INetworkItem) {
+			ItemStack itemStack = ((PlayerEntity)ent).getHeldItem(Hand.MAIN_HAND).isEmpty() ? ((PlayerEntity)ent).getHeldItem(Hand.OFF_HAND) : ((PlayerEntity)ent).getHeldItem(Hand.MAIN_HAND);
+			if(!itemStack.isEmpty() && itemStack.getItem() instanceof INetworkItem) {
 				((INetworkItem)itemStack.getItem()).readDataFromNetwork(in, packetId, nbt, itemStack);
 			}
-		}
-		else {
-			//Error
 		}
 	}
 }

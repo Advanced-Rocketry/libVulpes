@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.inventory.modules;
 
+import net.minecraft.client.gui.widget.button.AbstractButton;
 import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
@@ -70,7 +71,7 @@ public class ModuleRedstoneOutputButton extends ModuleButton {
 	}
 
 	@OnlyIn(value=Dist.CLIENT)
-	public void actionPerform(Button button) {
+	public void actionPerform(AbstractButton button) {
 		if(enabled && button == this.button) {
 			if(state == null)
 				state = RedstoneState.ON;

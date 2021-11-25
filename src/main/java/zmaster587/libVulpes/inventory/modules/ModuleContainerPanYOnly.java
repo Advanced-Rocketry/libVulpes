@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.AbstractButton;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
@@ -29,12 +30,11 @@ public class ModuleContainerPanYOnly extends ModuleBase {
 	protected int containerSizeY;
 	protected List<ModuleBase> moduleList;
 	protected List<ModuleBase> staticModuleList;
-	protected List<Button> buttonList, staticButtonList;
+	protected List<AbstractButton> buttonList, staticButtonList;
 	protected List<Slot> slotList;
 	protected double mouseLastX, mouseLastY;
 	boolean outofBounds;
 	ResourceLocation backdrop;
-	protected int internalOffsetX;
 	protected int internalOffsetY;
 	protected boolean mouseFirstDown = true;
 
@@ -89,7 +89,7 @@ public class ModuleContainerPanYOnly extends ModuleBase {
 
 	@Override
 	@OnlyIn(value= Dist.CLIENT)
-	public List<Button> addButtons(int x, int y) {
+	public List<AbstractButton> addButtons(int x, int y) {
 
 		buttonList.clear();
 		staticButtonList.clear();
@@ -113,7 +113,7 @@ public class ModuleContainerPanYOnly extends ModuleBase {
 		int deltaY = -y - currentPosY;
 		currentPosY += deltaY;
 
-		for(Button button2 : buttonList) {
+		for(AbstractButton button2 : buttonList) {
 			button2.y += deltaY;
 		}
 
@@ -144,7 +144,7 @@ public class ModuleContainerPanYOnly extends ModuleBase {
 
 	@Override
 	@OnlyIn(value= Dist.CLIENT)
-	public void actionPerform(Button button) {
+	public void actionPerform(AbstractButton button) {
 
 		for(ModuleBase module : moduleList)
 			module.actionPerform(button);
@@ -164,8 +164,7 @@ public class ModuleContainerPanYOnly extends ModuleBase {
 
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public void renderForeground(MatrixStack mat, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel,
-								 ContainerScreen<? extends Container>  gui, FontRenderer font) {
+	public void renderForeground(MatrixStack mat, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel, ContainerScreen<? extends Container>  gui, FontRenderer font) {
 
 		//Handle scrolling
 		int scrollDelta = (int)LibVulpes.proxy.getScrollDelta(); //ObfuscationReflectionHelper.getPrivateValue( MouseHelper.class, Minecraft.getInstance().mouseHelper, "accumulatedScrollDelta");
@@ -176,13 +175,11 @@ public class ModuleContainerPanYOnly extends ModuleBase {
 
 		setUpScissor((ContainerScreen<Container>) gui, offsetX + guiOffsetX, guiOffsetY + offsetY, offsetX + screenSizeX, offsetY + screenSizeY);
 
-		for(Button btn : buttonList)
-		{
+		for(AbstractButton btn : buttonList) {
 			btn.render(mat, mouseX, mouseY, zLevel);
 		}
 
-		for(Button btn : staticButtonList)
-		{
+		for(AbstractButton btn : staticButtonList) {
 			btn.render(mat, mouseX, mouseY, zLevel);
 		}
 
@@ -216,14 +213,14 @@ public class ModuleContainerPanYOnly extends ModuleBase {
 		//Handles buttons (mostly vanilla copy)
 		if(button == 0 && isMouseInBounds(0, 0, x, y)) {
 
-			List<Button> fullButtonList = new LinkedList<>();
+			List<AbstractButton> fullButtonList = new LinkedList<>();
 			fullButtonList.addAll(buttonList);
 			fullButtonList.addAll(staticButtonList);
 
 
-			for(IGuiEventListener iguieventlistener : fullButtonList) {
+			for(AbstractButton iguieventlistener : fullButtonList) {
 				if (iguieventlistener.isMouseOver(scaledX, scaledY)) {
-					Button button2 = (Button)iguieventlistener;
+					AbstractButton button2 = iguieventlistener;
 					button2.playDownSound(gui.getMinecraft().getSoundHandler());
 					gui.setListener(button2);
 				}
@@ -277,7 +274,7 @@ public class ModuleContainerPanYOnly extends ModuleBase {
 		{
 		}
 
-		for(Button button2 : buttonList) {
+		for(AbstractButton button2 : buttonList) {
 			button2.y += deltaY;
 		}
 
@@ -327,10 +324,10 @@ public class ModuleContainerPanYOnly extends ModuleBase {
 			gui.blit(mat, x + offsetX, y + offsetY, (int)(-0.1*currentPosX), (int)(-0.1*currentPosY), screenSizeX + offsetX,  screenSizeY + offsetY);
 		}
 
-		for(Button button : buttonList)
+		for(AbstractButton button : buttonList)
 			button.render(mat, mouseX, mouseY, 0);
 
-		for(Button button : staticButtonList)
+		for(AbstractButton button : staticButtonList)
 			button.render(mat, mouseX, mouseY, 0);
 
 		for(ModuleBase module : moduleList) {

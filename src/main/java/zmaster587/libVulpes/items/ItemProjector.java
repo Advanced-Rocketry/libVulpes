@@ -58,6 +58,8 @@ import zmaster587.libVulpes.util.Vector3F;
 import zmaster587.libVulpes.util.ZUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class ItemProjector extends Item implements IModularInventory, IButtonInventory, INetworkItem, INamedContainerProvider {
 
@@ -75,8 +77,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		descriptionList = new HashMap<>();
 	}
 
-	private String buildMachineBlocks(TileMultiBlock multiblock, BlockTile mainBlock)
-	{
+	private String buildMachineBlocks(TileMultiBlock multiblock, BlockTile mainBlock) {
 		HashMap<Object, Integer> map = new HashMap<>();
 
 		Object[][][] structure = multiblock.getStructure();
@@ -95,7 +96,6 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		String str = Item.getItemFromBlock(mainBlock).getDisplayName(new ItemStack(mainBlock)).getString() + " x1\n";
 
 		for(Entry<Object, Integer> entry : map.entrySet()) {
-
 			List<BlockMeta> blockMeta = multiblock.getAllowableBlocks(entry.getKey());
 
 			if(blockMeta.isEmpty() || Item.getItemFromBlock(blockMeta.get(0).getBlock()) == Items.AIR || blockMeta.get(0).getBlock() == Blocks.AIR )
@@ -127,9 +127,9 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	@OnlyIn(value=Dist.CLIENT)
 	public void mouseEvent(MouseScrollEvent event) {
 		if(Minecraft.getInstance().player.isSneaking() && event.getScrollDelta() != 0) {
-			ItemStack stack = Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND);
+			ItemStack stack = Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND).isEmpty() ? Minecraft.getInstance().player.getHeldItem(Hand.OFF_HAND) : Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND);
 
-			if(stack != null && stack.getItem() == this && getMachineId(stack) != -1) {
+			if(!stack.isEmpty() && stack.getItem() == this && getMachineId(stack) != -1) {
 				if(event.getScrollDelta() < 0) {
 					setYLevel(stack, getYLevel(stack) + 1);
 				}
@@ -143,11 +143,8 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	}
 
 	private void clearStructure(World world, TileMultiBlock tile, @Nonnull ItemStack stack) {
-
-		int id = getMachineId(stack);
 		Direction direction = Direction.values()[getDirection(stack)];
 
-		TileMultiBlock multiblock = machineList.get(id);
 
 		int prevMachineId = getPrevMachineId(stack);
 		Object[][][] structure;
@@ -171,10 +168,9 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		}
 	}
 
-	private void RebuildStructure(World world, TileMultiBlock tile, ItemStack stack, int posX, int posY, int posZ, Direction orientation, boolean hologram) {
-
+	private void rebuildStructure(World world, TileMultiBlock tile, ItemStack stack, int posX, int posY, int posZ, Direction orientation, boolean hologram) {
 		int id = getMachineId(stack);
-		Direction direction = Direction.byIndex(getDirection(stack));
+		Direction direction;
 
 		TileMultiBlock multiblock = machineList.get(id);
 		Object[][][] structure;
@@ -241,12 +237,12 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	}
 
 	@Override
+	@Nonnull
+	@ParametersAreNonnullByDefault
 	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-
-		if(!world.isRemote && player.isSneaking())
-		{
+		if(!world.isRemote && player.isSneaking()) {
 			INamedContainerProvider stack = (INamedContainerProvider)player.getHeldItem(hand).getItem();
-			NetworkHooks.openGui((ServerPlayerEntity)player, stack, packetBuffer -> {packetBuffer.writeInt(getModularInvType().ordinal()); packetBuffer.writeBoolean(hand == Hand.MAIN_HAND);});
+			NetworkHooks.openGui((ServerPlayerEntity)player, stack, packetBuffer -> {packetBuffer.writeInt(getModularInvType().ordinal());});
 			return super.onItemRightClick(world, player, hand);
 		}
 		return super.onItemRightClick(world, player, hand);
@@ -254,9 +250,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 	@Override
 	public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext context) {
-
 		PlayerEntity player = context.getPlayer();
-		Hand hand = context.getHand();
 		World world = context.getWorld();
 
 		int id = getMachineId(stack);
@@ -266,7 +260,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			Vector3F<Integer> pos = getBasePosition(stack);
 			Direction direction = Direction.values()[getDirection(stack)];
 			setYLevel(stack, -1);
-			RebuildStructure(context.getWorld(), machineList.get(id), stack, pos.x, pos.y, pos.z, direction, false);
+			rebuildStructure(context.getWorld(), machineList.get(id), stack, pos.x, pos.y, pos.z, direction, false);
 
 		}
 		if(!player.isSneaking() && id != -1 && world.isRemote) {
@@ -351,12 +345,12 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 	@Override
 	public String getModularInventoryName() {
-		return "item.holoProjector";
+		return "item.libvulpes.holoprojector";
 	}
 
 	@Override
 	public boolean canInteractWithContainer(PlayerEntity entity) {
-		return entity != null && entity.isAlive() && entity.getHeldItem(Hand.MAIN_HAND) != null && entity.getHeldItem(Hand.MAIN_HAND).getItem() == this;
+		return entity != null && entity.isAlive() && !entity.getHeldItem(Hand.MAIN_HAND).isEmpty() ? entity.getHeldItem(Hand.MAIN_HAND).getItem() == this : !entity.getHeldItem(Hand.OFF_HAND).isEmpty() && entity.getHeldItem(Hand.MAIN_HAND).getItem() == this;
 	}
 
 	@Override
@@ -364,7 +358,8 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	public void onInventoryButtonPressed(ModuleButton buttonId) {
 		//PacketHandler.sendToServer(new PacketItemModifcation(this, gui.getInstance().thePlayer, (byte)buttonId));
 		ItemStack stack = Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND);
-		if(stack != null && stack.getItem() == this) {
+		if (stack.isEmpty()) stack = Minecraft.getInstance().player.getHeldItem(Hand.OFF_HAND);
+		if(!stack.isEmpty() && stack.getItem() == this) {
 			setMachineId(stack, (int)buttonId.getAdditionalData());
 			PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getInstance().player, (byte)0));
 		}
@@ -374,8 +369,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		CompoundNBT nbt;
 		if(stack.hasTag()) {
 			nbt = stack.getTag();
-		}
-		else 
+		} else
 			nbt = new CompoundNBT();
 
 		nbt.putInt(IDNAME, id);
@@ -385,8 +379,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	private int getMachineId(ItemStack stack) {
 		if(stack.hasTag()) {
 			return stack.getTag().getInt(IDNAME);
-		}
-		else
+		} else
 			return -1;
 	}
 
@@ -440,8 +433,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		if(stack.hasTag()) {
 			CompoundNBT nbt = stack.getTag();
 			return new Vector3F<>(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"));
-		}
-		else
+		} else
 			return null;
 	}
 
@@ -463,8 +455,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	public int getDirection(ItemStack stack) {
 		if(stack.hasTag()) {
 			return stack.getTag().getInt("dir");
-		}
-		else
+		} else
 			return -1;
 	}
 
@@ -472,8 +463,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		CompoundNBT nbt;
 		if(stack.hasTag()) {
 			nbt = stack.getTag();
-		}
-		else
+		} else
 			nbt = new CompoundNBT();
 
 		nbt.putInt("dir", dir);
@@ -481,8 +471,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		stack.setTag(nbt);
 	}
 
-	private String getDescription(int id)
-	{
+	private String getDescription(int id) {
 		if(descriptionList.containsKey(id))
 			descriptionList.get(id);
 
@@ -493,9 +482,9 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public void addInformation(ItemStack stack, World player,
-			List list, ITooltipFlag bool) {
-		super.addInformation(stack, player, list, bool);
+	@ParametersAreNonnullByDefault
+	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag bool) {
+		super.addInformation(stack, world, list, bool);
 
 		list.add(new StringTextComponent("Shift right-click: opens machine selection interface"));
 		list.add(new StringTextComponent("Shift-scroll: moves cross-section"));
@@ -515,27 +504,25 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id, @Nonnull ItemStack stack) {
-		if(id == 0) {
+		if(id == 0)
 			out.writeInt(getMachineId(stack));
-		}
 		else if(id == 1)
 			out.writeInt(getYLevel(stack));
 		else if(id == 2) {
-
 			Vector3F<Integer> pos = getBasePosition(stack);
-			out.writeInt(pos.x);
-			out.writeInt(pos.y);
-			out.writeInt(pos.z);
-			out.writeInt(getDirection(stack));
+			if (pos != null) {
+				out.writeInt(pos.x);
+				out.writeInt(pos.y);
+				out.writeInt(pos.z);
+				out.writeInt(getDirection(stack));
+			}
 		}
 	}
 
 	@Override
-	public void readDataFromNetwork(ByteBuf in, byte packetId,
-			CompoundNBT nbt, ItemStack stack) {
-		if(packetId == 0) {
+	public void readDataFromNetwork(ByteBuf in, byte packetId, CompoundNBT nbt, ItemStack stack) {
+		if(packetId == 0)
 			nbt.putInt(IDNAME, in.readInt());
-		}
 		else if(packetId == 1)
 			nbt.putInt("yLevel", in.readInt());
 		else if(packetId == 2) {
@@ -547,37 +534,36 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	}
 
 	@Override
-	public void useNetworkData(PlayerEntity player, Dist side, byte id,
-			CompoundNBT nbt, ItemStack stack) {
+	public void useNetworkData(PlayerEntity player, Dist side, byte id, CompoundNBT nbt, ItemStack stack) {
 		if(id == 0) {
 			int machineId = nbt.getInt(IDNAME);
 			setMachineId(stack, nbt.getInt(IDNAME));
 			TileMultiBlock tile = machineList.get(machineId);
 			setYLevel(stack, tile.getStructure().length-1);
-		}
-		else if(id == 1) {
+		} else if(id == 1) {
 			setYLevel(stack, nbt.getInt("yLevel"));
 			Vector3F<Integer> vec = getBasePosition(stack);
-			RebuildStructure(player.world, this.machineList.get(getMachineId(stack)), stack, vec.x, vec.y, vec.z, Direction.byIndex(getDirection(stack)), true);
-		}
-		else if(id == 2) {
+			rebuildStructure(player.world, this.machineList.get(getMachineId(stack)), stack, vec.x, vec.y, vec.z, Direction.byIndex(getDirection(stack)), true);
+		} else if(id == 2) {
 			int x = nbt.getInt("x");
 			int y = nbt.getInt("y");
 			int z = nbt.getInt("z");
 			int dir = nbt.getInt("dir");
 
 			if(getMachineId(stack) != -1)
-				RebuildStructure(player.world, this.machineList.get(getMachineId(stack)), stack, x, y, z, Direction.byIndex(dir), true);
+				rebuildStructure(player.world, this.machineList.get(getMachineId(stack)), stack, x, y, z, Direction.byIndex(dir), true);
 		}
 	}
 
 	@Override
+	@Nullable
 	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player) {
 		GuiHandler.guiId ID = getModularInvType();
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_HELD_ITEM, id, player, this.getModules(getModularInvType().ordinal(), player), this, ID);
 	}
 
 	@Override
+	@Nonnull
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent("item.libvulpes.holo_projector");
 	}

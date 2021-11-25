@@ -11,7 +11,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.cap.ForgePowerCapability;
-import zmaster587.libVulpes.config.LibVulpesConfig;
 import zmaster587.libVulpes.energy.IPower;
 import zmaster587.libVulpes.util.UniversalBattery;
 

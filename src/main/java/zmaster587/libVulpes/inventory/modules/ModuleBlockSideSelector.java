@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import net.minecraft.client.gui.widget.button.AbstractButton;
 import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.util.BlockDirectionFunction;
 import net.minecraft.client.gui.FontRenderer;
@@ -43,23 +44,22 @@ public class ModuleBlockSideSelector extends ModuleBase implements IButtonInvent
 	}
 
 	@Override
-	public void actionPerform(Button button) {
+	public void actionPerform(AbstractButton button) {
 		for(ModuleButton button2 : buttons)
 			button2.actionPerform(button);
 	}
 
 	@Override
-	public List<Button> addButtons(int x, int y) {
+	public List<AbstractButton> addButtons(int x, int y) {
 
-		List<Button> list = super.addButtons(x, y);
+		List<AbstractButton> list = super.addButtons(x, y);
 		for(int i = 0; i < 6; i++)
 			list.addAll(buttons[i].addButtons(x, y));
 		return list;
 	}
 
 	@Override
-	public void renderBackground(ContainerScreen<? extends Container>  gui, MatrixStack matrix, int x, int y, int mouseX,
-			int mouseY, FontRenderer font) {
+	public void renderBackground(ContainerScreen<? extends Container>  gui, MatrixStack matrix, int x, int y, int mouseX, int mouseY, FontRenderer font) {
 		super.renderBackground(gui, matrix, x, y, mouseX, mouseY, font);
 
 		for(ModuleBase button : buttons)
@@ -67,14 +67,10 @@ public class ModuleBlockSideSelector extends ModuleBase implements IButtonInvent
 	}
 
 	@Override
-	public void renderForeground(MatrixStack mat, int guiOffsetX, int guiOffsetY, int mouseX,
-			int mouseY, float zLevel, ContainerScreen<? extends Container>  gui, FontRenderer font) {
-		// TODO Auto-generated method stub
-		super.renderForeground(mat, guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui,
-				font);
+	public void renderForeground(MatrixStack mat, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel, ContainerScreen<? extends Container>  gui, FontRenderer font) {
+		super.renderForeground(mat, guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
 		for(ModuleBase button : buttons)
-			button.renderForeground(mat, guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui,
-					font);
+			button.renderForeground(mat, guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
 	}
 
 	public int getStateForSide(Direction side) {

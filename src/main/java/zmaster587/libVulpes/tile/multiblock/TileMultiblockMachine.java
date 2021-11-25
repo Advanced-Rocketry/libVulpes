@@ -250,104 +250,86 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 
 	//Can this recipe be processed
 	public boolean canProcessRecipe(IRecipe recipe) {
-
-		if( !isComplete() || invCheckFlag)
-			return false;
+		if( !isComplete() || invCheckFlag)  return false;
 
 		invCheckFlag = true;
 		int reservedSpotSize = 0;
-		if(recipe instanceof RecipesMachine.LibVulpesRecipe)
-			reservedSpotSize = recipe.getRequiredEmptyOutputs();
+		if(recipe instanceof RecipesMachine.LibVulpesRecipe) reservedSpotSize = recipe.getRequiredEmptyOutputs();
 		
 		List<ItemStack> outputItems = getItemOutputs(recipe);
 
 		boolean itemCheck = outputItems.size() == 0;
 
-
 		List<List<ItemStack>> ingredients = recipe.getPossibleIngredients();
 		short mask = 0x0;
+
 		recipeCheck:
+		for(int ingredientNum = 0;ingredientNum < ingredients.size(); ingredientNum++) {
+			List<ItemStack> ingredient = ingredients.get(ingredientNum);
+			ingredientCheck:
 
-			for(int ingredientNum = 0;ingredientNum < ingredients.size(); ingredientNum++) {
-
-				List<ItemStack> ingredient = ingredients.get(ingredientNum);
-				ingredientCheck:
-
-					for(IInventory hatch : getItemInPorts()) {
-
-						for(int i = 0; i < hatch.getSizeInventory(); i++) {
-							ItemStack stackInSlot = hatch.getStackInSlot(i);
-
-							for(ItemStack stack : ingredient) {
-								if(stackInSlot != ItemStack.EMPTY && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.isItemEqual(stack) || (/*stack.getDamage() == OreDictionary.WILDCARD_VALUE &&*/ stack.getItem() == stackInSlot.getItem()))) {
-									mask |= (1 << ingredientNum);
-									break ingredientCheck;
-								}
-							}
+			for (IInventory hatch : getItemInPorts()) {
+				for (int i = 0; i < hatch.getSizeInventory(); i++) {
+					ItemStack stackInSlot = hatch.getStackInSlot(i);
+					for (ItemStack stack : ingredient) {
+						if (stackInSlot != ItemStack.EMPTY && stackInSlot.getCount() >= stack.getCount() && (stackInSlot.isItemEqual(stack) || (/*stack.getDamage() == OreDictionary.WILDCARD_VALUE &&*/ stack.getItem() == stackInSlot.getItem()))) {
+							mask |= (1 << ingredientNum);
+							break ingredientCheck;
 						}
-
-						//If no matching item is found for the ingredient
-						//break recipeCheck;
 					}
-
-
+				}
+				//If no matching item is found for the ingredient
+				break recipeCheck;
 			}
+		}
 		if(mask != (1 << ( ( ingredients.size() ) )) - 1) {
 			invCheckFlag = false;
 			return false;
 		}
 
-
-		if(reservedSpotSize < 0)
-		{
-		//Check output Items
-		bottomItemCheck:
-			for(IInventory outInventory : getItemOutPorts()) {
+		if(reservedSpotSize < 0) {
+			//Check output Items
+			bottomItemCheck:
+			for (IInventory outInventory : getItemOutPorts()) {
 				//It's possible for the outputItems to be bigger than the inventory
-				if(outInventory.getSizeInventory() - outputItems.size() < 0)
+				if (outInventory.getSizeInventory() - outputItems.size() < 0)
 					continue;
-				
-				for(int i = smartInventoryUpgrade ? outInventory.getSizeInventory() - outputItems.size() : 0; (i < (smartInventoryUpgrade ? outInventory.getSizeInventory() : outputItems.size())); i++) {
+
+				for (int i = smartInventoryUpgrade ? outInventory.getSizeInventory() - outputItems.size() : 0; (i < (smartInventoryUpgrade ? outInventory.getSizeInventory() : outputItems.size())); i++) {
 					ItemStack stack = outInventory.getStackInSlot(i);
 
-					if(smartInventoryUpgrade) {
-						ItemStack outputItem = outputItems.get(outInventory.getSizeInventory() - i - 1);
-
-
+					if (smartInventoryUpgrade) {
 						boolean allIngredFit = true;
-						for(int k = 0; k < outputItems.size() && i - k >= 0; k++) {
-							ItemStack stack2 = outInventory.getStackInSlot(outInventory.getSizeInventory()-k-1);
-							ItemStack outputItem2  = outputItems.get(k);
+						for (int k = 0; k < outputItems.size() && i - k >= 0; k++) {
+							ItemStack stack2 = outInventory.getStackInSlot(outInventory.getSizeInventory() - k - 1);
+							ItemStack outputItem2 = outputItems.get(k);
 							allIngredFit = stack2.isEmpty() || (stack2.isItemEqual(outputItem2) && stack2.getCount() + outputItem2.getCount() <= outInventory.getInventoryStackLimit() && stack2.getCount() + outputItem2.getCount() <= stack.getMaxStackSize());
-							
-							if(!allIngredFit) break;
+
+							if (!allIngredFit) break;
 						}
-						
+
 						//stack cannot be null when assigning flag
-						if(allIngredFit) {
-							
+						if (allIngredFit) {
 							//Check all the slots
 							invCheckFlag = false;
 							itemCheck = true;
 							break bottomItemCheck;
 						}
 
-						if(stack != ItemStack.EMPTY && ZUtils.getFirstFilledSlotIndex(outInventory) >= outputItems.size()) {
+						if (stack != ItemStack.EMPTY && ZUtils.getFirstFilledSlotIndex(outInventory) >= outputItems.size()) {
 							//Range Check
 							int outputSize = outputItems.size();
 							int j;
-							for(j = 0; j < outputSize; j++) {
-								if(outInventory.getStackInSlot(j) != ItemStack.EMPTY) {
+							for (j = 0; j < outputSize; j++) {
+								if (outInventory.getStackInSlot(j) != ItemStack.EMPTY) {
 									invCheckFlag = false;
 									itemCheck = false;
 									break bottomItemCheck;
 								}
 							}
 
-							int numExtraMoves = outInventory.getSizeInventory() - ZUtils.getFirstFilledSlotIndex(outInventory) - 1;
-
 							//J will be last slot in index by now
-							for(j = outInventory.getSizeInventory() - outputSize; j > 0; j--) {
+							for (j = outInventory.getSizeInventory() - outputSize; j > 0; j--) {
 								int slot = outInventory.getSizeInventory();
 								outInventory.setInventorySlotContents(slot - j - outputSize, outInventory.getStackInSlot(slot - j));
 								outInventory.setInventorySlotContents(slot - j, ItemStack.EMPTY);
@@ -357,8 +339,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 							itemCheck = true;
 							break bottomItemCheck;
 						}
-					}
-					else if(stack == ItemStack.EMPTY || stack.isItemEqual(outputItems.get(i)) && 
+					} else if (stack == ItemStack.EMPTY || stack.isItemEqual(outputItems.get(i)) &&
 							(stack.getCount() + outputItems.get(i).getCount() <= outInventory.getInventoryStackLimit() && stack.getCount() + outputItems.get(i).getCount() <= stack.getMaxStackSize())) {
 						itemCheck = true;
 						break bottomItemCheck;

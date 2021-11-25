@@ -213,7 +213,7 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		String fluidname = json.getAsJsonObject().get("fluid").getAsString();
 		int size = json.getAsJsonObject().get("amount").getAsInt();
 		JsonElement chanceElem = json.getAsJsonObject().get("chance");
-		float chance = 0;
+		float chance = 1f;
 		
 		if(chanceElem != null)
 			chance = chanceElem.getAsFloat();

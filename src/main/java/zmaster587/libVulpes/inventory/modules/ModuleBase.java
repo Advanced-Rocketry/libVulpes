@@ -3,6 +3,7 @@ package zmaster587.libVulpes.inventory.modules;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.client.gui.widget.button.AbstractButton;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -172,9 +173,7 @@ public abstract class ModuleBase {
 	 * @param variableId container id to send
 	 * @param localId id of the object, scoped to this module
 	 */
-	public void sendChanges(Container container, IContainerListener crafter, int variableId, int localId) {
-
-	}
+	public void sendChanges(Container container, IContainerListener crafter, int variableId, int localId) {}
 
 	/**
 	 * 
@@ -192,9 +191,7 @@ public abstract class ModuleBase {
 	 * @param slot scoped id of the object updated
 	 * @param value value recieved from the server
 	 */
-	public void onChangeRecieved(int slot, int value) {
-
-	}
+	public void onChangeRecieved(int slot, int value) {}
 
 	/**
 	 * @return the number of objects this module can update
@@ -209,7 +206,7 @@ public abstract class ModuleBase {
 	 * @return list of buttons associated with this module
 	 */
 	@OnlyIn(value=Dist.CLIENT)
-	public List<Button> addButtons(int x, int y) {
+	public List<AbstractButton> addButtons(int x, int y) {
 		return new LinkedList<>();
 	}
 
@@ -218,7 +215,7 @@ public abstract class ModuleBase {
 	 * @param button Button that was clicked
 	 */
 	@OnlyIn(value=Dist.CLIENT)
-	public void actionPerform(Button button) {
+	public void actionPerform(AbstractButton button) {
 
 	}
 

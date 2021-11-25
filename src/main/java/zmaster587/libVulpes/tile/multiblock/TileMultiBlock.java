@@ -3,7 +3,6 @@ package zmaster587.libVulpes.tile.multiblock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -23,14 +22,12 @@ import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.block.RotatableBlock;
 import zmaster587.libVulpes.block.multiblock.BlockMultiBlockComponentVisible;
-import zmaster587.libVulpes.block.multiblock.BlockMultiblockStructure;
 import zmaster587.libVulpes.block.multiblock.IHidableBlock;
 import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.tile.TileSchematic;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileFluidHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileInputHatch;
-import zmaster587.libVulpes.tile.multiblock.hatch.TileInventoryHatch;
 import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
 import zmaster587.libVulpes.util.IFluidHandlerInternal;
 import zmaster587.libVulpes.util.Vector3F;
@@ -185,29 +182,19 @@ public class TileMultiBlock extends TileEntity {
 					int globalY = pos.getY() - y + offset.y;
 					int globalZ = pos.getZ() - (x - offset.x)*front.getXOffset()  - (z-offset.z)*front.getZOffset();
 
+					BlockPos globalPos = new BlockPos(globalX, globalY, globalZ);
+					Block block = world.getBlockState(globalPos).getBlock();
 
-					TileEntity tile = world.getTileEntity(new BlockPos(globalX, globalY, globalZ));
-					//This block is being broken anyway so don't bother
-					if(blockBroken 
-					&& globalX == destroyedPos.getX() 
-					&& globalY == destroyedPos.getY() 
-					&& globalZ == destroyedPos.getZ()) {
-						if(tile instanceof IMultiblock) {
-							((IMultiblock)tile).setIncomplete();
-						}
-						tile.remove();
-						continue;
-					}
-					Block block = world.getBlockState(new BlockPos(globalX, globalY, globalZ)).getBlock();
-
-					destroyBlockAt(new BlockPos(globalX, globalY, globalZ), block, tile);
+					TileEntity tile = world.getTileEntity(globalPos);
+					if(tile instanceof IMultiblock && tile.getType() != this.getType()) ((IMultiblock)tile).setIncomplete();
+					destroyBlockAt(globalPos, block, tile);
 				}
 			}
 		}
 
+		world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 		resetCache();
 		this.markDirty();
-		world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 	}
 
 	/**
@@ -255,7 +242,6 @@ public class TileMultiBlock extends TileEntity {
 	}
 
 	public boolean attemptCompleteStructure(BlockState state) {
-		//if(!completeStructure)
 		canRender = completeStructure = localCompleteStructure = completeStructure(state);
 		return completeStructure;
 	}
@@ -299,7 +285,6 @@ public class TileMultiBlock extends TileEntity {
         //Required data for structure formation
 		Object[][][] structure = getStructure();
 		Vector3F<Integer> offset = getControllerOffset(structure);
-		List<BlockPos> replacableBlocks = new LinkedList<>();
 		Direction front = getFrontDirection(state);
 		//Store tile entities for later processing so we don't risk the check failing halfway through leaving half the multiblock assigned
 		LinkedList<TileEntity> tiles = new LinkedList<>();
@@ -373,7 +358,7 @@ public class TileMultiBlock extends TileEntity {
 						if(shouldHideBlock(world, globalPos, blockState)) ((IHidableBlock)block).hideBlock(world, globalPos, blockState);
 					}
 
-					if(structure[y][z][x] != null && !block.isAir(blockState, world, globalPos) && !(tile instanceof IMultiblock) && !(tile instanceof TileMultiBlock)) {
+					if(structure[y][z][x] != null && !block.isAir(blockState, world, globalPos) && !(tile instanceof IMultiblock) && !(tile instanceof TileMultiBlock) && !(block instanceof BlockMultiBlockComponentVisible)) {
 						replaceStandardBlock(globalPos, blockState, tile);
 					}
 				}

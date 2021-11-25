@@ -31,7 +31,6 @@ import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.client.RepeatingSound;
-import zmaster587.libVulpes.config.LibVulpesConfig;
 import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
@@ -48,6 +47,9 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine.NetworkPackets
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.MultiBattery;
 import zmaster587.libVulpes.util.ZUtils;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMachine, IModularInventory, IProgressBar, IToggleButton, ITickableTileEntity, IToggleableMachine {
 
@@ -307,7 +309,6 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 	@Override
 	public void writeDataToNetwork(PacketBuffer out, byte id) {
-
 		if(id == NetworkPackets.POWERERROR.ordinal()) {
 			out.writeBoolean(hadPowerLastTick);
 		}
@@ -317,8 +318,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	@Override
-	public void readDataFromNetwork(PacketBuffer in, byte packetId,
-			CompoundNBT nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId, CompoundNBT nbt) {
 		if(packetId == NetworkPackets.POWERERROR.ordinal()) {
 			nbt.putBoolean("hadPowerLastTick", in.readBoolean());
 		}
@@ -328,9 +328,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	@Override
-	public void useNetworkData(PlayerEntity player, Dist side, byte id,
-			CompoundNBT nbt) {
-
+	public void useNetworkData(PlayerEntity player, Dist side, byte id, CompoundNBT nbt) {
 		if(id == NetworkPackets.POWERERROR.ordinal()) {
 			hadPowerLastTick = nbt.getBoolean("hadPowerLastTick");
 		} else if (id == NetworkPackets.TOGGLE.ordinal()) {
@@ -385,11 +383,13 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 	
 	@Override
+	@Nonnull
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int ID, PlayerInventory playerInv, PlayerEntity playerEntity) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, ID, playerEntity, getModules(getModularInvType().ordinal(), playerEntity), this,getModularInvType());
 	}

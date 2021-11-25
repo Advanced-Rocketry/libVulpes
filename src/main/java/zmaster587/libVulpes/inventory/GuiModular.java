@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import net.minecraft.client.gui.widget.button.AbstractButton;
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.inventory.GuiHandler.guiId;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
@@ -16,7 +17,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 
@@ -46,7 +46,7 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 
 	@Override
 	public void init(Minecraft minecraft, int width, int height) {
-		if(((ContainerModular)container).guid != guiId.MODULARFULLSCREEN)
+		if(container.guid != guiId.MODULARFULLSCREEN)
 		{
 			super.init(minecraft, width, height);
 			return;
@@ -73,8 +73,7 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 	// InitGui
 	@Override
 	public void init() {
-		if(((ContainerModular)container).guid == guiId.MODULARFULLSCREEN)
-		{
+		if(container.guid == guiId.MODULARFULLSCREEN) {
 			this.xSize = Minecraft.getInstance().getMainWindow().getWidth();
 			this.ySize = Minecraft.getInstance().getMainWindow().getHeight();
 			this.width = Minecraft.getInstance().getMainWindow().getWidth();
@@ -87,7 +86,7 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 		int y = (height - ySize) / 2;
 
 		for(ModuleBase module : modules) {
-			List<Button> buttonList = module.addButtons(x, y);
+			List<AbstractButton> buttonList = module.addButtons(x, y);
 			if(!buttonList.isEmpty()) {
 				this.buttons.addAll(buttonList);
 			}
@@ -102,7 +101,7 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 		if(button == null)
 			return;
 		for(ModuleBase module : modules) {
-			module.actionPerform((Button)button);
+			module.actionPerform((AbstractButton)button);
 		}
 	}
 
@@ -148,9 +147,7 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 	//onMouseclicked
 	@Override
 	public boolean mouseReleased(double x, double y, int button) {
-
 		boolean handled = super.mouseReleased(x, y, button);
-
 		//Handles buttons (mostly vanilla copy)
 		if(button == 0) {
 
@@ -159,7 +156,7 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 
 			for(IGuiEventListener iguieventlistener : fullButtonList) {
 				if (iguieventlistener.isMouseOver(x, y)) {
-					Button button2 = (Button)iguieventlistener;
+					AbstractButton button2 = (AbstractButton)iguieventlistener;
 					button2.playDownSound(this.getMinecraft().getSoundHandler());
 					this.setListener(button2);
 				}

@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.audio.SoundHandler;
+import net.minecraft.client.gui.widget.button.AbstractButton;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -14,20 +15,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.StringTextComponent;
 
-public class GuiImageButton extends Button {
+public class GuiImageButton extends AbstractButton {
 
-	static class DummyPress implements IPressable
-	{
-		public DummyPress() {
-		}
-		
-		@Override
-		public void onPress(Button arg0) {
-			// Do nothing here
-		}
-		
-	}
-	
 	protected ResourceLocation[] buttonTexture;
 	private String soundString;
 	private int bgColor;
@@ -48,7 +37,7 @@ public class GuiImageButton extends Button {
 	 * @param location index 0: default, index 1: hover, index 2: pressed, index 3: disabled
 	 */
 	public GuiImageButton(int x, int y, int width, int height, ResourceLocation[] location) {
-		super(x, y, width, height, new StringTextComponent(""), new DummyPress());
+		super(x, y, width, height, new StringTextComponent(""));
 		buttonTexture = location;
 		soundString = "";
 		bgColor = 0xFFFFFFFF;
@@ -88,8 +77,7 @@ public class GuiImageButton extends Button {
 	//DrawButtonFG
 	@Override
 	public void render(MatrixStack matrix, int par2, int par3, float p_230431_4_) {
-		if (this.visible)
-		{
+		if (this.visible) {
 			//
 			this.hovered = par2 >= this.x && par3 >= this.y && par2 < this.x + this.width && par3 < this.y + this.height;
 			// get hover state
@@ -136,4 +124,6 @@ public class GuiImageButton extends Button {
 			//super.render(matrix, (int) par2, (int) par3, 0);
 		}
 	}
+
+	public void onPress() { }
 }

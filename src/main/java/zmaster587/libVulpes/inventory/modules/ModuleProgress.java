@@ -67,7 +67,7 @@ public class ModuleProgress extends ModuleBase {
 			int localY = mouseY - offsetY - progressBar.getInsetY();
 
 			if(localX > 0 && localX < progressBar.getBackWidth() - progressBar.getInsetX() && localY > 0 && localY < progressBar.getBackHeight() - progressBar.getInsetY()) {
-				drawTooltip((ContainerScreen<Container>) gui, mat, tooltip, mouseX, MathHelper.clamp(mouseY, 16, Integer.MAX_VALUE), zLevel, font);
+				drawTooltip(gui, mat, tooltip, mouseX, MathHelper.clamp(mouseY, 16, Integer.MAX_VALUE), zLevel, font);
 			}
 		}
 	}

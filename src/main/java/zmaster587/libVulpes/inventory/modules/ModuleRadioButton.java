@@ -6,6 +6,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.AbstractButton;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.IContainerListener;
@@ -73,8 +74,7 @@ public class ModuleRadioButton  extends ModuleBase {
 	}
 
 	@Override
-	public void sendChanges(Container container, IContainerListener crafter,
-			int variableId, int localId) {
+	public void sendChanges(Container container, IContainerListener crafter, int variableId, int localId) {
 		crafter.sendWindowProperty(container, variableId, getOptionSelected());
 	}
 
@@ -84,9 +84,9 @@ public class ModuleRadioButton  extends ModuleBase {
 	}
 
 	@Override
-	public List<Button> addButtons(int x, int y) {
+	public List<AbstractButton> addButtons(int x, int y) {
 
-		List<Button> buttonList = super.addButtons(x, y);
+		List<AbstractButton> buttonList = super.addButtons(x, y);
 
 		for(ModuleToggleSwitch button : buttons) {
 			buttonList.addAll(button.addButtons(x, y));
@@ -96,7 +96,7 @@ public class ModuleRadioButton  extends ModuleBase {
 	}
 
 	@Override
-	public void actionPerform(Button buttonObj) {
+	public void actionPerform(AbstractButton buttonObj) {
 
 		if(enabled) {
 			super.actionPerform(buttonObj);
@@ -122,8 +122,7 @@ public class ModuleRadioButton  extends ModuleBase {
 	}
 
 	@Override
-	public void renderForeground(MatrixStack mat, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel,
-			ContainerScreen<? extends Container> gui, FontRenderer font) {
+	public void renderForeground(MatrixStack mat, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel, ContainerScreen<? extends Container> gui, FontRenderer font) {
 		super.renderForeground(mat, guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
 
 		for(ModuleToggleSwitch button : buttons) {
@@ -132,8 +131,7 @@ public class ModuleRadioButton  extends ModuleBase {
 	}
 
 	@Override
-	public void renderBackground(ContainerScreen<? extends Container>  gui, MatrixStack mat, int x, int y, int mouseX, int mouseY, 
-			FontRenderer font) {
+	public void renderBackground(ContainerScreen<? extends Container>  gui, MatrixStack mat, int x, int y, int mouseX, int mouseY, FontRenderer font) {
 		super.renderBackground(gui, mat, x, y, mouseX, mouseY, font);
 
 		for(ModuleToggleSwitch button : buttons) {

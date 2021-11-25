@@ -30,7 +30,7 @@ public class GuiModularFullScreen extends GuiModular {
 		      if (!net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Pre(this, this.buttons, this::addButton, remove))) {
 		      this.buttons.clear();
 		      this.children.clear();
-		      this.setListener((IGuiEventListener)null);
+		      this.setListener(null);
 		      this.init();
 		      }
 		      net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Post(this, this.buttons, this::addButton, remove));
