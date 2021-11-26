@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class RecipesMachine {
 
@@ -225,15 +226,20 @@ public class RecipesMachine {
 		}
 
 		@Override
+		@Deprecated
+		@ParametersAreNonnullByDefault
 		public boolean matches(IInventory inv, World worldIn) {
 			// never match, we handle this in the machines
 			return false;
 		}
 
 		@Override
+		@Deprecated
+		@Nonnull
+		@ParametersAreNonnullByDefault
 		public ItemStack getCraftingResult(IInventory inv) {
 			// do not use
-			return null;
+			return ItemStack.EMPTY;
 		}
 
 		@Override
@@ -243,22 +249,27 @@ public class RecipesMachine {
 		}
 
 		@Override
+		@Deprecated
+		@Nonnull
 		public ItemStack getRecipeOutput() {
 			// used by vanilla :/
 			return ItemStack.EMPTY;
 		}
 
 		@Override
+		@Nonnull
 		public ResourceLocation getId() {
 			return name;
 		}
 
 		@Override
+		@Nonnull
 		public IRecipeSerializer<?> getSerializer() {
 			return serializer;
 		}
 
 		@Override
+		@Nonnull
 		public IRecipeType<?> getType() {
 			return RecipeMachineFactory.MACHINING_TYPE;
 		}
@@ -300,8 +311,7 @@ public class RecipesMachine {
 						for (Item item : ItemTags.getCollection().get(res).getAllElements() ) {
 							innerList.add(new ItemStack(item));
 						}
-					}
-					else if(inputs[i] instanceof ResourceLocation) {
+					} else if(inputs[i] instanceof ResourceLocation) {
 						oreDict.put(i, ((ResourceLocation)inputs[i]));
 						if(!ItemTags.getCollection().getRegisteredTags().contains((ResourceLocation)inputs[i]))
 							throw new  NullPointerException("No such item tag registered: " + ((ResourceLocation)inputs[i]).toString());
@@ -309,8 +319,7 @@ public class RecipesMachine {
 						for (Item item : ItemTags.getCollection().get((ResourceLocation)inputs[i]).getAllElements() ) {
 							innerList.add(new ItemStack(item));
 						}
-					}
-					else if(inputs[i] instanceof NumberedOreDictStack) {
+					} else if(inputs[i] instanceof NumberedOreDictStack) {
 						oreDict.put(i, ((NumberedOreDictStack)inputs[i]).ore);
 						for (Item item : ItemTags.getCollection().get(((NumberedOreDictStack)inputs[i]).ore).getAllElements()) {
 							int number  = ((NumberedOreDictStack)inputs[i]).getNumber();
@@ -318,8 +327,7 @@ public class RecipesMachine {
 							stack2.setCount(number);
 							innerList.add(stack2);
 						}
-					}
-					else if(inputs[i] instanceof FluidStack)
+					} else if(inputs[i] instanceof FluidStack)
 						inputFluidStacks.add((FluidStack) inputs[i]);
 					else if(inputs[i] instanceof Item)
 						inputs[i] = new ItemStack((Item)inputs[i]);

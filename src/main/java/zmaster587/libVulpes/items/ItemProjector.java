@@ -96,6 +96,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		String str = Item.getItemFromBlock(mainBlock).getDisplayName(new ItemStack(mainBlock)).getString() + " x1\n";
 
 		for(Entry<Object, Integer> entry : map.entrySet()) {
+
 			List<BlockMeta> blockMeta = multiblock.getAllowableBlocks(entry.getKey());
 
 			if(blockMeta.isEmpty() || Item.getItemFromBlock(blockMeta.get(0).getBlock()) == Items.AIR || blockMeta.get(0).getBlock() == Blocks.AIR )
@@ -127,7 +128,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	@OnlyIn(value=Dist.CLIENT)
 	public void mouseEvent(MouseScrollEvent event) {
 		if(Minecraft.getInstance().player.isSneaking() && event.getScrollDelta() != 0) {
-			ItemStack stack = Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND).isEmpty() ? Minecraft.getInstance().player.getHeldItem(Hand.OFF_HAND) : Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND);
+			ItemStack stack = Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND);
 
 			if(!stack.isEmpty() && stack.getItem() == this && getMachineId(stack) != -1) {
 				if(event.getScrollDelta() < 0) {
@@ -144,7 +145,6 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 	private void clearStructure(World world, TileMultiBlock tile, @Nonnull ItemStack stack) {
 		Direction direction = Direction.values()[getDirection(stack)];
-
 
 		int prevMachineId = getPrevMachineId(stack);
 		Object[][][] structure;
@@ -242,7 +242,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
 		if(!world.isRemote && player.isSneaking()) {
 			INamedContainerProvider stack = (INamedContainerProvider)player.getHeldItem(hand).getItem();
-			NetworkHooks.openGui((ServerPlayerEntity)player, stack, packetBuffer -> {packetBuffer.writeInt(getModularInvType().ordinal());});
+			NetworkHooks.openGui((ServerPlayerEntity)player, stack, packetBuffer -> {packetBuffer.writeInt(getModularInvType().ordinal()); packetBuffer.writeBoolean(hand == Hand.MAIN_HAND);});
 			return super.onItemRightClick(world, player, hand);
 		}
 		return super.onItemRightClick(world, player, hand);
@@ -337,7 +337,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			((ModuleButton)btns.get(i)).setAdditionalData(i);
 		}
 
-		ModuleContainerPanYOnly panningContainer = new ModuleContainerPanYOnly(5, 20, btns, new LinkedList<>(), TextureResources.starryBG, 160, 100, 0, 500);
+		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<>(), TextureResources.starryBG, 160, 100, 0, 500);
 		modules.add(panningContainer);
 		//modules.addAll(btns);
 		return modules;
@@ -345,12 +345,12 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 	@Override
 	public String getModularInventoryName() {
-		return "item.libvulpes.holoprojector";
+		return "item.holoProjector";
 	}
 
 	@Override
 	public boolean canInteractWithContainer(PlayerEntity entity) {
-		return entity != null && entity.isAlive() && !entity.getHeldItem(Hand.MAIN_HAND).isEmpty() ? entity.getHeldItem(Hand.MAIN_HAND).getItem() == this : !entity.getHeldItem(Hand.OFF_HAND).isEmpty() && entity.getHeldItem(Hand.MAIN_HAND).getItem() == this;
+		return entity != null && entity.isAlive() && !entity.getHeldItem(Hand.MAIN_HAND).isEmpty() && entity.getHeldItem(Hand.MAIN_HAND).getItem() == this;
 	}
 
 	@Override
@@ -358,7 +358,6 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	public void onInventoryButtonPressed(ModuleButton buttonId) {
 		//PacketHandler.sendToServer(new PacketItemModifcation(this, gui.getInstance().thePlayer, (byte)buttonId));
 		ItemStack stack = Minecraft.getInstance().player.getHeldItem(Hand.MAIN_HAND);
-		if (stack.isEmpty()) stack = Minecraft.getInstance().player.getHeldItem(Hand.OFF_HAND);
 		if(!stack.isEmpty() && stack.getItem() == this) {
 			setMachineId(stack, (int)buttonId.getAdditionalData());
 			PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getInstance().player, (byte)0));
@@ -387,8 +386,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		CompoundNBT nbt;
 		if(stack.hasTag()) {
 			nbt = stack.getTag();
-		}
-		else 
+		} else
 			nbt = new CompoundNBT();
 
 		TileMultiBlock machine = machineList.get(getMachineId(stack));
@@ -404,8 +402,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	private int getYLevel(ItemStack stack) {
 		if(stack.hasTag()) {
 			return stack.getTag().getInt("yOffset");
-		}
-		else
+		} else
 			return -1;
 	}
 
@@ -413,8 +410,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		CompoundNBT nbt;
 		if(stack.hasTag()) {
 			nbt = stack.getTag();
-		}
-		else 
+		} else
 			nbt = new CompoundNBT();
 
 		nbt.putInt(IDNAME + "Prev", id);
@@ -424,8 +420,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	private int getPrevMachineId(ItemStack stack) {
 		if(stack.hasTag()) {
 			return stack.getTag().getInt(IDNAME + "Prev");
-		}
-		else
+		} else
 			return -1;
 	}
 
@@ -441,8 +436,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		CompoundNBT nbt;
 		if(stack.hasTag()) {
 			nbt = stack.getTag();
-		}
-		else
+		} else
 			nbt = new CompoundNBT();
 
 		nbt.putInt("x", x);
@@ -504,8 +498,9 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 	@Override
 	public void writeDataToNetwork(ByteBuf out, byte id, @Nonnull ItemStack stack) {
-		if(id == 0)
+		if(id == 0) {
 			out.writeInt(getMachineId(stack));
+		}
 		else if(id == 1)
 			out.writeInt(getYLevel(stack));
 		else if(id == 2) {
@@ -521,8 +516,9 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 	@Override
 	public void readDataFromNetwork(ByteBuf in, byte packetId, CompoundNBT nbt, ItemStack stack) {
-		if(packetId == 0)
+		if(packetId == 0) {
 			nbt.putInt(IDNAME, in.readInt());
+		}
 		else if(packetId == 1)
 			nbt.putInt("yLevel", in.readInt());
 		else if(packetId == 2) {
@@ -540,11 +536,13 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			setMachineId(stack, nbt.getInt(IDNAME));
 			TileMultiBlock tile = machineList.get(machineId);
 			setYLevel(stack, tile.getStructure().length-1);
-		} else if(id == 1) {
+		}
+		else if(id == 1) {
 			setYLevel(stack, nbt.getInt("yLevel"));
 			Vector3F<Integer> vec = getBasePosition(stack);
 			rebuildStructure(player.world, this.machineList.get(getMachineId(stack)), stack, vec.x, vec.y, vec.z, Direction.byIndex(getDirection(stack)), true);
-		} else if(id == 2) {
+		}
+		else if(id == 2) {
 			int x = nbt.getInt("x");
 			int y = nbt.getInt("y");
 			int z = nbt.getInt("z");
@@ -556,7 +554,6 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	}
 
 	@Override
-	@Nullable
 	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player) {
 		GuiHandler.guiId ID = getModularInvType();

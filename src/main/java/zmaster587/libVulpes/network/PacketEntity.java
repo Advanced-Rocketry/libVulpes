@@ -121,8 +121,7 @@ public class PacketEntity extends BasePacket {
 		if(ent instanceof INetworkEntity) {
 			entity = (INetworkEntity)ent;
 			entity.readDataFromNetwork(buffer, packetId, nbt);
-		}
-		else {
+		} else {
 			this.entityId = entityId;
 			System.out.println("oh no...");
 		}

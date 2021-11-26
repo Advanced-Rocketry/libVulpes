@@ -195,6 +195,7 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 	}
 	
 	public abstract Class getMachine();
+
 	public List<ChanceFluidStack> getFluidStacks(ResourceLocation context, JsonElement json) throws InvalidRecipeException {
 		if(!json.isJsonArray())
 			return null;
