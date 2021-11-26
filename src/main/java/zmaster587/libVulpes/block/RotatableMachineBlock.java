@@ -31,6 +31,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class RotatableMachineBlock extends RotatableBlock {
 	protected final Random random = new Random();
 	
@@ -48,7 +52,8 @@ public class RotatableMachineBlock extends RotatableBlock {
 	
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+	@ParametersAreNonnullByDefault
+	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		
 		Style style = Style.EMPTY.setFormatting(TextFormatting.ITALIC);
@@ -62,6 +67,7 @@ public class RotatableMachineBlock extends RotatableBlock {
      * metadata
      */
 	@Override
+	@ParametersAreNonnullByDefault
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		IInventory tileentitychest = (IInventory)world.getTileEntity(pos);
 
@@ -102,6 +108,8 @@ public class RotatableMachineBlock extends RotatableBlock {
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
+	@Nonnull
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if(tile != null && !worldIn.isRemote) {

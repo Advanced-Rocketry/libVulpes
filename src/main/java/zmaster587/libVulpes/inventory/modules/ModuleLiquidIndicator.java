@@ -8,16 +8,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldVertexBufferUploader;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.util.ResourceLocation;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.model.ModelLoader;
 import org.lwjgl.opengl.GL11;
 import zmaster587.libVulpes.util.IFluidHandlerInternal;
 import net.minecraft.client.gui.FontRenderer;
@@ -73,13 +69,13 @@ public class ModuleLiquidIndicator extends ModuleBase {
 		FluidStack info = tile.getFluidInTank(0);
 
 		if(localId == 0)
-			if(info == null) 
+			if(info.isEmpty()) 
 				crafter.sendWindowProperty(container, variableId, invalidFluid);
 			else
 				crafter.sendWindowProperty(container, variableId, getFluidID(info.getFluid()));
-		if(localId == 1 && info != null)
+		if(localId == 1 && !info.isEmpty())
 			crafter.sendWindowProperty(container, variableId, info.getAmount() & 0xFFFF);
-		else if(localId == 2 && info != null)
+		else if(localId == 2 && !info.isEmpty())
 			crafter.sendWindowProperty(container, variableId, (info.getAmount() >>> 16) & 0xFFFF);
 		
 	}
@@ -162,21 +158,6 @@ public class ModuleLiquidIndicator extends ModuleBase {
 				prevLiquidUUID = getFluidID(info.getFluid());
 	}
 
-	protected float getProgress() {
-
-		int capacity = 0;
-		int fillAmount = 0;
-
-		for(int i = 0; i < tile.getTanks(); i++) {
-			FluidStack fluidInfo = tile.getFluidInTank(i);
-			capacity += tile.getTankCapacity(i);
-			if(!fluidInfo.isEmpty())
-				fillAmount += fluidInfo.getAmount();
-		}
-
-		return fillAmount/(float)capacity;
-	}
-
 	@OnlyIn(value=Dist.CLIENT)
 	@Override
 	public void renderForeground (MatrixStack mat, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel, ContainerScreen<? extends Container>  gui, FontRenderer font) {
@@ -190,12 +171,8 @@ public class ModuleLiquidIndicator extends ModuleBase {
 			FluidStack fluidStack = tile.getFluidInTank(0);
 
 			if(!fluidStack.isEmpty()) {
-
 				list.add(fluidStack.getDisplayName().getString() +": "+fluidStack.getAmount() + " / " + tile.getTankCapacity(0) + " mB");
-
-
-			}
-			else
+			} else
 				list.add("Empty");
 
 			this.drawTooltip(gui, mat, list, mouseX, mouseY, zLevel, font);
@@ -245,7 +222,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
 			RenderSystem.color3f(1, 1, 1);
 		}
 	}
-	
+
 	private void innerBlit(Matrix4f matrix, int x1, int x2, int y1, int y2, int blitOffset, float minU, float maxU, float minV, float maxV) {
 		BufferBuilder bufferbuilder = Tessellator.getInstance().getBuffer();
 		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);

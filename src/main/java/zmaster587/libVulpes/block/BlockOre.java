@@ -5,6 +5,8 @@ import zmaster587.libVulpes.api.material.Material;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class BlockOre extends Block {
 	public AllowedProducts product;
 	public Material material;
@@ -20,6 +22,7 @@ public class BlockOre extends Block {
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public int getHarvestLevel(BlockState state) {
 		// TODO Auto-generated method stub
 		return super.getHarvestLevel(state);

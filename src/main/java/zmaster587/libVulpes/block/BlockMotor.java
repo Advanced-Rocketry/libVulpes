@@ -17,6 +17,10 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class BlockMotor extends RotatableBlock implements ITimeModifier {
 	
 	float timeModifier;
@@ -33,13 +37,16 @@ public class BlockMotor extends RotatableBlock implements ITimeModifier {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+	@ParametersAreNonnullByDefault
+	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		
 		tooltip.add(new StringTextComponent(String.format(TextFormatting.GRAY + "Machine Speed: %.2f", 1/getTimeMult())));
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
+	@Nonnull
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return HOLLOW_CUBE;
 	}

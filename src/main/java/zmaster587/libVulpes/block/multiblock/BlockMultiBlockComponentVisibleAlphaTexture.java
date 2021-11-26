@@ -1,13 +1,11 @@
 package zmaster587.libVulpes.block.multiblock;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import zmaster587.libVulpes.tile.TilePointer;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 

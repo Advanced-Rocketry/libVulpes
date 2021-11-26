@@ -7,7 +7,6 @@ import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.LibVulpesItems;
 import zmaster587.libVulpes.common.CommonProxy;
 import zmaster587.libVulpes.entity.fx.FxErrorBlock;
-import zmaster587.libVulpes.network.BasePacket;
 import zmaster587.libVulpes.util.ScrollHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ITickableSound;

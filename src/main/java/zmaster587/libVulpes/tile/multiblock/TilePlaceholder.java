@@ -11,6 +11,8 @@ import net.minecraft.tileentity.TileEntityType;
 import zmaster587.libVulpes.api.LibVulpesTileEntityTypes;
 import zmaster587.libVulpes.tile.TilePointer;
 
+import javax.annotation.Nonnull;
+
 //Used to store info about the block previously at the location
 public class TilePlaceholder extends TilePointer {
 	public TilePlaceholder(TileEntityType<?> type) {
@@ -51,6 +53,7 @@ public class TilePlaceholder extends TilePointer {
 	}
 	
 	@Override
+	@Nonnull
 	public CompoundNBT getUpdateTag() {
 		CompoundNBT nbt = new CompoundNBT();
 
@@ -61,6 +64,7 @@ public class TilePlaceholder extends TilePointer {
 	public void handleUpdateTag(BlockState state, CompoundNBT tag) {
 		super.handleUpdateTag(state, tag);
 	}
+
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 		CompoundNBT nbt = pkt.getNbtCompound();

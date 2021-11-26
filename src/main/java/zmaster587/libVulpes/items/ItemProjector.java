@@ -557,6 +557,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 	@Override
 	@Nullable
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player) {
 		GuiHandler.guiId ID = getModularInvType();
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_HELD_ITEM, id, player, this.getModules(getModularInvType().ordinal(), player), this, ID);

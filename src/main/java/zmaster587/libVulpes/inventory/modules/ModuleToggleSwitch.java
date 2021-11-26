@@ -9,7 +9,6 @@ import net.minecraft.client.gui.widget.button.AbstractButton;
 import zmaster587.libVulpes.gui.GuiToggleButtonImage;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.util.ResourceLocation;

@@ -14,6 +14,10 @@ import zmaster587.libVulpes.cap.ForgePowerCapability;
 import zmaster587.libVulpes.energy.IPower;
 import zmaster587.libVulpes.util.UniversalBattery;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public abstract class TileEntityFEConsumer extends TileEntity implements IPower, IUniversalEnergy, ITickableTileEntity {
 	protected UniversalBattery energy;
 
@@ -33,6 +37,7 @@ public abstract class TileEntityFEConsumer extends TileEntity implements IPower,
 	}
 
 	@Override
+	@Nonnull
 	public CompoundNBT getUpdateTag() {
 		return write(new CompoundNBT());
 	}
@@ -43,8 +48,8 @@ public abstract class TileEntityFEConsumer extends TileEntity implements IPower,
 	}
 
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
-
+	@Nonnull
+	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
 		if(capability == CapabilityEnergy.ENERGY )
 			return LazyOptional.of( () -> new ForgePowerCapability(this)).cast();
 		
@@ -52,13 +57,15 @@ public abstract class TileEntityFEConsumer extends TileEntity implements IPower,
 	}
 	
 	@Override
-	public CompoundNBT write(CompoundNBT nbt) {
+	@Nonnull
+	public CompoundNBT write(@Nonnull CompoundNBT nbt) {
 		super.write(nbt);
 		energy.write(nbt);
 		return nbt;
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void read(BlockState state, CompoundNBT nbt) {
 		super.read(state, nbt);
 		energy.readFromNBT(nbt);

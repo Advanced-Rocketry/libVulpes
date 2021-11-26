@@ -32,6 +32,7 @@ import zmaster587.libVulpes.tile.multiblock.hatch.TileOutputHatch;
 import zmaster587.libVulpes.util.IFluidHandlerInternal;
 import zmaster587.libVulpes.util.Vector3F;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -134,6 +135,7 @@ public class TileMultiBlock extends TileEntity {
 	}
 
 	@Override
+	@Nonnull
 	public CompoundNBT getUpdateTag() {
 		CompoundNBT nbt = new CompoundNBT();
 		nbt.putBoolean("canRender", canRender);
@@ -472,7 +474,8 @@ public class TileMultiBlock extends TileEntity {
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt) {
+	@Nonnull
+	public CompoundNBT write(@Nonnull CompoundNBT nbt) {
 		super.write(nbt);
 		writeNetworkData(nbt);
 		nbt.putBoolean("completeStructure", completeStructure);
@@ -481,7 +484,7 @@ public class TileMultiBlock extends TileEntity {
 	}
 	
 	@Override
-	public void read(BlockState state, CompoundNBT nbt) {
+	public void read(@Nonnull BlockState state, @Nonnull CompoundNBT nbt) {
 		super.read(state, nbt);
 		readNetworkData(nbt);
 		completeStructure = nbt.getBoolean("completeStructure");

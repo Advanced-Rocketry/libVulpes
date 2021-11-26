@@ -21,6 +21,8 @@ import zmaster587.libVulpes.recipe.RecipesMachine;
 import zmaster587.libVulpes.util.IFluidHandlerInternal;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -76,6 +78,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	
 	
 	@Override
+	@Nonnull
 	public CompoundNBT getUpdateTag() {
 		CompoundNBT nbt = write(new CompoundNBT());
 		nbt.putBoolean("built", canRender);
@@ -446,6 +449,8 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
+	@Nonnull
 	public CompoundNBT write(CompoundNBT nbt) {
 		super.write(nbt);
 
@@ -491,6 +496,7 @@ public abstract class TileMultiblockMachine extends TileMultiPowerConsumer {
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void read(BlockState state, CompoundNBT nbt) {
 		super.read(state, nbt);
 

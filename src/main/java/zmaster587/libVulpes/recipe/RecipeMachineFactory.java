@@ -34,9 +34,9 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		List<ChanceItemStack> outputs = new LinkedList<>();
 		List<FluidStack> inputFluids = new LinkedList<>();
 		List<ChanceFluidStack> outputFluids = new LinkedList<>();
-		int timeTaken = 0;
-		int energy = 0;
-		int maxOutput = -1;
+		int timeTaken;
+		int energy;
+		int maxOutput;
 		
 		// Write count
 		int ingredientListSize = buffer.readInt();
@@ -137,8 +137,8 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 		List<ChanceItemStack> outputs = new LinkedList<>();
 		List<FluidStack> inputFluids = new LinkedList<>();
 		List<ChanceFluidStack> outputFluids = new LinkedList<>();
-		int timeTaken = 0;
-		int energy = 0;
+		int timeTaken;
+		int energy;
 		int maxOutput = -1;
 		
 		try {
@@ -246,8 +246,8 @@ public abstract class RecipeMachineFactory extends ForgeRegistryEntry<IRecipeSer
 	List<ChanceItemStack> getIngredients(ResourceLocation context, JsonElement json) {
 		List<ChanceItemStack> stacks = new LinkedList<>();
 		for(ItemStack stack : CraftingHelper.getIngredient(json).getMatchingStacks()) {
-			int count = stack.getCount();
-			int data = stack.getDamage();
+			int count;
+			int data;
 			float chance = 0f;
 			ItemStack stack2 = stack.copy();
 			JsonElement countElem = json.getAsJsonObject().get("count");

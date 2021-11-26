@@ -162,7 +162,6 @@ public class ZUtils {
 	}
 
 	public static boolean isInvEmpty(ItemStack[] stack) {
-		boolean empty = true;
 		if(stack == null)
 			return true;
 
@@ -174,28 +173,7 @@ public class ZUtils {
 		return true;
 	}
 
-	/***
-	 * Returns true if the array of object contains object2
-	 */
-	public static boolean doesArrayContains(Object[] object, Object object2) {
-		for(Object obj : object) {
-			if(obj.equals(object2))
-				return true;
-		}
-
-		return false;
-	}
-
-	public static boolean doesArrayContains(int[] object, Object object2) {
-		for(Object obj : object) {
-			if(obj.equals(object2))
-				return true;
-		}
-		return false;
-	}
-
 	public static boolean isInvEmpty(IInventory inv) {
-		boolean empty = true;
 		if(inv == null)
 			return true;
 
@@ -216,32 +194,11 @@ public class ZUtils {
 		return false;
 	}
 
-	public static boolean hasFullStack(IInventory inv) {
-
-		for(int i = 0; i < inv.getSizeInventory(); i++) {
-			if(!inv.getStackInSlot(i).isEmpty() && inv.getStackInSlot(i).getMaxStackSize() == inv.getStackInSlot(i).getCount())
-				return true;
-		}
-
-		return false;
-	}
-
 	public static int numEmptySlots(IInventory inv) {
 		int num = 0;
 
 		for(int i = 0; i < inv.getSizeInventory(); i++) {
 			if(inv.getStackInSlot(i).isEmpty())
-				num++;
-		}
-
-		return num;
-	}
-
-	public static int numFilledSlots(IInventory inv) {
-		int num = 0;
-
-		for(int i = 0; i < inv.getSizeInventory(); i++) {
-			if(!inv.getStackInSlot(i).isEmpty() && inv.getStackInSlot(i).getCount() == inv.getStackInSlot(i).getMaxStackSize())
 				num++;
 		}
 

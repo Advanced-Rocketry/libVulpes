@@ -4,7 +4,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import zmaster587.libVulpes.network.BasePacket;
 
 public class CommonProxy {
 	public String getLocalizedString(String str) {

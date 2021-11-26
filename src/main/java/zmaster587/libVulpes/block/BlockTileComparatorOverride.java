@@ -6,6 +6,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.libVulpes.tile.IComparatorOverride;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class BlockTileComparatorOverride extends BlockTile {
 
 	public BlockTileComparatorOverride(Properties properties, zmaster587.libVulpes.inventory.GuiHandler.guiId guiId) {
@@ -15,12 +17,14 @@ public class BlockTileComparatorOverride extends BlockTile {
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean hasComparatorInputOverride(BlockState state)
 	{
 		return true;
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
 		TileEntity tile = worldIn.getTileEntity(pos);
         if (tile instanceof IComparatorOverride) {

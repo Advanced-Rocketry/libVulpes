@@ -9,7 +9,6 @@ import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.util.BlockDirectionFunction;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;

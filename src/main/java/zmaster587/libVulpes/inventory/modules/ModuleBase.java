@@ -15,7 +15,6 @@ import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.inventory.GuiModular;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -287,7 +286,6 @@ public abstract class ModuleBase {
 			k2 += 10;
 		}
 
-		zLevel = 0.0F;
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		RenderHelper.enableStandardItemLighting();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);

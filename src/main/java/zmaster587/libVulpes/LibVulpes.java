@@ -11,9 +11,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.RegistryEvent.MissingMappings.Mapping;
@@ -52,7 +49,7 @@ import zmaster587.libVulpes.tile.energy.TileForgePowerOutput;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.OreGen;
 
-import java.util.HashMap;
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -61,7 +58,6 @@ import java.util.List;
 public class LibVulpes {
 	public static org.apache.logging.log4j.Logger logger = LogManager.getLogger("libVulpes");
 	public static int time = 0;
-	private static HashMap<Class, String> userModifiableRecipes = new HashMap<>();
 
 	public final static String MODID = "libvulpes";
 	public static LibVulpes instance;
@@ -80,16 +76,13 @@ public class LibVulpes {
 	public static ItemGroup tabLibVulpesOres = new ItemGroup("libvulpesmaterials") {
 
 		@Override
+		@Nonnull
 		public ItemStack createIcon() {
 			return MaterialRegistry.getMaterialFromName("Copper").getProduct(AllowedProducts.getProductByName("ORE"));
 		}
 	};
 
 	public static MaterialRegistry materialRegistry = new MaterialRegistry();
-
-	public static void registerRecipeHandler(Class clazz, String fileName) {
-		userModifiableRecipes.put(clazz, fileName);
-	}
 
 	public LibVulpes() {
 		MOD_CONTAINER = ModLoadingContext.get().getActiveContainer();

@@ -15,6 +15,9 @@ import net.minecraft.world.World;
 import zmaster587.libVulpes.tile.IMultiblock;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Block which is integrated into the multiblock structure.  When a structure is formed the block
  * continues to render and when broken will alert the master block
@@ -53,17 +56,19 @@ public class BlockMultiblockStructure extends Block implements IHidableBlock {
 	}
 
 	@Override
+	@Nonnull
+	@ParametersAreNonnullByDefault
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return state.get(VISIBLE) ? super.getShape(state, worldIn, pos, context) : almostFull;
 	}
 
 	@Override
-	public boolean isSideInvisible(net.minecraft.block.BlockState state, net.minecraft.block.BlockState adjacentBlockState, Direction side) {
+	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
 		return super.isSideInvisible(state, adjacentBlockState, side) || !state.get(VISIBLE);
 	}
 
 	@Override
-	public void onReplaced(net.minecraft.block.BlockState state, World world, BlockPos pos, net.minecraft.block.BlockState newState, boolean isMoving) {
+	public void onReplaced(net.minecraft.block.BlockState state, @Nonnull World world, @Nonnull BlockPos pos, net.minecraft.block.BlockState newState, boolean isMoving) {
 		if(state.getBlock() != newState.getBlock()) {
 			TileEntity tile = world.getTileEntity(pos);
 			if(tile instanceof IMultiblock) {

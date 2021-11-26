@@ -24,6 +24,9 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.util.IAdjBlockUpdate;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class BlockTile extends RotatableBlock {
 
 	protected TileEntityType<?> tileClass;
@@ -62,8 +65,8 @@ public class BlockTile extends RotatableBlock {
 	}
 	
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,
-			Hand handIn, BlockRayTraceResult hit) {
+	@Nonnull
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		if(!world.isRemote) {
 			TileEntity te = world.getTileEntity(pos);
 			if(te != null)
@@ -83,8 +86,7 @@ public class BlockTile extends RotatableBlock {
 	}
 	
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
-		
+	public void onReplaced(@Nonnull BlockState state, @Nullable World world, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
 		TileEntity tile = world.getTileEntity(pos);
 
 		//This code could use some optimization -Dark

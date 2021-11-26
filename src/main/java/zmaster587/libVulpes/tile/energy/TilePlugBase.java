@@ -28,6 +28,8 @@ import zmaster587.libVulpes.tile.TilePointer;
 import zmaster587.libVulpes.util.UniversalBattery;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -63,8 +65,9 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	}
 
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
-
+	@Nonnull
+	@ParametersAreNonnullByDefault
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if(capability == CapabilityEnergy.ENERGY )
 			return LazyOptional.of(() -> (new ForgePowerCapability(this))).cast();
 		
@@ -130,14 +133,12 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	
 	
 	@Override
-	public void openInventory(PlayerEntity player) {
-		
-	}
+	@ParametersAreNonnullByDefault
+	public void openInventory(PlayerEntity player) { }
 
 	@Override
-	public void closeInventory(PlayerEntity player) {
-		
-	}
+	@ParametersAreNonnullByDefault
+	public void closeInventory(PlayerEntity player) { }
 
 	@Override
 	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
@@ -192,6 +193,7 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean isUsableByPlayer(PlayerEntity player) {
 		return true;
 	}
@@ -207,11 +209,13 @@ public abstract class TilePlugBase extends TilePointer implements IModularInvent
 	}
 	
 	@Override
+	@Nonnull
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int ID, PlayerInventory playerInv, PlayerEntity playerEntity) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, ID, playerEntity, getModules(getModularInvType().ordinal(), playerEntity), this, getModularInvType());
 	}

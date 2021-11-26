@@ -153,10 +153,10 @@ public class ProgressBarImage {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexbuffer = tessellator.getBuffer();
         vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vertexbuffer.pos(x + 0, y + height, zLevel).tex(((float)(textureX + 0) * 0.00390625F), ((float)(textureY + height) * 0.00390625F)).endVertex();
+        vertexbuffer.pos(x, y + height, zLevel).tex(((float)(textureX) * 0.00390625F), ((float)(textureY + height) * 0.00390625F)).endVertex();
         vertexbuffer.pos(x + width, y + height, zLevel).tex(((float)(textureX + width) * 0.00390625F), ((float)(textureY + height) * 0.00390625F)).endVertex();
-        vertexbuffer.pos(x + width, y + 0, zLevel).tex(((float)(textureX + width) * 0.00390625F), ((float)(textureY + 0) * 0.00390625F)).endVertex();
-        vertexbuffer.pos(x + 0, y + 0, zLevel).tex(((float)(textureX + 0) * 0.00390625F), ((float)(textureY + 0) * 0.00390625F)).endVertex();
+        vertexbuffer.pos(x + width, y, zLevel).tex(((float)(textureX + width) * 0.00390625F), ((float)(textureY) * 0.00390625F)).endVertex();
+        vertexbuffer.pos(x, y, zLevel).tex(((float)(textureX) * 0.00390625F), ((float)(textureY) * 0.00390625F)).endVertex();
         tessellator.draw();
     }
 	
