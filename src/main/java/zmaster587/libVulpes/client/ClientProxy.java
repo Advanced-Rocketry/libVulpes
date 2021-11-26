@@ -40,11 +40,6 @@ public class ClientProxy extends CommonProxy {
 		RenderTypeLookup.setRenderLayer(LibVulpesBlocks.blockEnhancedMotor, RenderType.getCutoutMipped());
 		RenderTypeLookup.setRenderLayer(LibVulpesBlocks.blockEliteMotor, RenderType.getCutoutMipped());
 	}
-
-	@Override
-	public void preinit() {
-		//OBJLoader.INSTANCE. addDomain("libvulpes");
-	}
 	
 	@Override
 	public void registerEventHandlers() {
@@ -54,27 +49,10 @@ public class ClientProxy extends CommonProxy {
 	
 	@Override
 	public void spawnParticle(String particle, World world, double x, double y, double z, double motionX, double motionY, double motionZ) {
-
-		
 		if(particle == "errorBox" && world.isRemote) {
 			FxErrorBlock fx = new FxErrorBlock((ClientWorld) world, x, y, z);
 			Minecraft.getInstance().particles.addEffect(fx);
 		}
-	}
-	
-	@Override
-	public void addScheduledTask(BasePacket packet) {
-		//gui.getInstance().addScheduledTask(new ExecutorClient(packet, gui.getInstance().thePlayer, Dist.CLIENT));
-	}
-	
-	@Override
-	public void preInitItems() {
-
-	}
-	
-	@Override
-	public void preInitBlocks() {
-
 	}
 	
 	@Override

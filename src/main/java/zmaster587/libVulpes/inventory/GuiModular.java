@@ -46,8 +46,7 @@ public class GuiModular extends ContainerScreen<ContainerModular> {
 
 	@Override
 	public void init(Minecraft minecraft, int width, int height) {
-		if(container.guid != guiId.MODULARFULLSCREEN)
-		{
+		if(container.guid != guiId.MODULARFULLSCREEN) {
 			super.init(minecraft, width, height);
 			return;
 		}

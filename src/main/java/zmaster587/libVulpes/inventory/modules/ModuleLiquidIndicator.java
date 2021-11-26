@@ -3,14 +3,25 @@ package zmaster587.libVulpes.inventory.modules;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldVertexBufferUploader;
+import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.util.ResourceLocation;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.model.ModelLoader;
+import org.lwjgl.opengl.GL11;
 import zmaster587.libVulpes.util.IFluidHandlerInternal;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
@@ -18,8 +29,6 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.IContainerListener;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
@@ -195,35 +204,57 @@ public class ModuleLiquidIndicator extends ModuleBase {
 	}
 
 	@Override
-	public void renderBackground(ContainerScreen<? extends Container> gui, MatrixStack mat, int x, int y, int mouseX, int mouseY, FontRenderer font) {
-		super.renderBackground(gui, mat, x, y, mouseX, mouseY,  font);
-		gui.blit(mat, x + offsetX, y + offsetY, 176, 58, 14, 54);
+	public void renderBackground(ContainerScreen<? extends Container> gui, MatrixStack transform, int x, int y, int mouseX, int mouseY, FontRenderer font) {
+		super.renderBackground(gui, transform, x, y, mouseX, mouseY,  font);
+		gui.blit(transform, x + offsetX, y + offsetY, 176, 58, 14, 54);
 
 		//Draw Fluid
-		FluidStack info = tile.getFluidInTank(0);
-		if(info.isEmpty()) return;
+		FluidStack fluid = tile.getFluidInTank(0);
+		if(fluid.isEmpty()) return;
 
-		TextureAtlasSprite sprite = info.getFluid() != Fluids.EMPTY ? ModelLoader.defaultTextureGetter().apply(ForgeHooksClient.getBlockMaterial(info.getFluid().getAttributes().getStillTexture())) : null;
-		
-		sprite.getAtlasTexture().bindTexture();
-		int color = info.getFluid().getAttributes().getColor(info);
+		x+=offsetX+1;
+		y+=offsetY+1;
 
-		GL11.glColor3b((byte)((color >>> 16) & 127), (byte)((color >>> 8) & 127), (byte)(color & 127));
-		//GL11.glColor3b((byte)127, (byte)127, (byte)127);
+		if(!fluid.isEmpty()) {
+			//Pre-render stuff
+			RenderSystem.enableBlend();
+			RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			gui.getMinecraft().getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
+			transform.push();
 
-		float percent = getProgress();
-		int ySize = 52;
-		int xSize = 12;
+			//Fluid-based stuff
+			int fluidHeight = (int)(52*(fluid.getAmount()/(float)tile.getTankCapacity(0)));
+			int color = fluid.getFluid().getAttributes().getColor(fluid);
 
-		if(sprite == null)
-			gui.blit(mat, offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), 0, 0, xSize, (int)(percent*ySize));
-		else {
-			gui.getMinecraft().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-			gui.blit(mat, offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), 0 /* zlevel */, xSize, (int)(percent*ySize), sprite);
+            //Texture-based stuff
+			TextureAtlasSprite sprite = Minecraft.getInstance().getModelManager().getAtlasTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE).getSprite(fluid.getFluid().getAttributes().getStillTexture());
+			int iW = sprite.getWidth();
+			int iH = sprite.getHeight();
+
+			//Actual render
+			RenderSystem.color4f((color >> 16 & 255)/255.0f, (color >> 8 & 255)/255.0f, (color & 255)/255.0f, 1);
+			for (int i = 0; i < (1 + (fluidHeight-1)/iH); i++) {
+				float maxU = sprite.getMinU() + (sprite.getMaxU()-sprite.getMinU())*12f/iW;
+				float maxV = sprite.getMinV() + (sprite.getMaxV()-sprite.getMinV())*((fluidHeight-i*iH) >= iH ? iH : fluidHeight % iH)/(float)iH;
+				innerBlit(transform.getLast().getMatrix(), x, x+12, y + 52-Math.min(fluidHeight, (i+1)*iH), y + 52-i*iH, 0, sprite.getMinU(), maxU, sprite.getMinV(), maxV);
+			}
+
+			//Post-render stuff
+			transform.pop();
+			RenderSystem.disableBlend();
+			RenderSystem.color3f(1, 1, 1);
 		}
-		//gui.drawTexturedModelRectFrom(offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), fluidIcon, xSize, (int)(percent*ySize));
-
-		//this.drawProgressBarIconVertical(x + 27, y + 18,, 12, 52, getProgress());
 	}
-
+	
+	private void innerBlit(Matrix4f matrix, int x1, int x2, int y1, int y2, int blitOffset, float minU, float maxU, float minV, float maxV) {
+		BufferBuilder bufferbuilder = Tessellator.getInstance().getBuffer();
+		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+		bufferbuilder.pos(matrix, (float)x1, (float)y2, (float)blitOffset).tex(minU, maxV).endVertex();
+		bufferbuilder.pos(matrix, (float)x2, (float)y2, (float)blitOffset).tex(maxU, maxV).endVertex();
+		bufferbuilder.pos(matrix, (float)x2, (float)y1, (float)blitOffset).tex(maxU, minV).endVertex();
+		bufferbuilder.pos(matrix, (float)x1, (float)y1, (float)blitOffset).tex(minU, minV).endVertex();
+		bufferbuilder.finishDrawing();
+		RenderSystem.enableAlphaTest();
+		WorldVertexBufferUploader.draw(bufferbuilder);
+	}
 }

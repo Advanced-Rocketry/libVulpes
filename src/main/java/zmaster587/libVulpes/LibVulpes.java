@@ -142,8 +142,6 @@ public class LibVulpes {
 
 
 
-
-		proxy.preinit();
 		//Configuration
 		LibVulpesConfig.register();
 
@@ -208,13 +206,6 @@ public class LibVulpes {
 	@SubscribeEvent
 	public void registerContainers(RegistryEvent.Register<ContainerType<?>> evt) {
 		LibvulpesGuiRegistry.initContainers(evt);
-	}
-
-	@OnlyIn(value=Dist.CLIENT)
-	@SubscribeEvent
-	public void registerModels(ModelRegistryEvent event) {
-		proxy.preInitItems();
-		proxy.preInitBlocks();
 	}
 
 	@SubscribeEvent(priority=EventPriority.HIGH)
