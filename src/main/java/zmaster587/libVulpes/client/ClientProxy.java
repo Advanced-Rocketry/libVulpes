@@ -34,10 +34,10 @@ public class ClientProxy extends CommonProxy {
 	public void init() {
 		LibVulpes.materialRegistry.init();
 
-		RenderTypeLookup.setRenderLayer(LibVulpesBlocks.blockMotor, RenderType.getCutoutMipped());
-		RenderTypeLookup.setRenderLayer(LibVulpesBlocks.blockAdvancedMotor, RenderType.getCutoutMipped());
-		RenderTypeLookup.setRenderLayer(LibVulpesBlocks.blockEnhancedMotor, RenderType.getCutoutMipped());
-		RenderTypeLookup.setRenderLayer(LibVulpesBlocks.blockEliteMotor, RenderType.getCutoutMipped());
+		RenderTypeLookup.setRenderLayer(LibVulpesBlocks.blockMotor, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(LibVulpesBlocks.blockAdvancedMotor, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(LibVulpesBlocks.blockEnhancedMotor, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(LibVulpesBlocks.blockEliteMotor, RenderType.getCutout());
 	}
 	
 	@Override

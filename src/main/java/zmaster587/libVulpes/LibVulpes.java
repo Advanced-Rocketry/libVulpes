@@ -105,7 +105,7 @@ public class LibVulpes {
 		LibVulpesBlocks.blockForgeOutputPlug = new BlockMultiMachineBattery(net.minecraft.block.AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(3f), TileForgePowerOutput.class, GuiHandler.guiId.MODULAR).setRegistryName("forge_power_output");
 		LibVulpesBlocks.blockCoalGenerator = new BlockTile(net.minecraft.block.AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3f), GuiHandler.guiId.MODULAR).setRegistryName("coal_generator");
 
-		net.minecraft.block.AbstractBlock.Properties motorProperties = net.minecraft.block.AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(2).notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false);
+		net.minecraft.block.AbstractBlock.Properties motorProperties = net.minecraft.block.AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(2).notSolid().setOpaque((p_test_1_, p_test_2_, p_test_3_) -> false).setBlocksVision((p_test_1_, p_test_2_, p_test_3_) -> false);
 		LibVulpesBlocks.blockMotor = new BlockMotor(motorProperties, 1f).setRegistryName("motor");
 		LibVulpesBlocks.blockAdvancedMotor = new BlockMotor(motorProperties, 1/1.5f).setRegistryName("advanced_motor");
 		LibVulpesBlocks.blockEnhancedMotor = new BlockMotor(motorProperties, 1/2f).setRegistryName("enhanced_motor");

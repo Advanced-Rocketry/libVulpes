@@ -2,6 +2,9 @@ package zmaster587.libVulpes.block;
 
 import java.util.List;
 
+import net.minecraft.util.Direction;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.libVulpes.api.ITimeModifier;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -52,8 +55,14 @@ public class BlockMotor extends RotatableBlock implements ITimeModifier {
 	}
 	
 	@Override
-	public ItemStack getPickBlock(net.minecraft.block.BlockState state, RayTraceResult target, IBlockReader world,
-			BlockPos pos, PlayerEntity player) {
+	public ItemStack getPickBlock(net.minecraft.block.BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
 		return super.getPickBlock(state.getBlock().getDefaultState(), target, world, pos, player);
 	}
+
+	@OnlyIn(Dist.CLIENT)
+	@ParametersAreNonnullByDefault
+	public float getAmbientOcclusionLightValue(BlockState state, IBlockReader worldIn, BlockPos pos) {
+		return 1.0F;
+	}
+
 }
