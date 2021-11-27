@@ -1,5 +1,5 @@
 {
   "loader": "forge:obj",
   "model": "libvulpes:models/block/models/elitemotor.obj",
-  "flip-v": false
+  "flip-v": true
 }
