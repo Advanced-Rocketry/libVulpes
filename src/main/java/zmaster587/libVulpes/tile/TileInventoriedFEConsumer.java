@@ -78,14 +78,12 @@ public abstract class TileInventoriedFEConsumer extends TileEntityFEConsumer imp
 	}
 	
 	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn,
-			Direction direction) {
+	public boolean canInsertItem(int index, ItemStack itemStackIn, Direction direction) {
 		return inventory.canInsertItem(index, itemStackIn, direction);
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack,
-			Direction direction) {
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
 		return inventory.canExtractItem(index, stack, direction);
 	}
 

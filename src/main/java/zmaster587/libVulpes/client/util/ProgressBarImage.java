@@ -140,16 +140,13 @@ public class ProgressBarImage {
 		else if(direction == Direction.WEST ) 
 			blit(x + insetX + foreWidth - (int)(percent*foreWidth),zLevel, y + insetY, foreOffsetX + foreWidth - (int)(percent*foreWidth), foreOffsetY, (int)(percent*foreWidth), foreHeight);
 		else if(direction == Direction.UP) // bottom to top
-			blit(x + insetX,zLevel, y + insetY + foreHeight - (int)(percent*foreHeight), foreOffsetX, foreOffsetY + foreHeight - (int)(percent*foreHeight), foreWidth, (int)(percent*foreHeight) );
+			blit(x + insetX,zLevel, y + insetY + foreHeight, foreOffsetX, foreOffsetY + foreHeight - (int)(percent*foreHeight), foreWidth, (int)(percent*foreHeight) );
 		else if(direction == Direction.DOWN)
 			blit(x + insetX,zLevel, y + insetY, foreOffsetX, foreOffsetY, foreWidth, (int)(percent*foreHeight) );
 	}
 	
 	@OnlyIn(value=Dist.CLIENT)
-    public void blit(int x, int zLevel, int y, int textureX, int textureY, int width, int height)
-    {
-        float f = 0.00390625F;
-        float f1 = 0.00390625F;
+    public void blit(int x, int zLevel, int y, int textureX, int textureY, int width, int height) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexbuffer = tessellator.getBuffer();
         vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);

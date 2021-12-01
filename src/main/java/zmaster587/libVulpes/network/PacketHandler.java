@@ -130,8 +130,7 @@ public class PacketHandler {
 		return revPacketList.get(id);
 	}
     
-    public static final void sendToServer(BasePacket pkt)
-    {
+    public static final void sendToServer(BasePacket pkt) {
     	Object msg = new EncapsulatingPacket(pkt);
     	HANDLER.sendToServer(msg);
     }

@@ -70,8 +70,7 @@ public class ModuleButton extends ModuleBase {
 		return this;
 	}
 
-	public Object getAdditionalData()
-	{
+	public Object getAdditionalData() {
 		return additionalData;
 	}
 
