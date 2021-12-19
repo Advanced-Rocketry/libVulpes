@@ -383,7 +383,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	}
 
 	private int getMachineId(ItemStack stack) {
-		if(stack.hasTag()) {
+		if(stack.hasTag() && stack.getTag().contains(IDNAME)) {
 			return stack.getTag().getInt(IDNAME);
 		}
 		else
