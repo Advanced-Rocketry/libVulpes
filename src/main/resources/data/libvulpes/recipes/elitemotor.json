@@ -1,28 +1,22 @@
 {
     "type": "minecraft:crafting_shaped",
-    "pattern":
-    [
-	" cp",
-	"rrp",
-	" cp"
+    "pattern": [
+		" cp",
+		"rrp",
+		" cp"
     ],
-    "key":
-    {
-        "c":
-        {
+    "key": {
+        "c": {
             "tag": "forge:coils/titanium"
         },
-        "p":
-        {
+        "p": {
             "tag": "forge:plates/iridium"
-	},
-        "r":
-        {
-            "tag": "forge:sticks/iridium"
-	}
+		},
+        "r": {
+            "tag": "forge:rods/iridium"
+		}
     },
-    "result":
-    {
+    "result": {
         "item": "libvulpes:elite_motor",
         "count": 1
     }

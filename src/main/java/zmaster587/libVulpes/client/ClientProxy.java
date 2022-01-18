@@ -1,10 +1,12 @@
 package zmaster587.libVulpes.client;
 
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import zmaster587.libVulpes.LibVulpes;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.api.LibVulpesItems;
 import zmaster587.libVulpes.common.CommonProxy;
 import zmaster587.libVulpes.entity.fx.FxErrorBlock;
-import zmaster587.libVulpes.network.BasePacket;
 import zmaster587.libVulpes.util.ScrollHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ITickableSound;
@@ -31,11 +33,11 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void init() {
 		LibVulpes.materialRegistry.init();
-	}
 
-	@Override
-	public void preinit() {
-		//OBJLoader.INSTANCE. addDomain("libvulpes");
+		RenderTypeLookup.setRenderLayer(LibVulpesBlocks.blockMotor, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(LibVulpesBlocks.blockAdvancedMotor, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(LibVulpesBlocks.blockEnhancedMotor, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(LibVulpesBlocks.blockEliteMotor, RenderType.getCutout());
 	}
 	
 	@Override
@@ -46,51 +48,10 @@ public class ClientProxy extends CommonProxy {
 	
 	@Override
 	public void spawnParticle(String particle, World world, double x, double y, double z, double motionX, double motionY, double motionZ) {
-
-		
 		if(particle == "errorBox" && world.isRemote) {
 			FxErrorBlock fx = new FxErrorBlock((ClientWorld) world, x, y, z);
 			Minecraft.getInstance().particles.addEffect(fx);
 		}
-	}
-	
-	@Override
-	public void addScheduledTask(BasePacket packet) {
-		//gui.getInstance().addScheduledTask(new ExecutorClient(packet, gui.getInstance().thePlayer, Dist.CLIENT));
-	}
-	
-	@Override
-	public void preInitItems()
-	{
-        //Register Item models
-        /*ModelLoader.setCustomModelResourceLocation(LibVulpesItems.itemLinker, 0, new ModelResourceLocation(LibVulpesItems.itemLinker.getRegistryName(), "inventory"));
-        ModelLoader.setCustomModelResourceLocation(LibVulpesItems.itemHoloProjector, 0, new ModelResourceLocation(LibVulpesItems.itemHoloProjector.getRegistryName(), "inventory"));
-        ModelLoader.setCustomModelResourceLocation(LibVulpesItems.itemBattery, 0, new ModelResourceLocation("libvulpes:smallBattery", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(LibVulpesItems.itemBattery, 1, new ModelResourceLocation("libvulpes:small2xBattery", "inventory"));*/
-	}
-	
-	@Override
-	public void preInitBlocks()
-	{
-		/*LinkedList<Item> blockItems = new LinkedList<Item>();
-		
-		blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockAdvancedMotor));
-		blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockAdvStructureBlock));
-		blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockCoalGenerator));
-		blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockCreativeInputPlug));
-		blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockEliteMotor));
-		blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockEnhancedMotor));
-		blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockForgeInputPlug));
-		blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockForgeOutputPlug));
-		if(LibVulpesBlocks.blockIC2Plug != null)
-			blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockIC2Plug));
-		blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockMotor));
-		//blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockRFBattery));
-		//blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockRFOutput));
-		blockItems.add(Item.getItemFromBlock(LibVulpesBlocks.blockStructureBlock));
-		
-		for(Item blockItem2 : blockItems)
-			ModelLoader.setCustomModelResourceLocation(blockItem2, 0, new ModelResourceLocation(blockItem2.getRegistryName(), "inventory"));*/
 	}
 	
 	@Override

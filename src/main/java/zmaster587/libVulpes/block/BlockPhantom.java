@@ -21,6 +21,9 @@ import net.minecraft.world.IBlockReader;
 import zmaster587.libVulpes.tile.TileSchematic;
 import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class BlockPhantom extends Block {
 
 	public BlockPhantom(Properties mat) {
@@ -33,6 +36,8 @@ public class BlockPhantom extends Block {
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
+	@Nonnull
 	public List<ItemStack> getDrops(BlockState state, Builder builder) {
 		return new ArrayList<>();
 	}
@@ -44,43 +49,45 @@ public class BlockPhantom extends Block {
 	}
 	
 	@Override
-	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
-			PlayerEntity player) {
+	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
 		TileEntity tile = world.getTileEntity(pos);
 		
 		if(tile instanceof TilePlaceholder && ((TilePlaceholder) tile).getReplacedState() != null) {
-			Block block = ((TilePlaceholder)tile).getReplacedState().getBlock();
-
-
 			return ((TilePlaceholder)tile).getReplacedState().getBlock().getPickBlock(((TilePlaceholder)tile).getReplacedState(), target, world, pos, player);
 		}
 		return super.getPickBlock(state, target, world, pos, player);
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
 		return true;
 	}
 	
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
 		return true;
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean isReplaceable(BlockState p_225541_1_, Fluid p_225541_2_) {
 		return true;
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
+	@Nonnull
 	public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return VoxelShapes.empty();
 	}
 	
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
-			ISelectionContext context) {
+	@ParametersAreNonnullByDefault
+	@Nonnull
+	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return VoxelShapes.empty();
 	}
 }

@@ -1,7 +1,6 @@
 package zmaster587.libVulpes.inventory;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
@@ -30,7 +29,7 @@ public class GuiModularFullScreen extends GuiModular {
 		      if (!net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Pre(this, this.buttons, this::addButton, remove))) {
 		      this.buttons.clear();
 		      this.children.clear();
-		      this.setListener((IGuiEventListener)null);
+		      this.setListener(null);
 		      this.init();
 		      }
 		      net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Post(this, this.buttons, this::addButton, remove));

@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.inventory.modules;
 
+import net.minecraft.client.gui.widget.button.AbstractButton;
 import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 
@@ -7,7 +8,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.inventory.container.Container;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -70,7 +70,7 @@ public class ModuleRedstoneOutputButton extends ModuleButton {
 	}
 
 	@OnlyIn(value=Dist.CLIENT)
-	public void actionPerform(Button button) {
+	public void actionPerform(AbstractButton button) {
 		if(enabled && button == this.button) {
 			if(state == null)
 				state = RedstoneState.ON;

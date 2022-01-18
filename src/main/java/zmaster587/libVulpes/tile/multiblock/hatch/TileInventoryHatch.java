@@ -12,6 +12,7 @@ import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
 import zmaster587.libVulpes.tile.TilePointer;
+import zmaster587.libVulpes.tile.multiblock.INoTileRemoval;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import net.minecraft.block.BlockState;
@@ -31,8 +32,10 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
-public class TileInventoryHatch extends TilePointer implements ISidedInventory, IModularInventory, IInventoryUpdateCallback {
+public class TileInventoryHatch extends TilePointer implements ISidedInventory, IModularInventory, IInventoryUpdateCallback, INoTileRemoval {
 
 	protected EmbeddedInventory inventory;
 
@@ -66,13 +69,14 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	@Override
 	public void read(BlockState state, CompoundNBT nbt) {
 		super.read(state, nbt);
-
 		inventory.readFromNBT(nbt);
 	}
 
 
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
+	@ParametersAreNonnullByDefault
+	@Nonnull
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 			return LazyOptional.of(() -> inventory).cast();
 		}
@@ -124,14 +128,12 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	}
 
 	@Override
-	public void openInventory(PlayerEntity entity) {
-
-	}
+	@ParametersAreNonnullByDefault
+	public void openInventory(PlayerEntity entity) { }
 
 	@Override
-	public void closeInventory(PlayerEntity entity) {
-
-	}
+	@ParametersAreNonnullByDefault
+	public void closeInventory(PlayerEntity entity) { }
 
 	@Override
 	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
@@ -139,19 +141,19 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
+	@Nonnull
 	public int[] getSlotsForFace(Direction side) {
 		return inventory.getSlotsForFace(side);
 	}
 
 	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn,
-			Direction direction) {
+	public boolean canInsertItem(int index, @Nonnull ItemStack itemStackIn, @Nullable Direction direction) {
 		return inventory.canInsertItem(index, itemStackIn, direction);
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack,
-			Direction direction) {
+	public boolean canExtractItem(int index, @Nonnull  ItemStack stack, @Nullable Direction direction) {
 		return inventory.canExtractItem(index, stack, direction);
 	}
 
@@ -208,11 +210,13 @@ public class TileInventoryHatch extends TilePointer implements ISidedInventory, 
 	}
 	
 	@Override
+	@Nonnull
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int ID, PlayerInventory playerInv, PlayerEntity playerEntity) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, ID, playerEntity, getModules(getModularInvType().ordinal(), playerEntity), this, getModularInvType());
 	}

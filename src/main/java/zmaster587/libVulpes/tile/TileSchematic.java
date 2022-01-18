@@ -23,7 +23,6 @@ public class TileSchematic extends TilePlaceholder implements ITickableTileEntit
 	public TileSchematic() {
 		super(LibVulpesTileEntityTypes.TILE_SCHEMATIC);
 		possibleBlocks = new ArrayList<>();
-		possibleBlocks = new ArrayList<>();
 	}
 
 	@Override

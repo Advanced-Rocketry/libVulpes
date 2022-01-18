@@ -24,6 +24,9 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.util.IAdjBlockUpdate;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class BlockTile extends RotatableBlock {
 
 	protected TileEntityType<?> tileClass;
@@ -37,8 +40,7 @@ public class BlockTile extends RotatableBlock {
 	}
 	
 	//MUST be called after construction.  The Tile type doesn't yet exist when the block is contructed
-	public BlockTile _setTile(TileEntityType<?> tileClass)
-	{
+	public BlockTile _setTile(TileEntityType<?> tileClass) {
 		this.tileClass = tileClass;
 		return this;
 	}
@@ -63,10 +65,9 @@ public class BlockTile extends RotatableBlock {
 	}
 	
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,
-			Hand handIn, BlockRayTraceResult hit) {
-		if(!world.isRemote)
-		{
+	@Nonnull
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+		if(!world.isRemote) {
 			TileEntity te = world.getTileEntity(pos);
 			if(te != null)
 				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)te, buf -> {buf.writeInt(((IModularInventory)te).getModularInvType().ordinal()); buf.writeBlockPos(pos); });
@@ -85,31 +86,24 @@ public class BlockTile extends RotatableBlock {
 	}
 	
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving)
-	{
-		
+	public void onReplaced(@Nonnull BlockState state, @Nullable World world, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
 		TileEntity tile = world.getTileEntity(pos);
 
 		//This code could use some optimization -Dark
-		if (!world.isRemote() && tile instanceof IInventory)
-		{
+		if (!world.isRemote() && tile instanceof IInventory) {
 			IInventory inventory = (IInventory)tile;
-			for (int i1 = 0; i1 < inventory.getSizeInventory(); ++i1)
-			{
+			for (int i1 = 0; i1 < inventory.getSizeInventory(); ++i1) {
 				ItemStack itemstack = inventory.getStackInSlot(i1);
 
-				if (!itemstack.isEmpty())
-				{
+				if (!itemstack.isEmpty()) {
 					float f = world.getRandom().nextFloat() * 0.8F + 0.1F;
 					float f1 = world.getRandom().nextFloat() * 0.8F + 0.1F;
 					ItemEntity entityitem;
 
-					for (float f2 = world.getRandom().nextFloat() * 0.8F + 0.1F; itemstack.getCount() > 0; world.addEntity(entityitem))
-					{
+					for (float f2 = world.getRandom().nextFloat() * 0.8F + 0.1F; itemstack.getCount() > 0; world.addEntity(entityitem)) {
 						int j1 = world.getRandom().nextInt(21) + 10;
 
-						if (j1 > itemstack.getCount())
-						{
+						if (j1 > itemstack.getCount()) {
 							j1 = itemstack.getCount();
 						}
 						Item oldItem = itemstack.getItem();
@@ -121,15 +115,13 @@ public class BlockTile extends RotatableBlock {
 								(float)world.getRandom().nextGaussian() * f3 + 0.2F,
 								(float)world.getRandom().nextGaussian() * f3);
 
-						if (oldStack.hasTag())
-						{
+						if (oldStack.hasTag()) {
 							entityitem.getItem().setTag(oldStack.getTag().copy());
 						}
 						world.addEntity(entityitem);
 					}
 				}
 			}
-
 		}
 
 		super.onReplaced(state, world, pos, newState, isMoving);

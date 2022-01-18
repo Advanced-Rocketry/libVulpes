@@ -146,7 +146,7 @@ public class ContainerModular extends Container {
 
 					List<IContainerListener> listeners = ObfuscationReflectionHelper.getPrivateValue(Container.class, this, "field_75149_d");
 					for (IContainerListener listener : listeners) {
-						module.sendChanges(this, ((IContainerListener) listener), moduleIndex, i);
+						module.sendChanges(this, listener, moduleIndex, i);
 					}
 				}
 				moduleIndex++;

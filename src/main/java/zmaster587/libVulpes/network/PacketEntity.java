@@ -62,7 +62,7 @@ public class PacketEntity extends BasePacket {
 		Entity ent = world.getEntityByID(entityId);
 
 		if(in.readBoolean()) {
-			CompoundNBT nbt = null;
+			CompoundNBT nbt;
 			nbt = in.readCompoundTag();
 			this.nbt = nbt;
 		}
@@ -112,7 +112,7 @@ public class PacketEntity extends BasePacket {
 		Entity ent = world.getEntityByID(entityId);
 
 		if(buffer.readBoolean()) {
-			CompoundNBT nbt = null;
+			CompoundNBT nbt;
 			nbt = buffer.readCompoundTag();
 
 			this.nbt = nbt;
@@ -121,8 +121,7 @@ public class PacketEntity extends BasePacket {
 		if(ent instanceof INetworkEntity) {
 			entity = (INetworkEntity)ent;
 			entity.readDataFromNetwork(buffer, packetId, nbt);
-		}
-		else {
+		} else {
 			this.entityId = entityId;
 			System.out.println("oh no...");
 		}

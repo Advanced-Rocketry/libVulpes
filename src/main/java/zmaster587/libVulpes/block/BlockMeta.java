@@ -31,7 +31,6 @@ public class BlockMeta {
 	
 	@Override
 	public boolean equals(Object obj) {
-
 		if(obj instanceof BlockMeta) {
 			return ((BlockMeta)obj).block.getBlock() == block.getBlock() && ( wildcard || ((BlockMeta)obj).wildcard || ((BlockMeta)obj).block == block);
 		}

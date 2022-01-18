@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [    "libvulpes:orecopper",
-    "libvulpes:oretin",
     "libvulpes:orerutile",
     "libvulpes:orealuminum",
     "libvulpes:oreiridium"]

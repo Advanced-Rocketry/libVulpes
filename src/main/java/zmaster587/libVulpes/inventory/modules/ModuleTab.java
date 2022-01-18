@@ -4,10 +4,10 @@ import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import net.minecraft.client.gui.widget.button.AbstractButton;
 import zmaster587.libVulpes.inventory.GuiModular;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -47,8 +47,8 @@ public class ModuleTab extends ModuleBase implements IButtonInventory {
 	}
 	
 	@Override
-	public List<Button> addButtons(int x, int y) {
-		List<Button> list = super.addButtons(x, y);
+	public List<AbstractButton> addButtons(int x, int y) {
+		List<AbstractButton> list = super.addButtons(x, y);
 		
 		for(ModuleButton button2 : buttons) list.addAll(button2.addButtons(x, y));
 		
@@ -57,7 +57,7 @@ public class ModuleTab extends ModuleBase implements IButtonInventory {
 	
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public void actionPerform(Button button) {
+	public void actionPerform(AbstractButton button) {
 		super.actionPerform(button);
 		
 		for(ModuleButton button2 : buttons)

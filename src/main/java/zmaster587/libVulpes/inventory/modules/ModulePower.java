@@ -55,7 +55,7 @@ public class ModulePower extends ModuleBase {
 			List<String> list = new LinkedList<>();
 			list.add(tile.getUniversalEnergyStored() + " / " + tile.getMaxEnergyStored() + " Power");
 
-			this.drawTooltip((ContainerScreen<Container>) gui, mat, list, mouseX, mouseY, zLevel, font);
+			this.drawTooltip(gui, mat, list, mouseX, mouseY, zLevel, font);
 		}
 
 	}

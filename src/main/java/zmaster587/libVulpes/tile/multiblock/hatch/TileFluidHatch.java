@@ -33,6 +33,7 @@ import zmaster587.libVulpes.inventory.modules.ModuleImage;
 import zmaster587.libVulpes.inventory.modules.ModuleLiquidIndicator;
 import zmaster587.libVulpes.inventory.modules.ModuleSlotArray;
 import zmaster587.libVulpes.tile.TilePointer;
+import zmaster587.libVulpes.tile.multiblock.INoTileRemoval;
 import zmaster587.libVulpes.tile.multiblock.TileMultiBlock;
 import zmaster587.libVulpes.util.EmbeddedInventory;
 import zmaster587.libVulpes.util.FluidUtils;
@@ -40,8 +41,10 @@ import zmaster587.libVulpes.util.IFluidHandlerInternal;
 import zmaster587.libVulpes.util.IconResource;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
-public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal, IModularInventory, ISidedInventory, IInventoryUpdateCallback {
+public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal, IModularInventory, ISidedInventory, IInventoryUpdateCallback, INoTileRemoval {
 
 	protected FluidTank fluidTank;
 	private EmbeddedInventory inventory;
@@ -84,7 +87,9 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	}
 	
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
+	@ParametersAreNonnullByDefault
+	@Nonnull
+	public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
 			return LazyOptional.of(() -> new FluidCapability(this)).cast();
 		}
@@ -106,9 +111,8 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 
 	
 	@Override
-	public FluidStack drain(FluidStack resource,
-			FluidAction doDrain) {
-
+	@Nonnull
+	public FluidStack drain(FluidStack resource, FluidAction doDrain) {
 		if(resource.isFluidEqual(fluidTank.getFluid())) {
 			FluidStack fluidStack = fluidTank.drain(resource.getAmount(), doDrain);
 			while(useBucket(0, getStackInSlot(0)));
@@ -120,9 +124,11 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	}
 
 	@Override
+	@Nonnull
 	public FluidStack drain(int maxDrain, FluidAction doDrain) {
 		return fluidTank.drain(maxDrain, doDrain);
 	}
+
 	@Override
 	public FluidStack drainInternal(FluidStack maxDrain, FluidAction doDrain) {
 		return drain(maxDrain, doDrain);
@@ -145,6 +151,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	}
 	
 	@Override
+	@Nonnull
 	public FluidStack getFluidInTank(int tank) {
 		return fluidTank.getFluidInTank(tank);
 	}
@@ -159,7 +166,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 		List<ModuleBase> list = new ArrayList<>();
 
 		list.add(new ModuleSlotArray(45, 18, this, 0, 1));
-		list.add(new ModuleSlotArray(45, 54, this, 1, 2));
+		list.add(new ModuleSlotArray(45, 54, this, 1, 2, false));
 		if(world.isRemote)
 			list.add(new ModuleImage(44, 35, new IconResource(194, 0, 18, 18, CommonResources.genericBackground)));
 		list.add(new ModuleLiquidIndicator(27, 18, this));
@@ -219,6 +226,7 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean isUsableByPlayer(PlayerEntity player) {
 		return true;
 	}
@@ -252,14 +260,14 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public void openInventory(PlayerEntity player) {
-		
-	}
+	@ParametersAreNonnullByDefault
+	public void openInventory(PlayerEntity player) { }
 	
 	@Override
 	public boolean isEmpty() {
@@ -267,29 +275,28 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	}
 
 	@Override
-	public void closeInventory(PlayerEntity player) {
-		
-	}
+	@ParametersAreNonnullByDefault
+	public void closeInventory(PlayerEntity player) { }
 
 	@Override
-	public void clear() {
-		
-	}
+	public void clear() { }
 
 	@Override
+	@Nonnull
+	@ParametersAreNonnullByDefault
 	public int[] getSlotsForFace(Direction side) {
 		return new int[] {0,1};
 	}
 
 	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn,
-			Direction direction) {
+	@ParametersAreNonnullByDefault
+	public boolean canInsertItem(int index, ItemStack itemStackIn, @Nullable Direction direction) {
 		return index == 0 && isItemValidForSlot(index, itemStackIn);
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack,
-			Direction direction) {
+	@ParametersAreNonnullByDefault
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
 		return index == 1;
 	}
 
@@ -299,16 +306,19 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean isFluidValid(int tank, FluidStack stack) {
 		return fluidTank.isFluidValid(tank, stack);
 	}
 	
 	@Override
+	@Nonnull
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int ID, PlayerInventory playerInv, PlayerEntity playerEntity) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, ID, playerEntity, getModules(getModularInvType().ordinal(), playerEntity), this, getModularInvType());
 	}

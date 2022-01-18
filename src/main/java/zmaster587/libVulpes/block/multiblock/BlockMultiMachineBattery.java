@@ -17,6 +17,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 import zmaster587.libVulpes.tile.IComparatorOverride;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class BlockMultiMachineBattery extends BlockMultiblockStructure {
 
 	protected Class<? extends TileEntity> tileClass;
@@ -34,8 +37,9 @@ public class BlockMultiMachineBattery extends BlockMultiblockStructure {
 	}
 	
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player,
-			Hand handIn, BlockRayTraceResult hit) {
+	@ParametersAreNonnullByDefault
+	@Nonnull
+	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if(tile != null && !worldIn.isRemote) {
 			if(tile instanceof IModularInventory)
@@ -58,12 +62,14 @@ public class BlockMultiMachineBattery extends BlockMultiblockStructure {
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean hasComparatorInputOverride(BlockState state)
 	{
 		return true;
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
 		TileEntity tile = worldIn.getTileEntity(pos);
 		if (tile instanceof IComparatorOverride) {

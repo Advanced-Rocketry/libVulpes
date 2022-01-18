@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#i#",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "tag": "forge:ingots/steel"
+    },
+    "i": {
+      "item": "libvulpes:ingotsteel"
+    }
+  },
+  "result": {
+    "item": "libvulpes:blocksteel"
+  }
+}

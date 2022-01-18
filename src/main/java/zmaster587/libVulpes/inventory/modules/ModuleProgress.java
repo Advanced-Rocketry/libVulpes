@@ -48,7 +48,6 @@ public class ModuleProgress extends ModuleBase {
 	}
 
 	public void setTooltip(String tooltip) {
-
 		if(tooltip == null || tooltip.isEmpty())
 			this.tooltip.clear();
 		else
@@ -56,18 +55,16 @@ public class ModuleProgress extends ModuleBase {
 	}
 
 	@Override
-	public void renderForeground(MatrixStack mat, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel,
-			ContainerScreen<? extends Container>  gui, FontRenderer font) {
+	public void renderForeground(MatrixStack mat, int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel, ContainerScreen<? extends Container>  gui, FontRenderer font) {
 		super.renderForeground(mat, guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
 
-		
 		List<String> tooltip = getToolTip();
 		if(tooltip != null && !tooltip.isEmpty()) {
 			int localX = mouseX - offsetX - progressBar.getInsetX();
 			int localY = mouseY - offsetY - progressBar.getInsetY();
 
 			if(localX > 0 && localX < progressBar.getBackWidth() - progressBar.getInsetX() && localY > 0 && localY < progressBar.getBackHeight() - progressBar.getInsetY()) {
-				drawTooltip((ContainerScreen<Container>) gui, mat, tooltip, mouseX, MathHelper.clamp(mouseY, 16, Integer.MAX_VALUE), zLevel, font);
+				drawTooltip(gui, mat, tooltip, mouseX, MathHelper.clamp(mouseY, 16, Integer.MAX_VALUE), zLevel, font);
 			}
 		}
 	}
@@ -132,6 +129,6 @@ public class ModuleProgress extends ModuleBase {
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
 	public void renderBackground(ContainerScreen<? extends Container>  gui, MatrixStack mat, int x, int y, int mouseX, int mouseY , FontRenderer font) {
-		progressBar.renderProgressBar(mat, x + offsetX, y + offsetY,getProgress(), gui);
+		progressBar.renderProgressBar(mat, x + offsetX, y + offsetY, getProgress(), gui);
 	}
 }

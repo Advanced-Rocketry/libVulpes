@@ -1,0 +1,12 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "libvulpes:fluidihatch"
+        }
+    ],
+    "result": {
+        "item": "libvulpes:fluidohatch",
+        "count": 1
+    }
+}

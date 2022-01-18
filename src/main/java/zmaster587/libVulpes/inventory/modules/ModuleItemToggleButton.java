@@ -3,7 +3,7 @@ package zmaster587.libVulpes.inventory.modules;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.widget.button.AbstractButton;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -22,9 +22,9 @@ public class ModuleItemToggleButton extends ModuleToggleSwitch {
 	}
 	
 	@OnlyIn(value=Dist.CLIENT)
-	public List<Button> addButtons(int x, int y) {
+	public List<AbstractButton> addButtons(int x, int y) {
 
-		List<Button> list = new LinkedList<>();
+		List<AbstractButton> list = new LinkedList<>();
 
 		button = new GuiToggleButtonImage(x + offsetX, y + offsetY, sizeX, sizeY, buttonImages);
 		((GuiToggleButtonImage)button).setState(currentState);

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#i#",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "tag": "forge:ingots/copper"
+    },
+    "i": {
+      "item": "libvulpes:ingotcopper"
+    }
+  },
+  "result": {
+    "item": "libvulpes:blockcopper"
+  }
+}

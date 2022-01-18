@@ -23,6 +23,9 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Invisible block used to store blocks that are part of a completed multi-block structure
  * 
@@ -36,20 +39,24 @@ public class BlockMultiblockPlaceHolder extends ContainerBlock {
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
 		return false;
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
+	@Nonnull
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return almostFull;
 	}
 	
 	@Override
-		public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
-				ISelectionContext context) {
-			return VoxelShapes.fullCube();
-		}
+	@Nonnull
+	@ParametersAreNonnullByDefault
+	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+		return VoxelShapes.fullCube();
+	}
 
 	@Override
 	public boolean hasTileEntity(BlockState state) {
@@ -66,14 +73,15 @@ public class BlockMultiblockPlaceHolder extends ContainerBlock {
 	}
 	
 	@Override
+	@ParametersAreNonnullByDefault
+	@Nonnull
 	public List<ItemStack> getDrops(BlockState state, Builder builder) {
-		// TODO Auto-generated method stub
 		return new LinkedList<>();
 	}
 	
 	@Override
-	public void onBlockHarvested(World world, BlockPos pos,
-			BlockState state, PlayerEntity player) {
+	@ParametersAreNonnullByDefault
+	public void onBlockHarvested(World world, BlockPos pos, BlockState state, PlayerEntity player) {
 		
 		super.onBlockHarvested(world, pos, state, player);
 
@@ -90,6 +98,7 @@ public class BlockMultiblockPlaceHolder extends ContainerBlock {
 		}
 	}
 	@Override
+	@ParametersAreNonnullByDefault
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		TileEntity tile = world.getTileEntity(pos);
 
@@ -103,6 +112,7 @@ public class BlockMultiblockPlaceHolder extends ContainerBlock {
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public TileEntity createNewTileEntity(IBlockReader worldIn) {
 		return new TilePlaceholder();
 	}

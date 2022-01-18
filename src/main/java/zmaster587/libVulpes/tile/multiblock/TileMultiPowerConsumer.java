@@ -31,7 +31,6 @@ import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
 import zmaster587.libVulpes.block.BlockMeta;
 import zmaster587.libVulpes.block.BlockTile;
 import zmaster587.libVulpes.client.RepeatingSound;
-import zmaster587.libVulpes.config.LibVulpesConfig;
 import zmaster587.libVulpes.inventory.ContainerModular;
 import zmaster587.libVulpes.inventory.GuiHandler;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
@@ -48,6 +47,9 @@ import zmaster587.libVulpes.tile.multiblock.TileMultiblockMachine.NetworkPackets
 import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.MultiBattery;
 import zmaster587.libVulpes.util.ZUtils;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMachine, IModularInventory, IProgressBar, IToggleButton, ITickableTileEntity, IToggleableMachine {
 
@@ -79,10 +81,9 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	public double getPowerMultiplier() {
-		return LibVulpesConfig.common.powerMult.get();
+		return 1.0d;
 	}
 
-	
 	@Override
 	public int getProgress(int id) {
 		return currentTime;
@@ -146,32 +147,14 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	@Override
-	protected void replaceStandardBlock(BlockPos newPos, BlockState state,
-			TileEntity tile) {
+	protected void replaceStandardBlock(BlockPos newPos, BlockState state, TileEntity tile) {
 		super.replaceStandardBlock(newPos, state, tile);
 		timeMultiplier *= getTimeMultiplierForBlock(state, tile);
 	}
 	
 	@Override
 	public void tick() {
-
-		//Freaky janky crap to make sure the multiblock loads on chunkload etc
-		if(timeAlive == 0) {
-			if(!world.isRemote) {
-				if(isComplete())
-					canRender = completeStructure = completeStructure(world.getBlockState(pos));
-			}
-			else {
-				SoundEvent str;
-				if((str = getSound()) != null) {
-					playMachineSound(str);
-				}
-			}
-
-			timeAlive = 0x1;
-		}
-
-		if(!world.isRemote && world.getGameTime() % 1000L == 0 && !isComplete()) {
+		if(!localCompleteStructure && isComplete()) {
 			attemptCompleteStructure(world.getBlockState(pos));
 			markDirty();
 			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
@@ -179,25 +162,17 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 		if(isRunning()) {
 			if(hasEnergy(requiredPowerPerTick()) || (world.isRemote && hadPowerLastTick)) {
-
 				onRunningPoweredTick();
 
 				//If server then check to see if we need to update the client, use power and process output if applicable
 				if(!world.isRemote) {
-
 					if(!hadPowerLastTick) {
 						hadPowerLastTick = true;
-						markDirty();
-						world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 					}
-
 					useEnergy(usedPowerPerTick());
 				}
-			}
-			else if(!world.isRemote && hadPowerLastTick) { //If server and out of power check to see if client needs update
+			} else if(!world.isRemote && hadPowerLastTick) { //If server and out of power check to see if client needs update
 				hadPowerLastTick = false;
-				markDirty();
-				world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 			}
 		}
 	}
@@ -276,9 +251,6 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	protected void processComplete() {
 		completionTime = 0;
 		currentTime = 0;
-
-		this.markDirty();
-		world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 	}
 
 	/**
@@ -337,7 +309,6 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 
 	@Override
 	public void writeDataToNetwork(PacketBuffer out, byte id) {
-
 		if(id == NetworkPackets.POWERERROR.ordinal()) {
 			out.writeBoolean(hadPowerLastTick);
 		}
@@ -347,8 +318,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	@Override
-	public void readDataFromNetwork(PacketBuffer in, byte packetId,
-			CompoundNBT nbt) {
+	public void readDataFromNetwork(PacketBuffer in, byte packetId, CompoundNBT nbt) {
 		if(packetId == NetworkPackets.POWERERROR.ordinal()) {
 			nbt.putBoolean("hadPowerLastTick", in.readBoolean());
 		}
@@ -358,9 +328,7 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 
 	@Override
-	public void useNetworkData(PlayerEntity player, Dist side, byte id,
-			CompoundNBT nbt) {
-
+	public void useNetworkData(PlayerEntity player, Dist side, byte id, CompoundNBT nbt) {
 		if(id == NetworkPackets.POWERERROR.ordinal()) {
 			hadPowerLastTick = nbt.getBoolean("hadPowerLastTick");
 		} else if (id == NetworkPackets.TOGGLE.ordinal()) {
@@ -415,11 +383,13 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 	}
 	
 	@Override
+	@Nonnull
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int ID, PlayerInventory playerInv, PlayerEntity playerEntity) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, ID, playerEntity, getModules(getModularInvType().ordinal(), playerEntity), this,getModularInvType());
 	}

@@ -82,7 +82,7 @@ public class RenderHelper {
 
 	protected static final RenderState.TargetState TRANSLUCENT_TARGET = new RenderState.TargetState("translucent_target", () -> {
 		if (Minecraft.isFabulousGraphicsEnabled()) {
-			Minecraft.getInstance().worldRenderer.func_239228_q_().bindFramebuffer(false);
+			Minecraft.getInstance().worldRenderer.getTranslucentFrameBuffer().bindFramebuffer(false);
 		}
 
 	}, () -> {

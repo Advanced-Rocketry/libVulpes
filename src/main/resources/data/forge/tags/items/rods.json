@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [    "libvulpes:rodiron",
+    "libvulpes:rodcopper",
+    "libvulpes:rodsteel",
+    "libvulpes:rodtitanium",
+    "libvulpes:rodiridium"]
+}

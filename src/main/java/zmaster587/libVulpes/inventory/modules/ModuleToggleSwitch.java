@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import net.minecraft.client.gui.widget.button.AbstractButton;
 import zmaster587.libVulpes.gui.GuiToggleButtonImage;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.util.ResourceLocation;
@@ -53,9 +53,9 @@ public class ModuleToggleSwitch extends ModuleButton {
 	
 
 	@OnlyIn(value=Dist.CLIENT)
-	public List<Button> addButtons(int x, int y) {
+	public List<AbstractButton> addButtons(int x, int y) {
 
-		List<Button> list = new LinkedList<>();
+		List<AbstractButton> list = new LinkedList<>();
 
 		button = new GuiToggleButtonImage(x + offsetX, y + offsetY, sizeX, sizeY, buttonImages);
 		((GuiToggleButtonImage)button).setState(currentState);
@@ -69,7 +69,7 @@ public class ModuleToggleSwitch extends ModuleButton {
 	}
 
 	@OnlyIn(value=Dist.CLIENT)
-	public void actionPerform(Button button) {
+	public void actionPerform(AbstractButton button) {
 		if(enabled && button == this.button) {
 			this.currentState = !this.currentState;
 			this.tile.onInventoryButtonPressed(this);
@@ -105,7 +105,7 @@ public class ModuleToggleSwitch extends ModuleButton {
 		crafter.sendWindowProperty(container, variableId, currentState ? 1 : 0);
 	}
 	
-	public boolean isButton(Button button) {
+	public boolean isButton(AbstractButton button) {
 		return button == this.button;
 	}
 

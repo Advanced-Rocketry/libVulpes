@@ -18,6 +18,8 @@ import net.minecraft.world.World;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 public class ItemLinker extends Item {
@@ -34,8 +36,8 @@ public class ItemLinker extends Item {
 
 
 	@Override
-	public void addInformation(@Nonnull ItemStack par1ItemStack, World par2EntityPlayer, List<ITextComponent> par3List, ITooltipFlag par4)
-	{
+	@ParametersAreNonnullByDefault
+	public void addInformation(@Nonnull ItemStack par1ItemStack, @Nullable World par2EntityPlayer, List<ITextComponent> par3List, ITooltipFlag par4) {
 		int y = getMasterY(par1ItemStack);
 
 		if(y == 0){
@@ -172,6 +174,7 @@ public class ItemLinker extends Item {
 	
 	
 	@Override
+	@Nonnull
 	public ActionResultType onItemUse(ItemUseContext context) {
 		World worldIn = context.getWorld();
 		BlockPos pos = context.getPos();

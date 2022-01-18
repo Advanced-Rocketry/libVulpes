@@ -9,9 +9,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 public class TilePointer extends TileEntity implements IMultiblock, ILinkableTile {
 	BlockPos masterBlockPos;
@@ -38,7 +39,7 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 		masterBlockPos = pos;
 	}
 
-	public boolean onLinkStart(ItemStack item, TileEntity entity, PlayerEntity player, World world) {
+	public boolean onLinkStart(@Nonnull ItemStack item, TileEntity entity, PlayerEntity player, World world) {
 		if(hasMaster()) {
 			TileEntity master = this.getMasterBlock();
 			if(master instanceof ILinkableTile) {
@@ -47,7 +48,7 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 		}
 		return false;
 	}
-	public boolean onLinkComplete(ItemStack item, TileEntity entity, PlayerEntity player, World world) {
+	public boolean onLinkComplete(@Nonnull ItemStack item, TileEntity entity, PlayerEntity player, World world) {
 		if(hasMaster()) {
 			TileEntity master = this.getMasterBlock();
 			if(master instanceof ILinkableTile) {
@@ -55,10 +56,6 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 			}
 		}
 		return false;
-	}
-
-	public boolean allowRedstoneOutputOnSide(Direction facing) {
-		return true;
 	}
 	
 	public boolean isSet() { return masterBlockPos != null;}
@@ -102,6 +99,7 @@ public class TilePointer extends TileEntity implements IMultiblock, ILinkableTil
 	}
 
 	@Override
+	@Nonnull
 	public CompoundNBT getUpdateTag() {
 		return write(new CompoundNBT());
 	}

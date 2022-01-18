@@ -17,11 +17,8 @@ public class LibVulpesBlocks {
 	public static Block blockFluidInputHatch;
 	public static Block blockPhantom;
 	public static Block blockPlaceHolder;
-	public static Block blockRFBattery;
-	public static Block blockIC2Plug;
-	public static Block blockRFOutput;
-	public static Block blockStructureBlock;
-	public static Block blockAdvStructureBlock;
+	public static Block blockMachineStructure;
+	public static Block blockAdvancedMachineStructure;
 	public static Block blockCreativeInputPlug;
 	public static Block blockForgeInputPlug;
 	public static Block blockForgeOutputPlug;
@@ -29,22 +26,8 @@ public class LibVulpesBlocks {
 	public static Block blockAdvancedMotor;
 	public static Block blockEnhancedMotor;
 	public static Block blockEliteMotor;
-	//public static List<Block> blockOre = new ArrayList<Block>();
-	//public static List<Block> blockMetal = new ArrayList<Block>();
-	public static Item[] itemOreProduct;
-	//public static List<Block> blockCoil = new ArrayList<Block>();
 	public static Block[] motors;
 	public static Block blockCoalGenerator;
-	public static Block blockGTPlug;
-
-	
-
-	
-
-	
-
-	
-
 
 
 	/**

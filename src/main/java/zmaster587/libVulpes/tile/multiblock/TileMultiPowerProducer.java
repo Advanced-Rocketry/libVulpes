@@ -1,15 +1,19 @@
 package zmaster587.libVulpes.tile.multiblock;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import zmaster587.libVulpes.api.IUniversalEnergy;
 import zmaster587.libVulpes.api.LibvulpesGuiRegistry;
@@ -30,10 +34,12 @@ import zmaster587.libVulpes.util.INetworkMachine;
 import zmaster587.libVulpes.util.MultiBattery;
 import zmaster587.libVulpes.util.ZUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileMultiPowerProducer extends TileMultiBlock implements IToggleButton, IModularInventory, INetworkMachine {
+public class TileMultiPowerProducer extends TileMultiBlock implements IToggleButton, IModularInventory, INetworkMachine, ITickableTileEntity {
 
 	protected MultiBattery batteries = new MultiBattery();
 	protected boolean enabled;
@@ -51,13 +57,19 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 
 	public void setMachineEnabled(boolean enabled) {
 		this.enabled = enabled;
-		this.markDirty();
-		world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
 	}
 
 	@Override
-	public void useNetworkData(PlayerEntity player, Dist side, byte id,
-			CompoundNBT nbt) {
+	public void tick() {
+		if(!localCompleteStructure && isComplete()) {
+			attemptCompleteStructure(world.getBlockState(pos));
+			markDirty();
+			world.notifyBlockUpdate(pos, world.getBlockState(pos),  world.getBlockState(pos), 3);
+		}
+	}
+
+	@Override
+	public void useNetworkData(PlayerEntity player, Dist side, byte id, CompoundNBT nbt) {
 		if (id == NetworkPackets.TOGGLE.ordinal()) {
 			setMachineEnabled(nbt.getBoolean("enabled"));
 			toggleSwitch.setToggleState(getMachineEnabled());
@@ -152,21 +164,39 @@ public class TileMultiPowerProducer extends TileMultiBlock implements IToggleBut
 	protected void writeNetworkData(CompoundNBT nbt) {
 		super.writeNetworkData(nbt);
 		nbt.putBoolean("enabled", enabled);
+		nbt.putBoolean("canRender", canRender);
 	}
 	
 	@Override
 	protected void readNetworkData(CompoundNBT nbt) {
 		super.readNetworkData(nbt);
 		enabled = nbt.getBoolean("enabled");
+		canRender = nbt.getBoolean("canRender");
 	}
 	
 	@Override
+	@Nonnull
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int ID, PlayerInventory playerInv, PlayerEntity playerEntity) {
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, ID, playerEntity, getModules(getModularInvType().ordinal(), playerEntity), this, getModularInvType());
+	}
+
+	/**
+	 * @param world world
+	 * @param destroyedPos coords of destroyed block
+	 * @param blockBroken set true if the block is being broken, otherwise some other means is being used to disassemble the machine
+	 */
+	@Override
+	public void deconstructMultiBlock(World world, BlockPos destroyedPos, boolean blockBroken, BlockState state) {
+		resetCache();
+		enabled = false;
+		canRender = false;
+
+		super.deconstructMultiBlock(world, destroyedPos, blockBroken, state);
 	}
 }

@@ -1,5 +1,8 @@
 {
   "loader": "forge:obj",
   "model": "libvulpes:models/block/models/advancedmotor.obj",
-  "flip-v": false
+  "flip-v": true,
+  "textures": {
+    "particle": "libvulpes:blocks/machinegeneric"
+  }
 }

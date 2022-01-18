@@ -10,10 +10,11 @@ import zmaster587.libVulpes.api.LibVulpesTileEntityTypes;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import zmaster587.libVulpes.inventory.modules.ModuleOutputSlotArray;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 
 public class TileOutputHatch extends TileInventoryHatch {
-
-	
 
 	public TileOutputHatch() {
 		super(LibVulpesTileEntityTypes.TILE_OUTPUT_HATCH, 4);
@@ -37,8 +38,7 @@ public class TileOutputHatch extends TileInventoryHatch {
 	}
 
 	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn,
-			Direction direction) {
+	public boolean canInsertItem(int index, @Nonnull ItemStack itemStackIn, @Nullable Direction direction) {
 		return false;
 	}
 

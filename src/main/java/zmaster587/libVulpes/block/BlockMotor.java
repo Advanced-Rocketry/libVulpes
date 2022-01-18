@@ -2,6 +2,9 @@ package zmaster587.libVulpes.block;
 
 import java.util.List;
 
+import net.minecraft.util.Direction;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import zmaster587.libVulpes.api.ITimeModifier;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -16,6 +19,10 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class BlockMotor extends RotatableBlock implements ITimeModifier {
 	
@@ -33,26 +40,29 @@ public class BlockMotor extends RotatableBlock implements ITimeModifier {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip,
-			ITooltipFlag flagIn) {
+	@ParametersAreNonnullByDefault
+	public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		
 		tooltip.add(new StringTextComponent(String.format(TextFormatting.GRAY + "Machine Speed: %.2f", 1/getTimeMult())));
 	}
 	
 	@Override
-	public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
-		return VoxelShapes.empty();
-	}
-	
-	@Override
+	@ParametersAreNonnullByDefault
+	@Nonnull
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return HOLLOW_CUBE;
 	}
 	
 	@Override
-	public ItemStack getPickBlock(net.minecraft.block.BlockState state, RayTraceResult target, IBlockReader world,
-			BlockPos pos, PlayerEntity player) {
+	public ItemStack getPickBlock(net.minecraft.block.BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
 		return super.getPickBlock(state.getBlock().getDefaultState(), target, world, pos, player);
 	}
+
+	@OnlyIn(Dist.CLIENT)
+	@ParametersAreNonnullByDefault
+	public float getAmbientOcclusionLightValue(BlockState state, IBlockReader worldIn, BlockPos pos) {
+		return 1.0F;
+	}
+
 }

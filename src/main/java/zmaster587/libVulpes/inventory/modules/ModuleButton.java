@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.widget.button.AbstractButton;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -22,8 +22,6 @@ public class ModuleButton extends ModuleBase {
 	public GuiImageButton button;
 
 	IButtonInventory tile;
-	boolean prevState;
-	public int buttonId;
 
 	protected int color;
 
@@ -41,7 +39,6 @@ public class ModuleButton extends ModuleBase {
 		this.tile = tile;
 		this.buttonImages = buttonImages;
 		this.text = text;
-		this.buttonId = buttonId;
 
 		sound = "";
 		sizeX = 52;
@@ -68,23 +65,14 @@ public class ModuleButton extends ModuleBase {
 		this.tooltipText = tooltipText;
 	}
 
-	public ModuleButton setAdditionalData(Object data)
-	{
+	public ModuleButton setAdditionalData(Object data) {
 		additionalData = data;
 		return this;
 	}
 
-	public Object getAdditionalData()
-	{
+	public Object getAdditionalData() {
 		return additionalData;
 	}
-
-	/*public ModuleButtton(int offsetX, int offsetY, int buttonId, String text, IButtonInventory tile, IconResource buttonImage) {
-
-		this(offsetX, offsetY, buttonId, text, tile, new Re);
-		this.sizeX = buttonImage.getxSize();
-		this.sizeY = buttonImage.getySize();
-	}*/
 
 	public void setImage(ResourceLocation[] images) {
 		button.setButtonTexture(images);
@@ -177,9 +165,9 @@ public class ModuleButton extends ModuleBase {
 	}
 
 	@OnlyIn(value=Dist.CLIENT)
-	public List<Button> addButtons(int x, int y) {
+	public List<AbstractButton> addButtons(int x, int y) {
 
-		List<Button> list = new LinkedList<>();
+		List<AbstractButton> list = new LinkedList<>();
 
 		button = new GuiImageButton(x + offsetX, y + offsetY, sizeX, sizeY, buttonImages);
 
@@ -198,7 +186,7 @@ public class ModuleButton extends ModuleBase {
 	}
 
 	@OnlyIn(value=Dist.CLIENT)
-	public void actionPerform(Button button) {
+	public void actionPerform(AbstractButton button) {
 		if(enabled && button != null && button == this.button) {
 			tile.onInventoryButtonPressed(this);
 		}

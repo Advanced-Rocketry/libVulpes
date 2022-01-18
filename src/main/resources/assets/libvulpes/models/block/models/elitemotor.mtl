@@ -1,9 +1,5 @@
-# Blender MTL File: 'bottomTank.blend'
+# Blender MTL File: 'None'
 # Material Count: 1
 
-newmtl Material
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-d 1.000000
-illum 2
-map_Kd  libvulpes:models/elitemotor
+newmtl motor
+map_Kd libvulpes:blocks/motor

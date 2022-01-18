@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.LinkedList;
 import java.util.List;
+
+import net.minecraft.client.gui.widget.button.AbstractButton;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -11,9 +13,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.GuiModular;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.ResourceLocation;
@@ -30,7 +30,7 @@ public class ModuleContainerPan extends ModuleBase {
 	protected int containerSizeY;
 	protected List<ModuleBase> moduleList;
 	protected List<ModuleBase> staticModuleList;
-	protected List<Button> buttonList, staticButtonList;
+	protected List<AbstractButton> buttonList, staticButtonList;
 	protected List<Slot> slotList;
 	protected double mouseLastX, mouseLastY;
 	boolean outofBounds;
@@ -90,7 +90,7 @@ public class ModuleContainerPan extends ModuleBase {
 
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public List<Button> addButtons(int x, int y) {
+	public List<AbstractButton> addButtons(int x, int y) {
 
 		buttonList.clear();
 		staticButtonList.clear();
@@ -146,7 +146,7 @@ public class ModuleContainerPan extends ModuleBase {
 		{
 		}
 
-		for(Button button2 : buttonList) {
+		for(AbstractButton button2 : buttonList) {
 			button2.x += deltaX;
 			button2.y += deltaY;
 		}
@@ -183,7 +183,7 @@ public class ModuleContainerPan extends ModuleBase {
 
 	@Override
 	@OnlyIn(value=Dist.CLIENT)
-	public void actionPerform(Button button) {
+	public void actionPerform(AbstractButton button) {
 
 		for(ModuleBase module : moduleList)
 			module.actionPerform(button);
@@ -215,13 +215,11 @@ public class ModuleContainerPan extends ModuleBase {
 
 		setUpScissor((ContainerScreen<Container>) gui, offsetX + guiOffsetX, guiOffsetY + offsetY, offsetX + screenSizeX, offsetY + screenSizeY);
 
-		for(Button btn : buttonList)
-		{
+		for(AbstractButton btn : buttonList) {
 			btn.render(mat, mouseX, mouseY, zLevel);
 		}
 		
-		for(Button btn : staticButtonList)
-		{
+		for(AbstractButton btn : staticButtonList) {
 			btn.render(mat, mouseX, mouseY, zLevel);
 		}
 		
@@ -258,14 +256,14 @@ public class ModuleContainerPan extends ModuleBase {
 		//Handles buttons (mostly vanilla copy)
 		if(button == 0 && isMouseInBounds(0, 0, x, y)) {
 
-			List<Button> fullButtonList = new LinkedList<>();
+			List<AbstractButton> fullButtonList = new LinkedList<>();
 			fullButtonList.addAll(buttonList);
 			fullButtonList.addAll(staticButtonList);
 
 			
-			for(IGuiEventListener iguieventlistener : fullButtonList) {
+			for(AbstractButton iguieventlistener : fullButtonList) {
 				if (iguieventlistener.isMouseOver(scaledX, scaledY)) {
-					Button button2 = (Button)iguieventlistener;
+					AbstractButton button2 = iguieventlistener;
 					button2.playDownSound(gui.getMinecraft().getSoundHandler());
 					gui.setListener(button2);
 				}
@@ -329,7 +327,7 @@ public class ModuleContainerPan extends ModuleBase {
 		{
 		}
 
-		for(Button button2 : buttonList) {
+		for(AbstractButton button2 : buttonList) {
 			button2.x += deltaX;
 			button2.y += deltaY;
 		}
@@ -383,11 +381,11 @@ public class ModuleContainerPan extends ModuleBase {
 			gui.blit(mat, x + offsetX, y + offsetY, (int)(-0.1*currentPosX), (int)(-0.1*currentPosY), screenSizeX + offsetX,  screenSizeY + offsetY);
 		}
 
-		for(Button button : buttonList)
-			button.renderButton(mat, mouseX, mouseY, 0);
+		for(AbstractButton button : buttonList)
+			button.render(mat, mouseX, mouseY, 0);
 
-		for(Button button : staticButtonList)
-			button.renderButton(mat, mouseX, mouseY, 0);
+		for(AbstractButton button : staticButtonList)
+			button.render(mat, mouseX, mouseY, 0);
 
 		for(ModuleBase module : moduleList) {
 			module.renderBackground(gui, mat, x, y, mouseX, mouseY, font);

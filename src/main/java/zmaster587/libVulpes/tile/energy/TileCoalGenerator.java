@@ -20,6 +20,7 @@ import zmaster587.libVulpes.inventory.modules.ModuleText;
 import zmaster587.libVulpes.tile.IComparatorOverride;
 import zmaster587.libVulpes.tile.TileInventoriedForgePowerMachine;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class TileCoalGenerator extends TileInventoriedForgePowerMachine implements IComparatorOverride {
 
@@ -93,11 +94,13 @@ public class TileCoalGenerator extends TileInventoriedForgePowerMachine implemen
 	}
 	
 	@Override
+	@Nonnull
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(getModularInventoryName());
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public Container createMenu(int ID, PlayerInventory playerInv, PlayerEntity playerEntity) {
 		GuiHandler.guiId guid = getModularInvType();
 		return new ContainerModular(LibvulpesGuiRegistry.CONTAINER_MODULAR_TILE, ID, playerEntity, getModules(guid.ordinal(), playerEntity), this, guid);
