@@ -14,6 +14,7 @@ import java.util.Set;
 
 public class LibVulpesBlocks {
 	public static final Set<Block> blocks = new HashSet<>();
+	public static final Set<Block> itemBlocks = new HashSet<>();
 
 	public static Block blockHatch;
 	public static Block blockPhantom;
@@ -81,8 +82,8 @@ public class LibVulpesBlocks {
 
 				itemBlock = clazz.getDeclaredConstructor(Block.class).newInstance(block);
 
-				if(FMLCommonHandler.instance().getSide().isClient() && registerItemStates) {
-					ModelLoader.setCustomModelResourceLocation(itemBlock, 0, new ModelResourceLocation(block.getRegistryName(), "inventory"));
+				if(registerItemStates) {
+					itemBlocks.add(block);
 				}
 
 				GameData.register_impl(itemBlock.setRegistryName(block.getRegistryName()));

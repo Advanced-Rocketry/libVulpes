@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.client;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ITickableSound;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -86,6 +87,9 @@ public class ClientProxy extends CommonProxy {
 		
 		for(Item blockItem2 : blockItems)
 			ModelLoader.setCustomModelResourceLocation(blockItem2, 0, new ModelResourceLocation(blockItem2.getRegistryName(), "inventory"));
+		
+		for(Block block : LibVulpesBlocks.itemBlocks)
+			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, new ModelResourceLocation(block.getRegistryName(), "inventory"));
 	}
 	
 	@Override
