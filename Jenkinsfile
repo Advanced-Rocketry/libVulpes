@@ -6,7 +6,7 @@
             steps {
 		sh 'mkdir -p libs'
             
-                sh 'gradle clean build curseforge236541' 
+                sh 'gradle clean build mavenPublish' 
                 archiveArtifacts artifacts: '**output/*.jar', fingerprint: true 
             }
         }

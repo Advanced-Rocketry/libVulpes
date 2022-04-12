@@ -1,0 +1,47 @@
+apply plugin: 'maven-publish'
+publishing {
+    publications {
+        mavenJava(MavenPublication)
+        {
+            artifact jar
+            artifact deobfJar
+            //checks if minecraft is in the project.
+            //checks if minecraft is in the project.
+            // if (project.hasProperty("minecraft"))
+            // artifact ("CompiledWith.txt") {
+            //     classifier "CompiledWith"
+            //     extension "txt"
+            // }
+            /*/*if (project.hasProperty("bambooBuildNumber"))
+            artifact ("changelog.xml") {
+                classifier "changelog"
+                extension "xml"
+            }*/
+            artifact ("changelog.html"){
+                classifier "changelog"
+                extension "html"
+            }
+            //from components.java
+            //prints the current date to the pom file.
+            pom.withXml {
+                asNode().appendNode('description', 'Created on ' + getDate())
+            }
+        }
+}
+
+    repositories {
+        maven {
+        //checks for a the local property as a gradle argument and if exists outputs to a local dir.
+            if (project.hasProperty("local") && project.getProperty("local") == "true")
+                url "file:" + projectDir.path + "/build/maven"
+            else
+                url "file:///usr/share/nginx/maven/"
+        }
+    }
+}
+
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyy-MM-dd-HH-mm')
+    return formattedDate
+}
