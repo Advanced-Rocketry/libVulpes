@@ -16,7 +16,7 @@ buildscript {
 }
 
 plugins {
-  //id "com.gradle.build-scan" version "1.9"
+  id "com.gradle.build-scan" version "1.9"
   id "com.matthewprenger.cursegradle" version "1.0.9"
   id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.64"
 }
@@ -42,6 +42,7 @@ minecraft {
 
 apply from: "gradle/scripts/jars.gradle"
 apply from: "gradle/scripts/version.gradle"
+apply from: "gradle/scripts/maven.gradle"
 
 group= "zmaster587.libVulpes" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "LibVulpes"
@@ -166,5 +167,7 @@ task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
 {{/tags}}
 """
 }
+
+
 
 tasks.build.dependsOn makeChangelog
