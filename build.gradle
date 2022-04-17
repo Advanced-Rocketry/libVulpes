@@ -227,7 +227,7 @@ task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
   <h3>{{name}}</h3>
   <ul>
     {{#commits}}
-    <li> <a href="https://github.com/zmaster587/LibVulpes/commit/{{hash}}" target=_blank> {{{message}}}</a>
+    <li> <a href="https://github.com/Advanced-Rocketry/libVulpes/commit/{{hash}}" target=_blank> {{{message}}}</a>
 </li>
     {{/commits}}
   </ul>
