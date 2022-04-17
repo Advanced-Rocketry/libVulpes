@@ -22,7 +22,7 @@ buildscript {
 
 plugins {
   id "com.matthewprenger.cursegradle" version "1.4.0"
-  id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.64"
+  id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.72.0"
 }
 
 
@@ -206,14 +206,44 @@ curseforge{
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
-            groupId = 'zmaster587.libVulpes'
-            artifactId = 'libVulpes'
+        mavenJava(MavenPublication)
+        {
+            artifact jar
+            artifact deobfJar
+            //checks if minecraft is in the project.
+            //checks if minecraft is in the project.
+            // if (project.hasProperty("minecraft"))
+            // artifact ("CompiledWith.txt") {
+            //     classifier "CompiledWith"
+            //     extension "txt"
+            // }
+            /*/*if (project.hasProperty("bambooBuildNumber"))
+            artifact ("changelog.xml") {
+                classifier "changelog"
+                extension "xml"
+            }*/
+            artifact ("changelog.html"){
+                classifier "changelog"
+                extension "html"
+            }
             //from components.java
-             artifact deobfJar
+            //prints the current date to the pom file.
+            pom.withXml {
+                asNode().appendNode('description', 'Created on ' + getDate())
             }
         }
+}
+
+    repositories {
+        maven {
+        //checks for a the local property as a gradle argument and if exists outputs to a local dir.
+            if (project.hasProperty("local") && project.getProperty("local") == "true")
+                url "file:" + projectDir.path + "/build/maven"
+            else
+                url "file:///usr/share/nginx/maven/"
+        }
     }
+}
 
 task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     file = new File ("changelog.html")
@@ -235,5 +265,5 @@ task makeChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
 """
 }
 
-tasks.build.dependsOn makeChangelog, deobfJar 
+tasks.build.dependsOn makeChangelog, deobfJar, publish
 
