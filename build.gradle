@@ -138,7 +138,7 @@ curseforge{
     id = "236541"
     changelog = file('changelog.html')
     changelogType = 'html'
-    releaseType = "beta"
+    releaseType = "release"
     addGameVersion minecraft.version
     mainArtifact(jar) {
       displayName = "LibVulpes ${project.version} build " + project.getBuildNumber() +  " for " + minecraft.version

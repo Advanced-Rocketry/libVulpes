@@ -1,4 +1,5 @@
 apply plugin: 'maven-publish'
+
 publishing {
     publications {
         mavenJava(MavenPublication)
