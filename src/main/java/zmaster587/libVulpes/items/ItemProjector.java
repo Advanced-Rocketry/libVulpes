@@ -484,7 +484,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		list.add(new StringTextComponent("Shift-scroll: moves cross-section"));
 
 		int id = getMachineId(stack);
-		if(id != -1) {
+		if(id != -1 && machineList != null && machineList.contains(id)) {
 			list.add(new StringTextComponent(""));
 			list.add(new StringTextComponent(TextFormatting.GREEN + LibVulpes.proxy.getLocalizedString(machineList.get(id).getMachineName())));
 			String str = getDescription(id);
