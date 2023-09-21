@@ -1,9 +1,8 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven {
-            name = "forge"
-            url = "https://files.minecraftforge.net/maven"
+        maven { 
+            url = 'https://maven.minecraftforge.net' 
         }
         maven {
             name = "sonatype"
@@ -11,25 +10,25 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '6.+', changing: true
     }
 }
 
 plugins {
-  id "com.gradle.build-scan" version "1.9"
+  //id "com.gradle.build-scan" version "1.9"
   id "com.matthewprenger.cursegradle" version "1.0.9"
   id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.64"
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'net.minecraftforge.gradle'
 
 
 apply from: "gradle/scripts/getbuildnumber.gradle"
 sourceCompatibility = 8
 targetCompatibility = 8
 minecraft {
-    version = "1.12.2-14.23.4.2739"
-    runDir = "run"
+    //version = "1.12.2-14.23.4.2739"
+    //workingDirectory = "run"
     mappings = "snapshot_20170624"
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
@@ -57,16 +56,22 @@ repositories {
             name = "mezz.jei"
             url = "http://dvs1.progwml6.com/files/maven"
         }
-    ivy {
+    /*ivy {
             name "industrialcraft-2"
             artifactPattern "http://jenkins.ic2.player.to/job/IC2_112/96/artifact/build/libs/[module]-[revision].[ext]"
-        }
+        }*/
     maven {
         name 'jared maven'
         url 'http://blamejared.com/maven'
     }
     maven {
         url 'http://maven.mcmoddev.com'
+    }
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
     }
 //    ivy {
 //            name "EnderIO"
@@ -79,8 +84,9 @@ dependencies {
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
     //compile "some.group:artifact:version"
+    minecraft(group = "net.minecraftforge", name = "forge", version = "1.12.2-14.23.4.2739")
       
-    compile name: 'industrialcraft-2', version: '2.8.96-ex112-api', ext: 'jar'
+    //compile name: 'industrialcraft-2', version: '2.8.96-ex112-api', ext: 'jar'
     compile "net.darkhax.tesla:Tesla-1.12.2:1.0.63"
     deobfCompile "blusunrize:ImmersiveEngineering:0.12-92-+"
     //You'll need to download Tesla Tesla-1.12.2-1.0.63-deobf.jar and put it into the libs folder
@@ -90,6 +96,8 @@ dependencies {
     deobfCompile "mezz.jei:jei_1.12.2:4.8.0.110:api"
     // at runtime, use the full JEI jar
     runtime "mezz.jei:jei_1.12.2:4.8.0.110"
+    implementation  "curse.maven:industrial-craft-242638-2597419-api"
+
 
 }
 
