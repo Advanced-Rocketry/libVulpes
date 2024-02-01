@@ -26,16 +26,52 @@ apply plugin: 'net.minecraftforge.gradle'
 apply from: "gradle/scripts/getbuildnumber.gradle"
 sourceCompatibility = 8
 targetCompatibility = 8
+
+
 minecraft {
-    //version = "1.12.2-14.23.4.2739"
-    //workingDirectory = "run"
-    mappings = "snapshot_20170624"
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-    replace "@MAJOR@", version_major
-    replace "@MINOR@", version_minor
-    replace "@REVIS@", version_revis
-    replace "@BUILD@", project.getBuildNumber()
+
+    mappings channel: 'snapshot' version :'20170624-1.12'
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                examplemod {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                examplemod {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            args '--mod', 'AdvancedRocketry', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            mods {
+                examplemod {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+    
+
+    // replace "@MAJOR@", version_major
+    // replace "@MINOR@", version_minor
+    // replace "@REVIS@", version_revis
+    // replace "@BUILD@", project.getBuildNumber()
 }
 
 
@@ -84,7 +120,7 @@ dependencies {
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
     //compile "some.group:artifact:version"
-    minecraft(group = "net.minecraftforge", name = "forge", version = "1.12.2-14.23.4.2739")
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2859'
       
     //compile name: 'industrialcraft-2', version: '2.8.96-ex112-api', ext: 'jar'
     compile "net.darkhax.tesla:Tesla-1.12.2:1.0.63"
